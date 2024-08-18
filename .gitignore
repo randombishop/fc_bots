@@ -1,0 +1,7 @@
+.gcp
+.env
+virtual_env
+workers.egg-info
+__pycache__
+.DS_Store
+
