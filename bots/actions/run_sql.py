@@ -37,7 +37,17 @@ class RunSql(IAction):
       return self.result
     
   def get_casts(self, intro=''):
-    return None
+    if self.result is None:
+      return None
+    else:
+      if 'error' in self.result or self.result['total_rows'] == 0:
+        return [{
+          'text': 'I was unable to process your SQL query.'  
+        }]
+      else:
+        return [{
+          'text': f"Your SQL query returned {self.result['total_rows']} rows. Here is a link to the results: https://fc.datascience.art/bot/files/{self.result['id']}.csv"  
+        }]
 
 
 if __name__ == "__main__":
