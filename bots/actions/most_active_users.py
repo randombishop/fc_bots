@@ -11,32 +11,7 @@ from bots.models.mistral import mistral
 from bots.utils.check_links import check_link_data
 
 
-instructions = """
-GENERAL INSTRUCTIONS:
-ABOVE ARE SOCIAL MEDIA POSTS FROM A RANDOM SAMPLE OF USERS.
-GENERATE A GLOBAL SUMMARY AND SELECT 3 INTERESTING ONES.
-
-DETAILED INSTRUCTIONS:
-  - Write a catch phrase title.
-  - Generate 3 sentences to describe what the users are talking about, try to cover as much content as possible in these 3 sentences.
-  - Include 3 links to reference relevant post ids and comment them with a keyword and emoji.
-  - Output the result in json format.
-  - Make sure you don't use " inside json strings. Avoid invalid json.
-
-RESPONSE FORMAT:
-{
-  "title": "...catch phrase...",
-  "sentence1": "...",
-  "sentence2": "...",
-  "sentence3": "...",
-  "link1": {"id": "uuid1", "comment": "keyword [emoji]"},
-  "link2": {"id": "uuid2", "comment": "keyword [emoji]"},
-  "link3": {"id": "uuid3", "comment": "keyword [emoji]"}
-}
-"""
-
-
-class DigestCasts(IAction):
+class MostActiveUsers(IAction):
 
   def __init__(self, params):
     super().__init__(params)
@@ -112,18 +87,15 @@ if __name__ == "__main__":
   try:  
     channel = sys.argv[1] if len(sys.argv) > 1 else None
     num_days = sys.argv[2] if len(sys.argv) > 2 else None
-    keywords = sys.argv[3] if len(sys.argv) > 3 else None
-    params = {'channel': channel, 'days': num_days, 'keywords': keywords}
-    digest = DigestCasts(params)
-    print(f"Num days: {digest.num_days}")
-    print(f"Channel: {digest.channel}")
-    print(f"Keywords: {digest.keywords}")
-    print(f"Max rows: {digest.max_rows}")
-    cost = digest.get_cost()
+    params = {'channel': channel, 'days': num_days}
+    action = MostActiveUsers(params)
+    print(f"Channel: {action.channel}")    
+    print(f"Num days: {action.num_days}")
+    cost = action.get_cost()
     print(f"Cost: {cost}")
-    digest.execute()
-    print(f"Result: {digest.result}")
-    digest.get_casts(intro='🗞️ Channel Digest 🗞️')
-    print(f"Casts: {digest.casts}")
+    action.execute()
+    print(f"Result: {action.result}")
+    action.get_casts()
+    print(f"Casts: {action.casts}")
   except:
-    print(f"Error: {digest.error}")
+    print(f"Error: {action.error}")
