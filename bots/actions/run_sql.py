@@ -1,10 +1,10 @@
 from dotenv import load_dotenv
 load_dotenv()
-import json
+import uuid
 import sys
 from bots.iaction import IAction
 from bots.utils.read_params import read_string
-from bots.data.bq import dry_run
+from bots.data.bq import dry_run, sql_to_gcs
 
 
 class RunSql(IAction):
@@ -23,7 +23,18 @@ class RunSql(IAction):
       return self.cost
     
   def execute(self):
-    return None
+    filename = str(uuid.uuid4())
+    folder = 'run_sql'
+    result = sql_to_gcs(self.sql, folder, filename)
+    if 'error' in result:
+      self.error = result['error']
+      return None
+    else:
+      self.result = {      
+        'id': filename,
+        'total_rows': result['total_rows']
+      }
+      return self.result
     
   def get_casts(self, intro=''):
     return None
