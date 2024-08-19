@@ -1,5 +1,7 @@
+import os
 from datetime import datetime, timedelta
 from google.cloud import bigquery
+from bots.data.bq import bq_client, dataset_id
 
 
 sql_select = """
@@ -48,8 +50,7 @@ def make_sql(channel, num_days, max_rows, keywords, order_by):
 
 def get_casts_with_top_engagement(channel, num_days, max_rows, keywords):
   sql, params = make_sql(channel, num_days, max_rows, keywords, sql_order_by_engagement)
-  client = bigquery.Client()
-  job_config = bigquery.QueryJobConfig(query_parameters=params)
-  query_job = client.query(sql, job_config)
+  job_config = bigquery.QueryJobConfig(default_dataset=dataset_id, query_parameters=params)
+  query_job = bq_client.query(sql, job_config)
   results = [x for x in query_job.result()]
   return results

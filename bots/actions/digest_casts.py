@@ -1,12 +1,16 @@
+from dotenv import load_dotenv
+load_dotenv()
 import json
 import sys
 from bots.iaction import IAction
-from bots.data.channels import get_channels
+from bots.utils.read_params import read_channel, read_int, read_keywords
 from bots.data.cast_sample import get_casts_with_top_engagement
-from bots.models.mistral import call_model
+from bots.utils.prompts import casts_and_instructions
+from bots.models.mistral import mistral
+from bots.utils.check_links import check_link_data
 
 
-INSTRUCTIONS = """
+instructions = """
 GENERAL INSTRUCTIONS:
 ABOVE ARE SOCIAL MEDIA POSTS FROM A RANDOM SAMPLE OF USERS.
 GENERATE A GLOBAL SUMMARY AND SELECT 3 INTERESTING ONES.
@@ -31,70 +35,60 @@ RESPONSE FORMAT:
 """
 
 
-def make_prompt(posts):
-  prompt = 'POSTS:\n'
-  for post in posts:
-    prompt += "\n"
-    prompt += "<"+post['hash']+">\n"
-    prompt += post['text']
-    prompt += "\n</"+post['hash']+">\n"
-  prompt += "\n"
-  prompt += '\n\n'
-  prompt += INSTRUCTIONS
-  return prompt
-
-
 class DigestCasts(IAction):
 
   def __init__(self, params):
     super().__init__(params)
-    # channel
-    self.channel = None
-    if ('channel' in params) and (params['channel'] is not None) and (params['channel'] != 'null') and (len(params['channel']) > 0):
-      channels_by_id, channels_by_name = get_channels()
-      channel = params['channel']
-      if channel is not None and channel != 'null' and len(channel) > 0:
-        channel_lower_case = channel.lower()
-        if channel_lower_case in channels_by_id:
-            channel = channels_by_id[channel_lower_case]
-        elif channel_lower_case in channels_by_name:
-            channel = channels_by_name[channel_lower_case]
-      self.channel = channel
-    # num_days
-    self.num_days = 1
-    if 'days' in params:
-      self.num_days = int(params['days'])
-      self.num_days = min(self.num_days, 10)
-    # max_rows
-    self.max_rows = 50
-    # keywords
-    self.keywords = []
-    if 'keywords' in params and len(params['keywords']) > 0:
-      keywords_string = params['keywords']
-      keywords_string = keywords_string.replace(' ', ',')
-      keywords_string = keywords_string.replace('\n', ',')
-      keywords_string = keywords_string.lower()
-      self.keywords = keywords_string.split(',')
-      self.keywords = [keyword.strip() for keyword in self.keywords]
-      self.keywords = [
-        keyword for keyword in self.keywords if len(keyword) > 3]
-
+    self.channel = read_channel(params)
+    self.num_days = read_int(params, 'days', 1, 1, 10)
+    self.max_rows = 100
+    self.keywords = read_keywords(params)
+    
   def get_cost(self):
-    return self.params['num_days'] * 10
+    return self.num_days * 10
 
   def execute(self):
+    # Get data
     posts = get_casts_with_top_engagement(
       self.channel, self.num_days, self.max_rows, self.keywords)
     posts.sort(key=lambda x: x['timestamp'])
-    prompt = make_prompt(posts)
-    result_string = call_model(prompt)
+    # Run LLM
+    prompt = casts_and_instructions(posts, instructions)
+    result_string = mistral(prompt)
     try:
-      self.result = json.loads(result_string)
+      result = json.loads(result_string)
     except:
       print(f"Error parsing json: {result_string}")
-      self.result = None
+      return self.result
+    # Make summary
+    summary = []
+    if 'sentence1' in result and len(result['sentence1']) > 0:
+      summary.append(result['sentence1'])
+    if 'sentence2' in result and len(result['sentence2']) > 0   :
+      summary.append(result['sentence2'])
+    if 'sentence3' in result and len(result['sentence3']) > 0:
+      summary.append(result['sentence3'])
+    try:
+      del result['sentence1']
+      del result['sentence2']
+      del result['sentence3']
+    except:
+      pass
+    result['summary'] = summary
+    # Make links
+    posts_map = {x['hash']: x for x in posts}
+    links = []
+    for link_key in ['link1', 'link2', 'link3']:
+        if link_key in result:
+            link = check_link_data(result[link_key], posts_map)
+            if link is not None:
+                links.append(link)
+            del result[link_key]
+    result['links'] = links
+    # Done
+    self.result = result
     return self.result
-
+  
   def get_casts(self, intro=''):
     casts = []
     cast1 = (intro + '\n\n' + self.result['title'] + '\n\n' + self.result['summary'][0]).strip()
@@ -105,6 +99,7 @@ class DigestCasts(IAction):
         casts.append({'text': link['comment'], 'embed': {'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['id']}})
     self.casts = casts
     return self.casts
+
 
 if __name__ == "__main__":
   channel = None
@@ -127,5 +122,6 @@ if __name__ == "__main__":
   print(f"Cost: {cost}")
   digest.execute()
   print(f"Result: {digest.result}")
-  digest.get_casts(intro='🗞️ Channel Digest 🗞️')
-  print(f"Casts: {digest.casts}")
+  if digest.result is not None:
+    digest.get_casts(intro='🗞️ Channel Digest 🗞️')
+    print(f"Casts: {digest.casts}")

@@ -48,6 +48,7 @@ def make_prompt(query):
   prompt += query
   return prompt
 
+
 if __name__ == "__main__":
   query = "Common followers between @jim, @joe and @dwr.eth"
   prompt = make_prompt(query)
