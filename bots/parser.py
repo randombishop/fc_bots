@@ -28,14 +28,10 @@ channel, string, optional, defaults to null
 Who are the favorite users of {username}
 username, text or integer, required.
 
-*common_followers*
-How many followers do {usernames} have in common?
-usernames, comma separated list of usernames, required, must be at least 2 elements.
-
 
 RESPONSE FORMAT:
 {
-  "function": "one of run_sql, pick_cast, digest_casts, favorite_users, common_followers",
+  "function": "one of run_sql, pick_cast, digest_casts, favorite_users",
   "params": {...parameters inferred from user query...}
 }
 (if the user query does not match any of the functions, return a json with only the key "error" and the value "unknown function")
