@@ -1,0 +1,56 @@
+from models.mistral import mistral
+
+INSTRUCTIONS = """
+INSTRUCTIONS:
+Map the query to one of the following actions and output a json representation of the action.
+
+
+FUNCTIONS:
+*sql*
+runs a {sql} query
+sql, text, required.
+
+*pick*
+selects top post from {channel} over last {num_days} days with this {criteria}
+channel is an optional parameter and defaults to null
+num_days is an optional parameter and defaults to 1  
+criteria is free text and defaults to 'most interesting'
+
+*digest*
+digests the last {num_days} casts/posts containing {keywords} from {channel}
+num_days, integer, optional, defaults to 1  
+keywords, comma separated list of keywords, optional, defaults to null
+channel, string, optional, defaults to null
+
+*favorites*
+Who are the favorite users of {username}
+username, text or integer, required.
+
+*common_followers*
+How many followers do {usernames} have in common?
+usernames, comma separated list of usernames, required, must be at least 2 elements.
+
+
+RESPONSE FORMAT:
+{
+  "function": "one of sql, pick, digest, favorites, common_followers",
+  "params": {...parameters inferred from user query...}
+}
+(if the user query does not match any of the functions, return a json with only the key "error" and the value "unknown function")
+
+"""
+
+
+def make_prompt(query):
+  prompt = INSTRUCTIONS
+  prompt += '\n\n'
+  prompt += 'USER QUERY:\n'
+  prompt += query
+  return prompt
+
+if __name__ == "__main__":
+  query = "Common followers between @jim, @joe and @dwr.eth"
+  prompt = make_prompt(query)
+  print(prompt)
+  result = mistral(prompt)
+  print(result)

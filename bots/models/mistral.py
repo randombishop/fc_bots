@@ -1,6 +1,6 @@
 import ollama
 
 
-def call_model(prompt):
+def mistral(prompt):
   result = ollama.generate(model='mistral', prompt=prompt)
   return result['response']

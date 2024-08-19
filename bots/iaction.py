@@ -11,6 +11,6 @@ class IAction:
     """Execute the action."""
     raise NotImplementedError("Action doesn't implement execute")
 
-  def get_casts(self):
+  def get_casts(self, intro=''):
     """Return the associated casts."""
     raise NotImplementedError("Action doesn't implement get_casts")
