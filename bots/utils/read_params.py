@@ -1,6 +1,27 @@
 from bots.data.channels import get_channels
 
 
+def read_int(params, key, default, min, max):
+  ans = default
+  try:
+    if key in params and params[key] is not None:
+      ans = int(params[key])
+      ans = max(ans, min)
+      ans = min(ans, max)
+  except:
+    pass
+  return ans
+
+
+def read_string(params, key, default, max_length):
+  ans = default
+  if key in params and params[key] is not None:
+    ans = str(params[key])
+    if len(ans) > max_length:
+      ans = ans[:max_length]
+  return ans
+
+
 def read_channel(params):
   channel = None
   if ('channel' in params) and (params['channel'] is not None) and (params['channel'] != 'null') and (len(params['channel']) > 0):
@@ -13,16 +34,6 @@ def read_channel(params):
       channel = channels_by_name[channel_lower_case]
   return channel
 
-def read_int(params, key, default, min, max):
-  ans = default
-  try:
-    if key in params:
-      ans = int(params[key])
-      ans = max(ans, min)
-      ans = min(ans, max)
-  except:
-    pass
-  return ans
 
 def read_keywords(params):
   keywords = []

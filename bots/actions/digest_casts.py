@@ -4,7 +4,8 @@ import json
 import sys
 from bots.iaction import IAction
 from bots.utils.read_params import read_channel, read_int, read_keywords
-from bots.data.cast_sample import get_casts_with_top_engagement
+from fc_bots.bots.data.casts import get_casts_top_engagement, get_sql_top_engagement
+from bots.data.bq import dry_run
 from bots.utils.prompts import casts_and_instructions
 from bots.models.mistral import mistral
 from bots.utils.check_links import check_link_data
@@ -45,11 +46,19 @@ class DigestCasts(IAction):
     self.keywords = read_keywords(params)
     
   def get_cost(self):
-    return self.num_days * 10
+    sql = get_sql_top_engagement(
+       self.channel, self.num_days, self.max_rows, self.keywords, 'engagement')
+    test = dry_run(self.sql)
+    if 'error' in test:
+      self.error = test['error']
+      return 0
+    else:
+      self.cost = test['cost']
+      return self.cost
 
   def execute(self):
     # Get data
-    posts = get_casts_with_top_engagement(
+    posts = get_casts_top_engagement(
       self.channel, self.num_days, self.max_rows, self.keywords)
     posts.sort(key=lambda x: x['timestamp'])
     # Run LLM
@@ -102,16 +111,9 @@ class DigestCasts(IAction):
 
 
 if __name__ == "__main__":
-  channel = None
-  num_days = 1
-  keywords = None
-  if len(sys.argv) > 2:
-    channel = sys.argv[2]
-  if len(sys.argv) > 3:
-    num_days = int(sys.argv[3])
-    num_days = min(num_days, 10)
-  if len(sys.argv) > 4:
-    keywords = sys.argv[3]
+  channel = sys.argv[1] if len(sys.argv) > 1 else None
+  num_days = sys.argv[2] if len(sys.argv) > 2 else None
+  keywords = sys.argv[3] if len(sys.argv) > 3 else None
   params = {'channel': channel, 'days': num_days, 'keywords': keywords}
   digest = DigestCasts(params)
   print(f"Num days: {digest.num_days}")

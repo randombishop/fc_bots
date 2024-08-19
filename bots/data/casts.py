@@ -25,7 +25,7 @@ ORDER BY (
 """
 
 
-def make_sql(channel, num_days, max_rows, keywords, order_by):
+def get_sql_top_engagement(channel, num_days, max_rows, keywords, order_by):
   params = []
   sql = sql_select
   today = datetime.today()
@@ -48,8 +48,8 @@ def make_sql(channel, num_days, max_rows, keywords, order_by):
   return sql, params
 
 
-def get_casts_with_top_engagement(channel, num_days, max_rows, keywords):
-  sql, params = make_sql(channel, num_days, max_rows, keywords, sql_order_by_engagement)
+def get_casts_top_engagement(channel, num_days, max_rows, keywords):
+  sql, params = get_sql_top_engagement(channel, num_days, max_rows, keywords, sql_order_by_engagement)
   job_config = bigquery.QueryJobConfig(default_dataset=dataset_id, query_parameters=params)
   query_job = bq_client.query(sql, job_config)
   results = [x for x in query_job.result()]

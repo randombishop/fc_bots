@@ -2,6 +2,9 @@ class IAction:
     
   def __init__(self, params):
     self.params = params
+    self.result = None
+    self.casts = None
+    self.error = None
 
   def get_cost(self):
     """Calculate and return the cost of executing the action."""
