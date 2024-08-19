@@ -4,27 +4,11 @@ import json
 import sys
 from bots.iaction import IAction
 from bots.utils.read_params import read_channel, read_int, read_keywords, read_string
-from fc_bots.bots.data.casts import get_casts_top_engagement, get_sql_top_engagement
+from fc_bots.bots.data.top_casts import get_casts_top_engagement, get_sql_top_engagement
 from bots.data.bq import dry_run
-from bots.utils.prompts import casts_and_instructions
-from bots.models.mistral import mistral
 from bots.utils.check_links import check_link_data
 
 
-instructions = """
-INSTRUCTIONS:
-  - Select the best post from this list above. Criteria: {}
-  - Comment about the post with only a keyword and an emoji.
-  - Output the result in json format.
-  - Make sure you don't use " inside json strings. Avoid invalid json.
-
-RESPONSE FORMAT:
-{{
-  "id": "selected post uuid",
-  "text": "original text of the post",
-  "comment": "keyword [emoji]",
-}}
-"""
 
 
 class PickCast(IAction):

@@ -28,6 +28,10 @@ channel, string, optional, defaults to null
 Who are the favorite users of {username}
 username, text or integer, required.
 
+*most_active_users*
+Lists the most active users in channel {channel} over the last {num_days} days
+channel, text, required.
+num_days, integer, optional, defaults to 1
 
 RESPONSE FORMAT:
 {

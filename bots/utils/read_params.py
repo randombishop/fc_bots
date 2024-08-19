@@ -1,4 +1,5 @@
 from bots.data.channels import get_channels
+from bots.data.users import get_fid
 
 
 def read_int(params, key, default, min, max):
@@ -44,3 +45,14 @@ def read_keywords(params):
     keywords_string = keywords_string.lower()
     keywords = keywords_string.split(',')
   return keywords
+
+
+def read_fid(params):
+  if 'username' in params and params['username'] is not None:
+    try:
+      fid = int(params['username'])
+      return fid
+    except:
+      username = params['username'].lower()
+      return get_fid(username)
+  return None

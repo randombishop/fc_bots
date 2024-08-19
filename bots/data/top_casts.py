@@ -15,7 +15,7 @@ FROM `cast_features` t
 """
 
 
-sql_order_by_engagement = """
+sql_order = """
 ORDER BY (
 (predict_like/100)
 + (2 * IFNULL(h12_likes, 0))
@@ -25,7 +25,7 @@ ORDER BY (
 """
 
 
-def get_sql_top_engagement(channel, num_days, max_rows, keywords, order_by):
+def top_casts_sql(channel, num_days, max_rows, keywords):
   params = []
   sql = sql_select
   today = datetime.today()
@@ -43,13 +43,13 @@ def get_sql_top_engagement(channel, num_days, max_rows, keywords, order_by):
     conditions = ["(LOWER(text) LIKE ?)" for _ in keywords]
     params += [bigquery.ScalarQueryParameter(None, "STRING", f"%{keyword}%") for keyword in keywords]
     sql += "AND (" + " OR ".join(conditions) + ") \n"
-  sql += order_by
+  sql += sql_order
   sql += f"LIMIT {max_rows}"
   return sql, params
 
 
-def get_casts_top_engagement(channel, num_days, max_rows, keywords):
-  sql, params = get_sql_top_engagement(channel, num_days, max_rows, keywords, sql_order_by_engagement)
+def top_casts_results(channel, num_days, max_rows, keywords):
+  sql, params = top_casts_sql(channel, num_days, max_rows, keywords)
   job_config = bigquery.QueryJobConfig(default_dataset=dataset_id, query_parameters=params)
   query_job = bq_client.query(sql, job_config)
   results = [x for x in query_job.result()]

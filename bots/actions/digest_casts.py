@@ -4,7 +4,7 @@ import json
 import sys
 from bots.iaction import IAction
 from bots.utils.read_params import read_channel, read_int, read_keywords
-from fc_bots.bots.data.casts import get_casts_top_engagement, get_sql_top_engagement
+from bots.data.top_casts import top_casts_sql, top_casts_results
 from bots.data.bq import dry_run
 from bots.utils.prompts import casts_and_instructions
 from bots.models.mistral import mistral
@@ -46,9 +46,8 @@ class DigestCasts(IAction):
     self.keywords = read_keywords(params)
     
   def get_cost(self):
-    sql = get_sql_top_engagement(
-       self.channel, self.num_days, self.max_rows, self.keywords, 'engagement')
-    test = dry_run(self.sql)
+    sql = top_casts_sql(self.channel, self.num_days, self.max_rows, self.keywords)
+    test = dry_run(sql)
     if 'error' in test:
       self.error = test['error']
       return 0
@@ -58,8 +57,7 @@ class DigestCasts(IAction):
 
   def execute(self):
     # Get data
-    posts = get_casts_top_engagement(
-      self.channel, self.num_days, self.max_rows, self.keywords)
+    posts = top_casts_results(self.channel, self.num_days, self.max_rows, self.keywords)
     posts.sort(key=lambda x: x['timestamp'])
     # Run LLM
     prompt = casts_and_instructions(posts, instructions)
