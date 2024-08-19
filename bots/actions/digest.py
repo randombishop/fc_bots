@@ -1,8 +1,10 @@
+import json
 from bots.iaction import IAction
 from bots.data.cast_sample import get_casts_with_top_engagement
 from bots.models.mistral import call_model
 
-instructions = """
+
+INSTRUCTIONS = """
 GENERAL INSTRUCTIONS:
 ABOVE ARE SOCIAL MEDIA POSTS FROM A RANDOM SAMPLE OF USERS.
 GENERATE A GLOBAL SUMMARY AND SELECT 3 INTERESTING ONES.
@@ -36,7 +38,7 @@ def make_prompt(posts):
     prompt += "\n</"+post['hash']+">\n"
   prompt += "\n"
   prompt += '\n\n'
-  prompt += instructions
+  prompt += INSTRUCTIONS
   return prompt
 
 
