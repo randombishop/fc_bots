@@ -51,17 +51,17 @@ class RunSql(IAction):
 
 
 if __name__ == "__main__":
-  sql = sys.argv[1]
-  params = {'sql': sql}
-  action = RunSql(params)
-  print(f"Sql: {action.sql}")
-  cost = action.get_cost()
-  print(f"Cost: {cost}")
-  if action.error is None:
+  try:  
+    sql = sys.argv[1]
+    params = {'sql': sql}
+    action = RunSql(params)
+    print(f"Sql: {action.sql}")
+    cost = action.get_cost()
+    print(f"Cost: {cost}")
     action.execute()
     print(f"Result: {action.result}")
-    if action.result is not None:
-      action.get_casts()
-      print(f"Casts: {action.casts}")
-  if action.error:  
+    action.get_casts()
+    print(f"Casts: {action.casts}")
+  except:
     print(f"Error: {action.error}")
+  

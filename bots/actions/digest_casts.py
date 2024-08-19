@@ -46,8 +46,8 @@ class DigestCasts(IAction):
     self.keywords = read_keywords(params)
     
   def get_cost(self):
-    sql = top_casts_sql(self.channel, self.num_days, self.max_rows, self.keywords)
-    test = dry_run(sql)
+    sql, params = top_casts_sql(self.channel, self.num_days, self.max_rows, self.keywords)
+    test = dry_run(sql, params)
     if 'error' in test:
       self.error = test['error']
       return 0

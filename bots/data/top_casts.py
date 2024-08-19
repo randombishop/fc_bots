@@ -1,4 +1,3 @@
-import os
 from datetime import datetime, timedelta
 from google.cloud import bigquery
 from bots.data.bq import bq_client, dataset_id
