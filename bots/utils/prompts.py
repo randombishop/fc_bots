@@ -1,3 +1,13 @@
+
+
+def instructions_and_request(instructions, request):
+  prompt = instructions
+  prompt += '\n\n'
+  prompt += 'REQUEST:\n'
+  prompt += request
+  return prompt
+
+
 def casts_and_instructions(posts, instructions):
   prompt = 'POSTS:\n'
   for post in posts:

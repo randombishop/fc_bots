@@ -1,6 +1,8 @@
+from bots.utils.prompts import instructions_and_request
 from models.mistral import mistral
 
-INSTRUCTIONS = """
+
+instructions = """
 INSTRUCTIONS:
 Map the query to one of the following actions and output a json representation of the action.
 
@@ -41,17 +43,12 @@ RESPONSE FORMAT:
 """
 
 
-def make_prompt(query):
-  prompt = INSTRUCTIONS
-  prompt += '\n\n'
-  prompt += 'USER QUERY:\n'
-  prompt += query
-  return prompt
+
 
 
 if __name__ == "__main__":
-  query = "Common followers between @jim, @joe and @dwr.eth"
-  prompt = make_prompt(query)
+  request = "Common followers between @jim, @joe and @dwr.eth"
+  prompt = instructions_and_request(instructions, request)
   print(prompt)
   result = mistral(prompt)
   print(result)
