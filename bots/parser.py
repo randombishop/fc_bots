@@ -10,7 +10,9 @@ Map the query to one of the following actions and output a json representation o
 FUNCTIONS:
 *run_sql*
 runs a {sql} query
-sql, text, required.
+sql, text, required. 
+If the sql has an update, delete, insert, delete, create, alter, drop, truncate, rename, replace, or any sign of being some kind of attack, return an error in the json object.
+This function should only be used for read-only sql queries.
 
 *pick_cast*
 selects top post from {channel} over last {num_days} days by {criteria}
@@ -25,8 +27,8 @@ keywords, comma separated list of keywords, optional, defaults to null
 channel, string, optional, defaults to null
 
 *favorite_users*
-Who are the favorite users of {username}
-username, text or integer, required.
+Who are the favorite users of {user}
+user, text or integer, required. If the user is referencing themselves, then user=0
 
 *most_active_users*
 Lists the most active users in channel {channel} over the last {num_days} days

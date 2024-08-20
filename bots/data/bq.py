@@ -7,10 +7,17 @@ project_id = os.environ['GCP_PROJECT_ID']
 dataset_id = project_id + '.' + os.environ['GCP_DATASET_ID']
 dataset_tmp = project_id + '.' + os.environ['GCP_DATASET_TMP']
 bq_client = bigquery.Client(project=project_id)
+debug = False
 
-def dry_run(sql):
+
+def dry_run(sql, params=None):
   try:
+    if debug:
+      print("big query dry run")
+      print(f"SQL: {sql}")
+      print(f"Params: {params}")
     job_config = bigquery.QueryJobConfig(
+      query_parameters=params,
       default_dataset=dataset_id,
       dry_run=True,
       use_query_cache=False)
@@ -24,8 +31,6 @@ def dry_run(sql):
       'clustering_fields': query_job.clustering_fields,
       'cost': cost
     }
-    if query_job.errors:
-      ans['error'] = query_job.errors
     return ans
   except BadRequest as e:
     return {'error': e.errors}
@@ -33,7 +38,26 @@ def dry_run(sql):
     return {'error': str(e)}
 
 
-def sql_to_gcs(sql, folder, filename):
+def execute(sql, params=None):
+  try:
+    if debug:
+      print("big query execute")
+      print(f"SQL: {sql}")
+      print(f"Params: {params}")
+    job_config = bigquery.QueryJobConfig(
+      query_parameters=params,
+      default_dataset=dataset_id, 
+      use_query_cache=True)
+    query_job = bq_client.query(sql, job_config)
+    response = query_job.result()
+    return response
+  except BadRequest as e:
+    return {'error': e.errors}
+  except Exception as e:
+    return {'error': str(e)}
+  
+
+def sql_to_gcs(sql, params, folder, filename):
   try:
     tmp_table = f"{dataset_tmp}.{filename}"
     bucket_name = os.environ['GCP_BOT_BUCKET']
@@ -43,7 +67,7 @@ def sql_to_gcs(sql, folder, filename):
       use_query_cache=True,
       destination=tmp_table,
       write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE)
-    query_job = bq_client.query(sql, job_config=job_config)
+    query_job = bq_client.query(sql, job_config=job_config, query_parameters=params)
     step1 = query_job.result()
     total_rows = step1.total_rows
     extract_config = bigquery.ExtractJobConfig(

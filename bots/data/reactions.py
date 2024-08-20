@@ -1,5 +1,5 @@
 from google.cloud import bigquery
-from bots.data.bq import bq_client, dataset_id
+from bots.data.bq import execute
 
 
 fav_usr_sql = """
@@ -20,7 +20,6 @@ def favorite_users_sql(fid):
 
 def favorite_users_results(fid):
   sql = favorite_users_sql(fid)
-  job_config = bigquery.QueryJobConfig(default_dataset=dataset_id)
-  query_job = bq_client.query(sql, job_config)
-  results = [x for x in query_job.result()]
+  response = execute(sql)
+  results = [x for x in response]
   return results

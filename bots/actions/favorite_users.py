@@ -10,7 +10,6 @@ from bots.utils.check_links import check_link_data
 
 
 
-
 class FavoriteUsers(IAction):
 
   def __init__(self, params):
