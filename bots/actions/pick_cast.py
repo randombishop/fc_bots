@@ -55,14 +55,14 @@ class PickCast(IAction):
     result = json.loads(result_string)
     posts_map = {x['hash']: x for x in posts}
     result = check_link_data(result, posts_map)
-    self.result = result
+    self.data = result
     return result
     
   def get_casts(self, intro=''):
     casts = []
     cast = {
-      'text': self.result['comment'],
-      'embed': {'fid': self.result['fid'], 'user_name': self.result['user_name'], 'hash': self.result['id']}
+      'text': self.data['comment'],
+      'embed': {'fid': self.data['fid'], 'user_name': self.data['user_name'], 'hash': self.data['id']}
     }
     casts.append(cast)
     check_casts(casts)
@@ -76,16 +76,16 @@ if __name__ == "__main__":
   num_days = sys.argv[3] if len(sys.argv) > 3 else None
   keywords = sys.argv[4] if len(sys.argv) > 4 else None
   params = {'channel': channel, 'criteria': criteria, 'num_days': num_days, 'keywords': keywords}
-  digest = PickCast(params)
-  print(f"Channel: {digest.channel}")
-  print(f"Criteria: {digest.criteria}")
-  print(f"Num days: {digest.num_days}") 
-  print(f"Keywords: {digest.keywords}")
-  print(f"Max rows: {digest.max_rows}")
-  cost = digest.get_cost()
+  action = PickCast(params)
+  print(f"Channel: {action.channel}")
+  print(f"Criteria: {action.criteria}")
+  print(f"Num days: {action.num_days}") 
+  print(f"Keywords: {action.keywords}")
+  print(f"Max rows: {action.max_rows}")
+  cost = action.get_cost()
   print(f"Cost: {cost}")
-  digest.execute()
-  print(f"Result: {digest.result}")
-  digest.get_casts(intro='🗞️ Channel Digest 🗞️')
-  print(f"Casts: {digest.casts}")
+  action.execute()
+  print(f"Data: {action.data}")
+  action.get_casts(intro='🗞️ Channel Digest 🗞️')
+  print(f"Casts: {action.casts}")
   

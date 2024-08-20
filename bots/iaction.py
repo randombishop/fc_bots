@@ -2,7 +2,7 @@ class IAction:
     
   def __init__(self, params):
     self.params = params
-    self.result = None
+    self.data = None
     self.casts = None
 
   def get_cost(self):

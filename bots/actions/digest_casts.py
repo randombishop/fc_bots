@@ -91,16 +91,16 @@ class DigestCasts(IAction):
             del result[link_key]
     result['links'] = links
     # Done
-    self.result = result
-    return self.result
+    self.data = result
+    return self.data
   
   def get_casts(self, intro=''):
     casts = []
-    cast1 = (intro + '\n\n' + self.result['title'] + '\n\n' + self.result['summary'][0]).strip()
+    cast1 = (intro + '\n\n' + self.data['title'] + '\n\n' + self.data['summary'][0]).strip()
     casts.append({'text': cast1})
-    for t in self.result['summary'][1:]:
+    for t in self.data['summary'][1:]:
         casts.append({'text': t})
-    for link in self.result['links']:
+    for link in self.data['links']:
         casts.append({'text': link['comment'], 'embed': {'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['id']}})
     check_casts(casts)
     self.casts = casts
@@ -120,6 +120,6 @@ if __name__ == "__main__":
   cost = action.get_cost()
   print(f"Cost: {cost}")
   action.execute()
-  print(f"Result: {action.result}")
+  print(f"Data: {action.data}")
   action.get_casts(intro='🗞️ Channel Digest 🗞️')
   print(f"Casts: {action.casts}")

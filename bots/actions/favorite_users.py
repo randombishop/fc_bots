@@ -32,11 +32,11 @@ class FavoriteUsers(IAction):
     users = favorite_users_results(self.fid)
     if len(users) < 3:
       raise Exception(f"Not enough data ({len(users)})")
-    self.result = users
-    return self.result
+    self.data = users
+    return self.data
     
   def get_casts(self, intro=''):
-    df = to_pandas(self.result)
+    df = to_pandas(self.data)
     del df['target_fid']
     df.rename(inplace=True, columns={
         'username': 'User',
@@ -48,9 +48,9 @@ class FavoriteUsers(IAction):
     table_image(df, filename)
     upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
     os.remove(filename)
-    gold = self.result[0]['username']
-    silver = self.result[1]['username']
-    bronze = self.result[2]['username']
+    gold = self.data[0]['username']
+    silver = self.data[1]['username']
+    bronze = self.data[2]['username']
     print(f"Gold: {gold}, Silver: {silver}, Bronze: {bronze}")
     text = "The winners are... \n"
     text += f"🥇 {gold}\n"
@@ -69,6 +69,6 @@ if __name__ == "__main__":
   action.get_cost()
   print(f"Cost: {action.cost}")
   action.execute()
-  print(f"Result: {action.result}")
+  print(f"Data: {action.data}")
   action.get_casts()
   print(f"Casts: {action.casts}")

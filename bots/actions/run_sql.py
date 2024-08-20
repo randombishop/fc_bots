@@ -22,18 +22,18 @@ class RunSql(IAction):
     filename = str(uuid.uuid4())
     folder = 'csv'
     result = sql_to_gcs(self.sql, folder, filename)
-    self.result = {      
+    self.data = {      
       'id': filename,
       'total_rows': result['total_rows']
     }
-    return self.result
+    return self.data
     
   def get_casts(self, intro=''):
-    if self.result['total_rows'] == 0:
+    if self.data['total_rows'] == 0:
       self.casts = [{'text': 'Your SQL query returned 0 rows.'}]
     else:
-      text = f"Your SQL query returned {self.result['total_rows']} rows.\n"
-      text += f"Here is a link to the results: https://fc.datascience.art/bot/tmp_files/{self.result['id']}.csv"
+      text = f"Your SQL query returned {self.data['total_rows']} rows.\n"
+      text += f"Here is a link to the results: https://fc.datascience.art/bot/tmp_files/{self.data['id']}.csv"
       self.casts =  [{'text': text}]
     return self.casts
 
@@ -45,6 +45,6 @@ if __name__ == "__main__":
   action.get_cost()
   print(f"Cost: {action.cost}")
   action.execute()
-  print(f"Result: {action.result}")
+  print(f"Data: {action.data}")
   action.get_casts()
   print(f"Casts: {action.casts}")

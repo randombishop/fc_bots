@@ -36,14 +36,14 @@ class MostActiveUsers(IAction):
       self.error = "Query returned 0 rows"
       return None
     else:
-      self.result = users
-      return self.result
+      self.data = users
+      return self.data
   
   def get_casts(self, intro=''):
-    if self.result is None or 'error' in self.result:
+    if self.data is None or 'error' in self.data:
       self.casts = [{'text': 'I was unable to generate a chart.'}]
     else:
-      df = to_pandas(self.result)
+      df = to_pandas(self.data)
       rename_cols = {x: x.replace('casts-', '') for x in df.columns}
       rename_cols['user_name']='User'
       df.rename(columns=rename_cols, inplace=True)
@@ -54,9 +54,9 @@ class MostActiveUsers(IAction):
       upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
       os.remove(filename)
       text = "The most active users are: \n"
-      text += f"🥇 {self.result[0]['user_name']}: {self.result[0]['casts_total']} casts.\n"
-      text += f"🥈 {self.result[1]['user_name']}: {self.result[1]['casts_total']} casts.\n"
-      text += f"🥉 {self.result[2]['user_name']}: {self.result[2]['casts_total']} casts.\n"
+      text += f"🥇 {self.data[0]['user_name']}: {self.data[0]['casts_total']} casts.\n"
+      text += f"🥈 {self.data[1]['user_name']}: {self.data[1]['casts_total']} casts.\n"
+      text += f"🥉 {self.data[2]['user_name']}: {self.data[2]['casts_total']} casts.\n"
       check_casts(casts)
       self.casts =  [{'text': text, 'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]}]
     return self.casts
@@ -74,7 +74,7 @@ if __name__ == "__main__":
   cost = action.get_cost()
   print(f"Cost: {cost}")
   action.execute()
-  print(f"Result: {action.result}")
+  print(f"Data: {action.data}")
   action.get_casts()
   print(f"Casts: {action.casts}")
   
