@@ -1,7 +1,7 @@
 import sys
 import json
 from bots.utils.prompts import instructions_and_request
-from models.mistral import mistral
+from bots.models.mistral import mistral
 
 
 instructions = """
