@@ -54,6 +54,9 @@ def parse(request):
   prompt = instructions_and_request(instructions, request)
   result_string = mistral(prompt)
   result = json.loads(result_string)
+  if 'function' in result and result['function'] == 'run_sql':
+    # avoid mistral hallucinating the sql
+    result['params']['sql'] = request
   return result
 
 
