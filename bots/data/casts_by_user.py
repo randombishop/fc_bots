@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from google.cloud import bigquery
-from bots.data.bq import bq_client, dataset_id
+from bots.data.bq import execute
 
 
 
@@ -24,7 +24,6 @@ def casts_by_user_sql(channel, num_days, max_rows):
 
 def casts_by_user_results(channel, num_days, max_rows):
   sql = casts_by_user_sql(channel, num_days, max_rows)
-  job_config = bigquery.QueryJobConfig(default_dataset=dataset_id)
-  query_job = bq_client.query(sql, job_config)
-  results = [x for x in query_job.result()]
+  response = execute(sql)
+  results = [x for x in response]
   return results
