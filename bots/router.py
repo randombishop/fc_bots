@@ -34,6 +34,6 @@ if __name__ == "__main__":
   action.get_cost()
   print(f"Cost: {action.cost}")
   action.execute()
-  print(f"Result: {action.result}")
+  print(f"Data: {action.data}")
   action.get_casts()
   print(f"Casts: {action.casts}")
