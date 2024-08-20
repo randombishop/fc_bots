@@ -37,17 +37,15 @@ class RunSql(IAction):
       return self.result
     
   def get_casts(self, intro=''):
-    if self.result is None:
-      return None
-    else:
-      if 'error' in self.result or self.result['total_rows'] == 0:
-        return [{
-          'text': 'I was unable to process your SQL query.'  
-        }]
+    if self.result is not None:
+      if 'error' in self.result:
+        self.casts = [{'text': 'I was unable to process your SQL query.'}]
+      elif self.result['total_rows'] == 0:
+        self.casts = [{'text': 'Your SQL query returned 0 rows.'}]
       else:
-        return [{
-          'text': f"Your SQL query returned {self.result['total_rows']} rows. Here is a link to the results: https://fc.datascience.art/bot/files/{self.result['id']}.csv"  
-        }]
+        text = f"Your SQL query returned {self.result['total_rows']} rows.\n"
+        text += f"Here is a link to the results: https://fc.datascience.art/bot/run_sql/{self.result['id']}.csv"
+        self.casts =  [{'text': text}]
 
 
 if __name__ == "__main__":
@@ -62,6 +60,8 @@ if __name__ == "__main__":
     print(f"Result: {action.result}")
     action.get_casts()
     print(f"Casts: {action.casts}")
-  except:
+  except Exception as e:
+    print(f"Exception: {e}")
+  finally:
     print(f"Error: {action.error}")
   

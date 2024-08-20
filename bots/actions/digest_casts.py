@@ -59,6 +59,10 @@ class DigestCasts(IAction):
     # Get data
     posts = top_casts_results(self.channel, self.num_days, self.max_rows, self.keywords)
     posts.sort(key=lambda x: x['timestamp'])
+    if len(posts) < 25:
+      print(f"Not enough posts to generate a digest: {len(posts)}")
+      self.error = "Not enough posts to generate a digest"
+      return None
     # Run LLM
     prompt = casts_and_instructions(posts, instructions)
     result_string = mistral(prompt)
@@ -66,7 +70,8 @@ class DigestCasts(IAction):
       result = json.loads(result_string)
     except:
       print(f"Error parsing json: {result_string}")
-      return self.result
+      self.error = "Error parsing json"
+      return None
     # Make summary
     summary = []
     if 'sentence1' in result and len(result['sentence1']) > 0:
@@ -114,16 +119,18 @@ if __name__ == "__main__":
     num_days = sys.argv[2] if len(sys.argv) > 2 else None
     keywords = sys.argv[3] if len(sys.argv) > 3 else None
     params = {'channel': channel, 'days': num_days, 'keywords': keywords}
-    digest = DigestCasts(params)
-    print(f"Num days: {digest.num_days}")
-    print(f"Channel: {digest.channel}")
-    print(f"Keywords: {digest.keywords}")
-    print(f"Max rows: {digest.max_rows}")
-    cost = digest.get_cost()
+    action = DigestCasts(params)
+    print(f"Num days: {action.num_days}")
+    print(f"Channel: {action.channel}")
+    print(f"Keywords: {action.keywords}")
+    print(f"Max rows: {action.max_rows}")
+    cost = action.get_cost()
     print(f"Cost: {cost}")
-    digest.execute()
-    print(f"Result: {digest.result}")
-    digest.get_casts(intro='🗞️ Channel Digest 🗞️')
-    print(f"Casts: {digest.casts}")
-  except:
-    print(f"Error: {digest.error}")
+    action.execute()
+    print(f"Result: {action.result}")
+    action.get_casts(intro='🗞️ Channel Digest 🗞️')
+    print(f"Casts: {action.casts}")
+  except Exception as e:
+    print(f"Exception: {e}")
+  finally:
+    print(f"Error: {action.error}")

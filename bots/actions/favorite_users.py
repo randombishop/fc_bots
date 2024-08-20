@@ -1,13 +1,10 @@
 from dotenv import load_dotenv
 load_dotenv()
-import json
 import sys
 from bots.iaction import IAction
 from bots.utils.read_params import read_fid
-from fc_bots.bots.data.reactions import favorite_users_sql, favorite_users_results
+from bots.data.reactions import favorite_users_sql, favorite_users_results
 from bots.data.bq import dry_run
-from bots.utils.check_links import check_link_data
-
 
 
 class FavoriteUsers(IAction):
@@ -48,6 +45,8 @@ if __name__ == "__main__":
     print(f"Result: {action.result}")
     action.get_casts()
     print(f"Casts: {action.casts}")
-  except:
+  except Exception as e:
+    print(f"Exception: {e}")
+  finally:
     print(f"Error: {action.error}")
     

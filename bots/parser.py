@@ -35,6 +35,8 @@ Lists the most active users in channel {channel} over the last {num_days} days
 channel, text, required.
 num_days, integer, optional, defaults to 1
 
+
+
 RESPONSE FORMAT:
 {
   "function": "one of run_sql, pick_cast, digest_casts, favorite_users",

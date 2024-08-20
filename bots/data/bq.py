@@ -7,13 +7,13 @@ project_id = os.environ['GCP_PROJECT_ID']
 dataset_id = project_id + '.' + os.environ['GCP_DATASET_ID']
 dataset_tmp = project_id + '.' + os.environ['GCP_DATASET_TMP']
 bq_client = bigquery.Client(project=project_id)
-debug = False
+debug = True
 
 
-def dry_run(sql, params=None):
+def dry_run(sql, params=[]):
   try:
     if debug:
-      print("big query dry run")
+      print("---- big query dry run start ----")
       print(f"SQL: {sql}")
       print(f"Params: {params}")
     job_config = bigquery.QueryJobConfig(
@@ -31,6 +31,9 @@ def dry_run(sql, params=None):
       'clustering_fields': query_job.clustering_fields,
       'cost': cost
     }
+    if debug:
+      print(f"Dry run result: {ans}")
+      print("---- big query dry run end ----")
     return ans
   except BadRequest as e:
     return {'error': e.errors}
@@ -38,10 +41,10 @@ def dry_run(sql, params=None):
     return {'error': str(e)}
 
 
-def execute(sql, params=None):
+def execute(sql, params=[]):
   try:
     if debug:
-      print("big query execute")
+      print("---- big query execute start ----")
       print(f"SQL: {sql}")
       print(f"Params: {params}")
     job_config = bigquery.QueryJobConfig(
@@ -50,6 +53,9 @@ def execute(sql, params=None):
       use_query_cache=True)
     query_job = bq_client.query(sql, job_config)
     response = query_job.result()
+    if debug:
+      print(f"Num results: {response.total_rows}")
+      print("---- big query execute end ----")
     return response
   except BadRequest as e:
     return {'error': e.errors}
@@ -57,17 +63,22 @@ def execute(sql, params=None):
     return {'error': str(e)}
   
 
-def sql_to_gcs(sql, params, folder, filename):
+def sql_to_gcs(sql, folder, filename, params=[]):
   try:
+    if debug:
+      print("---- big query sql_to_gcs start ----")
+      print(f"SQL: {sql}")
+      print(f"Params: {params}")
     tmp_table = f"{dataset_tmp}.{filename}"
     bucket_name = os.environ['GCP_BOT_BUCKET']
     destination_uri = f"gs://{bucket_name}/{folder}/{filename}.csv"
     job_config = bigquery.QueryJobConfig(
+      query_parameters=params,
       default_dataset=dataset_id,
       use_query_cache=True,
       destination=tmp_table,
       write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE)
-    query_job = bq_client.query(sql, job_config=job_config, query_parameters=params)
+    query_job = bq_client.query(sql, job_config=job_config)
     step1 = query_job.result()
     total_rows = step1.total_rows
     extract_config = bigquery.ExtractJobConfig(
@@ -83,6 +94,9 @@ def sql_to_gcs(sql, params, folder, filename):
     }
     if step2.errors:
       ans['error'] = step2.errors
+    if debug:
+      print(f"Result: {ans}")
+      print("---- big query sql_to_gcs end ----")
     return ans
   except BadRequest as e:
     return {'error': e.errors}
