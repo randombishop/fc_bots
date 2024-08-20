@@ -1,3 +1,4 @@
+import sys
 from bots.utils.prompts import instructions_and_request
 from models.mistral import mistral
 
@@ -47,12 +48,14 @@ RESPONSE FORMAT:
 """
 
 
+def parse(request):
+  prompt = instructions_and_request(instructions, request)
+  result = mistral(prompt)
+  return result
 
 
 
 if __name__ == "__main__":
-  request = "Common followers between @jim, @joe and @dwr.eth"
-  prompt = instructions_and_request(instructions, request)
-  print(prompt)
-  result = mistral(prompt)
+  request = sys.argv[1]
+  result = parse(request)
   print(result)

@@ -41,19 +41,15 @@ class DigestCasts(IAction):
   def __init__(self, params):
     super().__init__(params)
     self.channel = read_channel(params)
-    self.num_days = read_int(params, 'days', 1, 1, 10)
+    self.num_days = read_int(params, 'num_days', 1, 1, 10)
     self.max_rows = 100
     self.keywords = read_keywords(params)
     
   def get_cost(self):
     sql, params = top_casts_sql(self.channel, self.num_days, self.max_rows, self.keywords)
     test = dry_run(sql, params)
-    if 'error' in test:
-      self.error = test['error']
-      return 0
-    else:
-      self.cost = test['cost']
-      return self.cost
+    self.cost = test['cost']
+    return self.cost
 
   def execute(self):
     # Get data
@@ -66,12 +62,7 @@ class DigestCasts(IAction):
     # Run LLM
     prompt = casts_and_instructions(posts, instructions)
     result_string = mistral(prompt)
-    try:
-      result = json.loads(result_string)
-    except:
-      print(f"Error parsing json: {result_string}")
-      self.error = "Error parsing json"
-      return None
+    result = json.loads(result_string)
     # Make summary
     summary = []
     if 'sentence1' in result and len(result['sentence1']) > 0:
@@ -114,23 +105,18 @@ class DigestCasts(IAction):
 
 
 if __name__ == "__main__":
-  try:  
-    channel = sys.argv[1] if len(sys.argv) > 1 else None
-    num_days = sys.argv[2] if len(sys.argv) > 2 else None
-    keywords = sys.argv[3] if len(sys.argv) > 3 else None
-    params = {'channel': channel, 'days': num_days, 'keywords': keywords}
-    action = DigestCasts(params)
-    print(f"Num days: {action.num_days}")
-    print(f"Channel: {action.channel}")
-    print(f"Keywords: {action.keywords}")
-    print(f"Max rows: {action.max_rows}")
-    cost = action.get_cost()
-    print(f"Cost: {cost}")
-    action.execute()
-    print(f"Result: {action.result}")
-    action.get_casts(intro='🗞️ Channel Digest 🗞️')
-    print(f"Casts: {action.casts}")
-  except Exception as e:
-    print(f"Exception: {e}")
-  finally:
-    print(f"Error: {action.error}")
+  channel = sys.argv[1] if len(sys.argv) > 1 else None
+  num_days = sys.argv[2] if len(sys.argv) > 2 else None
+  keywords = sys.argv[3] if len(sys.argv) > 3 else None
+  params = {'channel': channel, 'num_days': num_days, 'keywords': keywords}
+  action = DigestCasts(params)
+  print(f"Num days: {action.num_days}")
+  print(f"Channel: {action.channel}")
+  print(f"Keywords: {action.keywords}")
+  print(f"Max rows: {action.max_rows}")
+  cost = action.get_cost()
+  print(f"Cost: {cost}")
+  action.execute()
+  print(f"Result: {action.result}")
+  action.get_casts(intro='🗞️ Channel Digest 🗞️')
+  print(f"Casts: {action.casts}")

@@ -11,15 +11,15 @@ def table_image(df, filename, size=(4, 3), dpi=100):
   table.set_fontsize(12)
   table.scale(2, 2)
   for i in range(len(df.columns)):
-      table[0, i].set_facecolor('#40466e') 
-      table[0, i].set_text_props(color='w')
+    table[0, i].set_facecolor('#40466e') 
+    table[0, i].set_text_props(color='w')
   plt.savefig(filename, bbox_inches='tight', dpi=dpi)
   
 
 def user_activity_chart(df, filename, size=(10, 6)):
   plt.figure(figsize=size)
   for user in df.index:
-      plt.plot(df.columns, df.loc[user], label=user)
+    plt.plot(df.columns, df.loc[user], label=user)
   plt.title('Daily casts per user')
   plt.xlabel("Date")
   plt.ylabel("Number of Casts")

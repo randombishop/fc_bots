@@ -61,20 +61,18 @@ class MostActiveUsers(IAction):
 
 
 if __name__ == "__main__":
-  try:  
-    channel = sys.argv[1] if len(sys.argv) > 1 else None
-    num_days = sys.argv[2] if len(sys.argv) > 2 else None
-    max_rows = sys.argv[3] if len(sys.argv) > 3 else None
-    params = {'channel': channel, 'num_days': num_days, 'max_rows': max_rows}
-    action = MostActiveUsers(params)
-    print(f"Channel: {action.channel}")    
-    print(f"Num days: {action.num_days}")
-    print(f"Max rows: {action.max_rows}")
-    cost = action.get_cost()
-    print(f"Cost: {cost}")
-    action.execute()
-    print(f"Result: {action.result}")
-    action.get_casts()
-    print(f"Casts: {action.casts}")
-  except:
-    print(f"Error: {action.error}")
+  channel = sys.argv[1] if len(sys.argv) > 1 else None
+  num_days = sys.argv[2] if len(sys.argv) > 2 else None
+  max_rows = sys.argv[3] if len(sys.argv) > 3 else None
+  params = {'channel': channel, 'num_days': num_days, 'max_rows': max_rows}
+  action = MostActiveUsers(params)
+  print(f"Channel: {action.channel}")    
+  print(f"Num days: {action.num_days}")
+  print(f"Max rows: {action.max_rows}")
+  cost = action.get_cost()
+  print(f"Cost: {cost}")
+  action.execute()
+  print(f"Result: {action.result}")
+  action.get_casts()
+  print(f"Casts: {action.casts}")
+  

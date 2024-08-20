@@ -30,54 +30,43 @@ class FavoriteUsers(IAction):
   def execute(self):
     users = favorite_users_results(self.fid)
     if len(users) < 3:
-      print(f"Not enough stats to make a leaderboard: {len(users)}")
-      self.error = "Not enough stats to make a leaderboard"
-      return None
+      raise Exception(f"Not enough data ({len(users)})")
     self.result = users
     return self.result
     
   def get_casts(self, intro=''):
-    if self.result is None or 'error' in self.result:
-      self.casts = [{'text': 'I was unable to run this action.'}]
-    else:
-      df = to_pandas(self.result)
-      del df['target_fid']
-      df.rename(inplace=True, columns={
-          'username': 'User',
-          'num_recasts': 'Recasts',
-          'num_likes': 'Likes',
-          'num_replies': 'Replies'
-      })
-      filename = str(uuid.uuid4())+'.png'
-      table_image(df, filename)
-      upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
-      os.remove(filename)
-      gold = self.result[0]['username']
-      silver = self.result[1]['username']
-      bronze = self.result[2]['username']
-      print(f"Gold: {gold}, Silver: {silver}, Bronze: {bronze}")
-      text = "The winners are... \n"
-      text += f"🥇 {gold}\n"
-      text += f"🥈 {silver}\n"
-      text += f"🥉 {bronze}"
-      self.casts =  [{'text': text, 'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]}]
+    df = to_pandas(self.result)
+    del df['target_fid']
+    df.rename(inplace=True, columns={
+        'username': 'User',
+        'num_recasts': 'Recasts',
+        'num_likes': 'Likes',
+        'num_replies': 'Replies'
+    })
+    filename = str(uuid.uuid4())+'.png'
+    table_image(df, filename)
+    upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
+    os.remove(filename)
+    gold = self.result[0]['username']
+    silver = self.result[1]['username']
+    bronze = self.result[2]['username']
+    print(f"Gold: {gold}, Silver: {silver}, Bronze: {bronze}")
+    text = "The winners are... \n"
+    text += f"🥇 {gold}\n"
+    text += f"🥈 {silver}\n"
+    text += f"🥉 {bronze}"
+    self.casts =  [{'text': text, 'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]}]
     return self.casts
 
 
 if __name__ == "__main__":
-  try:  
-    user = sys.argv[1]
-    params = {'user': user}
-    action = FavoriteUsers(params)
-    print(f"FID: {action.fid}")
-    action.get_cost()
-    print(f"Cost: {action.cost}")
-    action.execute()
-    print(f"Result: {action.result}")
-    action.get_casts()
-    print(f"Casts: {action.casts}")
-  except Exception as e:
-    print(f"Exception: {e}")
-  finally:
-    print(f"Error: {action.error}")
-    
+  user = sys.argv[1]
+  params = {'user': user}
+  action = FavoriteUsers(params)
+  print(f"FID: {action.fid}")
+  action.get_cost()
+  print(f"Cost: {action.cost}")
+  action.execute()
+  print(f"Result: {action.result}")
+  action.get_casts()
+  print(f"Casts: {action.casts}")
