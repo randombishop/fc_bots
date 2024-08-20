@@ -1,4 +1,3 @@
-from google.cloud import bigquery
 from bots.data.bq import execute
 
 
@@ -10,7 +9,8 @@ num_recasts,
 num_likes, 
 num_replies 
 FROM reactions 
-WHERE fid={} and target_fid!={}
+WHERE fid={} AND target_fid!={}
+AND (select user_name from fid_username where fid_username.fid=reactions.target_fid) is not null
 ORDER BY (3*num_recasts + 2*num_likes + 1*num_replies) DESC
 LIMIT 10 ;
 """

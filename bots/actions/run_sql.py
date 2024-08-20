@@ -24,7 +24,7 @@ class RunSql(IAction):
     
   def execute(self):
     filename = str(uuid.uuid4())
-    folder = 'run_sql'
+    folder = 'csv'
     result = sql_to_gcs(self.sql, folder, filename)
     if 'error' in result:
       self.error = result['error']
@@ -44,7 +44,7 @@ class RunSql(IAction):
         self.casts = [{'text': 'Your SQL query returned 0 rows.'}]
       else:
         text = f"Your SQL query returned {self.result['total_rows']} rows.\n"
-        text += f"Here is a link to the results: https://fc.datascience.art/bot/run_sql/{self.result['id']}.csv"
+        text += f"Here is a link to the results: https://fc.datascience.art/bot/tmp_files/{self.result['id']}.csv"
         self.casts =  [{'text': text}]
 
 

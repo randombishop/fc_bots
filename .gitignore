@@ -4,4 +4,4 @@ virtual_env
 *.egg-info
 __pycache__
 .DS_Store
-
+notebooks

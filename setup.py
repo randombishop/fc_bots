@@ -15,7 +15,8 @@ setup(
         "tensorflow-text==2.17.0",
         "tensorflow-hub==0.16.1",
         "python-dotenv==1.0.1",
-        "ollama==0.2.1"
+        "ollama==0.2.1",
+        "matplotlib==3.9.2"
     ]
 )
 

@@ -1,4 +1,5 @@
 import os
+import pandas
 from google.cloud import bigquery
 from google.api_core.exceptions import BadRequest
 
@@ -70,7 +71,7 @@ def sql_to_gcs(sql, folder, filename, params=[]):
       print(f"SQL: {sql}")
       print(f"Params: {params}")
     tmp_table = f"{dataset_tmp}.{filename}"
-    bucket_name = os.environ['GCP_BOT_BUCKET']
+    bucket_name = os.environ['GCP_BOT_BUCKET_TMP']
     destination_uri = f"gs://{bucket_name}/{folder}/{filename}.csv"
     job_config = bigquery.QueryJobConfig(
       query_parameters=params,
@@ -103,3 +104,8 @@ def sql_to_gcs(sql, folder, filename, params=[]):
   except Exception as e:
     return {'error': e}
   
+
+def to_pandas(result):
+  values = [x.values() for x in result]
+  columns = list(result[0].keys())
+  return pandas.DataFrame(values, columns=columns)

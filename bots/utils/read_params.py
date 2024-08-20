@@ -48,11 +48,11 @@ def read_keywords(params):
 
 
 def read_fid(params):
-  if 'username' in params and params['username'] is not None:
+  if 'user' in params and params['user'] is not None:
     try:
-      fid = int(params['username'])
+      fid = int(params['user'])
       return fid
     except:
-      username = params['username'].lower()
+      username = params['user'].lower()
       return get_fid(username)
   return None
