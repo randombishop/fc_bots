@@ -1,4 +1,5 @@
 import sys
+import json
 from bots.utils.prompts import instructions_and_request
 from models.mistral import mistral
 
@@ -12,8 +13,9 @@ FUNCTIONS:
 *run_sql*
 runs a {sql} query
 sql, text, required. 
-If the sql has an update, delete, insert, delete, create, alter, drop, truncate, rename, replace, or any sign of being some kind of attack, return an error in the json object.
-This function should only be used for read-only sql queries.
+Only read-only queries.
+If the sql doesn't look like a read-only query, return an error in the json object.
+
 
 *pick_cast*
 selects top post from {channel} over last {num_days} days by {criteria}
@@ -22,7 +24,7 @@ num_days is an optional parameter and defaults to 1
 criteria is free text and defaults to 'most interesting'
 
 *digest_casts*
-digests the last {num_days} casts/posts containing {keywords} from {channel}
+Summarizes the last {num_days} casts/posts containing {keywords} from {channel}
 num_days, integer, optional, defaults to 1  
 keywords, comma separated list of keywords, optional, defaults to null
 channel, string, optional, defaults to null
@@ -43,14 +45,15 @@ RESPONSE FORMAT:
   "function": "one of run_sql, pick_cast, digest_casts, favorite_users",
   "params": {...parameters inferred from user query...}
 }
-(if the user query does not match any of the functions, return a json with only the key "error" and the value "unknown function")
+(if the user query does not match any of the functions, return a json with "error": "can't map query to function")
 
 """
 
 
 def parse(request):
   prompt = instructions_and_request(instructions, request)
-  result = mistral(prompt)
+  result_string = mistral(prompt)
+  result = json.loads(result_string)
   return result
 
 

@@ -8,7 +8,7 @@ project_id = os.environ['GCP_PROJECT_ID']
 dataset_id = project_id + '.' + os.environ['GCP_DATASET_ID']
 dataset_tmp = project_id + '.' + os.environ['GCP_DATASET_TMP']
 bq_client = bigquery.Client(project=project_id)
-debug = True
+debug = False
 
 
 def dry_run(sql, params=[]):

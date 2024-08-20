@@ -16,9 +16,8 @@ FROM cast_features t
 
 sql_order = """
 ORDER BY (
-(predict_like/100)
+(3 * IFNULL(h12_recasts, 0))
 + (2 * IFNULL(h12_likes, 0))
-+ (3 * IFNULL(h12_recasts, 0)) 
 + (1 * IFNULL(h12_replies, 0)) 
 ) DESC
 """

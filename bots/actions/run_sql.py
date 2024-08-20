@@ -42,8 +42,8 @@ if __name__ == "__main__":
   params = {'sql': sql}
   action = RunSql(params)
   print(f"Sql: {action.sql}")
-  cost = action.get_cost()
-  print(f"Cost: {cost}")
+  action.get_cost()
+  print(f"Cost: {action.cost}")
   action.execute()
   print(f"Result: {action.result}")
   action.get_casts()

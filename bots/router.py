@@ -1,3 +1,4 @@
+import sys
 from bots.parser import parse
 from bots.actions.digest_casts import DigestCasts
 from bots.actions.favorite_users import FavoriteUsers
@@ -25,3 +26,14 @@ def route(request):
   action = Action(params)
   return action
 
+
+if __name__ == "__main__":
+  request = sys.argv[1]
+  action = route(request)
+  print(action)
+  action.get_cost()
+  print(f"Cost: {action.cost}")
+  action.execute()
+  print(f"Result: {action.result}")
+  action.get_casts()
+  print(f"Casts: {action.casts}")

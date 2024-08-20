@@ -29,6 +29,8 @@ def read_channel(params):
     channels_by_id, channels_by_name = get_channels()
     channel = params['channel']
     channel_lower_case = channel.lower()
+    if channel_lower_case.startswith('/'):
+      channel_lower_case = channel_lower_case[1:]
     if channel_lower_case in channels_by_id:
       channel = channels_by_id[channel_lower_case]
     elif channel_lower_case in channels_by_name:
@@ -54,5 +56,7 @@ def read_fid(params):
       return fid
     except:
       username = params['user'].lower()
+      if username.startswith('@'):
+        username = username[1:]
       return get_fid(username)
   return None
