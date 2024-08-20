@@ -9,6 +9,7 @@ from bots.data.bq import dry_run
 from bots.utils.prompts import casts_and_instructions
 from bots.models.mistral import mistral
 from bots.utils.check_links import check_link_data
+from bots.utils.check_casts import check_casts
 
 
 instructions = """
@@ -64,6 +65,7 @@ class PickCast(IAction):
       'embed': {'fid': self.result['fid'], 'user_name': self.result['user_name'], 'hash': self.result['id']}
     }
     casts.append(cast)
+    check_casts(casts)
     self.casts = casts
     return self.casts
 

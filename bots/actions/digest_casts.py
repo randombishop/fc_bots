@@ -9,7 +9,7 @@ from bots.data.bq import dry_run
 from bots.utils.prompts import casts_and_instructions
 from bots.models.mistral import mistral
 from bots.utils.check_links import check_link_data
-
+from bots.utils.check_casts import check_casts
 
 instructions = """
 GENERAL INSTRUCTIONS:
@@ -102,6 +102,7 @@ class DigestCasts(IAction):
         casts.append({'text': t})
     for link in self.result['links']:
         casts.append({'text': link['comment'], 'embed': {'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['id']}})
+    check_casts(casts)
     self.casts = casts
     return self.casts
 

@@ -9,6 +9,7 @@ from bots.data.reactions import favorite_users_sql, favorite_users_results
 from bots.data.bq import dry_run, to_pandas
 from bots.utils.images import table_image
 from bots.utils.gcs import upload_to_gcs
+from bots.utils.check_casts import check_casts
 
 
 class FavoriteUsers(IAction):
@@ -55,6 +56,7 @@ class FavoriteUsers(IAction):
     text += f"🥇 {gold}\n"
     text += f"🥈 {silver}\n"
     text += f"🥉 {bronze}"
+    check_casts(casts)
     self.casts =  [{'text': text, 'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]}]
     return self.casts
 

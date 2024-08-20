@@ -9,6 +9,7 @@ from bots.data.casts_by_user import casts_by_user_sql, casts_by_user_results
 from bots.data.bq import dry_run, to_pandas
 from bots.utils.images import user_activity_chart
 from bots.utils.gcs import upload_to_gcs
+from bots.utils.check_casts import check_casts
 
 
 class MostActiveUsers(IAction):
@@ -56,6 +57,7 @@ class MostActiveUsers(IAction):
       text += f"🥇 {self.result[0]['user_name']}: {self.result[0]['casts_total']} casts.\n"
       text += f"🥈 {self.result[1]['user_name']}: {self.result[1]['casts_total']} casts.\n"
       text += f"🥉 {self.result[2]['user_name']}: {self.result[2]['casts_total']} casts.\n"
+      check_casts(casts)
       self.casts =  [{'text': text, 'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]}]
     return self.casts
 
