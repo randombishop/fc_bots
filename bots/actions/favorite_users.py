@@ -49,9 +49,9 @@ class FavoriteUsers(IAction):
     table_image(df, filename)
     upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
     os.remove(filename)
-    gold = self.data[0]['username']
-    silver = self.data[1]['username']
-    bronze = self.data[2]['username']
+    gold = df.iloc[0]['User']
+    silver = df.iloc[1]['User']
+    bronze = df.iloc[2]['User']
     print(f"Gold: {gold}, Silver: {silver}, Bronze: {bronze}")
     text = "The winners are... \n"
     text += f"🥇 {gold}\n"
