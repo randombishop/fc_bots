@@ -57,7 +57,7 @@ class DigestCasts(IAction):
     # Get data
     posts = top_casts_results(self.channel, self.num_days, self.max_rows, self.keywords)
     posts.sort(key=lambda x: x['timestamp'])
-    if len(posts) < 25:
+    if len(posts) < 10:
       print(f"Not enough posts to generate a digest: {len(posts)}")
       self.error = "Not enough posts to generate a digest"
       return None
