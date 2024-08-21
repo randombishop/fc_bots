@@ -20,6 +20,8 @@ def route(request):
   print('request', request)
   parsed = parse(request)
   print('parsed', parsed)  
+  if parsed is None or 'error' in parsed:
+    raise Exception(parsed['error'])
   func = parsed['function']
   params = parsed['params']
   Action = actions[func]
