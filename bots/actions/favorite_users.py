@@ -56,8 +56,9 @@ class FavoriteUsers(IAction):
     text += f"🥇 {gold}\n"
     text += f"🥈 {silver}\n"
     text += f"🥉 {bronze}"
+    casts =  [{'text': text, 'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]}]
     check_casts(casts)
-    self.casts =  [{'text': text, 'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]}]
+    self.casts = casts
     return self.casts
 
 
