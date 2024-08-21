@@ -3,10 +3,11 @@ load_dotenv()
 import sys
 import uuid
 import os
+import pandas
 from bots.iaction import IAction
 from bots.utils.read_params import read_fid
 from bots.data.reactions import favorite_users_sql, favorite_users_results
-from bots.data.bq import dry_run, to_pandas
+from bots.data.bq import dry_run, to_array
 from bots.utils.images import table_image
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
@@ -32,11 +33,11 @@ class FavoriteUsers(IAction):
     users = favorite_users_results(self.fid)
     if len(users) < 3:
       raise Exception(f"Not enough data ({len(users)})")
-    self.data = users
+    self.data = to_array(users)
     return self.data
     
   def get_casts(self, intro=''):
-    df = to_pandas(self.data)
+    df = pandas.DataFrame(self.data['values'], columns=self.data['columns'])
     del df['target_fid']
     df.rename(inplace=True, columns={
         'username': 'User',

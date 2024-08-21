@@ -3,10 +3,11 @@ load_dotenv()
 import uuid
 import sys
 import os
+import pandas
 from bots.iaction import IAction
 from bots.utils.read_params import read_channel, read_int
 from bots.data.casts_by_user import casts_by_user_sql, casts_by_user_results
-from bots.data.bq import dry_run, to_pandas
+from bots.data.bq import dry_run, to_array
 from bots.utils.images import user_activity_chart
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
@@ -36,14 +37,14 @@ class MostActiveUsers(IAction):
       self.error = "Query returned 0 rows"
       return None
     else:
-      self.data = users
+      self.data = to_array(users)
       return self.data
   
   def get_casts(self, intro=''):
     if self.data is None or 'error' in self.data:
       self.casts = [{'text': 'I was unable to generate a chart.'}]
     else:
-      df = to_pandas(self.data)
+      df = df = pandas.DataFrame(self.data['values'], columns=self.data['columns'])
       rename_cols = {x: x.replace('casts-', '') for x in df.columns}
       rename_cols['user_name']='User'
       df.rename(columns=rename_cols, inplace=True)

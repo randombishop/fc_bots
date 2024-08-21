@@ -90,7 +90,7 @@ def sql_to_gcs(sql, folder, filename, params=[]):
   return ans
   
 
-def to_pandas(result):
+def to_array(result):
   values = [x.values() for x in result]
   columns = list(result[0].keys())
-  return pandas.DataFrame(values, columns=columns)
+  return {'values': values, 'columns': columns}
