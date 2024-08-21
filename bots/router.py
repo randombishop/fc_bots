@@ -22,6 +22,8 @@ def route(request):
   print('parsed', parsed)  
   if parsed is None or 'error' in parsed:
     raise Exception(parsed['error'])
+  if ('function' not in parsed) or ('params' not in parsed):
+    raise Exception('Could not parse the query.')
   func = parsed['function']
   params = parsed['params']
   Action = actions[func]
