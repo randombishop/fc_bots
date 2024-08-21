@@ -1,0 +1,76 @@
+from dotenv import load_dotenv
+load_dotenv()
+import sys
+import uuid
+import os
+import pandas
+from bots.iaction import IAction
+from bots.utils.read_params import read_fid
+from bots.data.reactions import favorite_users_sql, favorite_users_results
+from bots.data.bq import dry_run, to_array
+from bots.utils.images import table_image
+from bots.utils.gcs import upload_to_gcs
+from bots.utils.check_casts import check_casts
+
+
+class FavoriteUsers(IAction):
+
+  def __init__(self, params):
+    super().__init__(params)
+    self.fid = read_fid(params)
+    
+  def get_cost(self):
+    sql = favorite_users_sql(self.fid)
+    test = dry_run(sql)
+    if 'error' in test:
+      self.error = test['error']
+      return 0
+    else:
+      self.cost = test['cost']
+      return self.cost
+
+  def execute(self):
+    users = favorite_users_results(self.fid)
+    if len(users) < 3:
+      raise Exception(f"Not enough data ({len(users)})")
+    self.data = to_array(users)
+    return self.data
+    
+  def get_casts(self, intro=''):
+    df = pandas.DataFrame(self.data['values'], columns=self.data['columns'])
+    del df['target_fid']
+    df.rename(inplace=True, columns={
+        'username': 'User',
+        'num_recasts': 'Recasts',
+        'num_likes': 'Likes',
+        'num_replies': 'Replies'
+    })
+    filename = str(uuid.uuid4())+'.png'
+    table_image(df, filename)
+    upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
+    os.remove(filename)
+    gold = df.iloc[0]['User']
+    silver = df.iloc[1]['User']
+    bronze = df.iloc[2]['User']
+    print(f"Gold: {gold}, Silver: {silver}, Bronze: {bronze}")
+    text = "The winners are... \n"
+    text += f"🥇 {gold}\n"
+    text += f"🥈 {silver}\n"
+    text += f"🥉 {bronze}"
+    casts =  [{'text': text, 'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]}]
+    check_casts(casts)
+    self.casts = casts
+    return self.casts
+
+
+if __name__ == "__main__":
+  user = sys.argv[1]
+  params = {'user': user}
+  action = FavoriteUsers(params)
+  print(f"FID: {action.fid}")
+  action.get_cost()
+  print(f"Cost: {action.cost}")
+  action.execute()
+  print(f"Data: {action.data}")
+  action.get_casts()
+  print(f"Casts: {action.casts}")
