@@ -62,7 +62,7 @@ class PickCast(IAction):
     casts = []
     cast = {
       'text': self.data['comment'],
-      'embed': {'fid': self.data['fid'], 'user_name': self.data['user_name'], 'hash': self.data['id']}
+      'embeds': [{'fid': self.data['fid'], 'user_name': self.data['user_name'], 'hash': self.data['id']}]
     }
     casts.append(cast)
     check_casts(casts)

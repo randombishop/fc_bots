@@ -101,7 +101,7 @@ class DigestCasts(IAction):
     for t in self.data['summary'][1:]:
         casts.append({'text': t})
     for link in self.data['links']:
-        casts.append({'text': link['comment'], 'embed': {'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['id']}})
+        casts.append({'text': link['comment'], 'embeds': [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['id']}]})
     check_casts(casts)
     self.casts = casts
     return self.casts
