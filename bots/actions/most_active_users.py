@@ -55,11 +55,12 @@ class MostActiveUsers(IAction):
       upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
       os.remove(filename)
       text = "The most active users are: \n"
-      text += f"🥇 {self.data[0]['user_name']}: {self.data[0]['casts_total']} casts.\n"
-      text += f"🥈 {self.data[1]['user_name']}: {self.data[1]['casts_total']} casts.\n"
-      text += f"🥉 {self.data[2]['user_name']}: {self.data[2]['casts_total']} casts.\n"
+      text += f"🥇 {df.iloc[0]['user_name']}: {self.data[0]['casts_total']} casts.\n"
+      text += f"🥈 {df.iloc[1]['user_name']}: {self.data[1]['casts_total']} casts.\n"
+      text += f"🥉 {df.iloc[0]['user_name']}: {self.data[2]['casts_total']} casts.\n"
+      casts =  [{'text': text, 'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]}]
       check_casts(casts)
-      self.casts =  [{'text': text, 'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]}]
+      self.casts = casts
     return self.casts
 
 
