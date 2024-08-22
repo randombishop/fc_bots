@@ -36,7 +36,7 @@ class PickCast(IAction):
     super().__init__(params)
     self.channel = read_channel(params)
     self.criteria = read_string(params, 'criteria', 'most interesting', 100)
-    self.num_days = read_int(params, 'num_days', 1, 1, 10)
+    self.num_days = read_int(params, 'num_days', 7, 1, 10)
     self.max_rows = 100
     self.keywords = read_keywords(params)
     
