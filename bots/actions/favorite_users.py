@@ -50,16 +50,19 @@ class FavoriteUsers(IAction):
     os.remove(filename)
     mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
     mentions = [int(df.iloc[i]['target_fid']) for i in range(3)]
+    mentions_positions = []
     print(f"Mentioned users: {mentions_ats}")
     print(f"Mentioned fid: {mentions}")
     text = "The winners are... \n"
-    text += f"🥇 {mentions_ats[0]}\n"
-    text += f"🥈 {mentions_ats[1]}\n"
-    text += f"🥉 {mentions_ats[2]}"
-    mentions_positions = []
-    for user in mentions_ats:
-      mentions_positions.append(text.find(user))
-      text = text.replace(user, '')
+    text += "🥇 "
+    mentions_positions.append(len(text.encode('utf-8')))
+    text += "\n"
+    text += "🥈 "
+    mentions_positions.append(len(text.encode('utf-8')))
+    text += "\n"
+    text += "🥉 "
+    mentions_positions.append(len(text.encode('utf-8')))
+    text += "\n"
     cast = {
       'text': text, 
       'mentions': mentions, 
