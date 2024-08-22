@@ -19,6 +19,10 @@ def table_image(df, filename, size=(4, 3), dpi=100):
   
 
 def user_activity_chart(df, filename, size=(10, 6)):
+  df = df.copy()
+  del df['fid']
+  del df['casts_total']
+  df.set_index("User", inplace=True)
   plt.figure(figsize=size)
   for user in df.index:
     plt.plot(df.columns, df.loc[user], label=user)
@@ -28,5 +32,5 @@ def user_activity_chart(df, filename, size=(10, 6)):
   plt.legend(title="Users", bbox_to_anchor=(1.05, 1))
   plt.grid(True)
   plt.xticks(rotation=45)
-  plt.subplots_adjust(top=0.90, bottom=0.25, left=0.1, right=0.9) 
+  plt.subplots_adjust(top=0.90, bottom=0.25, left=0.1, right=0.75) 
   plt.savefig(filename)

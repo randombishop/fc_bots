@@ -38,7 +38,6 @@ class FavoriteUsers(IAction):
     
   def get_casts(self, intro=''):
     df = pandas.DataFrame(self.data['values'], columns=self.data['columns'])
-    del df['target_fid']
     df.rename(inplace=True, columns={
         'username': 'User',
         'num_recasts': 'Recasts',
@@ -46,18 +45,29 @@ class FavoriteUsers(IAction):
         'num_replies': 'Replies'
     })
     filename = str(uuid.uuid4())+'.png'
-    table_image(df, filename)
+    table_image(df[['User', 'Recasts', 'Likes', 'Replies']], filename)
     upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
     os.remove(filename)
-    gold = df.iloc[0]['User']
-    silver = df.iloc[1]['User']
-    bronze = df.iloc[2]['User']
-    print(f"Gold: {gold}, Silver: {silver}, Bronze: {bronze}")
+    mentions_ats = ['@'+df.iloc[0]['User'], '@'+df.iloc[1]['User'], '@'+df.iloc[2]['User']]
+    mentions = [df.iloc[0]['target_fid'], df.iloc[1]['target_fid'], df.iloc[2]['target_fid']]
+    print(f"Mentioned users: {mentions_ats}")
+    print(f"Mentioned fid: {mentions}")
     text = "The winners are... \n"
-    text += f"🥇 {gold}\n"
-    text += f"🥈 {silver}\n"
-    text += f"🥉 {bronze}"
-    casts =  [{'text': text, 'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]}]
+    text += f"🥇 {mentions_ats[0]}\n"
+    text += f"🥈 {mentions_ats[1]}\n"
+    text += f"🥉 {mentions_ats[2]}"
+    mentions_positions = []
+    for user in mentions_ats:
+      mentions_positions.append(text.find(user))
+      text = text.replace(user, '')
+    cast = {
+      'text': text, 
+      'mentions': mentions, 
+      'mentions_pos': mentions_positions,
+      'mentions_ats': mentions_ats,
+      'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]
+    }
+    casts =  [cast]
     check_casts(casts)
     self.casts = casts
     return self.casts
