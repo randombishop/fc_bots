@@ -19,7 +19,7 @@ class MostActiveUsers(IAction):
     super().__init__(params)
     self.channel = read_channel(params)
     self.num_days = read_int(params, 'num_days', 7, 3, 15)
-    self.max_rows = read_int(params, 'max_rows', 10, 1, 100)
+    self.max_rows = read_int(params, 'max_rows', 10, 1, 10)
     
   def get_cost(self):
     sql = casts_by_user_sql(self.channel, self.num_days, self.max_rows)
@@ -44,22 +44,39 @@ class MostActiveUsers(IAction):
     if self.data is None or 'error' in self.data:
       self.casts = [{'text': 'I was unable to generate a chart.'}]
     else:
-      df = df = pandas.DataFrame(self.data['values'], columns=self.data['columns'])
+      df = pandas.DataFrame(self.data['values'], columns=self.data['columns'])
       rename_cols = {x: x.replace('casts-', '') for x in df.columns}
       rename_cols['user_name']='User'
-      df.rename(columns=rename_cols, inplace=True)
-      df.set_index("User", inplace=True)
-      del df['casts_total']
+      df.rename(columns=rename_cols, inplace=True)      
       filename = str(uuid.uuid4())+'.png'
       user_activity_chart(df, filename)
       upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
       os.remove(filename)
+      mentions = [int(df.iloc[i]['fid']) for i in range(3)]
+      mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
+      mentions_positions = []
+      print(f"Mentioned users: {mentions_ats}")
+      print(f"Mentioned fid: {mentions}")
       text = "The most active users are: \n"
-      text += f"🥇 {self.data[0]['user_name']}: {self.data[0]['casts_total']} casts.\n"
-      text += f"🥈 {self.data[1]['user_name']}: {self.data[1]['casts_total']} casts.\n"
-      text += f"🥉 {self.data[2]['user_name']}: {self.data[2]['casts_total']} casts.\n"
+      text += "🥇 "
+      mentions_positions.append(len(text.encode('utf-8')))
+      text += f" : {df.iloc[0]['casts_total']} casts.\n"
+      text += "🥈 "
+      mentions_positions.append(len(text.encode('utf-8')))
+      text += f" : {df.iloc[1]['casts_total']} casts.\n"
+      text += "🥉 "
+      mentions_positions.append(len(text.encode('utf-8')))
+      text += f" : {df.iloc[2]['casts_total']} casts.\n"
+      cast = {
+        'text': text, 
+        'mentions': mentions, 
+        'mentions_pos': mentions_positions,
+        'mentions_ats': mentions_ats,
+        'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]
+      }
+      casts =  [cast]
       check_casts(casts)
-      self.casts =  [{'text': text, 'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]}]
+      self.casts = casts
     return self.casts
 
 

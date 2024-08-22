@@ -31,7 +31,7 @@ channel, string, optional, defaults to null
 
 *favorite_users*
 Who are the favorite users of {user}
-user, text or integer, required. If the user is referencing themselves, then user=0
+user, text or integer, required.
 
 *most_active_users*
 Lists the most active users in channel {channel} over the last {num_days} days
@@ -50,15 +50,18 @@ RESPONSE FORMAT:
 """
 
 
-def parse(request):
+def parse(request, fid_origin=None):
   prompt = instructions_and_request(instructions, request)
+  if fid_origin is not None:
+    prompt += "\n\n"
+    prompt += f"CURRENT USER ID: {fid_origin}"
   result_string = mistral(prompt)
+  print('parsing output by mistral:', result_string)
   result = json.loads(result_string)
   if 'function' in result and result['function'] == 'run_sql':
     # avoid mistral hallucinating the sql
     result['params']['sql'] = request
   return result
-
 
 
 if __name__ == "__main__":
