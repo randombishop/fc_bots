@@ -16,9 +16,9 @@ actions ={
 }
 
 
-def route(request):
+def route(request, fid_origin=None):
   print('request', request)
-  parsed = parse(request)
+  parsed = parse(request, fid_origin)
   print('parsed', parsed)  
   if parsed is None or 'error' in parsed:
     raise Exception(parsed['error'])
