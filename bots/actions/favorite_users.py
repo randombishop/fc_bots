@@ -48,8 +48,8 @@ class FavoriteUsers(IAction):
     table_image(df[['User', 'Recasts', 'Likes', 'Replies']], filename)
     upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
     os.remove(filename)
-    mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
     mentions = [int(df.iloc[i]['target_fid']) for i in range(3)]
+    mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
     mentions_positions = []
     print(f"Mentioned users: {mentions_ats}")
     print(f"Mentioned fid: {mentions}")

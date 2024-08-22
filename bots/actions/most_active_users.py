@@ -52,16 +52,21 @@ class MostActiveUsers(IAction):
       user_activity_chart(df, filename)
       upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
       os.remove(filename)
-      mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
       mentions = [int(df.iloc[i]['fid']) for i in range(3)]
-      text = "The most active users are: \n"
-      text += f"🥇 {mentions_ats[0]}: {df.iloc[0]['casts_total']} casts.\n"
-      text += f"🥈 {mentions_ats[1]}: {df.iloc[1]['casts_total']} casts.\n"
-      text += f"🥉 {mentions_ats[2]}: {df.iloc[2]['casts_total']} casts.\n"
+      mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
       mentions_positions = []
-      for user in mentions_ats:
-        mentions_positions.append(text.find(user))
-        text = text.replace(user, '')
+      print(f"Mentioned users: {mentions_ats}")
+      print(f"Mentioned fid: {mentions}")
+      text = "The most active users are: \n"
+      text += "🥇 "
+      mentions_positions.append(len(text.encode('utf-8')))
+      text += f" : {df.iloc[0]['casts_total']} casts.\n"
+      text += "🥈 "
+      mentions_positions.append(len(text.encode('utf-8')))
+      text += f" : {df.iloc[1]['casts_total']} casts.\n"
+      text += "🥉 "
+      mentions_positions.append(len(text.encode('utf-8')))
+      text += f" : {df.iloc[2]['casts_total']} casts.\n"
       cast = {
         'text': text, 
         'mentions': mentions, 
