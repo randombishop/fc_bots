@@ -52,8 +52,8 @@ class MostActiveUsers(IAction):
       user_activity_chart(df, filename)
       upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
       os.remove(filename)
-      mentions_ats = ['@'+df.iloc[0]['User'], '@'+df.iloc[1]['User'], '@'+df.iloc[2]['User']]
-      mentions = [df.iloc[0]['fid'], df.iloc[1]['fid'], df.iloc[2]['fid']]
+      mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
+      mentions = [int(df.iloc[i]['fid']) for i in range(3)]
       text = "The most active users are: \n"
       text += f"🥇 {mentions_ats[0]}: {df.iloc[0]['casts_total']} casts.\n"
       text += f"🥈 {mentions_ats[1]}: {df.iloc[1]['casts_total']} casts.\n"
