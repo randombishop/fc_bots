@@ -50,15 +50,19 @@ RESPONSE FORMAT:
 """
 
 
-def parse(request):
+def parse(request, fid_origin=None):
   prompt = instructions_and_request(instructions, request)
   result_string = mistral(prompt)
   result = json.loads(result_string)
   if 'function' in result and result['function'] == 'run_sql':
     # avoid mistral hallucinating the sql
     result['params']['sql'] = request
+  if 'params' in result and 'fid' in result['params'] and result['params']['fid'] == 0:
+    if fid_origin is not None:
+      result['params']['fid'] = fid_origin
+    else:
+      raise Exception("User references themself but fid_origin is not provided")
   return result
-
 
 
 if __name__ == "__main__":
