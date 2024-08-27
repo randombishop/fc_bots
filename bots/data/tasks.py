@@ -1,21 +1,17 @@
+import json
 from bots.data.pg import pg_connection
 
 
-def create_app_user_if_not_exists(fid):
+def get_task(task_id):
   with pg_connection.cursor() as cursor:
-    cursor.execute("SELECT * FROM app.app_user WHERE fid = %s", (fid,))
-    if cursor.fetchone() is None:
-      cursor.execute("INSERT INTO app.app_user (fid) VALUES (%s)", (fid,))
-      pg_connection.commit()
+    cursor.execute('SELECT * FROM ds.tasks WHERE id = %s', (task_id,))
+    return cursor.fetchone()
 
 
-def get_credits(fid):
+def update_task_result(task_id, result):
   with pg_connection.cursor() as cursor:
-    cursor.execute("SELECT credits FROM app.app_user WHERE fid = %s", (fid,))
-    return cursor.fetchone()[0]
-
-  
-def deduct_credits(fid, cost):
-  with pg_connection.cursor() as cursor:
-    cursor.execute("UPDATE app.app_user SET credits = credits - %s WHERE fid = %s", (cost, fid))
+    cursor.execute(
+      "UPDATE ds.tasks SET result = %s, done_at = now() WHERE id = %s",
+      (json.dumps(result), task_id)
+    )
     pg_connection.commit()
