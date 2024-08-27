@@ -15,8 +15,10 @@ ORDER BY (3*num_recasts + 2*num_likes + 1*num_replies) DESC
 LIMIT 10 ;
 """
 
+
 def favorite_users_sql(fid):
   return fav_usr_sql.format(fid, fid)
+
 
 def favorite_users_results(fid):
   sql = favorite_users_sql(fid)
