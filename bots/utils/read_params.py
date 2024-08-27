@@ -1,4 +1,4 @@
-from bots.data.channels import get_channels
+from bots.data.channels import get_channels_map
 from bots.data.users import get_fid
 
 
@@ -26,7 +26,7 @@ def read_string(params, key, default, max_length):
 def read_channel(params):
   channel = None
   if ('channel' in params) and (params['channel'] is not None) and (params['channel'] != 'null') and (len(params['channel']) > 0):
-    channels_by_id, channels_by_name = get_channels()
+    channels_by_id, channels_by_name = get_channels_map()
     channel = params['channel']
     channel_lower_case = channel.lower()
     if channel_lower_case.startswith('/'):
