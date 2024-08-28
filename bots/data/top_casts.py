@@ -40,7 +40,7 @@ def top_casts_sql(channel, num_days, max_rows, keywords):
   if keywords is not None and len(keywords) > 0:
     conditions = ["(LOWER(text) LIKE ?)" for _ in keywords]
     params += [bigquery.ScalarQueryParameter(None, "STRING", f"%{keyword}%") for keyword in keywords]
-    sql += "AND (" + " OR ".join(conditions) + ") \n"
+    sql += "AND (" + " AND ".join(conditions) + ") \n"
   sql += sql_order
   sql += f"LIMIT {max_rows}"
   return sql, params

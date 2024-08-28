@@ -46,6 +46,8 @@ def read_keywords(params):
     keywords_string = keywords_string.replace('\n', ',')
     keywords_string = keywords_string.lower()
     keywords = keywords_string.split(',')
+    keywords = [keyword.strip() for keyword in keywords]
+    keywords = [keyword for keyword in keywords if len(keyword) > 3]
   return keywords
 
 
