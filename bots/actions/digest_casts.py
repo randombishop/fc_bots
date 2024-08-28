@@ -37,6 +37,7 @@ RESPONSE FORMAT:
 }
 """
 
+debug = True
 
 class DigestCasts(IAction):
 
@@ -46,11 +47,22 @@ class DigestCasts(IAction):
     self.num_days = read_int(params, 'num_days', 7, 1, 10)
     self.max_rows = 100
     self.keywords = read_keywords(params)
+    if debug:
+       print("DigestCasts.init():")
+       print(f"  channel: {self.channel}")
+       print(f"  num_days: {self.num_days}")
+       print(f"  max_rows: {self.max_rows}")
+       print(f"  keywords: {self.keywords}")
     
   def get_cost(self):
     sql, params = top_casts_sql(self.channel, self.num_days, self.max_rows, self.keywords)
     test = dry_run(sql, params)
     self.cost = test['cost']
+    if debug:
+      print("DigestCasts.get_cost():")
+      print(f"  sql: {sql}")
+      print(f"  params: {params}")
+      print(f"  cost: {self.cost}")
     return self.cost
 
   def execute(self):
