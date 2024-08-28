@@ -77,7 +77,7 @@ class DigestCasts(IAction):
     # Run LLM
     instructions = instructions1
     if self.keywords is not None and len(self.keywords) > 0:
-      instructions += ("Focus on the following keywords: " + ", ".join(self.keywords) + "\n")
+      instructions += ("- Focus on the following subject: " + " ".join(self.keywords) + "\n")
     instructions += "\n\n"
     instructions += instructions2
     if debug:
