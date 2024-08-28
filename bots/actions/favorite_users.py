@@ -22,12 +22,8 @@ class FavoriteUsers(IAction):
   def get_cost(self):
     sql = favorite_users_sql(self.fid)
     test = dry_run(sql)
-    if 'error' in test:
-      self.error = test['error']
-      return 0
-    else:
-      self.cost = test['cost']
-      return self.cost
+    self.cost = test['cost']
+    return self.cost
 
   def execute(self):
     users = favorite_users_results(self.fid)

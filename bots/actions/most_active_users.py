@@ -24,59 +24,50 @@ class MostActiveUsers(IAction):
   def get_cost(self):
     sql = casts_by_user_sql(self.channel, self.num_days, self.max_rows)
     test = dry_run(sql)
-    if 'error' in test:
-      self.error = test['error']
-      return 0
-    else:
-      self.cost = test['cost']
-      return self.cost
+    self.cost = test['cost']
+    return self.cost
 
   def execute(self):
     users = casts_by_user_results(self.channel, self.num_days, self.max_rows)
     if len(users) == 0:
-      self.error = "Query returned 0 rows"
-      return None
-    else:
-      self.data = to_array(users)
-      return self.data
+      raise Exception("Query returned 0 rows")
+    self.data = to_array(users)
+    return self.data
   
   def get_casts(self, intro=''):
-    if self.data is None or 'error' in self.data:
-      self.casts = [{'text': 'I was unable to generate a chart.'}]
-    else:
-      df = pandas.DataFrame(self.data['values'], columns=self.data['columns'])
-      rename_cols = {x: x.replace('casts-', '') for x in df.columns}
-      rename_cols['user_name']='User'
-      df.rename(columns=rename_cols, inplace=True)      
-      filename = str(uuid.uuid4())+'.png'
-      user_activity_chart(df, filename)
-      upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
-      os.remove(filename)
-      mentions = [int(df.iloc[i]['fid']) for i in range(3)]
-      mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
-      mentions_positions = []
-      print(f"Mentioned users: {mentions_ats}")
-      print(f"Mentioned fid: {mentions}")
-      text = "The most active users are: \n"
-      text += "🥇 "
-      mentions_positions.append(len(text.encode('utf-8')))
-      text += f" : {df.iloc[0]['casts_total']} casts.\n"
-      text += "🥈 "
-      mentions_positions.append(len(text.encode('utf-8')))
-      text += f" : {df.iloc[1]['casts_total']} casts.\n"
-      text += "🥉 "
-      mentions_positions.append(len(text.encode('utf-8')))
-      text += f" : {df.iloc[2]['casts_total']} casts.\n"
-      cast = {
-        'text': text, 
-        'mentions': mentions, 
-        'mentions_pos': mentions_positions,
-        'mentions_ats': mentions_ats,
-        'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]
-      }
-      casts =  [cast]
-      check_casts(casts)
-      self.casts = casts
+    df = pandas.DataFrame(self.data['values'], columns=self.data['columns'])
+    rename_cols = {x: x.replace('casts-', '') for x in df.columns}
+    rename_cols['user_name']='User'
+    df.rename(columns=rename_cols, inplace=True)      
+    filename = str(uuid.uuid4())+'.png'
+    user_activity_chart(df, filename)
+    upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
+    os.remove(filename)
+    mentions = [int(df.iloc[i]['fid']) for i in range(3)]
+    mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
+    mentions_positions = []
+    print(f"Mentioned users: {mentions_ats}")
+    print(f"Mentioned fid: {mentions}")
+    text = "The most active users are: \n"
+    text += "🥇 "
+    mentions_positions.append(len(text.encode('utf-8')))
+    text += f" : {df.iloc[0]['casts_total']} casts.\n"
+    text += "🥈 "
+    mentions_positions.append(len(text.encode('utf-8')))
+    text += f" : {df.iloc[1]['casts_total']} casts.\n"
+    text += "🥉 "
+    mentions_positions.append(len(text.encode('utf-8')))
+    text += f" : {df.iloc[2]['casts_total']} casts.\n"
+    cast = {
+      'text': text, 
+      'mentions': mentions, 
+      'mentions_pos': mentions_positions,
+      'mentions_ats': mentions_ats,
+      'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]
+    }
+    casts =  [cast]
+    check_casts(casts)
+    self.casts = casts
     return self.casts
 
 

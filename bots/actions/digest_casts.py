@@ -11,20 +11,22 @@ from bots.models.mistral import mistral
 from bots.utils.check_links import check_link_data
 from bots.utils.check_casts import check_casts
 
-instructions = """
+instructions1 = """
 GENERAL INSTRUCTIONS:
 ABOVE ARE SOCIAL MEDIA POSTS FROM A RANDOM SAMPLE OF USERS.
 GENERATE A GLOBAL SUMMARY AND SELECT 3 INTERESTING ONES.
 
 DETAILED INSTRUCTIONS:
-  - Write a catch phrase title.
-  - Generate 3 sentences to describe what the users are talking about, try to cover as much content as possible in these 3 sentences.
-  - Include 3 links to reference relevant post ids and comment them with a keyword and emoji.
-  - Output the result in json format.
-  - Make sure you don't use " inside json strings. Avoid invalid json.
-  - Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
-  - Focus on posts that are genuine, interesting, funny, or informative.
+- Write a catch phrase title.
+- Generate 3 sentences to describe what the users are talking about, try to cover as much content as possible in these 3 sentences.
+- Include 3 links to reference relevant post ids and comment them with a keyword and emoji.
+- Output the result in json format.
+- Make sure you don't use " inside json strings. Avoid invalid json.
+- Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
+- Focus on posts that are genuine, interesting, funny, or informative.
+"""
 
+instructions2 = """
 RESPONSE FORMAT:
 {
   "title": "...catch phrase...",
@@ -36,6 +38,7 @@ RESPONSE FORMAT:
   "link3": {"id": "uuid3", "comment": "keyword [emoji]"}
 }
 """
+
 
 debug = True
 
@@ -70,10 +73,15 @@ class DigestCasts(IAction):
     posts = top_casts_results(self.channel, self.num_days, self.max_rows, self.keywords)
     posts.sort(key=lambda x: x['timestamp'])
     if len(posts) < 10:
-      print(f"Not enough posts to generate a digest: {len(posts)}")
-      self.error = "Not enough posts to generate a digest"
-      return None
+      raise Exception(f"Not enough posts to generate a digest: {len(posts)}")
     # Run LLM
+    instructions = instructions1
+    if self.keywords is not None and len(self.keywords) > 0:
+      instructions += ("Focus on the following keywords: " + ", ".join(self.keywords) + "\n")
+    instructions += "\n\n"
+    instructions += instructions2
+    if debug:
+      print(instructions)
     prompt = casts_and_instructions(posts, instructions)
     result_string = mistral(prompt)
     result = json.loads(result_string)
