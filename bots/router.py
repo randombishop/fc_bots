@@ -10,6 +10,7 @@ from bots.actions.pick_cast import PickCast
 from bots.actions.favorite_users import FavoriteUsers
 from bots.actions.most_active_users import MostActiveUsers
 from bots.actions.wordcloud import Wordcloud
+from bots.actions.psycho import Psycho
 # Generic functions
 from bots.actions.run_sql import RunSql
 
@@ -37,7 +38,7 @@ RESPONSE FORMAT:
 }
 """
 
-instructions = intro + functions + format
+instructions = intro + '\n' + functions + '\n' + format
 
 actions ={
   10: DigestCasts,
@@ -46,7 +47,7 @@ actions ={
   21: FavoriteUsers,
   22: MostActiveUsers,
   23: Wordcloud, 
-  24: None,
+  24: Psycho,
   25: None,
 
   91: RunSql,

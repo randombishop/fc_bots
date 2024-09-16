@@ -43,8 +43,8 @@ class MostActiveUsers(IAction):
     self.max_rows = read_int(self.params, 'max_rows', 10, 1, 10)
     
   def get_cost(self):
-    sql = casts_by_user_sql(self.channel, self.num_days, self.max_rows)
-    test = dry_run(sql)
+    sql, params = casts_by_user_sql(self.channel, self.num_days, self.max_rows)
+    test = dry_run(sql, params)
     self.cost = test['cost']
     return self.cost
 

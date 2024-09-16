@@ -5,7 +5,7 @@ import uuid
 import os
 import pandas
 from bots.iaction import IAction
-from bots.utils.prompts import instructions_and_request, parse_user_examples
+from bots.utils.prompts import instructions_and_request, extract_user_prompt
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_fid
 from bots.data.reactions import favorite_users_sql, favorite_users_results
@@ -15,27 +15,11 @@ from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
 
 
-parse_instructions = """
-INSTRUCTIONS:
-Extract the user name from the query.
-Your goal is not to answer the query, you only need to extract the user parameter.
-
-"""
-parse_instructions += parse_user_examples
-parse_instructions += """
-
-RESPONSE FORMAT:
-{{
-  "user": ...
-}}
-(if you can not extract a user name, return a json with an error message)
-"""
-
 
 class FavoriteUsers(IAction):
   
   def parse(self, input, fid_origin=None):
-    prompt = instructions_and_request(parse_instructions, input, fid_origin)
+    prompt = instructions_and_request(extract_user_prompt, input, fid_origin)
     self.params = call_llm(prompt)
     self.fid = read_fid(self.params)
 
