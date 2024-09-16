@@ -3,10 +3,14 @@ import os
 import json
 from bots.utils.prompts import instructions_and_request
 from bots.utils.llms import call_llm
+# Casts functions
 from bots.actions.digest_casts import DigestCasts
+from bots.actions.pick_cast import PickCast
+# User functions
 from bots.actions.favorite_users import FavoriteUsers
 from bots.actions.most_active_users import MostActiveUsers
-from bots.actions.pick_cast import PickCast
+from bots.actions.wordcloud import Wordcloud
+# Generic functions
 from bots.actions.run_sql import RunSql
 
 
@@ -41,7 +45,7 @@ actions ={
 
   21: FavoriteUsers,
   22: MostActiveUsers,
-  23: None, 
+  23: Wordcloud, 
   24: None,
   25: None,
 

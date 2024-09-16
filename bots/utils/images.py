@@ -1,6 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 
 
 def table_image(df, filename, size=(4, 3), dpi=100):
@@ -33,4 +34,12 @@ def user_activity_chart(df, filename, size=(10, 6)):
   plt.grid(True)
   plt.xticks(rotation=45)
   plt.subplots_adjust(top=0.90, bottom=0.25, left=0.1, right=0.75) 
+  plt.savefig(filename)
+  
+def make_wordcloud(words, filename):
+  wordcloud = WordCloud(width = 800, height = 800).generate_from_frequencies(words)
+  plt.figure(figsize = (5, 5), facecolor = None) 
+  plt.imshow(wordcloud) 
+  plt.axis("off") 
+  plt.tight_layout(pad = 0) 
   plt.savefig(filename)

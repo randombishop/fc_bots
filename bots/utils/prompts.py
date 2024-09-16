@@ -1,4 +1,12 @@
 
+parse_user_examples = """
+QUERY EXAMPLES:
+* In query "Who are @alice.eth's favorite users?" -> the user is "alice.eth".
+* In query "randombishop's wordcloud" -> the user is "randombishop".
+* In query "Roast me!" -> the user is CURRENT USER ID indicated below.
+* In query "Psychoanalysis of 328193" -> the user is 328193.
+"""
+
 
 def instructions_and_request(instructions, request, fid_origin=None):
   prompt = instructions

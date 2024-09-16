@@ -3,14 +3,13 @@ load_dotenv()
 import sys
 import uuid
 import os
-import pandas
 from bots.iaction import IAction
+from bots.data.bq import dry_run
+from bots.data.fid_features import get_words_dict_sql, get_words_dict
 from bots.utils.prompts import instructions_and_request, parse_user_examples
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_fid
-from bots.data.reactions import favorite_users_sql, favorite_users_results
-from bots.data.bq import dry_run, to_array
-from bots.utils.images import table_image
+from bots.utils.images import make_wordcloud
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
 
@@ -32,7 +31,7 @@ RESPONSE FORMAT:
 """
 
 
-class FavoriteUsers(IAction):
+class Wordcloud(IAction):
   
   def parse(self, input, fid_origin=None):
     prompt = instructions_and_request(parse_instructions, input, fid_origin)
@@ -40,50 +39,28 @@ class FavoriteUsers(IAction):
     self.fid = read_fid(self.params)
 
   def get_cost(self):
-    sql = favorite_users_sql(self.fid)
-    test = dry_run(sql)
+    sql, params = get_words_dict_sql(self.fid)
+    test = dry_run(sql, params)
     self.cost = test['cost']
     return self.cost
 
   def execute(self):
-    users = favorite_users_results(self.fid)
-    if len(users) < 3:
-      raise Exception(f"Not enough data ({len(users)})")
-    self.data = to_array(users)
+    words = get_words_dict(self.fid)
+    if words is None or len(words) == 0:
+      raise Exception(f"Not enough activity to buid a word cloud.")
+    self.data = words
     return self.data
     
   def get_casts(self, intro=''):
-    df = pandas.DataFrame(self.data['values'], columns=self.data['columns'])
-    df.rename(inplace=True, columns={
-        'username': 'User',
-        'num_recasts': 'Recasts',
-        'num_likes': 'Likes',
-        'num_replies': 'Replies'
-    })
     filename = str(uuid.uuid4())+'.png'
-    table_image(df[['User', 'Recasts', 'Likes', 'Replies']], filename)
+    make_wordcloud(self.data, filename)
     upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
     os.remove(filename)
-    mentions = [int(df.iloc[i]['target_fid']) for i in range(3)]
-    mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
-    mentions_positions = []
-    print(f"Mentioned users: {mentions_ats}")
-    print(f"Mentioned fid: {mentions}")
-    text = "The winners are... \n"
-    text += "🥇 "
-    mentions_positions.append(len(text.encode('utf-8')))
-    text += "\n"
-    text += "🥈 "
-    mentions_positions.append(len(text.encode('utf-8')))
-    text += "\n"
-    text += "🥉 "
-    mentions_positions.append(len(text.encode('utf-8')))
-    text += "\n"
     cast = {
-      'text': text, 
-      'mentions': mentions, 
-      'mentions_pos': mentions_positions,
-      'mentions_ats': mentions_ats,
+      'text': "'s wordcloud", 
+      'mentions': [self.fid], 
+      'mentions_pos': [0],
+      'mentions_ats': [f"@{self.params['user']}"],
       'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]
     }
     casts =  [cast]
@@ -94,7 +71,7 @@ class FavoriteUsers(IAction):
 
 if __name__ == "__main__":
   input = sys.argv[1]
-  action = FavoriteUsers()
+  action = Wordcloud()
   action.parse(input)
   print(f"FID: {action.fid}")
   action.get_cost()
