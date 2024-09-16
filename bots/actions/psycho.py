@@ -57,8 +57,9 @@ class Psycho(IAction):
       casts.append({'text': result['sentence2']})
     if 'sentence3' in result:
       casts.append({'text': result['sentence3']})
+    check_casts(casts)
     self.casts = casts
-    return self.casts
+    return casts
 
 if __name__ == "__main__":
   input = sys.argv[1]
