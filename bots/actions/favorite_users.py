@@ -5,6 +5,8 @@ import uuid
 import os
 import pandas
 from bots.iaction import IAction
+from bots.utils.prompts import instructions_and_request
+from bots.utils.llms import call_llm
 from bots.utils.read_params import read_fid
 from bots.data.reactions import favorite_users_sql, favorite_users_results
 from bots.data.bq import dry_run, to_array
@@ -13,12 +15,30 @@ from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
 
 
-class FavoriteUsers(IAction):
+parse_instructions = """
+INSTRUCTIONS:
+Extract the user name from the query.
+Your goal is not to answer the query, you only need to extract the user parameter.
+For example, if the user query is "Who are @alice.eth's favorite users?", the user is "alice.eth".
 
-  def __init__(self, params):
-    super().__init__(params)
-    self.fid = read_fid(params)
-    
+PARAMETER:
+* user, text or integer, required.
+
+RESPONSE FORMAT:
+{{
+  "user": ...
+}}
+(if the user query can not be mapped to the function, return a json with an error message)
+"""
+
+
+class FavoriteUsers(IAction):
+  
+  def parse(self, input, fid_origin=None):
+    prompt = instructions_and_request(parse_instructions, input, fid_origin)
+    self.params = call_llm(prompt)
+    self.fid = read_fid(self.params)
+
   def get_cost(self):
     sql = favorite_users_sql(self.fid)
     test = dry_run(sql)
@@ -73,9 +93,9 @@ class FavoriteUsers(IAction):
 
 
 if __name__ == "__main__":
-  user = sys.argv[1]
-  params = {'user': user}
-  action = FavoriteUsers(params)
+  input = sys.argv[1]
+  action = FavoriteUsers()
+  action.parse(input)
   print(f"FID: {action.fid}")
   action.get_cost()
   print(f"Cost: {action.cost}")

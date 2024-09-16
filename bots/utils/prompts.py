@@ -1,8 +1,11 @@
 
 
-def instructions_and_request(instructions, request):
+def instructions_and_request(instructions, request, fid_origin=None):
   prompt = instructions
   prompt += '\n\n'
+  if fid_origin is not None:
+    prompt += '\n\n'
+    prompt += f"CURRENT USER ID: {fid_origin}"
   prompt += 'REQUEST:\n'
   prompt += request
   return prompt

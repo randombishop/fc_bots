@@ -5,6 +5,8 @@ import sys
 import os
 import pandas
 from bots.iaction import IAction
+from bots.utils.prompts import instructions_and_request
+from bots.utils.llms import call_llm
 from bots.utils.read_params import read_channel, read_int
 from bots.data.casts_by_user import casts_by_user_sql, casts_by_user_results
 from bots.data.bq import dry_run, to_array
@@ -13,13 +15,32 @@ from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
 
 
+parse_instructions = """
+INSTRUCTIONS:
+Extract the parameters from the user query to find the most active users in a channel over a given number of days.
+Your goal is not to answer the query, you only need to extract the parameters channel and num_days.
+
+PARAMETERS:
+* channel, text, required.
+* num_days, integer, optional, defaults to 1
+
+RESPONSE FORMAT:
+{{
+  "channel": ...,
+  "num_days": ...
+}}
+(if the user query can not be mapped to the function, return a json with an error message)
+"""
+
+
 class MostActiveUsers(IAction):
 
-  def __init__(self, params):
-    super().__init__(params)
-    self.channel = read_channel(params)
-    self.num_days = read_int(params, 'num_days', 7, 3, 15)
-    self.max_rows = read_int(params, 'max_rows', 10, 1, 10)
+  def parse(self, input, fid_origin=None):
+    prompt = instructions_and_request(parse_instructions, input)
+    self.params = call_llm(prompt)
+    self.channel = read_channel(self.params)
+    self.num_days = read_int(self.params, 'num_days', 7, 3, 15)
+    self.max_rows = read_int(self.params, 'max_rows', 10, 1, 10)
     
   def get_cost(self):
     sql = casts_by_user_sql(self.channel, self.num_days, self.max_rows)
@@ -72,11 +93,9 @@ class MostActiveUsers(IAction):
 
 
 if __name__ == "__main__":
-  channel = sys.argv[1] if len(sys.argv) > 1 else None
-  num_days = sys.argv[2] if len(sys.argv) > 2 else None
-  max_rows = sys.argv[3] if len(sys.argv) > 3 else None
-  params = {'channel': channel, 'num_days': num_days, 'max_rows': max_rows}
-  action = MostActiveUsers(params)
+  input = sys.argv[1] 
+  action = MostActiveUsers()
+  action.parse(input)
   print(f"Channel: {action.channel}")    
   print(f"Num days: {action.num_days}")
   print(f"Max rows: {action.max_rows}")

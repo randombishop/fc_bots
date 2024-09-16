@@ -3,16 +3,31 @@ load_dotenv()
 import uuid
 import sys
 from bots.iaction import IAction
-from bots.utils.read_params import read_string
+from bots.utils.llms import call_llm
+from bots.utils.prompts import instructions_and_request
 from bots.data.bq import dry_run, sql_to_gcs
+
+instructions = """
+INSTRUCTIONS:
+Check that the following query is an actual SQL statement, that it's read only, and that is doesn't have any security issues or risks if sent to BigQuery.
+Output your check as a json object.
+
+RESPONSE FORMAT:
+{
+  "ok": true/false
+}
+"""
 
 
 class RunSql(IAction):
 
-  def __init__(self, params):
-    super().__init__(params)
-    self.sql = read_string(params, 'sql', '', 1000)
-    
+  def parse(self, input, fid_origin=None):
+    prompt = instructions_and_request(instructions, input)
+    result = call_llm(prompt)
+    if 'ok' not in result or not result['ok']:
+      raise Exception('The query is not a valid read-only SQL.')
+    self.sql = input
+  
   def get_cost(self):
     test = dry_run(self.sql)
     self.cost = test['cost']
@@ -38,9 +53,9 @@ class RunSql(IAction):
     return self.casts
 
 if __name__ == "__main__":
-  sql = sys.argv[1]
-  params = {'sql': sql}
-  action = RunSql(params)
+  input = sys.argv[1]
+  action = RunSql()
+  action.parse(input)
   print(f"Sql: {action.sql}")
   action.get_cost()
   print(f"Cost: {action.cost}")

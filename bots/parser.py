@@ -1,7 +1,7 @@
 import sys
 import json
 from bots.utils.prompts import instructions_and_request
-from bots.models.mistral import mistral
+from bots.utils.llms import call_llm
 
 
 instructions = """
@@ -55,11 +55,11 @@ def parse(request, fid_origin=None):
   if fid_origin is not None:
     prompt += "\n\n"
     prompt += f"CURRENT USER ID: {fid_origin}"
-  result_string = mistral(prompt)
-  print('parsing output by mistral:', result_string)
+  result_string = call_llm(prompt)
+  print('parsing output by llm:', result_string)
   result = json.loads(result_string)
   if 'function' in result and result['function'] == 'run_sql':
-    # avoid mistral hallucinating the sql
+    # avoid llm hallucinating the sql
     result['params']['sql'] = request
   return result
 
