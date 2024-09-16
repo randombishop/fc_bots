@@ -13,17 +13,15 @@ from bots.utils.check_casts import check_casts
 
 instructions = """
 INSTRUCTIONS:
-The text above are extracts from user {user}.
-Based on their posts, write a psycho analysis about them in 3 short parts, 
-including areferences to classic psychology, even if they don't really make sense.
-You are highly encouraged to use the word psycho, be absurd, use emojis, and make fun of the user.
-Each part should be one or two sentences max.
+The text above are extracts from {user}.
+Based on their posts, generate a psycho analysis about them in 3 sentences, including references to psychological pathologies, even if they don't really make sense.
+You are highly encouraged to be absurd, quote them and use random emojis as you make fun of their psychological issues.
 
 RESPONSE FORMAT:
 {{
-  "part1": "...",
-  "part2": "...",
-  "part3": "..."
+  "sentence1": "...",
+  "sentence2": "...",
+  "sentence3": "..."
 }}
 """
 
@@ -53,12 +51,12 @@ class Psycho(IAction):
     prompt = text + '\n\n' + instructions.format(user=self.params['user']) ;
     result = call_llm(prompt)
     casts = []
-    if 'part1' in result:
-      casts.append({'text': result['part1']})
-    if 'part2' in result:
-      casts.append({'text': result['part2']})
-    if 'part3' in result:
-      casts.append({'text': result['part3']})
+    if 'sentence1' in result:
+      casts.append({'text': result['sentence1']})
+    if 'sentence2' in result:
+      casts.append({'text': result['sentence2']})
+    if 'sentence3' in result:
+      casts.append({'text': result['sentence3']})
     self.casts = casts
     return self.casts
 
