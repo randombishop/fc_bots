@@ -3,17 +3,8 @@ import os
 import json
 from bots.utils.prompts import instructions_and_request
 from bots.utils.llms import call_llm
-# Casts functions
-from bots.actions.digest_casts import DigestCasts
-from bots.actions.pick_cast import PickCast
-# User functions
-from bots.actions.favorite_users import FavoriteUsers
-from bots.actions.most_active_users import MostActiveUsers
-from bots.actions.prefs_cloud import PrefsCloud
-from bots.actions.psycho import Psycho
-from bots.actions.roast import Roast
-# Generic functions
-from bots.actions.run_sql import RunSql
+from bots.catalog import ACTIONS, DESCRIPTIONS
+
 
 
 def read_functions_md():
@@ -30,8 +21,6 @@ Your goal is not to answer the query.
 Just find the function that should be used to reply to the query.
 """
 
-functions = read_functions_md()
-
 format = """
 RESPONSE FORMAT:
 {
@@ -39,21 +28,9 @@ RESPONSE FORMAT:
 }
 """
 
-instructions = intro + '\n' + functions + '\n' + format
+instructions = intro + '\n' + DESCRIPTIONS + '\n' + format
 
-actions ={
-  10: DigestCasts,
-  11: PickCast,
 
-  21: FavoriteUsers,
-  22: MostActiveUsers,
-  23: PrefsCloud, 
-  24: Psycho,
-  25: Roast,
-
-  91: RunSql,
-  92: None
-}
 
 def find_action(request):
   prompt = instructions_and_request(instructions, request)
@@ -64,10 +41,10 @@ def route(request, fid_origin=None, parent_hash=None):
   print('request', request)
   mapped = find_action(request)
   print('mapped', mapped)  
-  if ('function' not in mapped or mapped['function'] not in actions):
+  if ('function' not in mapped or mapped['function'] not in ACTIONS):
     raise Exception('Could not map the request to a bot action.')
   function_number = int(mapped['function'])
-  Action = actions[function_number]
+  Action = ACTIONS[function_number]
   action = Action()
   action.set_fid_origin(fid_origin)
   action.set_parent_hash(parent_hash)

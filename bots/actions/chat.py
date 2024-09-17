@@ -15,7 +15,7 @@ INSTRUCTIONS:
 You are @dsart bot.
 Continue the conversation above by generating one short sentence.
 You are encouraged to be creative, funny and use random emojis.
-If you are not sure what to say, you can recommend to contact @randombishop. 
+If you are not sure what to say, just recommend a visit to app.datascience.art. 
 
 RESPONSE FORMAT:
 {
@@ -43,11 +43,16 @@ class Chat(IAction):
       parent_hash = cast['parent_hash']
     context.reverse()
     fids = list(set(item['fid'] for item in context))
+    fids = [x for x in fids if x is not None]
     print(fids)
-    usernames = get_usernames(fids)
-    print(usernames)
+    if len(fids) > 0:
+      usernames = get_usernames(fids)
+      print(usernames)
+      for item in context:
+        item['username'] = '@' +usernames[item['fid']] if item['fid'] in usernames else '#' + str(item['fid'])
     for item in context:
-      item['username'] = '@' +usernames[item['fid']] if item['fid'] in usernames else '#' + str(item['fid'])
+      if 'username' not in item:
+        item['username'] = '!anonymous'
     self.data = context
     return self.data
     
