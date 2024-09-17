@@ -28,7 +28,7 @@ RESPONSE FORMAT:
 
 class Psycho(IAction):
   
-  def parse(self, input, fid_origin=None):
+  def parse(self, input, fid_origin=None, parent_hash=None):
     prompt = instructions_and_request(extract_user_prompt, input, fid_origin)
     self.params = call_llm(prompt)
     self.fid = read_fid(self.params)

@@ -8,7 +8,7 @@ class IAction:
   def set_params(self, params):
     self.params = params
 
-  def parse(self, input, fid_origin=None):
+  def parse(self, input, fid_origin=None, parent_hash=None):
     """Parse the prompt and set the params."""
     raise NotImplementedError("Action doesn't implement parse")
 

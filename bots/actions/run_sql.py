@@ -21,7 +21,7 @@ RESPONSE FORMAT:
 
 class RunSql(IAction):
 
-  def parse(self, input, fid_origin=None):
+  def parse(self, input, fid_origin=None, parent_hash=None):
     prompt = instructions_and_request(instructions, input)
     result = call_llm(prompt)
     if 'ok' not in result or not result['ok']:

@@ -11,6 +11,7 @@ from bots.actions.favorite_users import FavoriteUsers
 from bots.actions.most_active_users import MostActiveUsers
 from bots.actions.wordcloud import Wordcloud
 from bots.actions.psycho import Psycho
+from bots.actions.roast import Roast
 # Generic functions
 from bots.actions.run_sql import RunSql
 
@@ -48,7 +49,7 @@ actions ={
   22: MostActiveUsers,
   23: Wordcloud, 
   24: Psycho,
-  25: None,
+  25: Roast,
 
   91: RunSql,
   92: None

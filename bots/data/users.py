@@ -51,7 +51,6 @@ def get_usernames(fids):
   and type = 11 
   and body->>'type' = '6'
   order by timestamp desc
-  limit 1
   """
   with pg_connection.cursor() as cursor:
     cursor.execute(sql.format(",".join([str(fid) for fid in fids])))

@@ -55,7 +55,7 @@ RESPONSE FORMAT:
 
 class PickCast(IAction):
 
-  def parse(self, input, fid_origin=None):
+  def parse(self, input, fid_origin=None, parent_hash=None):
     prompt = instructions_and_request(parse_instructions, input)
     self.params = call_llm(prompt)
     self.channel = read_channel(self.params)

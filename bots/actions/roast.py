@@ -5,17 +5,26 @@ import uuid
 import os
 from bots.iaction import IAction
 from bots.data.bq import dry_run
-from bots.data.fid_features import get_words_dict_sql, get_words_dict
+from bots.data.casts import text_for_fid_sql, text_for_fid_results
 from bots.utils.prompts import instructions_and_request, extract_user_prompt
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_fid
-from bots.utils.images import make_wordcloud
-from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
 
+instructions = """
+INSTRUCTIONS:
+The text above are extracts from {user}.
+Based on their posts, roast them as hard as you can in one sentence.
+You are highly encouraged to be absurd, quote them and use random emojis as you make fun of them.
 
-class Wordcloud(IAction):
-  
+RESPONSE FORMAT:
+{{
+  "sentence1": "..."
+}}
+"""
+
+
+class Roast(IAction):
   
   def parse(self, input, fid_origin=None, parent_hash=None):
     prompt = instructions_and_request(extract_user_prompt, input, fid_origin)
@@ -23,39 +32,31 @@ class Wordcloud(IAction):
     self.fid = read_fid(self.params)
 
   def get_cost(self):
-    sql, params = get_words_dict_sql(self.fid)
+    sql, params = text_for_fid_sql(self.fid, 15)
     test = dry_run(sql, params)
     self.cost = test['cost']
     return self.cost
 
   def execute(self):
-    words = get_words_dict(self.fid)
-    if words is None or len(words) == 0:
-      raise Exception(f"Not enough activity to buid a word cloud.")
-    self.data = words
+    text = text_for_fid_results(self.fid, 15)
+    if text is None or len(text) == 0:
+      raise Exception(f"Not enough activity to buid a psychodegen analysis.")
+    self.data = text
     return self.data
     
   def get_casts(self, intro=''):
-    filename = str(uuid.uuid4())+'.png'
-    make_wordcloud(self.data, filename)
-    upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
-    os.remove(filename)
-    cast = {
-      'text': "'s wordcloud", 
-      'mentions': [self.fid], 
-      'mentions_pos': [0],
-      'mentions_ats': [f"@{self.params['user']}"],
-      'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]
-    }
-    casts =  [cast]
+    text = "\n".join(self.data)
+    prompt = text + '\n\n' + instructions.format(user=self.params['user']) ;
+    result = call_llm(prompt)
+    cast = {'text': result['sentence1']}
+    casts = [cast]
     check_casts(casts)
     self.casts = casts
-    return self.casts
-
+    return casts
 
 if __name__ == "__main__":
   input = sys.argv[1]
-  action = Wordcloud()
+  action = Roast()
   action.parse(input)
   print(f"FID: {action.fid}")
   action.get_cost()
