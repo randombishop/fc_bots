@@ -60,7 +60,7 @@ def find_action(request):
   result = call_llm(prompt)
   return result
 
-def route(request, fid_origin=None):
+def route(request, fid_origin=None, parent_hash=None):
   print('request', request)
   mapped = find_action(request)
   print('mapped', mapped)  
@@ -69,7 +69,9 @@ def route(request, fid_origin=None):
   function_number = int(mapped['function'])
   Action = actions[function_number]
   action = Action()
-  action.parse(request, fid_origin)
+  action.set_fid_origin(fid_origin)
+  action.set_parent_hash(parent_hash)
+  action.set_input(request)
   return action
 
 
@@ -79,7 +81,7 @@ if __name__ == "__main__":
   print(action)
   action.get_cost()
   print(f"Cost: {action.cost}")
-  action.execute()
+  action.get_data()
   print(f"Data: {action.data}")
   action.get_casts()
   print(f"Casts: {action.casts}")
