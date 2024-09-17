@@ -3,7 +3,7 @@ load_dotenv()
 import json
 import sys
 from bots.iaction import IAction
-from bots.utils.read_params import read_channel, read_int, read_keywords
+from bots.utils.read_params import read_channel, read_int, read_keywords, read_category
 from bots.data.top_casts import top_casts_sql, top_casts_results
 from bots.data.bq import dry_run
 from bots.utils.prompts import instructions_and_request, casts_and_instructions
@@ -70,7 +70,7 @@ class DigestCasts(IAction):
     self.params = call_llm(prompt)
     self.channel = read_channel(self.params)
     self.keywords = read_keywords(self.params)
-    self.category = None
+    self.category = read_category(self.params)
     self.num_days = read_int(self.params, 'num_days', 7, 1, 10)
     self.max_rows = 100
     if debug:
@@ -82,7 +82,7 @@ class DigestCasts(IAction):
       print(f"  category: {self.category}")
        
   def get_cost(self):
-    sql, params = top_casts_sql(self.channel, self.num_days, self.max_rows, self.keywords)
+    sql, params = top_casts_sql(self.channel, self.num_days, self.max_rows, self.keywords, self.category)
     test = dry_run(sql, params)
     self.cost = test['cost']
     if debug:
@@ -94,7 +94,7 @@ class DigestCasts(IAction):
 
   def execute(self):
     # Get data
-    posts = top_casts_results(self.channel, self.num_days, self.max_rows, self.keywords)
+    posts = top_casts_results(self.channel, self.num_days, self.max_rows, self.keywords, self.category)
     posts.sort(key=lambda x: x['timestamp'])
     if len(posts) < 10:
       raise Exception(f"Not enough posts to generate a digest: {len(posts)}")

@@ -24,15 +24,18 @@ ORDER BY (
 """
 
 
-def top_casts_sql(channel, num_days, max_rows, keywords):
+def top_casts_sql(channel, num_days, max_rows, keywords, category):
   params = []
   sql = sql_select
   today = datetime.today()
   past = (today - timedelta(days=(num_days+1))).strftime("%Y-%m-%d")
   sql += "WHERE t.day > ? \n"
+  params.append(bigquery.ScalarQueryParameter(None, "DATE", past))
   sql += "AND t.parent_fid = -1 \n"
   sql += "AND q_info>50 \n"
-  params.append(bigquery.ScalarQueryParameter(None, "DATE", past))
+  if category is not None:
+    sql += "AND (t.category_label = ?) \n"
+    params.append(bigquery.ScalarQueryParameter(None, "STRING", category))
   if channel is not None:
     sql += "AND (t.parent_url = ?) \n"
     params.append(bigquery.ScalarQueryParameter(None, "STRING", channel))
@@ -45,8 +48,8 @@ def top_casts_sql(channel, num_days, max_rows, keywords):
   return sql, params
 
 
-def top_casts_results(channel, num_days, max_rows, keywords):
-  sql, params = top_casts_sql(channel, num_days, max_rows, keywords)
+def top_casts_results(channel, num_days, max_rows, keywords, category):
+  sql, params = top_casts_sql(channel, num_days, max_rows, keywords, category)
   response = execute(sql, params)
   results = [x for x in response]
   return results
