@@ -17,8 +17,9 @@ from bots.utils.check_casts import check_casts
 
 parse_instructions = """
 INSTRUCTIONS:
-Extract the parameters from the user query to find the most active users in a channel over a given number of days.
-Your goal is not to answer the query, you only need to extract the parameters channel and num_days.
+Find the channel and the number of days in the user input. 
+Your goal is not to answer the request, you only need to extract the parameters.
+The query doesn't need to match a specific format, your job is to guess the parameters that the user is asking for.
 
 PARAMETERS:
 * channel, text, required.
@@ -29,26 +30,28 @@ RESPONSE FORMAT:
   "channel": ...,
   "num_days": ...
 }}
-(if the user query can not be mapped to the function, return a json with an error message)
 """
 
 
 class MostActiveUsers(IAction):
 
-  def parse(self, input, fid_origin=None, parent_hash=None):
+  def set_input(self, input):
     prompt = instructions_and_request(parse_instructions, input)
-    self.params = call_llm(prompt)
-    self.channel = read_channel(self.params)
-    self.num_days = read_int(self.params, 'num_days', 7, 3, 15)
-    self.max_rows = read_int(self.params, 'max_rows', 10, 1, 10)
-    
+    params = call_llm(prompt)
+    self.set_params(params)
+  
+  def set_params(self, params):
+    self.channel = read_channel(params)
+    self.num_days = read_int(params, 'num_days', 7, 3, 15)
+    self.max_rows = read_int(params, 'max_rows', 10, 1, 10)
+
   def get_cost(self):
     sql, params = casts_by_user_sql(self.channel, self.num_days, self.max_rows)
     test = dry_run(sql, params)
     self.cost = test['cost']
     return self.cost
 
-  def execute(self):
+  def get_data(self):
     users = casts_by_user_results(self.channel, self.num_days, self.max_rows)
     if len(users) == 0:
       raise Exception("Query returned 0 rows")
@@ -95,13 +98,13 @@ class MostActiveUsers(IAction):
 if __name__ == "__main__":
   input = sys.argv[1] 
   action = MostActiveUsers()
-  action.parse(input)
+  action.set_input(input)
   print(f"Channel: {action.channel}")    
   print(f"Num days: {action.num_days}")
   print(f"Max rows: {action.max_rows}")
   cost = action.get_cost()
   print(f"Cost: {cost}")
-  action.execute()
+  action.get_data()
   print(f"Data: {action.data}")
   action.get_casts()
   print(f"Casts: {action.casts}")

@@ -9,7 +9,7 @@ from bots.actions.pick_cast import PickCast
 # User functions
 from bots.actions.favorite_users import FavoriteUsers
 from bots.actions.most_active_users import MostActiveUsers
-from bots.actions.wordcloud import Wordcloud
+from bots.actions.prefs_cloud import PrefsCloud
 from bots.actions.psycho import Psycho
 from bots.actions.roast import Roast
 # Generic functions
@@ -47,7 +47,7 @@ actions ={
 
   21: FavoriteUsers,
   22: MostActiveUsers,
-  23: Wordcloud, 
+  23: PrefsCloud, 
   24: Psycho,
   25: Roast,
 

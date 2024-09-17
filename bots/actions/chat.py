@@ -26,17 +26,17 @@ RESPONSE FORMAT:
 
 class Chat(IAction):
   
-  def parse(self, input, fid_origin=None, parent_hash=None):
-    self.params = {'input': input, 'fid': fid_origin, 'parent_hash': parent_hash}
+  def set_input(self, input):
+    self.input = input
 
   def get_cost(self):
     self.cost = 0
     return self.cost
 
-  def execute(self):
+  def get_data(self):
     context = []
-    context.append({'text': '@dsart ' + self.params['input'], 'fid': self.params['fid']})
-    parent_hash = self.params['parent_hash']
+    context.append({'text': '@dsart ' + self.input, 'fid': self.fid_origin})
+    parent_hash = self.parent_hash
     while parent_hash is not None:
       cast = get_cast(parent_hash)
       context.append({'text': cast['text'], 'fid': cast['fid']})
@@ -69,8 +69,10 @@ if __name__ == "__main__":
   fid_origin = int(sys.argv[2])
   parent_hash = sys.argv[3]
   action = Chat()
-  action.parse(input, fid_origin=fid_origin, parent_hash=parent_hash)
+  action.set_fid_origin(fid_origin)
+  action.set_parent_hash(parent_hash)
+  action.set_input(input)
   action.get_cost()
-  action.execute()
+  action.get_data()
   action.get_casts()
   print(f"Casts: {action.casts}")

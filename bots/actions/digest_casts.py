@@ -13,23 +13,23 @@ from bots.utils.check_casts import check_casts
 
 parse_instructions = """
 INSTRUCTIONS:
-Parse the parameters from the user query to make a digest of posts in a channel, from one of pre-defined categories, or using keyword search. 
+Find one or more of the following parameters in the user input: category, channel, keywords and number of days. 
 Your goal is not to answer the user query, you only need to extract the parameters.
+The query doesn't need to match a specific format, your job is to guess the parameters that the user is asking for.
 
 PARAMETERS
-* channel, optional,defaults to null.
+* channel, optional, defaults to null.
 * category, optional, one of pre-defined categories, defaults to null. Allowed categories are: 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
 * keywords, optional, comma separated list of keywords, defaults to null.
 * num_days is an optional parameter and defaults to 1  
 
 RESPONSE FORMAT:
-{{
+{
   "category": ...,
   "channel": ...,
   "keywords": ...,
   "num_days": ...,
-}}
-(if the user query can not be mapped to the function, return a json with an error message)
+}
 """
 
 instructions1 = """
@@ -65,22 +65,25 @@ debug = True
 
 class DigestCasts(IAction):
     
-  def parse(self, input, fid_origin=None, parent_hash=None):
+  def set_input(self, input):
     prompt = instructions_and_request(parse_instructions, input)
-    self.params = call_llm(prompt)
-    self.channel = read_channel(self.params)
-    self.keywords = read_keywords(self.params)
-    self.category = read_category(self.params)
-    self.num_days = read_int(self.params, 'num_days', 7, 1, 10)
+    params = call_llm(prompt)
+    self.set_params(params)
+
+  def set_params(self, params):
+    self.channel = read_channel(params)
+    self.keywords = read_keywords(params)
+    self.category = read_category(params)
+    self.num_days = read_int(params, 'num_days', 7, 1, 10)
     self.max_rows = 100
     if debug:
-      print("DigestCasts.init():")
+      print("DigestCasts.set_params():")
       print(f"  channel: {self.channel}")
       print(f"  num_days: {self.num_days}")
       print(f"  max_rows: {self.max_rows}")
       print(f"  keywords: {self.keywords}")
       print(f"  category: {self.category}")
-       
+
   def get_cost(self):
     sql, params = top_casts_sql(self.channel, self.num_days, self.max_rows, self.keywords, self.category)
     test = dry_run(sql, params)
@@ -92,7 +95,7 @@ class DigestCasts(IAction):
       print(f"  cost: {self.cost}")
     return self.cost
 
-  def execute(self):
+  def get_data(self):
     # Get data
     posts = top_casts_results(self.channel, self.num_days, self.max_rows, self.keywords, self.category)
     posts.sort(key=lambda x: x['timestamp'])
@@ -152,15 +155,11 @@ class DigestCasts(IAction):
 
 if __name__ == "__main__":
   input = sys.argv[1] 
-  action = DigestCasts(input)
-  action.parse()
-  print(f"Num days: {action.num_days}")
-  print(f"Channel: {action.channel}")
-  print(f"Keywords: {action.keywords}")
-  print(f"Max rows: {action.max_rows}")
+  action = DigestCasts()
+  action.set_input(input)
   cost = action.get_cost()
   print(f"Cost: {cost}")
-  action.execute()
+  action.get_data()
   print(f"Data: {action.data}")
   action.get_casts(intro='🗞️ Channel Digest 🗞️')
   print(f"Casts: {action.casts}")

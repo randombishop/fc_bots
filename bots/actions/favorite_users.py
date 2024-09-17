@@ -18,10 +18,13 @@ from bots.utils.check_casts import check_casts
 
 class FavoriteUsers(IAction):
   
-  def parse(self, input, fid_origin=None, parent_hash=None):
-    prompt = instructions_and_request(extract_user_prompt, input, fid_origin)
-    self.params = call_llm(prompt)
-    self.fid = read_fid(self.params)
+  def set_input(self, input):
+    prompt = instructions_and_request(extract_user_prompt, input, self.fid_origin)
+    params = call_llm(prompt)
+    self.set_params(params)
+    
+  def set_params(self, params):
+    self.fid = read_fid(params)
 
   def get_cost(self):
     sql = favorite_users_sql(self.fid)
@@ -29,7 +32,7 @@ class FavoriteUsers(IAction):
     self.cost = test['cost']
     return self.cost
 
-  def execute(self):
+  def get_data(self):
     users = favorite_users_results(self.fid)
     if len(users) < 3:
       raise Exception(f"Not enough data ({len(users)})")
@@ -79,11 +82,11 @@ class FavoriteUsers(IAction):
 if __name__ == "__main__":
   input = sys.argv[1]
   action = FavoriteUsers()
-  action.parse(input)
+  action.set_input(input)
   print(f"FID: {action.fid}")
   action.get_cost()
   print(f"Cost: {action.cost}")
-  action.execute()
+  action.get_data()
   print(f"Data: {action.data}")
   action.get_casts()
   print(f"Casts: {action.casts}")

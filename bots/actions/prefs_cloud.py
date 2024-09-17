@@ -14,7 +14,7 @@ from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
 
 
-class Wordcloud(IAction):
+class PrefsCloud(IAction):
   
   
   def parse(self, input, fid_origin=None, parent_hash=None):
@@ -55,7 +55,7 @@ class Wordcloud(IAction):
 
 if __name__ == "__main__":
   input = sys.argv[1]
-  action = Wordcloud()
+  action = PrefsCloud()
   action.parse(input)
   print(f"FID: {action.fid}")
   action.get_cost()

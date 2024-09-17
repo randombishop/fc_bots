@@ -14,9 +14,19 @@ from bots.utils.check_casts import check_casts
 
 parse_instructions = """
 INSTRUCTIONS:
-Extract the parameters from the user query to select the best post from a channel or using keyword search, 
-over a number of days, using some criteria.
+Find and extract the following parameters from the user input: channel, keywords, number of days, criteria.
 Your goal is not to answer the user query, you only need to extract the parameters.
+The query doesn't need to match a specific format, your job is to guess the parameters that the user is asking for.
+
+EXAMPLE:
+query: What's the funniest post about Bitcoin and Ethereum during last week?
+result: 
+{
+  "channel": null,
+  "keywords": "Bitcoin, Ethereum",
+  "num_days": 7,
+  "criteria": "funniest"
+}
 
 PARAMETERS
 * channel is an optional parameter and defaults to null
@@ -25,13 +35,12 @@ PARAMETERS
 * criteria is free text and defaults to 'most interesting'
 
 RESPONSE FORMAT:
-{{
+{
   "channel": ...,
   "keywords": ...,
   "num_days": ...,
   "criteria": ...
-}}
-(if the user query can not be mapped to the function, return a json with an error message)
+}
 """
 
 
