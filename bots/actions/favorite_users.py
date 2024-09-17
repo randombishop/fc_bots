@@ -5,6 +5,8 @@ import uuid
 import os
 import pandas
 from bots.iaction import IAction
+from bots.utils.prompts import instructions_and_request, extract_user_prompt
+from bots.utils.llms import call_llm
 from bots.utils.read_params import read_fid
 from bots.data.reactions import favorite_users_sql, favorite_users_results
 from bots.data.bq import dry_run, to_array
@@ -13,21 +15,19 @@ from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
 
 
-class FavoriteUsers(IAction):
 
-  def __init__(self, params):
-    super().__init__(params)
-    self.fid = read_fid(params)
-    
+class FavoriteUsers(IAction):
+  
+  def parse(self, input, fid_origin=None, parent_hash=None):
+    prompt = instructions_and_request(extract_user_prompt, input, fid_origin)
+    self.params = call_llm(prompt)
+    self.fid = read_fid(self.params)
+
   def get_cost(self):
     sql = favorite_users_sql(self.fid)
     test = dry_run(sql)
-    if 'error' in test:
-      self.error = test['error']
-      return 0
-    else:
-      self.cost = test['cost']
-      return self.cost
+    self.cost = test['cost']
+    return self.cost
 
   def execute(self):
     users = favorite_users_results(self.fid)
@@ -77,9 +77,9 @@ class FavoriteUsers(IAction):
 
 
 if __name__ == "__main__":
-  user = sys.argv[1]
-  params = {'user': user}
-  action = FavoriteUsers(params)
+  input = sys.argv[1]
+  action = FavoriteUsers()
+  action.parse(input)
   print(f"FID: {action.fid}")
   action.get_cost()
   print(f"Cost: {action.cost}")

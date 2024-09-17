@@ -23,6 +23,7 @@ def get_username(fid):
   else:
     return None
 
+
 def get_fid(username):
   sql = """
   select fid
@@ -42,6 +43,21 @@ def get_fid(username):
     return None
 
 
+def get_usernames(fids):
+  sql = """
+  select fid, body->>'value' as user
+  from messages
+  where fid in ({})
+  and type = 11 
+  and body->>'type' = '6'
+  order by timestamp desc
+  """
+  with pg_connection.cursor() as cursor:
+    cursor.execute(sql.format(",".join([str(fid) for fid in fids])))
+    ans = cursor.fetchall()
+  return {int(row[0]): row[1] for row in ans}
+
+
 if __name__ == "__main__":
   t0 = time.time()
   input = sys.argv[1]
@@ -52,3 +68,4 @@ if __name__ == "__main__":
     username = input.lower()
     print(username, 'username->fid', get_fid(username))
   print('time:', time.time() - t0)
+  

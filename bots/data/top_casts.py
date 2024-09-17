@@ -11,6 +11,7 @@ t.fid,
 t.user_name,
 t.text
 FROM cast_features t
+JOIN fid_features users on t.fid = users.fid and users.spam_any = 0
 """
 
 
@@ -28,19 +29,17 @@ def top_casts_sql(channel, num_days, max_rows, keywords):
   sql = sql_select
   today = datetime.today()
   past = (today - timedelta(days=(num_days+1))).strftime("%Y-%m-%d")
-  sql += "WHERE day > ? \n"
+  sql += "WHERE t.day > ? \n"
   sql += "AND t.parent_fid = -1 \n"
   sql += "AND q_info>50 \n"
   params.append(bigquery.ScalarQueryParameter(None, "DATE", past))
-  if channel is None:
-    sql += "AND (t.parent_url is NULL) \n"
-  else:
+  if channel is not None:
     sql += "AND (t.parent_url = ?) \n"
     params.append(bigquery.ScalarQueryParameter(None, "STRING", channel))
   if keywords is not None and len(keywords) > 0:
     conditions = ["(LOWER(text) LIKE ?)" for _ in keywords]
     params += [bigquery.ScalarQueryParameter(None, "STRING", f"%{keyword}%") for keyword in keywords]
-    sql += "AND (" + " OR ".join(conditions) + ") \n"
+    sql += "AND (" + " AND ".join(conditions) + ") \n"
   sql += sql_order
   sql += f"LIMIT {max_rows}"
   return sql, params

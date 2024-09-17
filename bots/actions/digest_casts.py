@@ -6,25 +6,48 @@ from bots.iaction import IAction
 from bots.utils.read_params import read_channel, read_int, read_keywords
 from bots.data.top_casts import top_casts_sql, top_casts_results
 from bots.data.bq import dry_run
-from bots.utils.prompts import casts_and_instructions
-from bots.models.mistral import mistral
+from bots.utils.prompts import instructions_and_request, casts_and_instructions
+from bots.utils.llms import call_llm
 from bots.utils.check_links import check_link_data
 from bots.utils.check_casts import check_casts
 
-instructions = """
+parse_instructions = """
+INSTRUCTIONS:
+Parse the parameters from the user query to make a digest of posts in a channel, from one of pre-defined categories, or using keyword search. 
+Your goal is not to answer the user query, you only need to extract the parameters.
+
+PARAMETERS
+* channel, optional,defaults to null.
+* category, optional, one of pre-defined categories, defaults to null. Allowed categories are: 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
+* keywords, optional, comma separated list of keywords, defaults to null.
+* num_days is an optional parameter and defaults to 1  
+
+RESPONSE FORMAT:
+{{
+  "category": ...,
+  "channel": ...,
+  "keywords": ...,
+  "num_days": ...,
+}}
+(if the user query can not be mapped to the function, return a json with an error message)
+"""
+
+instructions1 = """
 GENERAL INSTRUCTIONS:
 ABOVE ARE SOCIAL MEDIA POSTS FROM A RANDOM SAMPLE OF USERS.
 GENERATE A GLOBAL SUMMARY AND SELECT 3 INTERESTING ONES.
 
 DETAILED INSTRUCTIONS:
-  - Write a catch phrase title.
-  - Generate 3 sentences to describe what the users are talking about, try to cover as much content as possible in these 3 sentences.
-  - Include 3 links to reference relevant post ids and comment them with a keyword and emoji.
-  - Output the result in json format.
-  - Make sure you don't use " inside json strings. Avoid invalid json.
-  - Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
-  - Focus on posts that are genuine, interesting, funny, or informative.
+- Write a catch phrase title.
+- Generate 3 sentences to describe what the users are talking about, try to cover as much content as possible in these 3 sentences.
+- Include 3 links to reference relevant post ids and comment them with a keyword and emoji.
+- Output the result in json format.
+- Make sure you don't use " inside json strings. Avoid invalid json.
+- Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
+- Focus on posts that are genuine, interesting, funny, or informative.
+"""
 
+instructions2 = """
 RESPONSE FORMAT:
 {
   "title": "...catch phrase...",
@@ -38,19 +61,35 @@ RESPONSE FORMAT:
 """
 
 
-class DigestCasts(IAction):
+debug = True
 
-  def __init__(self, params):
-    super().__init__(params)
-    self.channel = read_channel(params)
-    self.num_days = read_int(params, 'num_days', 7, 1, 10)
-    self.max_rows = 100
-    self.keywords = read_keywords(params)
+class DigestCasts(IAction):
     
+  def parse(self, input, fid_origin=None, parent_hash=None):
+    prompt = instructions_and_request(parse_instructions, input)
+    self.params = call_llm(prompt)
+    self.channel = read_channel(self.params)
+    self.keywords = read_keywords(self.params)
+    self.category = None
+    self.num_days = read_int(self.params, 'num_days', 7, 1, 10)
+    self.max_rows = 100
+    if debug:
+      print("DigestCasts.init():")
+      print(f"  channel: {self.channel}")
+      print(f"  num_days: {self.num_days}")
+      print(f"  max_rows: {self.max_rows}")
+      print(f"  keywords: {self.keywords}")
+      print(f"  category: {self.category}")
+       
   def get_cost(self):
     sql, params = top_casts_sql(self.channel, self.num_days, self.max_rows, self.keywords)
     test = dry_run(sql, params)
     self.cost = test['cost']
+    if debug:
+      print("DigestCasts.get_cost():")
+      print(f"  sql: {sql}")
+      print(f"  params: {params}")
+      print(f"  cost: {self.cost}")
     return self.cost
 
   def execute(self):
@@ -58,13 +97,17 @@ class DigestCasts(IAction):
     posts = top_casts_results(self.channel, self.num_days, self.max_rows, self.keywords)
     posts.sort(key=lambda x: x['timestamp'])
     if len(posts) < 10:
-      print(f"Not enough posts to generate a digest: {len(posts)}")
-      self.error = "Not enough posts to generate a digest"
-      return None
+      raise Exception(f"Not enough posts to generate a digest: {len(posts)}")
     # Run LLM
+    instructions = instructions1
+    if self.keywords is not None and len(self.keywords) > 0:
+      instructions += ("- Focus on the following subject: " + " ".join(self.keywords) + "\n")
+    instructions += "\n\n"
+    instructions += instructions2
+    if debug:
+      print(instructions)
     prompt = casts_and_instructions(posts, instructions)
-    result_string = mistral(prompt)
-    result = json.loads(result_string)
+    result = call_llm(prompt)
     # Make summary
     summary = []
     if 'sentence1' in result and len(result['sentence1']) > 0:
@@ -108,11 +151,9 @@ class DigestCasts(IAction):
 
 
 if __name__ == "__main__":
-  channel = sys.argv[1] if len(sys.argv) > 1 else None
-  num_days = sys.argv[2] if len(sys.argv) > 2 else None
-  keywords = sys.argv[3] if len(sys.argv) > 3 else None
-  params = {'channel': channel, 'num_days': num_days, 'keywords': keywords}
-  action = DigestCasts(params)
+  input = sys.argv[1] 
+  action = DigestCasts(input)
+  action.parse()
   print(f"Num days: {action.num_days}")
   print(f"Channel: {action.channel}")
   print(f"Keywords: {action.keywords}")
