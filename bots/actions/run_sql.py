@@ -21,19 +21,22 @@ RESPONSE FORMAT:
 
 class RunSql(IAction):
 
-  def parse(self, input, fid_origin=None, parent_hash=None):
+  def set_input(self, input):
     prompt = instructions_and_request(instructions, input)
     result = call_llm(prompt)
     if 'ok' not in result or not result['ok']:
       raise Exception('The query is not a valid read-only SQL.')
     self.sql = input
   
+  def set_params(self, params):
+    self.sql = params['sql']  
+
   def get_cost(self):
     test = dry_run(self.sql)
     self.cost = test['cost']
     return self.cost
     
-  def execute(self):
+  def get_data(self):
     filename = str(uuid.uuid4())
     folder = 'csv'
     result = sql_to_gcs(self.sql, folder, filename)
@@ -55,11 +58,11 @@ class RunSql(IAction):
 if __name__ == "__main__":
   input = sys.argv[1]
   action = RunSql()
-  action.parse(input)
+  action.set_input(input)
   print(f"Sql: {action.sql}")
   action.get_cost()
   print(f"Cost: {action.cost}")
-  action.execute()
+  action.get_data()
   print(f"Data: {action.data}")
   action.get_casts()
   print(f"Casts: {action.casts}")

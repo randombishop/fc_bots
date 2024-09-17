@@ -50,6 +50,16 @@ def read_keywords(params):
     keywords = [keyword for keyword in keywords if len(keyword) > 3]
   return keywords
 
+def read_category(params):
+  if 'category' in params and params['category'] is not None:
+    category = params['category'].lower()
+    if not category.startswith('c_'):
+      category = 'c_' + category
+    if category not in ['c_arts', 'c_business', 'c_crypto', 'c_culture', 'c_money', 'c_nature', 'c_politics', 'c_sports', 'c_tech_science']:
+      return None
+    else:
+      return category
+  return None
 
 def read_fid(params):
   if 'user' in params and params['user'] is not None:

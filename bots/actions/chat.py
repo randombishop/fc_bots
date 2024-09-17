@@ -13,39 +13,46 @@ from bots.utils.check_casts import check_casts
 instructions = """
 INSTRUCTIONS:
 You are @dsart bot.
-Continue the conversation above by generating one sentence.
+Continue the conversation above by generating one short sentence.
+You are encouraged to be creative, funny and use random emojis.
+If you are not sure what to say, just recommend a visit to app.datascience.art. 
 
 RESPONSE FORMAT:
 {
-  "sentence1": "..."
+  "sentence1": "short sentence, about 20 words max"
 }
 """
 
 
 class Chat(IAction):
   
-  def parse(self, input, fid_origin=None, parent_hash=None):
-    self.params = {'input': input, 'fid': fid_origin, 'parent_hash': parent_hash}
+  def set_input(self, input):
+    self.input = input
 
   def get_cost(self):
     self.cost = 0
     return self.cost
 
-  def execute(self):
+  def get_data(self):
     context = []
-    context.append({'text': '@dsart ' + self.params['input'], 'fid': self.params['fid']})
-    parent_hash = self.params['parent_hash']
+    context.append({'text': '@dsart ' + self.input, 'fid': self.fid_origin})
+    parent_hash = self.parent_hash
     while parent_hash is not None:
       cast = get_cast(parent_hash)
       context.append({'text': cast['text'], 'fid': cast['fid']})
       parent_hash = cast['parent_hash']
     context.reverse()
     fids = list(set(item['fid'] for item in context))
+    fids = [x for x in fids if x is not None]
     print(fids)
-    usernames = get_usernames(fids)
-    print(usernames)
+    if len(fids) > 0:
+      usernames = get_usernames(fids)
+      print(usernames)
+      for item in context:
+        item['username'] = '@' +usernames[item['fid']] if item['fid'] in usernames else '#' + str(item['fid'])
     for item in context:
-      item['username'] = '@' +usernames[item['fid']] if item['fid'] in usernames else '#' + str(item['fid'])
+      if 'username' not in item:
+        item['username'] = '!anonymous'
     self.data = context
     return self.data
     
@@ -67,8 +74,10 @@ if __name__ == "__main__":
   fid_origin = int(sys.argv[2])
   parent_hash = sys.argv[3]
   action = Chat()
-  action.parse(input, fid_origin=fid_origin, parent_hash=parent_hash)
+  action.set_fid_origin(fid_origin)
+  action.set_parent_hash(parent_hash)
+  action.set_input(input)
   action.get_cost()
-  action.execute()
+  action.get_data()
   action.get_casts()
   print(f"Casts: {action.casts}")

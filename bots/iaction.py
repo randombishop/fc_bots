@@ -1,24 +1,32 @@
 class IAction:
     
   def __init__(self):
-    self.params = None
+    self.fid_origin = None
+    self.parent_hash = None
     self.data = None
     self.casts = None
 
-  def set_params(self, params):
-    self.params = params
+  def set_fid_origin(self, fid_origin):
+    self.fid_origin = fid_origin
 
-  def parse(self, input, fid_origin=None, parent_hash=None):
-    """Parse the prompt and set the params."""
-    raise NotImplementedError("Action doesn't implement parse")
+  def set_parent_hash(self, parent_hash):
+    self.parent_hash = parent_hash
+
+  def set_input(self, input):
+    """Use natural language input to set the params."""
+    raise NotImplementedError("Action doesn't implement set_input")
+  
+  def set_params(self, params):
+    """Use dictionary params."""
+    raise NotImplementedError("Action doesn't implement set_params")
 
   def get_cost(self):
     """Calculate and return the cost of executing the action."""
     raise NotImplementedError("Action doesn't implement get_cost")
 
-  def execute(self):
-    """Execute the action."""
-    raise NotImplementedError("Action doesn't implement execute")
+  def get_data(self):
+    """Pull the data needed by the action."""
+    raise NotImplementedError("Action doesn't implement get_data")
 
   def get_casts(self, intro=''):
     """Return the associated casts."""

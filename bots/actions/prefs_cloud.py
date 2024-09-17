@@ -14,13 +14,17 @@ from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
 
 
-class Wordcloud(IAction):
+class PrefsCloud(IAction):
   
   
-  def parse(self, input, fid_origin=None, parent_hash=None):
-    prompt = instructions_and_request(extract_user_prompt, input, fid_origin)
-    self.params = call_llm(prompt)
-    self.fid = read_fid(self.params)
+  def set_input(self, input):
+    prompt = instructions_and_request(extract_user_prompt, input, self.fid_origin)
+    params = call_llm(prompt)
+    self.set_params(params)
+
+  def set_params(self, params):
+    self.user = params['user']
+    self.fid = read_fid(params)
 
   def get_cost(self):
     sql, params = get_words_dict_sql(self.fid)
@@ -28,7 +32,7 @@ class Wordcloud(IAction):
     self.cost = test['cost']
     return self.cost
 
-  def execute(self):
+  def get_data(self):
     words = get_words_dict(self.fid)
     if words is None or len(words) == 0:
       raise Exception(f"Not enough activity to buid a word cloud.")
@@ -44,7 +48,7 @@ class Wordcloud(IAction):
       'text': "'s wordcloud", 
       'mentions': [self.fid], 
       'mentions_pos': [0],
-      'mentions_ats': [f"@{self.params['user']}"],
+      'mentions_ats': [f"@{self.user}"],
       'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]
     }
     casts =  [cast]
@@ -55,12 +59,12 @@ class Wordcloud(IAction):
 
 if __name__ == "__main__":
   input = sys.argv[1]
-  action = Wordcloud()
-  action.parse(input)
+  action = PrefsCloud()
+  action.set_input(input)
   print(f"FID: {action.fid}")
   action.get_cost()
   print(f"Cost: {action.cost}")
-  action.execute()
+  action.get_data()
   print(f"Data: {action.data}")
   action.get_casts()
   print(f"Casts: {action.casts}")
