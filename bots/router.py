@@ -65,7 +65,7 @@ def route(request, fid_origin=None):
   mapped = find_action(request)
   print('mapped', mapped)  
   if ('function' not in mapped or mapped['function'] not in actions):
-    raise Exception('Could not map the query to a bot action.')
+    raise Exception('Could not map the request to a bot action.')
   function_number = int(mapped['function'])
   Action = actions[function_number]
   action = Action()

@@ -13,11 +13,13 @@ from bots.utils.check_casts import check_casts
 instructions = """
 INSTRUCTIONS:
 You are @dsart bot.
-Continue the conversation above by generating one sentence.
+Continue the conversation above by generating one short sentence.
+You are encouraged to be creative, funny and use random emojis.
+If you are not sure what to say, you can recommend to contact @randombishop. 
 
 RESPONSE FORMAT:
 {
-  "sentence1": "..."
+  "sentence1": "short sentence, about 20 words max"
 }
 """
 
