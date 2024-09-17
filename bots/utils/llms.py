@@ -13,7 +13,10 @@ def mistral(prompt):
   response = result['response']
   if debug:
     print('mistral response', response)
-  result = json.loads(response)
+  try:
+    result = json.loads(response)
+  except:
+    raise Exception(f"Error parsing LLM response: {response}")
   if 'error' in result and len(result['error']) > 0:
     raise Exception(result['error'])
   return result

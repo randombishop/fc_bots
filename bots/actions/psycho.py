@@ -28,18 +28,22 @@ RESPONSE FORMAT:
 
 class Psycho(IAction):
   
-  def parse(self, input, fid_origin=None, parent_hash=None):
-    prompt = instructions_and_request(extract_user_prompt, input, fid_origin)
-    self.params = call_llm(prompt)
-    self.fid = read_fid(self.params)
+  def set_input(self, input):
+    prompt = instructions_and_request(extract_user_prompt, input, self.fid_origin)
+    params = call_llm(prompt)
+    self.set_params(params)
 
+  def set_params(self, params):
+    self.user = params['user']
+    self.fid = read_fid(params)
+    
   def get_cost(self):
     sql, params = text_for_fid_sql(self.fid, 15)
     test = dry_run(sql, params)
     self.cost = test['cost']
     return self.cost
 
-  def execute(self):
+  def get_data(self):
     text = text_for_fid_results(self.fid, 15)
     if text is None or len(text) == 0:
       raise Exception(f"Not enough activity to buid a psychodegen analysis.")
@@ -48,7 +52,7 @@ class Psycho(IAction):
     
   def get_casts(self, intro=''):
     text = "\n".join(self.data)
-    prompt = text + '\n\n' + instructions.format(user=self.params['user']) ;
+    prompt = text + '\n\n' + instructions.format(user=self.user) ;
     result = call_llm(prompt)
     casts = []
     if 'sentence1' in result:
@@ -64,11 +68,11 @@ class Psycho(IAction):
 if __name__ == "__main__":
   input = sys.argv[1]
   action = Psycho()
-  action.parse(input)
+  action.set_input(input)
   print(f"FID: {action.fid}")
   action.get_cost()
   print(f"Cost: {action.cost}")
-  action.execute()
+  action.get_data()
   print(f"Data: {action.data}")
   action.get_casts()
   print(f"Casts: {action.casts}")

@@ -85,7 +85,9 @@ class DigestCasts(IAction):
       print(f"  category: {self.category}")
 
   def get_cost(self):
-    sql, params = top_casts_sql(self.channel, self.num_days, self.max_rows, self.keywords, self.category)
+    sql, params = top_casts_sql(channel=self.channel, num_days=self.num_days, 
+                                max_rows=self.max_rows, keywords=self.keywords, 
+                                category=self.category, informative=True)
     test = dry_run(sql, params)
     self.cost = test['cost']
     if debug:
@@ -97,7 +99,9 @@ class DigestCasts(IAction):
 
   def get_data(self):
     # Get data
-    posts = top_casts_results(self.channel, self.num_days, self.max_rows, self.keywords, self.category)
+    posts = top_casts_results(channel=self.channel, num_days=self.num_days, 
+                              max_rows=self.max_rows, keywords=self.keywords, 
+                              category=self.category, informative=True)
     posts.sort(key=lambda x: x['timestamp'])
     if len(posts) < 10:
       raise Exception(f"Not enough posts to generate a digest: {len(posts)}")

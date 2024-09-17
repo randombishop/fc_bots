@@ -14,11 +14,11 @@ class IAction:
 
   def set_input(self, input):
     """Use natural language input to set the params."""
-    raise NotImplementedError("Action doesn't implement parse")
+    raise NotImplementedError("Action doesn't implement set_input")
   
   def set_params(self, params):
     """Use dictionary params."""
-    raise NotImplementedError("Action doesn't implement parse")
+    raise NotImplementedError("Action doesn't implement set_params")
 
   def get_cost(self):
     """Calculate and return the cost of executing the action."""

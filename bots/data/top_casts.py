@@ -24,7 +24,7 @@ ORDER BY (
 """
 
 
-def top_casts_sql(channel, num_days, max_rows, keywords, category):
+def top_casts_sql(channel, num_days, max_rows, keywords, category, informative):
   params = []
   sql = sql_select
   today = datetime.today()
@@ -32,7 +32,8 @@ def top_casts_sql(channel, num_days, max_rows, keywords, category):
   sql += "WHERE t.day > ? \n"
   params.append(bigquery.ScalarQueryParameter(None, "DATE", past))
   sql += "AND t.parent_fid = -1 \n"
-  sql += "AND q_info>50 \n"
+  if informative:
+    sql += "AND q_info>50 \n"
   if category is not None:
     sql += "AND (t.category_label = ?) \n"
     params.append(bigquery.ScalarQueryParameter(None, "STRING", category))
@@ -48,8 +49,8 @@ def top_casts_sql(channel, num_days, max_rows, keywords, category):
   return sql, params
 
 
-def top_casts_results(channel, num_days, max_rows, keywords, category):
-  sql, params = top_casts_sql(channel, num_days, max_rows, keywords, category)
+def top_casts_results(channel, num_days, max_rows, keywords, category, informative):
+  sql, params = top_casts_sql(channel, num_days, max_rows, keywords, category, informative)
   response = execute(sql, params)
   results = [x for x in response]
   return results
