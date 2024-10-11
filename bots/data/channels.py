@@ -22,7 +22,7 @@ def get_next_channel_digest():
   FROM ds.channels_digest
   INNER JOIN ds.channels ON channels_digest.url = channels.url
   WHERE ((channels_digest.last_digest_at IS NULL) OR (channels_digest.last_digest_at < '{two_days_ago.strftime('%Y-%m-%d %H:%M:%S')}'))
-  AND channels_digest.num_casts > 500
+  AND channels_digest.num_casts > 100
   AND channels.dsart_member = TRUE
   ORDER BY channels_digest.num_casts DESC
   LIMIT 1;
