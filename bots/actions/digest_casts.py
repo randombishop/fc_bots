@@ -45,6 +45,7 @@ DETAILED INSTRUCTIONS:
 - Make sure you don't use " inside json strings. Avoid invalid json.
 - Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
 - Focus on posts that are genuine, interesting, funny, or informative.
+- Don't reference websites and don't include any urls in your summary.
 """
 
 instructions2 = """
