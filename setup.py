@@ -22,7 +22,8 @@ setup(
       "python-dotenv==1.0.1",
       "wordcloud==1.9.3",
       "matplotlib==3.9.2",
-      "python-dotenv==1.0.1"
+      "python-dotenv==1.0.1",
+      "dune_client==1.7.7"
     ]
 )
 

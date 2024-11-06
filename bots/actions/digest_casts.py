@@ -3,9 +3,8 @@ load_dotenv()
 import json
 import sys
 from bots.iaction import IAction
-from bots.utils.read_params import read_channel, read_int, read_keywords, read_category
-from bots.data.top_casts import top_casts_sql, top_casts_results
-from bots.data.bq import dry_run
+from bots.utils.read_params import read_channel, read_int, read_keyword, read_category
+from bots.data.casts import get_top_casts
 from bots.utils.prompts import instructions_and_request, casts_and_instructions
 from bots.utils.llms import call_llm
 from bots.utils.check_links import check_link_data
@@ -20,15 +19,13 @@ The query doesn't need to match a specific format, your job is to guess the para
 PARAMETERS
 * channel, optional, defaults to null.
 * category, optional, one of pre-defined categories, defaults to null. Allowed categories are: 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
-* keywords, optional, comma separated list of keywords, defaults to null.
-* num_days is an optional parameter and defaults to 1  
+* keyword, optional, any unique searchkeyword, defaults to null.
 
 RESPONSE FORMAT:
 {
   "category": ...,
   "channel": ...,
-  "keywords": ...,
-  "num_days": ...,
+  "keyword": ...
 }
 """
 
@@ -55,9 +52,9 @@ RESPONSE FORMAT:
   "sentence1": "...",
   "sentence2": "...",
   "sentence3": "...",
-  "link1": {"id": "uuid1", "comment": "keyword [emoji]"},
-  "link2": {"id": "uuid2", "comment": "keyword [emoji]"},
-  "link3": {"id": "uuid3", "comment": "keyword [emoji]"}
+  "link1": {"id": "0x...", "comment": "keyword [emoji]"},
+  "link2": {"id": "0x...", "comment": "keyword [emoji]"},
+  "link3": {"id": "0x...", "comment": "keyword [emoji]"}
 }
 """
 
@@ -73,49 +70,46 @@ class DigestCasts(IAction):
 
   def set_params(self, params):
     self.channel = read_channel(params)
-    self.keywords = read_keywords(params)
+    self.keyword = read_keyword(params)
     self.category = read_category(params)
-    self.num_days = read_int(params, 'num_days', 7, 1, 10)
     self.max_rows = 100
     if debug:
       print("DigestCasts.set_params():")
       print(f"  channel: {self.channel}")
-      print(f"  num_days: {self.num_days}")
-      print(f"  max_rows: {self.max_rows}")
-      print(f"  keywords: {self.keywords}")
+      print(f"  keywords: {self.keyword}")
       print(f"  category: {self.category}")
-
+      print(f"  max_rows: {self.max_rows}")
+      
   def get_cost(self):
-    sql, params = top_casts_sql(channel=self.channel, num_days=self.num_days, 
-                                max_rows=self.max_rows, keywords=self.keywords, 
-                                category=self.category, informative=True)
-    test = dry_run(sql, params)
-    self.cost = test['cost']
-    if debug:
-      print("DigestCasts.get_cost():")
-      print(f"  sql: {sql}")
-      print(f"  params: {params}")
-      print(f"  cost: {self.cost}")
+    self.cost = 20
     return self.cost
 
   def get_data(self):
     # Get data
-    posts = top_casts_results(channel=self.channel, num_days=self.num_days, 
-                              max_rows=self.max_rows, keywords=self.keywords, 
-                              category=self.category, informative=True)
+    posts = get_top_casts(channel=self.channel,
+                          keyword=self.keyword,
+                          category=self.category,
+                          max_rows=self.max_rows)
+    posts = posts.to_dict('records')
     posts.sort(key=lambda x: x['timestamp'])
-    if len(posts) < 10:
+    if len(posts) < 5:
       raise Exception(f"Not enough posts to generate a digest: {len(posts)}")
     # Run LLM
     instructions = instructions1
-    if self.keywords is not None and len(self.keywords) > 0:
-      instructions += ("- Focus on the following subject: " + " ".join(self.keywords) + "\n")
+    if self.keyword is not None:
+      instructions += ("- Focus on the following subject: " + self.keyword + "\n")
+    if self.category is not None:
+      instructions += ("- Focus on the following category: " + self.category[2:] + "\n")
     instructions += "\n\n"
     instructions += instructions2
-    if debug:
-      print(instructions)
     prompt = casts_and_instructions(posts, instructions)
+    if debug:
+      print('Prompt:')
+      print(prompt)
     result = call_llm(prompt)
+    if debug:
+      print('LLM result:')
+      print(result)
     # Make summary
     summary = []
     if 'sentence1' in result and len(result['sentence1']) > 0:

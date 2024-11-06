@@ -1,53 +1,32 @@
 from datetime import datetime, timedelta
-from google.cloud import bigquery
-from bots.data.bq import execute
-from bots.data.pg import pg_connection
+from bots.data.wield import get_cast_info
+from bots.data.dune import run_query
+from dune_client.types import QueryParameter
 
 
-def text_for_fid_sql(fid, num_days):
-  params = []
-  today = datetime.today()
-  past = (today - timedelta(days=(num_days+1))).strftime("%Y-%m-%d")
-  sql = """
-  SELECT text
-  FROM cast_features
-  WHERE day > ?
-  AND fid = ?
-  ORDER BY timestamp DESC
-  LIMIT 100
-  """
-  params.append(bigquery.ScalarQueryParameter(None, "DATE", past))
-  params.append(bigquery.ScalarQueryParameter(None, "INTEGER", fid))
-  return sql, params
+def get_casts_for_fid(fid):
+  query_id = 4248613
+  params = [QueryParameter.number_type(name="fid", value=fid)]
+  return run_query(query_id, params)
 
-
-def text_for_fid_results(fid, num_days):
-  sql, params = text_for_fid_sql(fid, num_days)
-  response = execute(sql, params)
-  results = [x['text'] for x in response]
-  return results
-
-
+def get_top_casts(channel, keyword, category, max_rows):
+  query_id = 4252915
+  params = [
+    QueryParameter.text_type(name="parent_url", value=channel if channel is not None else '*'),
+    QueryParameter.text_type(name="keyword", value=keyword if keyword is not None else '*'),
+    QueryParameter.text_type(name="category", value=category if category is not None else '*'),
+    QueryParameter.number_type(name="limit", value=max_rows)
+  ]
+  return run_query(query_id, params)
+  
 def get_cast(hash):
-  hash = hash.replace('0x', '')
-  sql = f"""
-  select fid,
-  body->>'text' as text,
-  (body->'parent'->>'fid')::INTEGER as parent_fid,
-  body->'parent'->>'hash' as parent_hash
-  from messages
-  where hash = '\\x{hash}'::bytea;
-  """
-  with pg_connection.cursor() as cursor:
-    cursor.execute(sql)
-    row = cursor.fetchone()
-    if row is not None:
-      return {
-        'fid': row[0],
-        'text': row[1],
-        'parent_fid': row[2],
-        'parent_hash': row[3]
-      }
-    else:
-      return None
+  cast = get_cast_info(hash)
+  return {
+    'fid': int(cast['author']['fid']),
+    'text': cast['text'],
+    'mentions': cast['mentions'] if 'mentions' in cast else [], 
+    'mentionsPos': cast['mentionsPositions'] if 'mentionsPositions' in cast else [],
+    'parent_fid': cast['parentFid'] if 'parentFid' in cast else None,
+    'parent_hash': cast['parentHash'] if 'parentHash' in cast else None
+  }
   

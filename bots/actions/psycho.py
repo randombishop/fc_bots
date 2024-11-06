@@ -4,8 +4,7 @@ import sys
 import uuid
 import os
 from bots.iaction import IAction
-from bots.data.bq import dry_run
-from bots.data.casts import text_for_fid_sql, text_for_fid_results
+from bots.data.casts import get_casts_for_fid
 from bots.utils.prompts import instructions_and_request, extract_user_prompt
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_fid
@@ -38,20 +37,18 @@ class Psycho(IAction):
     self.fid = read_fid(params)
     
   def get_cost(self):
-    sql, params = text_for_fid_sql(self.fid, 15)
-    test = dry_run(sql, params)
-    self.cost = test['cost']
+    self.cost = 20
     return self.cost
 
   def get_data(self):
-    text = text_for_fid_results(self.fid, 15)
-    if text is None or len(text) == 0:
+    df = get_casts_for_fid(self.fid)
+    if df is None or len(df) == 0:
       raise Exception(f"Not enough activity to buid a psychodegen analysis.")
-    self.data = text
+    self.data = list(df['text'])
     return self.data
     
   def get_casts(self, intro=''):
-    text = "\n".join(self.data)
+    text = "\n".join([str(x) for x in self.data])
     prompt = text + '\n\n' + instructions.format(user=self.user) ;
     result = call_llm(prompt)
     casts = []

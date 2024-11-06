@@ -1,12 +1,10 @@
 from dotenv import load_dotenv
 load_dotenv()
 import sys
-import uuid
-import os
+import time
 from bots.iaction import IAction
 from bots.data.casts import get_cast
-from bots.data.users import get_usernames
-from bots.utils.prompts import instructions_and_request
+from bots.data.users import get_username
 from bots.utils.llms import call_llm
 from bots.utils.check_casts import check_casts
 
@@ -41,18 +39,24 @@ class Chat(IAction):
       cast = get_cast(parent_hash)
       context.append({'text': cast['text'], 'fid': cast['fid']})
       parent_hash = cast['parent_hash']
+      if parent_hash is not None:
+        time.sleep(0.5)
     context.reverse()
     fids = list(set(item['fid'] for item in context))
     fids = [x for x in fids if x is not None]
     print(fids)
     if len(fids) > 0:
-      usernames = get_usernames(fids)
+      usernames = {}
+      for fid in fids:
+        usernames[fid] = get_username(fid)
+        if len(usernames)<len(fids):
+          time.sleep(0.5)
       print(usernames)
       for item in context:
-        item['username'] = '@' +usernames[item['fid']] if item['fid'] in usernames else '#' + str(item['fid'])
+        item['username'] = '@' +usernames[item['fid']] if usernames[item['fid']] is not None else '#' + str(item['fid'])
     for item in context:
       if 'username' not in item:
-        item['username'] = '!anonymous'
+        item['username'] = 'anonymous'
     self.data = context
     return self.data
     

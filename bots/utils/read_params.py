@@ -38,17 +38,15 @@ def read_channel(params):
   return channel
 
 
-def read_keywords(params):
-  keywords = []
-  if 'keywords' in params and params['keywords'] is not None and len(params['keywords']) > 0:
-    keywords_string = params['keywords']
-    keywords_string = keywords_string.replace(' ', ',')
-    keywords_string = keywords_string.replace('\n', ',')
-    keywords_string = keywords_string.lower()
-    keywords = keywords_string.split(',')
-    keywords = [keyword.strip() for keyword in keywords]
-    keywords = [keyword for keyword in keywords if len(keyword) > 3]
-  return keywords
+def read_keyword(params):
+  if 'keyword' in params and params['keyword'] is not None:
+    keyword_string = str(params['keyword'])
+    keyword_string = keyword_string.lower()
+    keyword_string = keyword_string.strip()
+    if len(keyword_string) > 3:
+      return keyword_string
+    else:
+      return None
 
 def read_category(params):
   if 'category' in params and params['category'] is not None:
