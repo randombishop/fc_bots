@@ -1,38 +1,34 @@
 from dotenv import load_dotenv
 load_dotenv()
-import json
 import sys
 from bots.iaction import IAction
 from bots.utils.prompts import instructions_and_request, casts_and_instructions
 from bots.utils.llms import call_llm
-from bots.utils.read_params import read_category, read_channel, read_int, read_keywords, read_string
-from bots.data.top_casts import top_casts_sql, top_casts_results
-from bots.data.bq import dry_run
+from bots.utils.read_params import read_category, read_channel, read_int, read_keyword, read_string
+from bots.data.casts import get_top_casts
 from bots.utils.check_links import check_link_data
 from bots.utils.check_casts import check_casts
 
 
 parse_instructions = """
 INSTRUCTIONS:
-Find and extract following parameters from the user input: channel, category, number of days, criteria.
+Find and extract following parameters from the user input: channel, category, and criteria.
 Your goal is not to answer the user query, you only need to extract the parameters.
 The query doesn't need to match a specific format, your job is to guess the parameters that the user is asking for.
 
 EXAMPLES:
-* get me the funniest cast in /ted channel last week -> criteria=funniest, channel=/ted, num_days=7
+* get me the funniest cast in /ted channel -> criteria=funniest, channel=/ted,
 * Best of arts -> criteria=best, category=arts
 
 PARAMETERS
 * channel is an optional parameter and defaults to null
 * category, optional, one of pre-defined categories, defaults to null. Allowed categories are: 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
-* num_days is an optional parameter and defaults to 1  
 * criteria is free text and defaults to 'most interesting'
 
 RESPONSE FORMAT:
 {
   "channel": ...,
   "category": ...,
-  "num_days": ...,
   "criteria": ...
 }
 """
@@ -49,7 +45,7 @@ INSTRUCTIONS:
 
 RESPONSE FORMAT:
 {{
-  "id": "selected post uuid",
+  "id": "selected post hash",
   "text": "original text of the post",
   "comment": "comment on the post with a keyword and emoji",
 }}
@@ -67,21 +63,18 @@ class PickCast(IAction):
     self.channel = read_channel(params)
     self.category = read_category(params)
     self.criteria = read_string(params, 'criteria', 'most interesting', 100)
-    self.num_days = read_int(params, 'num_days', 7, 1, 10)
     self.max_rows = 100
     
   def get_cost(self):
-    sql, params = top_casts_sql(channel=self.channel, num_days=self.num_days, 
-                                max_rows=self.max_rows, keywords=None, 
-                                category=self.category, informative=False)
-    test = dry_run(sql, params)
-    self.cost = test['cost']
+    self.cost = 20
     return self.cost
 
   def get_data(self):
-    posts = top_casts_results(channel=self.channel, num_days=self.num_days, 
-                              max_rows=self.max_rows, keywords=None, 
-                              category=self.category, informative=False)
+    posts = get_top_casts(channel=self.channel,
+                          keyword=None,
+                          category=self.category,
+                          max_rows=self.max_rows)
+    posts = posts.to_dict('records')
     if len(posts) < 5:
       raise Exception(f"Not enough posts to pick a winner ({len(posts)} posts)")
     prompt = casts_and_instructions(posts, task_instructions.format(self.criteria))
@@ -110,7 +103,6 @@ if __name__ == "__main__":
   print(f"Channel: {action.channel}")
   print(f"Category: {action.category}")
   print(f"Criteria: {action.criteria}")
-  print(f"Num days: {action.num_days}") 
   print(f"Max rows: {action.max_rows}")
   cost = action.get_cost()
   print(f"Cost: {cost}")

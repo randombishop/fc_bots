@@ -14,6 +14,7 @@ def mistral(prompt):
   if debug:
     print('mistral response', response)
   try:
+    response = response.replace('\\', '\\\\')
     result = json.loads(response)
   except:
     raise Exception(f"Error parsing LLM response: {response}")
