@@ -13,7 +13,7 @@ from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
 
 
-debug = True
+debug = False
 
 
 class PrefsCloud(IAction):
