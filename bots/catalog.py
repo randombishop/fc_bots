@@ -8,7 +8,6 @@ from bots.actions.prefs_cloud import PrefsCloud
 from bots.actions.psycho import Psycho
 from bots.actions.roast import Roast
 # Generic functions
-from bots.actions.run_sql import RunSql
 from bots.actions.chat import Chat
 
 
@@ -22,8 +21,7 @@ ACTIONS = {
   24: Psycho,
   25: Roast,
 
-  91: RunSql,
-  92: Chat
+  91: Chat
 }
 
 
@@ -43,7 +41,6 @@ DESCRIPTIONS = """
 25. Generate a roast for a user.
 
 ## Generic queries
-91. Runs a SQL query. (Query must be a valid SQL query, do not try to convert the user query from natural language to SQL.)
-92. Responds in natural language. Uses a LLM to generate an answer.
+91. Responds in natural language. Uses a LLM to generate an answer.
 
 """

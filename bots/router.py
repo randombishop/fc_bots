@@ -7,12 +7,7 @@ from bots.catalog import ACTIONS, DESCRIPTIONS
 
 
 
-def read_functions_md():
-  current_dir = os.path.dirname(os.path.abspath(__file__))
-  functions_path = os.path.join(current_dir, 'functions.md')
-  with open(functions_path, 'r') as file:
-    functions = file.read()
-  return functions
+
 
 intro = """
 INSTRUCTIONS:
