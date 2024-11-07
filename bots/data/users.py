@@ -4,6 +4,7 @@ import json
 from bots.data.wield import get_user_info_by_fid, get_user_info_by_name
 from bots.data.dune import run_query
 from dune_client.types import QueryParameter
+from datetime import datetime, timedelta
 
 
 def get_username(fid):
@@ -44,6 +45,22 @@ def get_favorite_users(fid):
     QueryParameter.number_type(name="limit", value=10)
   ]
   return run_query(query_id, params)
+
+
+def get_top_daily_casters(channel):
+  query_id = 4258259
+  params = [
+    QueryParameter.text_type(name="parent_url", value=channel if channel is not None else '*'),
+    QueryParameter.number_type(name="limit", value=10)
+  ]
+  df = run_query(query_id, params)
+  today = datetime.today()
+  deltas = list(range(1,11))
+  days = [(today - timedelta(days=x)).strftime("%Y-%m-%d") for x in deltas]
+  rename = {f"d-{deltas[i]}": days[i] for i in range(len(deltas))}
+  rename['user_name']='User'
+  df.rename(columns=rename, inplace=True)
+  return df
 
 
 if __name__ == "__main__":

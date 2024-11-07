@@ -3,13 +3,11 @@ load_dotenv()
 import uuid
 import sys
 import os
-import pandas
 from bots.iaction import IAction
 from bots.utils.prompts import instructions_and_request
 from bots.utils.llms import call_llm
-from bots.utils.read_params import read_channel, read_int
-from bots.data.casts_by_user import casts_by_user_sql, casts_by_user_results
-from bots.data.bq import dry_run, to_array
+from bots.utils.read_params import read_channel
+from bots.data.users import get_top_daily_casters
 from bots.utils.images import user_activity_chart
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
@@ -17,18 +15,16 @@ from bots.utils.check_casts import check_casts
 
 parse_instructions = """
 INSTRUCTIONS:
-Find the channel and the number of days in the user input. 
-Your goal is not to answer the request, you only need to extract the parameters.
-The query doesn't need to match a specific format, your job is to guess the parameters that the user is asking for.
+Find the channel in the user input. 
+Your goal is not to answer the request, you only need to extract the channel parameter.
+The query doesn't need to match a specific format, your job is to guess the channel that the user is asking for.
 
 PARAMETERS:
 * channel, text, required.
-* num_days, integer, optional, defaults to 1
 
 RESPONSE FORMAT:
 {{
-  "channel": ...,
-  "num_days": ...
+  "channel": ...
 }}
 """
 
@@ -42,27 +38,19 @@ class MostActiveUsers(IAction):
   
   def set_params(self, params):
     self.channel = read_channel(params)
-    self.num_days = read_int(params, 'num_days', 7, 3, 15)
-    self.max_rows = read_int(params, 'max_rows', 10, 1, 10)
 
   def get_cost(self):
-    sql, params = casts_by_user_sql(self.channel, self.num_days, self.max_rows)
-    test = dry_run(sql, params)
-    self.cost = test['cost']
+    self.cost = 20
     return self.cost
 
   def get_data(self):
-    users = casts_by_user_results(self.channel, self.num_days, self.max_rows)
+    users = get_top_daily_casters(self.channel)
     if len(users) == 0:
       raise Exception("Query returned 0 rows")
-    self.data = to_array(users)
-    return self.data
+    self.data = users
   
   def get_casts(self, intro=''):
-    df = pandas.DataFrame(self.data['values'], columns=self.data['columns'])
-    rename_cols = {x: x.replace('casts-', '') for x in df.columns}
-    rename_cols['user_name']='User'
-    df.rename(columns=rename_cols, inplace=True)      
+    df = self.data
     filename = str(uuid.uuid4())+'.png'
     user_activity_chart(df, filename)
     upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
@@ -100,8 +88,6 @@ if __name__ == "__main__":
   action = MostActiveUsers()
   action.set_input(input)
   print(f"Channel: {action.channel}")    
-  print(f"Num days: {action.num_days}")
-  print(f"Max rows: {action.max_rows}")
   cost = action.get_cost()
   print(f"Cost: {cost}")
   action.get_data()
