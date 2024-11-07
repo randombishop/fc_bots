@@ -1,71 +1,73 @@
 from dotenv import load_dotenv
 load_dotenv()
-import sys
-import time
-from bots.data.pg import pg_connection
+import json
+from bots.data.wield import get_user_info_by_fid, get_user_info_by_name
+from bots.data.dune import run_query
+from dune_client.types import QueryParameter
+from datetime import datetime, timedelta
 
 
 def get_username(fid):
-  sql = """
-  select body->>'value' as user_name
-  from messages
-  where fid={}
-  and type = 11 
-  and body->>'type' = '6'
-  order by timestamp desc
-  limit 1
-  """
-  with pg_connection.cursor() as cursor:
-    cursor.execute(sql.format(fid))
-    username = cursor.fetchone()
-  if username is not None:
-    return username[0]
+  user_info = get_user_info_by_fid(fid)
+  if user_info is not None:
+    return user_info['user_name']
   else:
     return None
 
 
 def get_fid(username):
-  sql = """
-  select fid
-  from messages
-  where body->>'value'='{}'
-  and type = 11 
-  and body->>'type' = '6'
-  order by timestamp desc
-  limit 1;
-  """
-  with pg_connection.cursor() as cursor:
-    cursor.execute(sql.format(username))
-    fid = cursor.fetchone()
-  if fid is not None:
-    return fid[0]
+  user_info = get_user_info_by_name(username)
+  if user_info is not None:
+    return user_info['fid']
   else:
     return None
 
 
-def get_usernames(fids):
-  sql = """
-  select fid, body->>'value' as user
-  from messages
-  where fid in ({})
-  and type = 11 
-  and body->>'type' = '6'
-  order by timestamp desc
-  """
-  with pg_connection.cursor() as cursor:
-    cursor.execute(sql.format(",".join([str(fid) for fid in fids])))
-    ans = cursor.fetchall()
-  return {int(row[0]): row[1] for row in ans}
+def get_words_dict(fid):
+  query_id = 4257892
+  params = [QueryParameter.number_type(name="fid", value=fid)]
+  response = run_query(query_id, params)
+  rows = response.to_dict('records')
+  if len(rows) == 0:
+    return None
+  else:
+    s = rows[0]['keywords']
+    if s is None:
+      return None
+    else:
+      return json.loads(s)
+
+
+def get_favorite_users(fid):
+  query_id = 4258114
+  params = [
+    QueryParameter.number_type(name="fid", value=fid),
+    QueryParameter.number_type(name="limit", value=10)
+  ]
+  return run_query(query_id, params)
+
+
+def get_top_daily_casters(channel):
+  query_id = 4258259
+  params = [
+    QueryParameter.text_type(name="parent_url", value=channel if channel is not None else '*'),
+    QueryParameter.number_type(name="limit", value=10)
+  ]
+  df = run_query(query_id, params)
+  today = datetime.today()
+  deltas = list(range(1,11))
+  days = [(today - timedelta(days=x)).strftime("%Y-%m-%d") for x in deltas]
+  rename = {f"d-{deltas[i]}": days[i] for i in range(len(deltas))}
+  rename['user_name']='User'
+  df.rename(columns=rename, inplace=True)
+  return df
 
 
 if __name__ == "__main__":
-  t0 = time.time()
-  input = sys.argv[1]
+  input = input("Enter user FID or username: ")
   try:
     fid = int(input)
     print(fid, 'fid->username', get_username(fid))
   except:
     username = input.lower()
-    print(username, 'username->fid', get_fid(username))
-  print('time:', time.time() - t0)
-  
+    print(username, 'username->fid', get_fid(username)) 

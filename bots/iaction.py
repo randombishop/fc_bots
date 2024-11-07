@@ -7,7 +7,7 @@ class IAction:
     self.casts = None
 
   def set_fid_origin(self, fid_origin):
-    self.fid_origin = fid_origin
+    self.fid_origin = int(fid_origin)
 
   def set_parent_hash(self, parent_hash):
     self.parent_hash = parent_hash

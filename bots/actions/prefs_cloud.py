@@ -4,14 +4,16 @@ import sys
 import uuid
 import os
 from bots.iaction import IAction
-from bots.data.bq import dry_run
-from bots.data.fid_features import get_words_dict_sql, get_words_dict
+from bots.data.users import get_words_dict
 from bots.utils.prompts import instructions_and_request, extract_user_prompt
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_fid
 from bots.utils.images import make_wordcloud
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
+
+
+debug = True
 
 
 class PrefsCloud(IAction):
@@ -27,13 +29,13 @@ class PrefsCloud(IAction):
     self.fid = read_fid(params)
 
   def get_cost(self):
-    sql, params = get_words_dict_sql(self.fid)
-    test = dry_run(sql, params)
-    self.cost = test['cost']
+    self.cost = 20
     return self.cost
 
   def get_data(self):
     words = get_words_dict(self.fid)
+    if debug:
+      print('words', words)
     if words is None or len(words) == 0:
       raise Exception(f"Not enough activity to buid a word cloud.")
     self.data = words

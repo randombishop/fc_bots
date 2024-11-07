@@ -18,11 +18,13 @@ def get_channels_map():
 def get_next_channel_digest():
   two_days_ago = datetime.datetime.now() - datetime.timedelta(days=2)
   sql = f"""
-  SELECT url, last_digest_at 
+  SELECT channels_digest.url, channels_digest.last_digest_at 
   FROM ds.channels_digest
-  WHERE ((last_digest_at IS NULL) OR (last_digest_at < '{two_days_ago.strftime('%Y-%m-%d %H:%M:%S')}'))
-  AND num_casts > 500
-  ORDER BY num_casts DESC
+  INNER JOIN ds.channels ON channels_digest.url = channels.url
+  WHERE ((channels_digest.last_digest_at IS NULL) OR (channels_digest.last_digest_at < '{two_days_ago.strftime('%Y-%m-%d %H:%M:%S')}'))
+  AND channels_digest.num_casts > 100
+  AND channels.dsart_member = TRUE
+  ORDER BY channels_digest.num_casts DESC
   LIMIT 1;
   """
   try:

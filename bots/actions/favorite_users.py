@@ -3,13 +3,11 @@ load_dotenv()
 import sys
 import uuid
 import os
-import pandas
 from bots.iaction import IAction
 from bots.utils.prompts import instructions_and_request, extract_user_prompt
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_fid
-from bots.data.reactions import favorite_users_sql, favorite_users_results
-from bots.data.bq import dry_run, to_array
+from bots.data.users import get_favorite_users
 from bots.utils.images import table_image
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
@@ -27,20 +25,18 @@ class FavoriteUsers(IAction):
     self.fid = read_fid(params)
 
   def get_cost(self):
-    sql = favorite_users_sql(self.fid)
-    test = dry_run(sql)
-    self.cost = test['cost']
+    self.cost = 20
     return self.cost
 
   def get_data(self):
-    users = favorite_users_results(self.fid)
+    users = get_favorite_users(self.fid)
     if len(users) < 3:
       raise Exception(f"Not enough data ({len(users)})")
-    self.data = to_array(users)
+    self.data = users
     return self.data
     
   def get_casts(self, intro=''):
-    df = pandas.DataFrame(self.data['values'], columns=self.data['columns'])
+    df = self.data
     df.rename(inplace=True, columns={
         'username': 'User',
         'num_recasts': 'Recasts',
