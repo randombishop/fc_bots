@@ -19,7 +19,7 @@ def update_task_result(task_id, result):
 
 def get_mention_listener_next_page(fid):
   with pg_connection.cursor() as cursor:
-    cursor.execute('SELECT next_page FROM ds.mention_listeners WHERE fid = %s', (fid,))
+    cursor.execute('SELECT next_page FROM ds.mention_listeners WHERE target_id = %s', (fid,))
     rows = cursor.fetchall()
     if len(rows) == 0:
       return None
@@ -29,5 +29,5 @@ def get_mention_listener_next_page(fid):
 
 def update_mention_listener_next_page(fid, next_page):
   with pg_connection.cursor() as cursor:
-    cursor.execute('UPDATE ds.mention_listeners SET next_page = %s WHERE fid = %s', (next_page, fid))
+    cursor.execute('UPDATE ds.mention_listeners SET next_page = %s WHERE target_id = %s', (next_page, fid))
     pg_connection.commit()
