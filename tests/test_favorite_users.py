@@ -13,7 +13,6 @@ class TestFavoriteUsers(unittest.TestCase):
     self.assertIsInstance(action, FavoriteUsers)
     self.assertEqual(action.fid, 3)
     self.assertEqual(len(action.casts), 1)
-    self.assertEqual(len(action.casts), 1)
     self.assertEqual(len(action.casts[0]['mentions']), 3)
     
   def test2(self):

@@ -7,7 +7,7 @@ from bots.iaction import IAction
 from bots.data.users import get_words_dict
 from bots.utils.prompts import instructions_and_request, extract_user_prompt
 from bots.utils.llms import call_llm
-from bots.utils.read_params import read_fid
+from bots.utils.read_params import read_fid, read_username
 from bots.utils.images import make_wordcloud
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
@@ -24,7 +24,7 @@ class PrefsCloud(IAction):
     self.set_params(params)
 
   def set_params(self, params):
-    self.user = params['user']
+    self.user = read_username(params)
     self.fid = read_fid(params)
 
   def get_cost(self):
