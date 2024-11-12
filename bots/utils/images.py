@@ -1,3 +1,4 @@
+import pandas
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -25,8 +26,9 @@ def user_activity_chart(df, filename, size=(10, 6)):
   del df['casts_total']
   df.set_index("User", inplace=True)
   plt.figure(figsize=size)
+  dates = pandas.to_datetime(df.columns)
   for user in df.index:
-    plt.plot(df.columns, df.loc[user], label=user)
+    plt.plot(dates, df.loc[user], label=user)
   plt.title('Daily casts per user')
   plt.xlabel("Date")
   plt.ylabel("Number of Casts")

@@ -46,7 +46,6 @@ INSTRUCTIONS:
 RESPONSE FORMAT:
 {{
   "id": "selected post hash",
-  "text": "original text of the post",
   "comment": "comment on the post with a keyword and emoji",
 }}
 """
@@ -57,6 +56,7 @@ class PickCast(IAction):
   def set_input(self, input):
     prompt = instructions_and_request(parse_instructions, input)
     params = call_llm(prompt)
+    self.input = input
     self.set_params(params)
     
   def set_params(self, params):

@@ -59,13 +59,13 @@ RESPONSE FORMAT:
 """
 
 
-debug = True
 
 class DigestCasts(IAction):
     
   def set_input(self, input):
     prompt = instructions_and_request(parse_instructions, input)
     params = call_llm(prompt)
+    self.input = input
     self.set_params(params)
 
   def set_params(self, params):
@@ -73,12 +73,6 @@ class DigestCasts(IAction):
     self.keyword = read_keyword(params)
     self.category = read_category(params)
     self.max_rows = 100
-    if debug:
-      print("DigestCasts.set_params():")
-      print(f"  channel: {self.channel}")
-      print(f"  keywords: {self.keyword}")
-      print(f"  category: {self.category}")
-      print(f"  max_rows: {self.max_rows}")
       
   def get_cost(self):
     self.cost = 20
@@ -103,13 +97,7 @@ class DigestCasts(IAction):
     instructions += "\n\n"
     instructions += instructions2
     prompt = casts_and_instructions(posts, instructions)
-    if debug:
-      print('Prompt:')
-      print(prompt)
     result = call_llm(prompt)
-    if debug:
-      print('LLM result:')
-      print(result)
     # Make summary
     summary = []
     if 'sentence1' in result and len(result['sentence1']) > 0:

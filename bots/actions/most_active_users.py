@@ -34,6 +34,7 @@ class MostActiveUsers(IAction):
   def set_input(self, input):
     prompt = instructions_and_request(parse_instructions, input)
     params = call_llm(prompt)
+    self.input = input
     self.set_params(params)
   
   def set_params(self, params):
@@ -55,21 +56,22 @@ class MostActiveUsers(IAction):
     user_activity_chart(df, filename)
     upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
     os.remove(filename)
-    mentions = [int(df.iloc[i]['fid']) for i in range(3)]
-    mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
+    num_mentions = min(len(df), 3)
+    mentions = [int(df.iloc[i]['fid']) for i in range(num_mentions)]
+    mentions_ats = ['@'+df.iloc[i]['User'] for i in range(num_mentions)]
     mentions_positions = []
-    print(f"Mentioned users: {mentions_ats}")
-    print(f"Mentioned fid: {mentions}")
     text = "The most active users are: \n"
     text += "🥇 "
     mentions_positions.append(len(text.encode('utf-8')))
     text += f" : {df.iloc[0]['casts_total']} casts.\n"
-    text += "🥈 "
-    mentions_positions.append(len(text.encode('utf-8')))
-    text += f" : {df.iloc[1]['casts_total']} casts.\n"
-    text += "🥉 "
-    mentions_positions.append(len(text.encode('utf-8')))
-    text += f" : {df.iloc[2]['casts_total']} casts.\n"
+    if num_mentions > 1:
+      text += "🥈 "
+      mentions_positions.append(len(text.encode('utf-8')))
+      text += f" : {df.iloc[1]['casts_total']} casts.\n"
+    if num_mentions > 2:
+      text += "🥉 "
+      mentions_positions.append(len(text.encode('utf-8')))
+      text += f" : {df.iloc[2]['casts_total']} casts.\n"
     cast = {
       'text': text, 
       'mentions': mentions, 

@@ -1,5 +1,5 @@
 from bots.data.channels import get_channels_map
-from bots.data.users import get_fid
+from bots.data.users import get_fid, get_username
 
 
 def read_int(params, key, default, min, max):
@@ -69,4 +69,16 @@ def read_fid(params):
       if username.startswith('@'):
         username = username[1:]
       return get_fid(username)
+  return None
+
+def read_username(params):
+  if 'user' in params and params['user'] is not None:
+    try:
+      fid = int(params['user'])
+      return get_username(fid)
+    except:
+      username = params['user'].lower()
+      if username.startswith('@'):
+        username = username[1:]
+      return username
   return None

@@ -19,6 +19,7 @@ class FavoriteUsers(IAction):
   def set_input(self, input):
     prompt = instructions_and_request(extract_user_prompt, input, self.fid_origin)
     params = call_llm(prompt)
+    self.input = input
     self.set_params(params)
     
   def set_params(self, params):
@@ -50,8 +51,6 @@ class FavoriteUsers(IAction):
     mentions = [int(df.iloc[i]['target_fid']) for i in range(3)]
     mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
     mentions_positions = []
-    print(f"Mentioned users: {mentions_ats}")
-    print(f"Mentioned fid: {mentions}")
     text = "The winners are... \n"
     text += "🥇 "
     mentions_positions.append(len(text.encode('utf-8')))
