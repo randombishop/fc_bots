@@ -33,9 +33,7 @@ def find_action(request):
   return result
 
 def route(request, fid_origin=None, parent_hash=None):
-  print('request', request)
   mapped = find_action(request)
-  print('mapped', mapped)  
   if ('function' not in mapped or mapped['function'] not in ACTIONS):
     raise Exception('Could not map the request to a bot action.')
   function_number = int(mapped['function'])

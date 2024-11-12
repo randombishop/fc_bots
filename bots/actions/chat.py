@@ -44,14 +44,12 @@ class Chat(IAction):
     context.reverse()
     fids = list(set(item['fid'] for item in context))
     fids = [x for x in fids if x is not None]
-    print(fids)
     if len(fids) > 0:
       usernames = {}
       for fid in fids:
         usernames[fid] = get_username(fid)
         if len(usernames)<len(fids):
           time.sleep(0.5)
-      print(usernames)
       for item in context:
         item['username'] = '@' +usernames[item['fid']] if usernames[item['fid']] is not None else '#' + str(item['fid'])
     for item in context:
@@ -64,7 +62,6 @@ class Chat(IAction):
     text = "CONVERSATION:\n\n"
     for item in self.data:
       text += f"--- {item['username']} ---\n {item['text']}\n\n"
-    print(text)
     prompt = text + '\n\n' + instructions ;
     result = call_llm(prompt)
     cast = {'text': result['sentence1']}

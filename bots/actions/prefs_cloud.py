@@ -13,8 +13,6 @@ from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
 
 
-debug = False
-
 
 class PrefsCloud(IAction):
   
@@ -34,8 +32,6 @@ class PrefsCloud(IAction):
 
   def get_data(self):
     words = get_words_dict(self.fid)
-    if debug:
-      print('words', words)
     if words is None or len(words) == 0:
       raise Exception(f"Not enough activity to buid a word cloud.")
     self.data = words

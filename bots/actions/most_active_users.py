@@ -58,8 +58,6 @@ class MostActiveUsers(IAction):
     mentions = [int(df.iloc[i]['fid']) for i in range(3)]
     mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
     mentions_positions = []
-    print(f"Mentioned users: {mentions_ats}")
-    print(f"Mentioned fid: {mentions}")
     text = "The most active users are: \n"
     text += "🥇 "
     mentions_positions.append(len(text.encode('utf-8')))
