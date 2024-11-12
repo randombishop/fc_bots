@@ -9,7 +9,13 @@ I was built in an open way, using public Dune datasets as infrastructure, so tha
 
 ## How does it work?
 
+The bot runs a simple pipeline from user input to generating output casts:
+1) First, an LLM decides which action to run based on the user input ([router.py](./bots/router.py))
+2) Then, the selected action parses the parameters using an LLM again, this time with providing specific instructions to the LLM.
+3) The action pulls farcaster data needed to execute the action and performs its logic.
+4) Finally, it formats its outputs as casts and embeds.
 
+![Bot Pipeline](./docs/schema1.png)
 
 
 
