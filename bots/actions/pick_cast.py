@@ -46,7 +46,6 @@ INSTRUCTIONS:
 RESPONSE FORMAT:
 {{
   "id": "selected post hash",
-  "text": "original text of the post",
   "comment": "comment on the post with a keyword and emoji",
 }}
 """
