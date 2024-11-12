@@ -28,7 +28,7 @@ class Chat(IAction):
     self.input = input
 
   def get_cost(self):
-    self.cost = 0
+    self.cost = 1
     return self.cost
 
   def get_data(self):

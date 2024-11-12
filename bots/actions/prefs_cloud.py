@@ -20,6 +20,7 @@ class PrefsCloud(IAction):
   def set_input(self, input):
     prompt = instructions_and_request(extract_user_prompt, input, self.fid_origin)
     params = call_llm(prompt)
+    self.input = input
     self.set_params(params)
 
   def set_params(self, params):

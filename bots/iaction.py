@@ -31,3 +31,18 @@ class IAction:
   def get_casts(self, intro=''):
     """Return the associated casts."""
     raise NotImplementedError("Action doesn't implement get_casts")
+  
+  def run(self, intro=''):
+    """Run the action."""
+    self.get_cost()
+    self.get_data()
+    self.get_casts(intro)
+    
+  def print(self):
+    attrs = ['input', 'fid', 'user', 'channel', 'keyword', 'category', 'criteria', 'cost', 'casts']
+    s = f"---{self.__class__.__name__ }---\n"
+    for attr in attrs:
+      if hasattr(self, attr): 
+        s += f"{attr}={getattr(self, attr)}\n"
+    s += ('-'*32)
+    print(s)
