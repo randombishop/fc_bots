@@ -40,7 +40,7 @@ class Chat(IAction):
       context.append({'text': cast['text'], 'fid': cast['fid']})
       parent_hash = cast['parent_hash']
       if parent_hash is not None:
-        time.sleep(0.5)
+        time.sleep(2.5)
     context.reverse()
     fids = list(set(item['fid'] for item in context))
     fids = [x for x in fids if x is not None]
