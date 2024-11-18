@@ -15,11 +15,11 @@ print('Bird model loaded.')
 print('XGBoost features: ' + str(features))
 
 
-def predict_and_explain(df):
+def bird(df):
   df_features = df[features]
   dmatrix = xgboost.DMatrix(df_features)
   predict = bird.predict(dmatrix)
   shap_values = bird_explainer(dmatrix)
   shap_values.feature_names = features  
-  return predict, shap_values
+  return predict, df_features, shap_values
 
