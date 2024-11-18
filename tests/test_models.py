@@ -1,7 +1,7 @@
 import unittest
 from bots.models.bert import bert
 from bots.models.gambit import gambit, categories, topics
-
+from bots.models.bird import bird
 
 class TestModels(unittest.TestCase):
   
@@ -30,3 +30,17 @@ class TestModels(unittest.TestCase):
     for i in range(len(sentences)):
       self.assertEqual(category_label[i], expected_categories[i])
       self.assertEqual(topic_label[i], expected_topics[i])
+      
+  def test_bird(self):
+    sentences = [
+        "gm! I am new to farcaster and looking for instructive content in #ML and #DataScience. Who should I follow?",
+        "Leave me alone"
+    ]
+    embed = bert(sentences)
+    df = gambit(embed)
+    predict, _, _ = bird(df)
+    self.assertEqual(predict.shape[0], 2)
+    predict1 = float(predict[0])
+    predict2 = float(predict[1])
+    self.assertGreater(predict1, predict2)
+    
