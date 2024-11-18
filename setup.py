@@ -16,6 +16,7 @@ setup(
       "tensorflow==2.17.0",
       "tensorflow-text==2.17.0",
       "tensorflow-hub==0.16.1",
+      "keras==3.4.1",
       "ollama==0.2.1",
       "wordcloud==1.9.3",
       "matplotlib==3.9.2",
