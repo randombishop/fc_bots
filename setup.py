@@ -22,6 +22,7 @@ setup(
       "matplotlib==3.9.2",
       "nltk==3.9.1",
       "langdetect==1.0.9",  
+      "sentencepiece==0.2.0",
       "dune_client==1.7.7",
       "google-cloud-storage==2.18.2",
       "google-cloud-aiplatform==1.59.0",
