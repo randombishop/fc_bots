@@ -8,8 +8,8 @@ import json
 
 
 print('Loading Gambit model...')
-model_source_h5 = 'nn_transformer_202405.h5' 
-model_source_meta = 'nn_transformer_202405.json' 
+model_source_h5 = 'gambit2.h5' 
+model_source_meta = 'gambit2.json' 
 model_dir = os.path.dirname(os.path.abspath(__file__))
 with open(model_dir + model_source_meta) as f:
   meta = json.load(f)
