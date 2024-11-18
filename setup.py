@@ -5,6 +5,10 @@ setup(
     name="bots",
     version="0.0.2",
     packages=find_packages(),
+    include_package_data=True,
+    package_data={
+        "bots": ["models/**/*"],
+    },
     install_requires=[
       "pandas==2.2.2",
       "xgboost==2.1.0",
