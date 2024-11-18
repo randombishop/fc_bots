@@ -11,9 +11,9 @@ print('Loading Gambit model...')
 model_source_h5 = 'gambit2.h5' 
 model_source_meta = 'gambit2.json' 
 model_dir = os.path.dirname(os.path.abspath(__file__))
-with open(model_dir + model_source_meta) as f:
+with open(model_dir  + '/' +  model_source_meta) as f:
   meta = json.load(f)
-gambit = tf.keras.models.load_model(model_dir + model_source_h5)
+gambit = tf.keras.models.load_model(model_dir + '/' + model_source_h5)
 print('Gambit model loaded.')
 gambit.summary()
 
