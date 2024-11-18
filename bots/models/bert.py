@@ -49,5 +49,5 @@ def bert(sentences):
       indices=sparse_inputs.indices,
       dense_shape=sparse_inputs.dense_shape
   )
-  return e
+  return e['default'].numpy()
 
