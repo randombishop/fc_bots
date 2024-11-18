@@ -1,5 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
+import tensorflow as tf
+import tensorflow_text as tf_text
 import tensorflow_hub as hub
 
 
