@@ -8,7 +8,7 @@ import shap
 print('Loading bird model...')
 bird_model = xgboost.Booster() 
 model_dir = os.path.dirname(os.path.abspath(__file__))
-bird_model.load_model(model_dir + '/' +'bird_0_0_1.xgb.json')
+bird_model.load_model(model_dir + '/' +'bird2.xgb.json')
 bird_explainer = shap.TreeExplainer(bird_model)
 features = bird_model.feature_names
 print('Bird model loaded.')
