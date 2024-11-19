@@ -32,7 +32,7 @@ def find_action(request):
   result = call_llm(prompt)
   return result
 
-def route(request, fid_origin=None, parent_hash=None):
+def route(request, fid_origin=None, parent_hash=None, attachment_hash=None):
   mapped = find_action(request)
   if ('function' not in mapped or mapped['function'] not in ACTIONS):
     raise Exception('Could not map the request to a bot action.')
@@ -41,6 +41,7 @@ def route(request, fid_origin=None, parent_hash=None):
   action = Action()
   action.set_fid_origin(fid_origin)
   action.set_parent_hash(parent_hash)
+  action.set_attachment_hash(attachment_hash)
   action.set_input(request)
   return action
 

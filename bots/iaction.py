@@ -3,7 +3,7 @@ class IAction:
   def __init__(self):
     self.fid_origin = None
     self.parent_hash = None
-    self.attachments = None
+    self.attachment_hash = None
     self.data = None
     self.casts = None
 
@@ -13,8 +13,8 @@ class IAction:
   def set_parent_hash(self, parent_hash):
     self.parent_hash = parent_hash
 
-  def set_attachments(self, attachments):
-    self.attachments = attachments
+  def set_attachment_hash(self, attachment_hash):
+    self.attachment_hash = attachment_hash
 
   def set_input(self, input):
     """Use natural language input to set the params."""
@@ -43,7 +43,7 @@ class IAction:
     self.get_casts(intro)
     
   def print(self):
-    attrs = ['input', 'fid', 'user', 'channel', 'keyword', 'category', 'criteria', 'cost', 'casts']
+    attrs = ['input', 'fid', 'user', 'channel', 'keyword', 'category', 'criteria', 'text','cost', 'casts']
     s = f"---{self.__class__.__name__ }---\n"
     for attr in attrs:
       if hasattr(self, attr): 
