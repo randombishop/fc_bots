@@ -3,6 +3,7 @@ class IAction:
   def __init__(self):
     self.fid_origin = None
     self.parent_hash = None
+    self.attachments = None
     self.data = None
     self.casts = None
 
@@ -11,6 +12,9 @@ class IAction:
 
   def set_parent_hash(self, parent_hash):
     self.parent_hash = parent_hash
+
+  def set_attachments(self, attachments):
+    self.attachments = attachments
 
   def set_input(self, input):
     """Use natural language input to set the params."""
