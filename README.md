@@ -43,8 +43,8 @@ FAR_QUEST_API_KEY=
 
 3) Create a virtual environment and install the package:
 ```
-python -m venv venv
-source venv/bin/activate
+python -m venv virtual_env
+source virtual_env/bin/activate
 pip install -e .
 ```
 
