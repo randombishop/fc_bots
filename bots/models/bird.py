@@ -16,7 +16,8 @@ print('XGBoost features: ' + str(features))
 
 
 def predict(df):
-  return bird_model.predict(df[features])
+  dmatrix = xgboost.DMatrix(df[features])
+  return bird_model.predict(dmatrix)
 
 
 def bird(df):
