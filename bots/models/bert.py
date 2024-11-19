@@ -13,10 +13,10 @@ model_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 sp = spm.SentencePieceProcessor()
-spm_file = model_dir + '/tf_hub/universal-sentence-encoder-tensorflow1-lite-v2/assets/universal_encoder_8k_spm.model'
+spm_file = model_dir + '/tf_hub/uni-encoder-tf1-lite-v2/assets/universal_encoder_8k_spm.model'
 sp.Load(spm_file)
 
-model_handle = model_dir + '/tf_hub/universal-sentence-encoder-tensorflow1-lite-v2'
+model_handle = model_dir + '/tf_hub/uni-encoder-tf1-lite-v2'
 bert_model = hub.load(model_handle).signatures['default']
 print('Tensorflow embedding model loaded.')
 
