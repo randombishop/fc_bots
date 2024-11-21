@@ -2,8 +2,8 @@ from dotenv import load_dotenv
 load_dotenv()
 import sys
 from bots.iaction import IAction
-from bots.utils.prompts import instructions_and_request, casts_and_instructions
-from bots.utils.llms import call_llm
+from bots.utils.prompts import concat_casts
+from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.read_params import read_category, read_channel, read_int, read_keyword, read_string
 from bots.data.casts import get_top_casts
 from bots.utils.check_links import check_link_data
@@ -21,22 +21,31 @@ EXAMPLES:
 * Best of arts -> criteria=best, category=arts
 
 PARAMETERS
-* channel is an optional parameter and defaults to null
 * category, optional, one of pre-defined categories, defaults to null. Allowed categories are: 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
+* channel, optional, defaults to null. (channels always start with '/', for example '/data', if there is no '/' then it's not a channel)
 * criteria is free text and defaults to 'most interesting'
 
 RESPONSE FORMAT:
 {
-  "channel": ...,
   "category": ...,
+  "channel": ...,
   "criteria": ...
 }
 """
 
+parse_schema = {
+  "type":"OBJECT",
+  "properties":{
+    "channel":{"type":"STRING"},
+    "category":{"type":"STRING"},
+    "criteria":{"type":"STRING"}
+  }
+}
+
 
 task_instructions = """
 INSTRUCTIONS:
-  - Select the best post from this list above using this criteria: {}
+  - Select the best post from this list above using this criteria: ?
   - Comment about the post with a keyword and emoji.
   - Output the result in json format.
   - Make sure you don't use " inside json strings. Avoid invalid json.
@@ -44,18 +53,25 @@ INSTRUCTIONS:
   - Focus on posts that are genuine, interesting, funny, or informative.
 
 RESPONSE FORMAT:
-{{
-  "id": "selected post hash",
+{
+  "id": "selected post id",
   "comment": "comment on the post with a keyword and emoji",
-}}
+}
 """
+
+task_schema = {
+  "type":"OBJECT",
+  "properties":{
+    "id":{"type":"STRING"}, 
+    "comment":{"type":"STRING"}
+  }
+}
 
 
 class PickCast(IAction):
 
   def set_input(self, input):
-    prompt = instructions_and_request(parse_instructions, input)
-    params = call_llm(prompt)
+    params = call_llm(input, parse_instructions, parse_schema)
     self.input = input
     self.set_params(params)
     
@@ -63,7 +79,7 @@ class PickCast(IAction):
     self.channel = read_channel(params)
     self.category = read_category(params)
     self.criteria = read_string(params, 'criteria', 'most interesting', 100)
-    self.max_rows = 100
+    self.max_rows = get_max_capactity()
     
   def get_cost(self):
     self.cost = 20
@@ -77,9 +93,9 @@ class PickCast(IAction):
     posts = posts.to_dict('records')
     if len(posts) < 5:
       raise Exception(f"Not enough posts to pick a winner ({len(posts)} posts)")
-    prompt = casts_and_instructions(posts, task_instructions.format(self.criteria))
-    result = call_llm(prompt)
-    posts_map = {x['hash']: x for x in posts}
+    prompt = concat_casts(posts)
+    result = call_llm(prompt, task_instructions.replace('?', self.criteria), task_schema)
+    posts_map = {x['id']: x for x in posts}
     result = check_link_data(result, posts_map)
     self.data = result
     return result
@@ -88,7 +104,7 @@ class PickCast(IAction):
     casts = []
     cast = {
       'text': self.data['comment'],
-      'embeds': [{'fid': self.data['fid'], 'user_name': self.data['user_name'], 'hash': self.data['id']}]
+      'embeds': [{'fid': self.data['fid'], 'user_name': self.data['user_name'], 'hash': self.data['hash']}]
     }
     casts.append(cast)
     check_casts(casts)
@@ -100,14 +116,6 @@ if __name__ == "__main__":
   input = sys.argv[1]
   action = PickCast()
   action.set_input(input)
-  print(f"Channel: {action.channel}")
-  print(f"Category: {action.category}")
-  print(f"Criteria: {action.criteria}")
-  print(f"Max rows: {action.max_rows}")
-  cost = action.get_cost()
-  print(f"Cost: {cost}")
-  action.get_data()
-  print(f"Data: {action.data}")
-  action.get_casts(intro='🗞️ Channel Digest 🗞️')
-  print(f"Casts: {action.casts}")
+  action.run()
+  action.print()
   

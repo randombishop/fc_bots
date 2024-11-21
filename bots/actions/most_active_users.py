@@ -4,7 +4,6 @@ import uuid
 import sys
 import os
 from bots.iaction import IAction
-from bots.utils.prompts import instructions_and_request
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_channel
 from bots.data.users import get_top_daily_casters
@@ -23,17 +22,23 @@ PARAMETERS:
 * channel, text, required.
 
 RESPONSE FORMAT:
-{{
+{
   "channel": ...
-}}
+}
 """
+
+parse_schema = {
+  "type":"OBJECT",
+  "properties":{
+    "sentence1":{"type":"STRING"}
+  }
+}
 
 
 class MostActiveUsers(IAction):
 
   def set_input(self, input):
-    prompt = instructions_and_request(parse_instructions, input)
-    params = call_llm(prompt)
+    params = call_llm(input, parse_instructions, parse_schema)
     self.input = input
     self.set_params(params)
   
@@ -89,11 +94,6 @@ if __name__ == "__main__":
   input = sys.argv[1] 
   action = MostActiveUsers()
   action.set_input(input)
-  print(f"Channel: {action.channel}")    
-  cost = action.get_cost()
-  print(f"Cost: {cost}")
-  action.get_data()
-  print(f"Data: {action.data}")
-  action.get_casts()
-  print(f"Casts: {action.casts}")
+  action.run()
+  action.print()
   

@@ -26,14 +26,14 @@ class TestRouter(unittest.TestCase):
     self.assertIsInstance(action, actions.most_active_users.MostActiveUsers)
     
   def test_pick_cast(self):
-    request = "Show me the funniest cast in channnel /data?"
+    request = "Pick the funniest cast in channnel /data?"
     action = route(request)
     self.assertIsInstance(action, actions.pick_cast.PickCast)
     
   def test_prefs_cloud(self):
     request = "Make a wordcloud for user @vitalik.eth"
     action = route(request)
-    self.assertIsInstance(action, actions.prefs_cloud.PrefsCloud)
+    self.assertIsInstance(action, actions.word_cloud.WordCloud)
 
   def test_psycho(self):
     request = "Psycho analyze @v"

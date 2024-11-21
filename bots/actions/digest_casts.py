@@ -3,23 +3,23 @@ load_dotenv()
 import json
 import sys
 from bots.iaction import IAction
-from bots.utils.read_params import read_channel, read_int, read_keyword, read_category
+from bots.utils.read_params import read_channel, read_keyword, read_category
 from bots.data.casts import get_top_casts
-from bots.utils.prompts import instructions_and_request, casts_and_instructions
-from bots.utils.llms import call_llm
+from bots.utils.prompts import concat_casts
+from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.check_links import check_link_data
 from bots.utils.check_casts import check_casts
 
 parse_instructions = """
 INSTRUCTIONS:
-Find one or more of the following parameters in the user input: category, channel, keywords and number of days. 
+Find one or more of the following parameters in the user input: category, channel, keywords. 
 Your goal is not to answer the user query, you only need to extract the parameters.
 The query doesn't need to match a specific format, your job is to guess the parameters that the user is asking for.
 
-PARAMETERS
-* channel, optional, defaults to null.
+PARAMETERS:
 * category, optional, one of pre-defined categories, defaults to null. Allowed categories are: 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
-* keyword, optional, any unique searchkeyword, defaults to null.
+* channel, optional, defaults to null. (channels always start with '/', for example '/data', if there is no '/' then it's not a channel)
+* keyword, optional, any unique search keyword, if something can't be mapped to a category and doesn't look like a channel, then it's a keyword, defaults to null.
 
 RESPONSE FORMAT:
 {
@@ -29,9 +29,20 @@ RESPONSE FORMAT:
 }
 """
 
-instructions1 = """
+parse_schema = {
+  "type":"OBJECT",
+  "properties":{
+    "category":{"type":"STRING"},
+    "channel":{"type":"STRING"},
+    "keyword":{"type":"STRING"}
+  }
+}
+
+
+
+main_instructions = """
 GENERAL INSTRUCTIONS:
-ABOVE ARE SOCIAL MEDIA POSTS FROM A RANDOM SAMPLE OF USERS.
+YOUR TASK IS TO PROCESS THE SOCIAL MEDIA POSTS RECEIVED FROM A RANDOM SAMPLE OF USERS.
 GENERATE A GLOBAL SUMMARY AND SELECT 3 INTERESTING ONES.
 
 DETAILED INSTRUCTIONS:
@@ -43,28 +54,57 @@ DETAILED INSTRUCTIONS:
 - Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
 - Focus on posts that are genuine, interesting, funny, or informative.
 - Don't reference websites and don't include any urls in your summary.
-"""
 
-instructions2 = """
+ADDITIONAL_NOTES?
+
 RESPONSE FORMAT:
 {
   "title": "...catch phrase...",
   "sentence1": "...",
   "sentence2": "...",
   "sentence3": "...",
-  "link1": {"id": "0x...", "comment": "keyword [emoji]"},
-  "link2": {"id": "0x...", "comment": "keyword [emoji]"},
-  "link3": {"id": "0x...", "comment": "keyword [emoji]"}
+  "link1": {"id": "......", "comment": "keyword [emoji]"},
+  "link2": {"id": "......", "comment": "keyword [emoji]"},
+  "link3": {"id": "......", "comment": "keyword [emoji]"}
 }
 """
 
+main_schema = {
+  "type":"OBJECT",
+  "properties":{
+    "title":{"type":"STRING"},
+    "sentence1":{"type":"STRING"},
+    "sentence2":{"type":"STRING"},
+    "sentence3":{"type":"STRING"},
+    "link1":{
+       "type":"OBJECT", 
+       "properties":{
+         "id":{"type":"STRING"},
+         "comment":{"type":"STRING"}
+       }
+    },
+    "link2":{
+       "type":"OBJECT", 
+       "properties":{
+         "id":{"type":"STRING"},
+         "comment":{"type":"STRING"}
+       }
+    },
+    "link3":{
+       "type":"OBJECT", 
+       "properties":{
+         "id":{"type":"STRING"},
+         "comment":{"type":"STRING"}
+       }
+    }  
+  }
+}
 
 
 class DigestCasts(IAction):
     
   def set_input(self, input):
-    prompt = instructions_and_request(parse_instructions, input)
-    params = call_llm(prompt)
+    params = call_llm(input, parse_instructions, parse_schema)
     self.input = input
     self.set_params(params)
 
@@ -72,7 +112,7 @@ class DigestCasts(IAction):
     self.channel = read_channel(params)
     self.keyword = read_keyword(params)
     self.category = read_category(params)
-    self.max_rows = 100
+    self.max_rows = get_max_capactity()
       
   def get_cost(self):
     self.cost = 20
@@ -89,15 +129,17 @@ class DigestCasts(IAction):
     if len(posts) < 5:
       raise Exception(f"Not enough posts to generate a digest: {len(posts)}")
     # Run LLM
-    instructions = instructions1
-    if self.keyword is not None:
-      instructions += ("- Focus on the following subject: " + self.keyword + "\n")
-    if self.category is not None:
-      instructions += ("- Focus on the following category: " + self.category[2:] + "\n")
-    instructions += "\n\n"
-    instructions += instructions2
-    prompt = casts_and_instructions(posts, instructions)
-    result = call_llm(prompt)
+    if self.keyword is not None or self.category is not None:
+      add_notes = "ADDITIONAL NOTES:\n"
+      if self.keyword is not None:
+        add_notes += ("- Focus on the following subject: " + self.keyword + "\n")
+      if self.category is not None:
+        add_notes += ("- Focus on the following category: " + self.category[2:] + "\n")
+      instructions = main_instructions.replace("ADDITIONAL_NOTES?", add_notes)
+    else:
+      instructions = main_instructions.replace("ADDITIONAL_NOTES?", "")
+    prompt = concat_casts(posts)
+    result = call_llm(prompt,instructions,main_schema)
     # Make summary
     summary = []
     if 'sentence1' in result and len(result['sentence1']) > 0:
@@ -114,14 +156,14 @@ class DigestCasts(IAction):
       pass
     result['summary'] = summary
     # Make links
-    posts_map = {x['hash']: x for x in posts}
+    posts_map = {x['id']: x for x in posts}
     links = []
     for link_key in ['link1', 'link2', 'link3']:
-        if link_key in result:
-            link = check_link_data(result[link_key], posts_map)
-            if link is not None:
-                links.append(link)
-            del result[link_key]
+      if link_key in result:
+        link = check_link_data(result[link_key], posts_map)
+        if link is not None:
+          links.append(link)
+        del result[link_key]
     result['links'] = links
     # Done
     self.data = result
@@ -132,9 +174,9 @@ class DigestCasts(IAction):
     cast1 = (intro + '\n\n' + self.data['title'] + '\n\n' + self.data['summary'][0]).strip()
     casts.append({'text': cast1})
     for t in self.data['summary'][1:]:
-        casts.append({'text': t})
+      casts.append({'text': t})
     for link in self.data['links']:
-        casts.append({'text': link['comment'], 'embeds': [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['id']}]})
+      casts.append({'text': link['comment'], 'embeds': [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}]})
     check_casts(casts)
     self.casts = casts
     return self.casts
@@ -144,9 +186,5 @@ if __name__ == "__main__":
   input = sys.argv[1] 
   action = DigestCasts()
   action.set_input(input)
-  cost = action.get_cost()
-  print(f"Cost: {cost}")
-  action.get_data()
-  print(f"Data: {action.data}")
-  action.get_casts(intro='🗞️ Channel Digest 🗞️')
-  print(f"Casts: {action.casts}")
+  action.run()
+  action.print()

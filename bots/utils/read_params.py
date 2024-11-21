@@ -20,6 +20,8 @@ def read_string(params, key, default, max_length):
     ans = str(params[key])
     if len(ans) > max_length:
       ans = ans[:max_length]
+    if ans.lower() in ['null', 'undefined', 'none']:
+      ans = None
   return ans
 
 
@@ -43,7 +45,9 @@ def read_keyword(params):
     keyword_string = str(params['keyword'])
     keyword_string = keyword_string.lower()
     keyword_string = keyword_string.strip()
-    if len(keyword_string) > 3:
+    if keyword_string in ['null', 'undefined', 'none']:
+      return None
+    elif len(keyword_string) > 3:
       return keyword_string
     else:
       return None

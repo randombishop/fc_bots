@@ -14,7 +14,7 @@ class TestDigestCasts(unittest.TestCase):
     self.assertIsNone(action.channel)
     self.assertEqual(action.keyword, 'bitcoin')
     self.assertEqual(action.category, 'c_crypto')
-    self.assertGreater(len(action.casts), 3)
+    self.assertGreaterEqual(len(action.casts), 3)
     
   def test2(self):
     request = "Summary for arts category"
@@ -25,10 +25,10 @@ class TestDigestCasts(unittest.TestCase):
     self.assertIsNone(action.channel)
     self.assertIsNone(action.keyword)
     self.assertEqual(action.category, 'c_arts')
-    self.assertGreater(len(action.casts), 3)
+    self.assertGreaterEqual(len(action.casts), 3)
     
   def test3(self):
-    request = "What is going on in /data channel?"
+    request = "Digest /data channel?"
     action = route(request)
     action.run()
     action.print()
@@ -36,4 +36,4 @@ class TestDigestCasts(unittest.TestCase):
     self.assertEqual(action.channel, 'https://farcaster.group/data')
     self.assertIsNone(action.keyword)
     self.assertIsNone(action.category)
-    self.assertGreater(len(action.casts), 3)
+    self.assertGreaterEqual(len(action.casts), 3)

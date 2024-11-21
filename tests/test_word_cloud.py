@@ -1,5 +1,5 @@
 import unittest
-from bots.actions.prefs_cloud import PrefsCloud
+from bots.actions.word_cloud import WordCloud
 from bots.router import route
 
 
@@ -10,7 +10,7 @@ class TestFavoriteUsers(unittest.TestCase):
     action = route(request)
     action.run()
     action.print()
-    self.assertIsInstance(action, PrefsCloud)
+    self.assertIsInstance(action, WordCloud)
     self.assertEqual(action.fid, 5650)
     self.assertEqual(action.user, 'vitalik.eth')
     self.assertEqual(len(action.casts), 1)
@@ -22,7 +22,7 @@ class TestFavoriteUsers(unittest.TestCase):
     action = route(request, fid_origin=fid_origin)
     action.run()
     action.print()
-    self.assertIsInstance(action, PrefsCloud)
+    self.assertIsInstance(action, WordCloud)
     self.assertEqual(action.fid, fid_origin)
     self.assertEqual(action.user, 'vitalik.eth')
     self.assertEqual(len(action.casts), 1)
