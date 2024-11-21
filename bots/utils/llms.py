@@ -29,7 +29,7 @@ def get_max_capactity():
 def call_llm(prompt, instructions, schema):
   if DEBUG:
     print("---Calling LLM---")
-    #print(f"<Instructions>\n{instructions}")
+    print(f"<Instructions>\n{instructions}")
     #print(f"<Schema>\n{schema}")
     if len(prompt) > 100:
       print(f"<Prompt>\n{prompt[:100]}...")

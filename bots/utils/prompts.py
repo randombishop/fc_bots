@@ -13,11 +13,6 @@ def parse_user_instructions(fid_origin=None):
     The query doesn't have to follow a specific format, you just need to extract what you think is most likely the user name or id.
     If you're not sure, pick the first token that starts with a @.
 
-    QUERY EXAMPLES:
-    * In input "Who are @alice.eth's favorite users?" -> the user is "alice.eth".
-    * In input "randombishop's wordcloud" -> the user is "randombishop".
-    * In input "Psycho analyze 328193" -> the user is 328193.
-    
     CURRENT_USER_ID?
     
     RESPONSE FORMAT:

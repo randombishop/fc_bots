@@ -65,24 +65,24 @@ def read_category(params):
 
 def read_fid(params):
   if 'user' in params and params['user'] is not None:
+    s = str(params['user']).lower()
+    if s.startswith('@'):
+      s = s[1:]
     try:
-      fid = int(params['user'])
+      fid = int(s)
       return fid
     except:
-      username = params['user'].lower()
-      if username.startswith('@'):
-        username = username[1:]
-      return get_fid(username)
+      return get_fid(s)
   return None
 
 def read_username(params):
   if 'user' in params and params['user'] is not None:
+    s = str(params['user']).lower()
+    if s.startswith('@'):
+      s = s[1:]
     try:
-      fid = int(params['user'])
+      fid = int(s)
       return get_username(fid)
     except:
-      username = params['user'].lower()
-      if username.startswith('@'):
-        username = username[1:]
-      return username
+      return s
   return None
