@@ -12,8 +12,8 @@ from bots.actions.chat import Chat
 
 
 ACTIONS = {
-  'DigestCasts': DigestCasts,
-  'PickCast': PickCast,
+  'Summary': DigestCasts,
+  'Pick': PickCast,
   'FavoriteUsers': FavoriteUsers,
   'MostActiveUsers': MostActiveUsers,
   'WordCloud': WordCloud, 
@@ -24,8 +24,8 @@ ACTIONS = {
 
 
 DESCRIPTIONS = """
-DigestCasts: Make a digest or summary about posts.
-PickCast: Pick a post given some criteria.
+Summary: Make a summary about posts.
+Pick: Pick a post given some criteria.
 FavoriteUsers: Find the favorite accounts of a user.
 MostActiveUsers: List the most active users in a channel.
 WordCloud: Make a word cloud of a user's posts and reactions.

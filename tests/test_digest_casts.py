@@ -6,7 +6,7 @@ from bots.router import route
 class TestDigestCasts(unittest.TestCase):
   
   def test1(self):
-    request = "Give me a daily digest about bitcoin"
+    request = "Give me a summary about bitcoin"
     action = route(request)
     action.run()
     action.print()
@@ -28,7 +28,7 @@ class TestDigestCasts(unittest.TestCase):
     self.assertGreaterEqual(len(action.casts), 3)
     
   def test3(self):
-    request = "Digest /data channel?"
+    request = "Summary for /data channel?"
     action = route(request)
     action.run()
     action.print()
