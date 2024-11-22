@@ -5,12 +5,10 @@ Find the user referenced in the query.
 Your goal is not to answer the query, you only need to extract the user parameter from the query.
 The query doesn't have to follow a specific format, you just need to extract what you think is most likely the user name or id.
 If you're not sure, pick the first token that starts with a @.
-If the user refers to themselves (my, me, myself) set self_reference to true, otherwise set it to false.
 
 RESPONSE FORMAT:
 {
-  "user": ...,
-  "self_reference": true/false
+  "user": ...
 }
 """
 

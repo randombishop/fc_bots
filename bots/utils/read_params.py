@@ -8,6 +8,21 @@ def is_true(value):
   else:
     return str(value).lower() in ['true', 'yes', '1']
 
+
+def is_specific_user(value):
+  if value is None:
+    return False
+  else:
+    s = str(value).lower()
+    if s.startswith('@'):
+      s = s[1:]
+    if 'username' in s:
+      return False
+    if s in ['null', 'undefined', 'none', 'me', 'you', 'myself', 'self', 'user']:
+      return False
+  return True
+
+
 def read_int(params, key, default, min, max):
   ans = default
   try:
@@ -70,9 +85,7 @@ def read_category(params):
   return None
 
 def read_fid(params, fid_origin=None):
-  if 'self_reference' in params and is_true(params['self_reference']):
-    return fid_origin
-  if 'user' in params and params['user'] is not None:
+  if 'user' in params and is_specific_user(params['user']):
     s = str(params['user']).lower()
     if s.startswith('@'):
       s = s[1:]
@@ -84,9 +97,7 @@ def read_fid(params, fid_origin=None):
   return fid_origin
 
 def read_username(params, fid_origin=None):
-  if 'self_reference' in params and is_true(params['self_reference']):
-    return get_username(fid_origin)
-  if 'user' in params and params['user'] is not None:
+  if 'user' in params and is_specific_user(params['user']):
     s = str(params['user']).lower()
     if s.startswith('@'):
       s = s[1:]
@@ -95,4 +106,6 @@ def read_username(params, fid_origin=None):
       return get_username(fid)
     except:
       return s
+  if fid_origin is not None:
+    return get_username(fid_origin)
   return None
