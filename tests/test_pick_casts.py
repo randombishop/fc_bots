@@ -18,7 +18,7 @@ class TestDigestCasts(unittest.TestCase):
     self.assertEqual(len(action.casts[0]['embeds']), 1)
     
   def test2(self):
-    request = "Pick the funniest cast in /parenting channel?"
+    request = "Pick the funniest cast from /parenting channel"
     action = route(request)
     action.run()
     action.print()

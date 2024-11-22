@@ -1,6 +1,7 @@
 # Casts functions
 from bots.actions.digest_casts import DigestCasts
 from bots.actions.pick_cast import PickCast
+from bots.actions.more_like_this import MoreLikeThis
 # User functions
 from bots.actions.favorite_users import FavoriteUsers
 from bots.actions.most_active_users import MostActiveUsers
@@ -14,6 +15,7 @@ from bots.actions.chat import Chat
 ACTIONS = {
   'Summary': DigestCasts,
   'Pick': PickCast,
+  'MoreLikeThis': MoreLikeThis,
   'FavoriteUsers': FavoriteUsers,
   'MostActiveUsers': MostActiveUsers,
   'WordCloud': WordCloud, 
@@ -26,6 +28,7 @@ ACTIONS = {
 DESCRIPTIONS = """
 Summary: Make a summary about posts.
 Pick: Pick a post given some criteria.
+MoreLikeThis: Find posts using "More Like This" algorithm.
 FavoriteUsers: Find the favorite accounts of a user.
 MostActiveUsers: List the most active users in a channel.
 WordCloud: Make a word cloud of a user's posts and reactions.

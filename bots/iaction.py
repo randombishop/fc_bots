@@ -43,10 +43,19 @@ class IAction:
     self.get_casts(intro)
     
   def print(self):
-    attrs = ['input', 'fid', 'user', 'channel', 'keyword', 'category', 'criteria', 'text','cost', 'casts']
-    s = f"---{self.__class__.__name__ }---\n"
+    attrs = ['fid', 'user', 'channel', 'keyword', 'category', 'criteria', 'text','cost']
+    s = '\n'
+    s += ('-'*64) + '\n'
+    s += f">>> {self.input} >>>\n"
+    s += f"  action: {self.__class__.__name__ }\n"
     for attr in attrs:
       if hasattr(self, attr): 
-        s += f"{attr}={getattr(self, attr)}\n"
-    s += ('-'*32)
+        s += f"  {attr}: {getattr(self, attr)}\n"
+    if hasattr(self, 'casts'): 
+      casts = self.casts
+      s += "<<< casts:\n"
+      for c in casts:
+        s+= f"{c}\n"
+    s += ('-'*64)
+    s += '\n'
     print(s)
