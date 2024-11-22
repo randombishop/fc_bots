@@ -3,7 +3,63 @@ load_dotenv()
 import os
 import sys
 import requests
+import time
 from datetime import datetime
+
+
+last_call = 0
+min_delay = 5
+def cooldown():
+  global last_call
+  now = time.time()
+  elapsed = now - last_call
+  if elapsed < min_delay:
+    time.sleep(min_delay - elapsed) 
+  last_call = time.time()
+
+
+def get_user_info_by_fid(fid):
+  cooldown()
+  url = 'https://build.wield.xyz/farcaster/v2/user'
+  response = requests.get(url, params={'fid': fid}, headers={
+    'API-KEY': os.getenv('FARQUEST_API_KEY'),
+    'Accept': 'application/json'
+  })
+  response.raise_for_status()  # Raise an error for bad responses
+  user = response.json()['result']['user']
+  return parse_user_info(user)
+  
+
+def get_user_info_by_name(name):
+  cooldown()
+  url = 'https://build.wield.xyz/farcaster/v2/user-by-username'
+  response = requests.get(url, params={'username': name}, headers={
+    'API-KEY': os.getenv('FARQUEST_API_KEY'),
+    'Accept': 'application/json'
+  })
+  response.raise_for_status()  # Raise an error for bad responses
+  user = response.json()['result']['user']
+  return parse_user_info(user)
+  
+
+def get_cast_info(hash):
+  cooldown()
+  url = 'https://build.wield.xyz/farcaster/v2/cast'
+  response = requests.get(url, params={'hash': hash}, headers={
+    'API-KEY': os.getenv('FARQUEST_API_KEY'),
+    'Accept': 'application/json'
+  })  
+  response.raise_for_status()  # Raise an error for bad responses
+  cast = response.json()['result']['cast']
+  return cast
+
+
+def get_user_info(user):
+  try:
+    fid = int(user)
+    return get_user_info_by_fid(fid)
+  except ValueError:
+    return get_user_info_by_name(user)
 
 
 def parse_user_info(user):
@@ -18,46 +74,6 @@ def parse_user_info(user):
     'connected_address': user['connectedAddress']
   }
 
-
-def get_user_info_by_fid(fid):
-  url = 'https://build.wield.xyz/farcaster/v2/user'
-  response = requests.get(url, params={'fid': fid}, headers={
-    'API-KEY': os.getenv('FARQUEST_API_KEY'),
-    'Accept': 'application/json'
-  })
-  response.raise_for_status()  # Raise an error for bad responses
-  user = response.json()['result']['user']
-  return parse_user_info(user)
-  
-
-def get_user_info_by_name(name):
-  url = 'https://build.wield.xyz/farcaster/v2/user-by-username'
-  response = requests.get(url, params={'username': name}, headers={
-    'API-KEY': os.getenv('FARQUEST_API_KEY'),
-    'Accept': 'application/json'
-  })
-  response.raise_for_status()  # Raise an error for bad responses
-  user = response.json()['result']['user']
-  return parse_user_info(user)
-  
-
-def get_user_info(user):
-  try:
-    fid = int(user)
-    return get_user_info_by_fid(fid)
-  except ValueError:
-    return get_user_info_by_name(user)
-
-
-def get_cast_info(hash):
-  url = 'https://build.wield.xyz/farcaster/v2/cast'
-  response = requests.get(url, params={'hash': hash}, headers={
-    'API-KEY': os.getenv('FARQUEST_API_KEY'),
-    'Accept': 'application/json'
-  })  
-  response.raise_for_status()  # Raise an error for bad responses
-  cast = response.json()['result']['cast']
-  return cast
 
 
 if __name__ == '__main__':

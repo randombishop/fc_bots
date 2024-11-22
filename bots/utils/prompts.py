@@ -1,30 +1,24 @@
 
+parse_user_instructions = """
+INSTRUCTIONS:
+Find the user referenced in the query.
+Your goal is not to answer the query, you only need to extract the user parameter from the query.
+The query doesn't have to follow a specific format, you just need to extract what you think is most likely the user name or id.
+If you're not sure, pick the first token that starts with a @.
+If the user refers to themselves (my, me, myself) set self_reference to true, otherwise set it to false.
+
+RESPONSE FORMAT:
+{
+  "user": ...,
+  "self_reference": true/false
+}
+"""
+
 parse_user_schema = {
   "type":"OBJECT",
   "properties":{"user":{"type":"STRING"}}
 }
 
-
-def parse_user_instructions(fid_origin=None):
-  ans =  """
-    INSTRUCTIONS:
-    Extract the user name or id from the input.
-    Your goal is not to answer the query, you only need to extract the user parameter from the query.
-    The query doesn't have to follow a specific format, you just need to extract what you think is most likely the user name or id.
-    If you're not sure, pick the first token that starts with a @.
-
-    CURRENT_USER_ID?
-    
-    RESPONSE FORMAT:
-    {
-      "user": ...
-    }
-  """
-  if fid_origin is not None:
-    ans = ans.replace('CURRENT_USER_ID?', f"CURRENT USER ID: {fid_origin}")
-  else:
-    ans = ans.replace('CURRENT_USER_ID?', '')
-  return ans
 
 
 def concat_casts(posts):

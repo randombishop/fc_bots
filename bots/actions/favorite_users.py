@@ -17,13 +17,12 @@ from bots.utils.check_casts import check_casts
 class FavoriteUsers(IAction):
   
   def set_input(self, input):
-    parse_instructions = parse_user_instructions(self.fid_origin)
-    params = call_llm(input, parse_instructions, parse_user_schema)
+    params = call_llm(input, parse_user_instructions, parse_user_schema)
     self.input = input
     self.set_params(params)
     
   def set_params(self, params):
-    self.fid = read_fid(params)
+    self.fid = read_fid(params, self.fid_origin)
 
   def get_cost(self):
     self.cost = 20

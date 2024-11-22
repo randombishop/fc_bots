@@ -48,8 +48,6 @@ class Chat(IAction):
       cast = get_cast(parent_hash)
       context.append({'text': cast['text'], 'fid': cast['fid']})
       parent_hash = cast['parent_hash']
-      if parent_hash is not None:
-        time.sleep(2.5)
     context.reverse()
     fids = list(set(item['fid'] for item in context))
     fids = [x for x in fids if x is not None]
@@ -57,8 +55,6 @@ class Chat(IAction):
       usernames = {}
       for fid in fids:
         usernames[fid] = get_username(fid)
-        if len(usernames)<len(fids):
-          time.sleep(0.5)
       for item in context:
         item['username'] = '@' +usernames[item['fid']] if usernames[item['fid']] is not None else '#' + str(item['fid'])
     for item in context:

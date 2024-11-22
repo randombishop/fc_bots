@@ -2,6 +2,12 @@ from bots.data.channels import get_channels_map
 from bots.data.users import get_fid, get_username
 
 
+def is_true(value):
+  if value==True:
+    return True
+  else:
+    return str(value).lower() in ['true', 'yes', '1']
+
 def read_int(params, key, default, min, max):
   ans = default
   try:
@@ -63,7 +69,9 @@ def read_category(params):
       return category
   return None
 
-def read_fid(params):
+def read_fid(params, fid_origin=None):
+  if 'self_reference' in params and is_true(params['self_reference']):
+    return fid_origin
   if 'user' in params and params['user'] is not None:
     s = str(params['user']).lower()
     if s.startswith('@'):
@@ -73,9 +81,11 @@ def read_fid(params):
       return fid
     except:
       return get_fid(s)
-  return None
+  return fid_origin
 
-def read_username(params):
+def read_username(params, fid_origin=None):
+  if 'self_reference' in params and is_true(params['self_reference']):
+    return get_username(fid_origin)
   if 'user' in params and params['user'] is not None:
     s = str(params['user']).lower()
     if s.startswith('@'):
