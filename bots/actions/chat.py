@@ -11,15 +11,24 @@ from bots.utils.check_casts import check_casts
 instructions = """
 INSTRUCTIONS:
 You are @dsart bot.
-Continue the conversation above by generating one short sentence.
+Continue the conversation by generating one short sentence.
 You are encouraged to be creative, funny and use random emojis.
 If you are not sure what to say, just recommend a visit to app.datascience.art. 
 
-RESPONSE FORMAT:
+OUTPUT FORMAT:
 {
   "sentence1": "short sentence, about 20 words max"
 }
 """
+
+schema = {
+  "type":"OBJECT",
+  "properties":{
+    "sentence1":{"type":"STRING"}
+  }
+}
+
+
 
 
 class Chat(IAction):
@@ -39,8 +48,6 @@ class Chat(IAction):
       cast = get_cast(parent_hash)
       context.append({'text': cast['text'], 'fid': cast['fid']})
       parent_hash = cast['parent_hash']
-      if parent_hash is not None:
-        time.sleep(2.5)
     context.reverse()
     fids = list(set(item['fid'] for item in context))
     fids = [x for x in fids if x is not None]
@@ -48,8 +55,6 @@ class Chat(IAction):
       usernames = {}
       for fid in fids:
         usernames[fid] = get_username(fid)
-        if len(usernames)<len(fids):
-          time.sleep(0.5)
       for item in context:
         item['username'] = '@' +usernames[item['fid']] if usernames[item['fid']] is not None else '#' + str(item['fid'])
     for item in context:
@@ -62,8 +67,7 @@ class Chat(IAction):
     text = "CONVERSATION:\n\n"
     for item in self.data:
       text += f"--- {item['username']} ---\n {item['text']}\n\n"
-    prompt = text + '\n\n' + instructions ;
-    result = call_llm(prompt)
+    result = call_llm(instructions, text, schema)
     cast = {'text': result['sentence1']}
     casts = [cast]
     check_casts(casts)
@@ -78,7 +82,5 @@ if __name__ == "__main__":
   action.set_fid_origin(fid_origin)
   action.set_parent_hash(parent_hash)
   action.set_input(input)
-  action.get_cost()
-  action.get_data()
-  action.get_casts()
-  print(f"Casts: {action.casts}")
+  action.run()
+  action.print()

@@ -5,37 +5,46 @@ import uuid
 import os
 from bots.iaction import IAction
 from bots.data.casts import get_casts_for_fid
-from bots.utils.prompts import instructions_and_request, extract_user_prompt
+from bots.utils.prompts import parse_user_instructions, parse_user_schema
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_fid, read_username
 from bots.utils.check_casts import check_casts
 
 instructions = """
 INSTRUCTIONS:
-The text above are extracts from {user}.
-Based on their posts, generate a psycho analysis about them in 3 sentences, including references to psychological pathologies, even if they don't really make sense.
-You are highly encouraged to be absurd, quote them and use random emojis as you make fun of their psychological issues.
+- The text above are extracts from ?.
+- Based on their posts, generate a psycho analysis about them in 3 sentences, including references to psychological pathologies, even if they don't really make sense.
+- You are highly encouraged to be absurd, quote them and use random emojis as you make fun of their psychological issues.
+- Output the result in json format.
+- Make sure you don't use " inside json strings. Avoid invalid json.
 
 RESPONSE FORMAT:
-{{
+{
   "sentence1": "...",
   "sentence2": "...",
   "sentence3": "..."
-}}
+}
 """
 
+schema = {
+  "type":"OBJECT",
+  "properties":{
+    "sentence1":{"type":"STRING"},
+    "sentence2":{"type":"STRING"},
+    "sentence3":{"type":"STRING"}
+  }
+}
 
 class Psycho(IAction):
   
   def set_input(self, input):
-    prompt = instructions_and_request(extract_user_prompt, input, self.fid_origin)
-    params = call_llm(prompt)
+    params = call_llm(input, parse_user_instructions, parse_user_schema)
     self.input = input
     self.set_params(params)
 
   def set_params(self, params):
-    self.user = read_username(params)
-    self.fid = read_fid(params)
+    self.user = read_username(params, self.fid_origin)
+    self.fid = read_fid(params, self.fid_origin)
     
   def get_cost(self):
     self.cost = 20
@@ -50,8 +59,7 @@ class Psycho(IAction):
     
   def get_casts(self, intro=''):
     text = "\n".join([str(x) for x in self.data])
-    prompt = text + '\n\n' + instructions.format(user=self.user) ;
-    result = call_llm(prompt)
+    result = call_llm(text,instructions.replace('?', self.user), schema)
     casts = []
     if 'sentence1' in result:
       casts.append({'text': result['sentence1']})
@@ -67,10 +75,5 @@ if __name__ == "__main__":
   input = sys.argv[1]
   action = Psycho()
   action.set_input(input)
-  print(f"FID: {action.fid}")
-  action.get_cost()
-  print(f"Cost: {action.cost}")
-  action.get_data()
-  print(f"Data: {action.data}")
-  action.get_casts()
-  print(f"Casts: {action.casts}")
+  action.run()
+  action.print()

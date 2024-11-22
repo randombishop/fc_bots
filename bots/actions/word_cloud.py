@@ -5,7 +5,7 @@ import uuid
 import os
 from bots.iaction import IAction
 from bots.data.users import get_words_dict
-from bots.utils.prompts import instructions_and_request, extract_user_prompt
+from bots.utils.prompts import parse_user_instructions, parse_user_schema
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_fid, read_username
 from bots.utils.images import make_wordcloud
@@ -14,18 +14,17 @@ from bots.utils.check_casts import check_casts
 
 
 
-class PrefsCloud(IAction):
+class WordCloud(IAction):
   
   
   def set_input(self, input):
-    prompt = instructions_and_request(extract_user_prompt, input, self.fid_origin)
-    params = call_llm(prompt)
+    params = call_llm(input, parse_user_instructions, parse_user_schema)
     self.input = input
     self.set_params(params)
 
   def set_params(self, params):
-    self.user = read_username(params)
-    self.fid = read_fid(params)
+    self.user = read_username(params, self.fid_origin)
+    self.fid = read_fid(params, self.fid_origin)
 
   def get_cost(self):
     self.cost = 20
@@ -58,12 +57,7 @@ class PrefsCloud(IAction):
 
 if __name__ == "__main__":
   input = sys.argv[1]
-  action = PrefsCloud()
+  action = WordCloud()
   action.set_input(input)
-  print(f"FID: {action.fid}")
-  action.get_cost()
-  print(f"Cost: {action.cost}")
-  action.get_data()
-  print(f"Data: {action.data}")
-  action.get_casts()
-  print(f"Casts: {action.casts}")
+  action.run()
+  action.print()

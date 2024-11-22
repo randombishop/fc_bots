@@ -37,6 +37,7 @@ The bot runs a simple pipeline from user input to generating output casts:
 
 2) Create a .env file with the following variables:
 ```
+LLM_MODEL=mistral
 DUNE_API_KEY=
 FAR_QUEST_API_KEY=
 ```

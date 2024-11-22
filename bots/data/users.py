@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 
 
 def get_username(fid):
+  if fid is None:
+    raise Exception("get_username: must provide fid")
   user_info = get_user_info_by_fid(fid)
   if user_info is not None:
     return user_info['user_name']
@@ -16,6 +18,8 @@ def get_username(fid):
 
 
 def get_fid(username):
+  if username is None:
+    raise Exception("get_fid: must provide username")
   user_info = get_user_info_by_name(username)
   if user_info is not None:
     return user_info['fid']

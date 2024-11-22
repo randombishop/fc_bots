@@ -2,6 +2,27 @@ from bots.data.channels import get_channels_map
 from bots.data.users import get_fid, get_username
 
 
+def is_true(value):
+  if value==True:
+    return True
+  else:
+    return str(value).lower() in ['true', 'yes', '1']
+
+
+def is_specific_user(value):
+  if value is None:
+    return False
+  else:
+    s = str(value).lower()
+    if s.startswith('@'):
+      s = s[1:]
+    if 'username' in s:
+      return False
+    if s in ['null', 'undefined', 'none', 'me', 'you', 'myself', 'self', 'user']:
+      return False
+  return True
+
+
 def read_int(params, key, default, min, max):
   ans = default
   try:
@@ -20,6 +41,8 @@ def read_string(params, key, default, max_length):
     ans = str(params[key])
     if len(ans) > max_length:
       ans = ans[:max_length]
+    if ans.lower() in ['null', 'undefined', 'none']:
+      ans = None
   return ans
 
 
@@ -43,7 +66,9 @@ def read_keyword(params):
     keyword_string = str(params['keyword'])
     keyword_string = keyword_string.lower()
     keyword_string = keyword_string.strip()
-    if len(keyword_string) > 3:
+    if keyword_string in ['null', 'undefined', 'none']:
+      return None
+    elif len(keyword_string) > 3:
       return keyword_string
     else:
       return None
@@ -59,26 +84,28 @@ def read_category(params):
       return category
   return None
 
-def read_fid(params):
-  if 'user' in params and params['user'] is not None:
+def read_fid(params, fid_origin=None):
+  if 'user' in params and is_specific_user(params['user']):
+    s = str(params['user']).lower()
+    if s.startswith('@'):
+      s = s[1:]
     try:
-      fid = int(params['user'])
+      fid = int(s)
       return fid
     except:
-      username = params['user'].lower()
-      if username.startswith('@'):
-        username = username[1:]
-      return get_fid(username)
-  return None
+      return get_fid(s)
+  return fid_origin
 
-def read_username(params):
-  if 'user' in params and params['user'] is not None:
+def read_username(params, fid_origin=None):
+  if 'user' in params and is_specific_user(params['user']):
+    s = str(params['user']).lower()
+    if s.startswith('@'):
+      s = s[1:]
     try:
-      fid = int(params['user'])
+      fid = int(s)
       return get_username(fid)
     except:
-      username = params['user'].lower()
-      if username.startswith('@'):
-        username = username[1:]
-      return username
+      return s
+  if fid_origin is not None:
+    return get_username(fid_origin)
   return None
