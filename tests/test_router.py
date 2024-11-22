@@ -19,6 +19,11 @@ class TestRouter(unittest.TestCase):
     request = "Who are @vitalik.eth's favorite users?"
     action = route(request)
     self.assertIsInstance(action, actions.favorite_users.FavoriteUsers)
+  
+  def test_more_like_this(self):
+    request = "More Like This: #Bitcoin is sweet!"
+    action = route(request)
+    self.assertIsInstance(action, actions.more_like_this.MoreLikeThis)
     
   def test_most_active_users(self):
     request = "Who is most active in channnel /data?"

@@ -1,5 +1,5 @@
 import os
-import json
+import json5
 from bots.models.mistral import mistral
 from bots.models.gemini import gemini
 from bots.utils.json_cleaner import clean_json
@@ -42,9 +42,9 @@ def call_llm(prompt, instructions, schema):
   # TODO: check that result is compatible with schema 
   # Maybe run a LLM to fix it if not?
   try:
-    result = json.loads(text)
+    result = json5.loads(text)
   except:
-    raise Exception(f"Error parsing LLM response: {text}")
+    raise Exception(f"Error parsing LLM response: {text}") from None
   if 'error' in result and len(result['error']) > 0:
     raise Exception(result['error'])
   return result

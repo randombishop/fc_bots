@@ -26,7 +26,8 @@ setup(
       "dune_client==1.7.7",
       "google-cloud-storage==2.18.2",
       "google-cloud-aiplatform==1.59.0",
-      "python-dotenv==1.0.1"
+      "python-dotenv==1.0.1",
+      "json5==0.9.28"
     ]
 )
 

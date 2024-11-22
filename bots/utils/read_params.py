@@ -20,8 +20,22 @@ def is_specific_user(value):
       return False
     if s in ['null', 'undefined', 'none', 'me', 'you', 'myself', 'self', 'user']:
       return False
+    if len(s) == 0:
+      return False
   return True
 
+def is_specific_channel(value):
+  if value is None:
+    return False
+  else:
+    s = str(value).lower()
+    if s.startswith('/'):
+      s = s[1:]
+    if s in ['null', 'undefined', 'none', 'channel', '<channel>']:
+      return False
+    if len(s) == 0:
+      return False
+  return True
 
 def read_int(params, key, default, min, max):
   ans = default
@@ -48,7 +62,7 @@ def read_string(params, key, default, max_length):
 
 def read_channel(params):
   channel = None
-  if ('channel' in params) and (params['channel'] is not None) and (params['channel'] != 'null') and (len(params['channel']) > 0):
+  if ('channel' in params) and is_specific_channel(params['channel']):
     channels_by_id, channels_by_name = get_channels_map()
     channel = params['channel']
     channel_lower_case = channel.lower()
