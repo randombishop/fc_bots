@@ -15,6 +15,8 @@ INSTRUCTIONS:
 - The text above are extracts from ?.
 - Based on their posts, generate a psycho analysis about them in 3 sentences, including references to psychological pathologies, even if they don't really make sense.
 - You are highly encouraged to be absurd, quote them and use random emojis as you make fun of their psychological issues.
+- DO NOT include anything that can feel like hate speech, sexual harassment or dangerous content. 
+- Stay away from sexual references and sensitive questions and keep it PG, but funny and absurd.
 - Output the result in json format.
 - Make sure you don't use " inside json strings. Avoid invalid json.
 
