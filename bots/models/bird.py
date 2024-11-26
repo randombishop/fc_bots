@@ -12,7 +12,6 @@ bird_model.load_model(model_dir + '/' +'bird2.xgb.json')
 bird_explainer = shap.TreeExplainer(bird_model)
 features = bird_model.feature_names
 print('Bird model loaded.')
-print('XGBoost features: ' + str(features))
 
 
 def predict(df):

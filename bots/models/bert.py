@@ -1,7 +1,8 @@
 from dotenv import load_dotenv
 load_dotenv()
 import os
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.enable_resource_variables()
 import tensorflow_hub as hub
 import sentencepiece as spm
 
