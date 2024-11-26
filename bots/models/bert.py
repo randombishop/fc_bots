@@ -1,12 +1,12 @@
 from dotenv import load_dotenv
 load_dotenv()
 import os
-import tensorflow.compat.v1 as tf
-tf.enable_resource_variables()
+import tensorflow as tf
 import tensorflow_hub as hub
 import sentencepiece as spm
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module='tensorflow')
 
-#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 print('Loading Tensorflow models...')
 model_dir = os.path.dirname(os.path.abspath(__file__))
