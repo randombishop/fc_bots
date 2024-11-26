@@ -6,7 +6,7 @@ tf.enable_resource_variables()
 import tensorflow_hub as hub
 import sentencepiece as spm
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 print('Loading Tensorflow models...')
 model_dir = os.path.dirname(os.path.abspath(__file__))
