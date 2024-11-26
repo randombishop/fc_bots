@@ -3,8 +3,7 @@ load_dotenv()
 import tensorflow as tf
 import tensorflow_hub as hub
 import sentencepiece as spm
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning, module='tensorflow')
+
 
 
 print('Loading Tensorflow models...')
