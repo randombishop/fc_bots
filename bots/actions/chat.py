@@ -22,9 +22,9 @@ You are programmed to perform the following actions:
 INSTRUCTIONS:
 Given the provided conversation, it seems like none of your programmed capabilities could be parsed.
 You are entering Chat mode and need to decide what to do next.
-- If it's a greeting or a thank you message, set "continue_conversation" to false and "like" to true. 
-- If it makes sense to point the user to one of your capabilities, set "continue_conversation" to true and generate a short sentence to make a suggestion.
-- Otherwise, set end_conversation to true. 
+- If it's a greeting or a thank you message, set "like" to true and "continue_conversation" to false. 
+- If it makes sense to point the user to one of your capabilities, set "continue_conversation" to true and generate a short sentence to suggest using one of your programmed actions.
+- Otherwise, set continue_conversation to false. 
 
 OUTPUT FORMAT:
 {
