@@ -127,7 +127,7 @@ class DigestCasts(IAction):
     posts = posts.to_dict('records')
     posts.sort(key=lambda x: x['timestamp'])
     if len(posts) < 5:
-      raise Exception(f"""Not enough posts to generate a digest: input={self.input}, channel={self.channel}, 
+      raise Exception(f"""Not enough posts to generate a digest: channel={self.channel}, 
                       keyword={self.keyword}, category={self.category}, max_rows={self.max_rows}, posts={len(posts)}""")
     # Run LLM
     if self.keyword is not None or self.category is not None:
