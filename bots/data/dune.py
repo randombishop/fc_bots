@@ -6,6 +6,7 @@ dune = DuneClient.from_env()
 
 
 def run_query(query_id, params=None):
+  print(f"Running Dune query {query_id} with params {params}")
   query = QueryBase(query_id=query_id, params=params)
   df = dune.run_query_dataframe(query)
   return df
