@@ -49,11 +49,3 @@ class MoreLikeThis(IAction):
       casts.append({'text': '', 'embeds': [{'fid': similar['fid'], 'user_name': similar['user_name'], 'hash': similar['hash']}]})
     self.casts = casts
     return self.casts
-
-if __name__ == "__main__":
-  parent_hash = sys.argv[1] 
-  action = MoreLikeThis()
-  action.set_parent_hash(parent_hash)
-  action.set_input(None)
-  action.run()
-  action.print()

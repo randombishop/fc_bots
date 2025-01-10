@@ -7,7 +7,7 @@ from bots.iaction import IAction
 from bots.data.users import get_words_dict
 from bots.utils.prompts import parse_user_instructions, parse_user_schema
 from bots.utils.llms import call_llm
-from bots.utils.read_params import read_fid, read_username
+from bots.utils.read_params import read_fid, read_user_name
 from bots.utils.images import make_wordcloud
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
@@ -23,8 +23,7 @@ class WordCloud(IAction):
     self.set_params(params)
 
   def set_params(self, params):
-    self.user = read_username(params, self.fid_origin)
-    self.fid = read_fid(params, self.fid_origin)
+    self.user_name = read_user_name(params, self.fid_origin, default_to_origin=True)
 
   def get_cost(self):
     self.cost = 20
@@ -53,11 +52,3 @@ class WordCloud(IAction):
     check_casts(casts)
     self.casts = casts
     return self.casts
-
-
-if __name__ == "__main__":
-  input = sys.argv[1]
-  action = WordCloud()
-  action.set_input(input)
-  action.run()
-  action.print()

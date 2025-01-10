@@ -3,8 +3,8 @@ load_dotenv()
 import json
 import sys
 from bots.iaction import IAction
-from bots.utils.read_params import read_channel, read_keyword, read_category
-from bots.data.casts import get_top_casts
+from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user_name
+from bots.data.casts import get_top_casts, get_more_like_this
 from bots.utils.prompts import concat_casts
 from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.check_links import check_link_data
@@ -12,20 +12,23 @@ from bots.utils.check_casts import check_casts
 
 parse_instructions = """
 INSTRUCTIONS:
-Find one or more of the following parameters in the user input: category, channel, keywords. 
-Your goal is not to answer the user query, you only need to extract the parameters.
-The query doesn't need to match a specific format, your job is to guess the parameters that the user is asking for.
+You are @dsart, a bot programmed to make summaries of posts in a social media platform.
+You have access to an API that can generate the summary based on these parameters: category, channel, keyword, more_like_this, user.
+* category: Can be one of pre-defined categories 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
+* channel: Channels always start with '/', for example '/data', if there is no '/' then it's not a channel.
+* keyword: Any single keyword, if something can't be mapped to a category and doesn't look like a channel, you can use it as a keyword, but only if it's a single word.
+* user: User names typically start with `@`, if the intent is to summarize posts by a specific user, you can use the user parameter.
+* search: If the summary is not about a category, channel, keyword or user; then formulate a search phrase to search for casts and summarize them.
 
-PARAMETERS:
-* category, optional, one of pre-defined categories, defaults to null. Allowed categories are: 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
-* channel, optional, defaults to null. (channels always start with '/', for example '/data', if there is no '/' then it's not a channel)
-* keyword, optional, any unique search keyword, if something can't be mapped to a category and doesn't look like a channel, then it's a keyword, defaults to null.
+Your goal is not to continue the conversation directly, you must only need to extract the parameters to call the API.
 
 RESPONSE FORMAT:
 {
-  "category": ...,
-  "channel": ...,
-  "keyword": ...
+  "category": "...",
+  "channel": "...",
+  "keyword": "...",
+  "search": "...",
+  "user": "..."
 }
 """
 
@@ -34,7 +37,9 @@ parse_schema = {
   "properties":{
     "category":{"type":"STRING"},
     "channel":{"type":"STRING"},
-    "keyword":{"type":"STRING"}
+    "keyword":{"type":"STRING"},
+    "search":{"type":"STRING"},
+    "user":{"type":"STRING"}
   }
 }
 
@@ -42,7 +47,7 @@ parse_schema = {
 
 main_instructions = """
 GENERAL INSTRUCTIONS:
-YOUR TASK IS TO PROCESS THE SOCIAL MEDIA POSTS RECEIVED FROM A RANDOM SAMPLE OF USERS.
+YOUR TASK IS TO PROCESS THE PROVIDED SOCIAL MEDIA POSTS.
 GENERATE A GLOBAL SUMMARY AND SELECT 3 INTERESTING ONES.
 
 DETAILED INSTRUCTIONS:
@@ -112,6 +117,8 @@ class DigestCasts(IAction):
     self.channel = read_channel(params)
     self.keyword = read_keyword(params)
     self.category = read_category(params)
+    self.search = read_string(params, key='search', default=None, max_length=500)
+    self.user_name = read_user_name(params, fid_origin=self.fid_origin, default_to_origin=False)
     self.max_rows = get_max_capactity()
       
   def get_cost(self):
@@ -120,22 +127,29 @@ class DigestCasts(IAction):
 
   def get_data(self):
     # Get data
-    posts = get_top_casts(channel=self.channel,
-                          keyword=self.keyword,
-                          category=self.category,
-                          max_rows=self.max_rows)
+    posts = []
+    if self.search is not None:
+      posts = get_more_like_this(self.search, limit=self.max_rows)
+    else:
+      posts = get_top_casts(channel=self.channel,
+                            keyword=self.keyword,
+                            category=self.category,
+                            user_name=self.user_name,
+                            max_rows=self.max_rows)
     posts = posts.to_dict('records')
     posts.sort(key=lambda x: x['timestamp'])
     if len(posts) < 5:
       raise Exception(f"""Not enough posts to generate a digest: channel={self.channel}, 
                       keyword={self.keyword}, category={self.category}, max_rows={self.max_rows}, posts={len(posts)}""")
     # Run LLM
-    if self.keyword is not None or self.category is not None:
+    if self.keyword is not None or self.category is not None or self.user_name is not None:
       add_notes = "ADDITIONAL NOTES:\n"
       if self.keyword is not None:
         add_notes += ("- Focus on the following subject: " + self.keyword + "\n")
       if self.category is not None:
         add_notes += ("- Focus on the following category: " + self.category[2:] + "\n")
+      if self.user_name is not None:
+        add_notes += ("- The posts are all from user @" + self.user_name + ", be respectful in your summary and only mention them in positive terms.\n")
       instructions = main_instructions.replace("ADDITIONAL_NOTES?", add_notes)
     else:
       instructions = main_instructions.replace("ADDITIONAL_NOTES?", "")

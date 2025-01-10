@@ -7,7 +7,7 @@ from bots.iaction import IAction
 from bots.data.casts import get_casts_for_fid
 from bots.utils.prompts import parse_user_instructions, parse_user_schema
 from bots.utils.llms import call_llm
-from bots.utils.read_params import read_fid, read_username
+from bots.utils.read_params import read_user_name
 from bots.utils.check_casts import check_casts
 
 instructions = """
@@ -45,8 +45,7 @@ class Psycho(IAction):
     self.set_params(params)
 
   def set_params(self, params):
-    self.user = read_username(params, self.fid_origin)
-    self.fid = read_fid(params, self.fid_origin)
+    self.user_name = read_user_name(params, self.fid_origin, default_to_origin=True)
     
   def get_cost(self):
     self.cost = 20
@@ -72,10 +71,3 @@ class Psycho(IAction):
     check_casts(casts)
     self.casts = casts
     return casts
-
-if __name__ == "__main__":
-  input = sys.argv[1]
-  action = Psycho()
-  action.set_input(input)
-  action.run()
-  action.print()

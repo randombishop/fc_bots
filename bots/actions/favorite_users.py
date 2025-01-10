@@ -4,7 +4,6 @@ import sys
 import uuid
 import os
 from bots.iaction import IAction
-from bots.utils.prompts import parse_user_instructions, parse_user_schema
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_fid
 from bots.data.users import get_favorite_users
@@ -12,6 +11,25 @@ from bots.utils.images import table_image
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
 
+
+parse_user_instructions = """
+INSTRUCTIONS:
+You are @dsart, a bot programmed to find the favorite accounts of a user.
+Based on the provided conversation, who should we pull the favorite accounts for?
+Your goal is not to continue the conversation, you must only extract the user parameter from the conversation so that we can call an API.
+Users typically start with @, but not always.
+If you're not sure, pick the last token that starts with a @.
+
+RESPONSE FORMAT:
+{
+  "user": ...
+}
+"""
+
+parse_user_schema = {
+  "type":"OBJECT",
+  "properties":{"user":{"type":"STRING"}}
+}
 
 
 class FavoriteUsers(IAction):
@@ -22,7 +40,7 @@ class FavoriteUsers(IAction):
     self.set_params(params)
     
   def set_params(self, params):
-    self.fid = read_fid(params, self.fid_origin)
+    self.fid = read_fid(params, self.fid_origin, default_to_origin=True)
 
   def get_cost(self):
     self.cost = 20
