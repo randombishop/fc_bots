@@ -25,3 +25,13 @@ class TestPsycho(unittest.TestCase):
     self.assertEqual(action.fid, fid_origin)
     self.assertEqual(action.user, 'randombishop')
     self.assertEqual(len(action.casts), 3)
+    
+  def test3(self):
+    request = "Psycho analyze aethernet"
+    action = route(request)
+    action.run()
+    action.print()
+    self.assertIsInstance(action, Psycho)
+    self.assertEqual(action.fid, 862185)
+    self.assertEqual(action.user, 'aethernet')
+    self.assertEqual(len(action.casts), 3)

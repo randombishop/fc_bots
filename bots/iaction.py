@@ -15,6 +15,9 @@ class IAction:
 
   def set_attachment_hash(self, attachment_hash):
     self.attachment_hash = attachment_hash
+    
+  def set_root_parent_url(self, root_parent_url):
+    self.root_parent_url = root_parent_url
 
   def set_input(self, input):
     """Use natural language input to set the params."""
@@ -43,15 +46,15 @@ class IAction:
     self.get_casts(intro)
     
   def print(self):
-    attrs = ['fid', 'user', 'channel', 'keyword', 'category', 'criteria', 'text','cost']
+    attrs = ['fid', 'user_name', 'channel', 'keyword', 'category', 'search', 'criteria', 'text', 'cost']
     s = '\n'
     s += ('-'*64) + '\n'
-    s += f">>> {self.input} >>>\n"
+    s += f"{self.input}>>>\n"
     s += f"  action: {self.__class__.__name__ }\n"
     for attr in attrs:
       if hasattr(self, attr): 
         s += f"  {attr}: {getattr(self, attr)}\n"
-    if hasattr(self, 'casts'): 
+    if hasattr(self, 'casts') and self.casts is not None: 
       casts = self.casts
       s += "<<< casts:\n"
       for c in casts:

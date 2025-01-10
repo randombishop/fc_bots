@@ -89,11 +89,3 @@ class MostActiveUsers(IAction):
     self.casts = casts
     return self.casts
 
-
-if __name__ == "__main__":
-  input = sys.argv[1] 
-  action = MostActiveUsers()
-  action.set_input(input)
-  action.run()
-  action.print()
-  

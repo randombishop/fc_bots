@@ -11,9 +11,11 @@ class TestDigestCasts(unittest.TestCase):
     action.run()
     action.print()
     self.assertIsInstance(action, DigestCasts)
-    self.assertIsNone(action.channel)
     self.assertEqual(action.keyword, 'bitcoin')
     self.assertEqual(action.category, 'c_crypto')
+    self.assertIsNone(action.channel)
+    self.assertIsNone(action.user_name)
+    self.assertIsNone(action.search)
     self.assertGreaterEqual(len(action.casts), 3)
     
   def test2(self):
@@ -22,9 +24,11 @@ class TestDigestCasts(unittest.TestCase):
     action.run()
     action.print()
     self.assertIsInstance(action, DigestCasts)
+    self.assertEqual(action.category, 'c_arts')
     self.assertIsNone(action.channel)
     self.assertIsNone(action.keyword)
-    self.assertEqual(action.category, 'c_arts')
+    self.assertIsNone(action.user_name)
+    self.assertIsNone(action.search)
     self.assertGreaterEqual(len(action.casts), 3)
     
   def test3(self):
@@ -36,4 +40,34 @@ class TestDigestCasts(unittest.TestCase):
     self.assertEqual(action.channel, 'https://farcaster.group/data')
     self.assertIsNone(action.keyword)
     self.assertIsNone(action.category)
+    self.assertIsNone(action.user_name)
+    self.assertIsNone(action.search)
     self.assertGreaterEqual(len(action.casts), 3)
+
+  def test4(self):
+    request = "Summary of posts about the beaty of canadian landscapes"
+    action = route(request)
+    action.run()
+    action.print()
+    self.assertIsInstance(action, DigestCasts)
+    self.assertIsNotNone(action.search)
+    self.assertIsNone(action.keyword)
+    self.assertIsNone(action.category)
+    self.assertIsNone(action.user_name)
+    self.assertIsNone(action.channel)
+    self.assertGreaterEqual(len(action.casts), 3)
+      
+  def test5(self):
+    request = "Summary of @randombishop's posts"
+    action = route(request)
+    action.run()
+    action.print()
+    self.assertIsInstance(action, DigestCasts)
+    self.assertEqual(action.user_name, 'randombishop')
+    self.assertIsNone(action.keyword)
+    self.assertIsNone(action.category)
+    self.assertIsNone(action.channel)
+    self.assertIsNone(action.search)
+    self.assertGreaterEqual(len(action.casts), 3)
+
+  def test6(self):

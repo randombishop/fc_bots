@@ -7,7 +7,7 @@ from bots.iaction import IAction
 from bots.data.casts import get_casts_for_fid
 from bots.utils.prompts import parse_user_instructions, parse_user_schema
 from bots.utils.llms import call_llm
-from bots.utils.read_params import read_fid, read_username
+from bots.utils.read_params import read_user_name
 from bots.utils.check_casts import check_casts
 
 instructions = """
@@ -15,6 +15,8 @@ INSTRUCTIONS:
 - The text above are extracts from ?.
 - Based on their posts, generate a psycho analysis about them in 3 sentences, including references to psychological pathologies, even if they don't really make sense.
 - You are highly encouraged to be absurd, quote them and use random emojis as you make fun of their psychological issues.
+- DO NOT include anything that can feel like hate speech, sexual harassment or dangerous content. 
+- Stay away from sexual references and sensitive questions and keep it PG, but funny and absurd.
 - Output the result in json format.
 - Make sure you don't use " inside json strings. Avoid invalid json.
 
@@ -43,8 +45,7 @@ class Psycho(IAction):
     self.set_params(params)
 
   def set_params(self, params):
-    self.user = read_username(params, self.fid_origin)
-    self.fid = read_fid(params, self.fid_origin)
+    self.user_name = read_user_name(params, self.fid_origin, default_to_origin=True)
     
   def get_cost(self):
     self.cost = 20
@@ -70,10 +71,3 @@ class Psycho(IAction):
     check_casts(casts)
     self.casts = casts
     return casts
-
-if __name__ == "__main__":
-  input = sys.argv[1]
-  action = Psycho()
-  action.set_input(input)
-  action.run()
-  action.print()

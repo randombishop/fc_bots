@@ -18,7 +18,7 @@ def is_specific_user(value):
       s = s[1:]
     if 'username' in s:
       return False
-    if s in ['null', 'undefined', 'none', 'me', 'you', 'myself', 'self', 'user']:
+    if s in ['null', 'undefined', 'none', 'me', 'you', 'myself', 'self', 'user', 'unknown_user']:
       return False
     if len(s) == 0:
       return False
@@ -98,7 +98,7 @@ def read_category(params):
       return category
   return None
 
-def read_fid(params, fid_origin=None):
+def read_fid(params, fid_origin=None, default_to_origin=False):
   if 'user' in params and is_specific_user(params['user']):
     s = str(params['user']).lower()
     if s.startswith('@'):
@@ -108,9 +108,12 @@ def read_fid(params, fid_origin=None):
       return fid
     except:
       return get_fid(s)
-  return fid_origin
+  if default_to_origin:
+    return fid_origin
+  else:
+    return None
 
-def read_username(params, fid_origin=None):
+def read_user_name(params, fid_origin=None, default_to_origin=False):
   if 'user' in params and is_specific_user(params['user']):
     s = str(params['user']).lower()
     if s.startswith('@'):
@@ -120,6 +123,7 @@ def read_username(params, fid_origin=None):
       return get_username(fid)
     except:
       return s
-  if fid_origin is not None:
+  if default_to_origin and fid_origin is not None:
     return get_username(fid_origin)
-  return None
+  else:
+    return None
