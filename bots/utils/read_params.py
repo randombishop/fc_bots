@@ -31,7 +31,7 @@ def is_specific_channel(value):
     s = str(value).lower()
     if s.startswith('/'):
       s = s[1:]
-    if s in ['null', 'undefined', 'none', 'channel', '<channel>']:
+    if s in ['null', 'undefined', 'none', 'channel', '<channel>', 'here', 'this']:
       return False
     if len(s) == 0:
       return False
@@ -60,21 +60,6 @@ def read_string(params, key, default, max_length):
   return ans
 
 
-def read_channel(params):
-  channel = None
-  if ('channel' in params) and is_specific_channel(params['channel']):
-    channels_by_id, channels_by_name = get_channels_map()
-    channel = params['channel']
-    channel_lower_case = channel.lower()
-    if channel_lower_case.startswith('/'):
-      channel_lower_case = channel_lower_case[1:]
-    if channel_lower_case in channels_by_id:
-      channel = channels_by_id[channel_lower_case]
-    elif channel_lower_case in channels_by_name:
-      channel = channels_by_name[channel_lower_case]
-  return channel
-
-
 def read_keyword(params):
   if 'keyword' in params and params['keyword'] is not None:
     keyword_string = str(params['keyword'])
@@ -97,6 +82,26 @@ def read_category(params):
     else:
       return category
   return None
+
+
+def read_channel(params, current_channel=None, default_to_current=False):
+  channel = None
+  if ('channel' in params) and is_specific_channel(params['channel']):
+    channels_by_id, channels_by_name = get_channels_map()
+    channel = params['channel']
+    channel_lower_case = channel.lower()
+    if channel_lower_case.startswith('/'):
+      channel_lower_case = channel_lower_case[1:]
+    if channel_lower_case in channels_by_id:
+      channel = channels_by_id[channel_lower_case]
+    elif channel_lower_case in channels_by_name:
+      channel = channels_by_name[channel_lower_case]
+    else:
+      channel = None  
+  if channel is None and default_to_current:
+    channel = current_channel
+  return channel
+
 
 def read_fid(params, fid_origin=None, default_to_origin=False):
   if 'user' in params and is_specific_user(params['user']):

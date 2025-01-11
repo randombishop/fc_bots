@@ -54,7 +54,7 @@ def find_action(request):
 # Bot Logic
 # ----------------
 
-def get_context(request, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
+def get_context(request, fid_origin=None, parent_hash=None, attachment_hash=None):
   context = []
   context.append({'text': '@dsart ' + request, 'fid': fid_origin})
   max_depth = 7
@@ -80,7 +80,7 @@ def get_context(request, fid_origin=None, parent_hash=None, attachment_hash=None
       item['username'] = '@fid#' + str(item['fid'])
   return context
  
-def format_context(context, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
+def format_context(context, root_parent_url=None):
   text = ''
   if root_parent_url is not None:
     channel_id = get_channel_by_url(root_parent_url)
@@ -95,8 +95,8 @@ def format_context(context, fid_origin=None, parent_hash=None, attachment_hash=N
   return text
 
 def route(request, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
-  context = get_context(request, fid_origin, parent_hash, attachment_hash, root_parent_url)
-  context = format_context(context, fid_origin, parent_hash, attachment_hash, root_parent_url)
+  context = get_context(request, fid_origin, parent_hash, attachment_hash)
+  context = format_context(context, root_parent_url)
   mapped = find_action(request)
   Action = None
   if ('action' not in mapped or mapped['action'] is None or str(mapped['action']) not in ACTIONS):
