@@ -69,5 +69,3 @@ class TestDigestCasts(unittest.TestCase):
     self.assertIsNone(action.channel)
     self.assertIsNone(action.search)
     self.assertGreaterEqual(len(action.casts), 3)
-
-  def test6(self):
