@@ -10,7 +10,7 @@ from bots.utils.check_casts import check_casts
 
 instructions = """
 You are @dsart bot, a social media bot.
-Your task is to decide if the last post in the provided conversation is worth liking.
+Your task is to decide if the last post (=cast) in the provided conversation is worth liking.
 
 INSTRUCTIONS:
 - If it's a greeting or a thank you message, set "like" to true. 

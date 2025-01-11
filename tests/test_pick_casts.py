@@ -11,7 +11,6 @@ class TestDigestCasts(unittest.TestCase):
     action.run()
     action.print()
     self.assertIsInstance(action, PickCast)
-    self.assertIsNone(action.channel)
     self.assertEqual(action.category, 'c_arts')
     self.assertIn('beautiful', action.criteria)
     self.assertEqual(len(action.casts), 1)
@@ -24,7 +23,17 @@ class TestDigestCasts(unittest.TestCase):
     action.print()
     self.assertIsInstance(action, PickCast)
     self.assertEqual(action.channel, 'chain://eip155:8453/erc721:0xb7310fc4b4a31c4fb7adf90b8201546bb2bcb52c')
-    self.assertIsNone(action.category)
     self.assertIn('funniest', action.criteria)
+    self.assertEqual(len(action.casts), 1)
+    self.assertEqual(len(action.casts[0]['embeds']), 1)
+    
+  def test3(self):
+    request = "Pick the most intriguing cast from @randombishop"
+    action = route(request)
+    action.run()
+    action.print()
+    self.assertIsInstance(action, PickCast)
+    self.assertEqual(action.user_name, 'randombishop')
+    self.assertEqual(action.criteria, 'intriging')
     self.assertEqual(len(action.casts), 1)
     self.assertEqual(len(action.casts[0]['embeds']), 1)

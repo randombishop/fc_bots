@@ -12,15 +12,15 @@ from bots.utils.check_casts import check_casts
 
 parse_instructions = """
 INSTRUCTIONS:
-You are @dsart, a bot programmed to make summaries of posts in a social media platform.
-You have access to an API that can generate the summary based on these parameters: category, channel, keyword, more_like_this, user.
+You are @dsart, a bot programmed to make summaries of posts (=casts) in a social media platform.
+You have access to an API that can generate the summary based on these parameters: category, channel, keyword, search, user.
 * category: Can be one of pre-defined categories 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
 * channel: Channels always start with '/', for example '/data', if there is no '/' then it's not a channel.
 * keyword: Any single keyword, if something can't be mapped to a category and doesn't look like a channel, you can use it as a keyword, but only if it's a single word.
 * user: User names typically start with `@`, if the intent is to summarize posts by a specific user, you can use the user parameter.
-* search: If the summary is not about a category, channel, keyword or user; then formulate a search phrase to search for casts and summarize them.
+* search: If the summary is not about a category, channel, keyword or user; then formulate a search phrase to search for posts and summarize them.
 
-Your goal is not to continue the conversation directly, you must only need to extract the parameters to call the API.
+Your goal is not to continue the conversation, you must only extract the parameters to call the API.
 
 RESPONSE FORMAT:
 {

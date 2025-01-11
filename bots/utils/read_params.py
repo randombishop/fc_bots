@@ -49,7 +49,7 @@ def read_int(params, key, default, min, max):
   return ans
 
 
-def read_string(params, key, default, max_length):
+def read_string(params, key, default=None, max_length=256):
   ans = default
   if key in params and params[key] is not None:
     ans = str(params[key])
