@@ -18,12 +18,12 @@ class TestFavoriteUsers(unittest.TestCase):
     
   def test2(self):
     request = "Make my word cloud."
-    fid_origin = 5650
+    fid_origin = 253232
     action = route(request, fid_origin=fid_origin)
     action.run()
     action.print()
     self.assertIsInstance(action, WordCloud)
     self.assertEqual(action.fid, fid_origin)
-    self.assertEqual(action.user_name, 'vitalik.eth')
+    self.assertEqual(action.user_name, 'randombishop')
     self.assertEqual(len(action.casts), 1)
     self.assertEqual(len(action.casts[0]['embeds']), 1)

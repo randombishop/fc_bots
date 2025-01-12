@@ -9,7 +9,7 @@ import vertexai.preview.generative_models as generative_models
 
 USE_VERTEX_AI = os.getenv('USE_VERTEX_AI', "false")
 GEMINI_MODEL_NAME = 'gemini-1.5-flash-001'
-MIN_DELAY = 2
+MIN_DELAY = 2.5
 if USE_VERTEX_AI == "true":
   print('Init Vertex AI...')
   vertexai.init(project=os.getenv('GCP_PROJECT_ID'), location=os.getenv('GCP_REGION'))

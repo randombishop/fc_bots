@@ -60,9 +60,7 @@ schema = {
 class Psycho(IAction):
   
   def set_input(self, input):
-    print(f"set_input input={input}")
     params = call_llm(input, parse_user_instructions, parse_user_schema)
-    print(f"params={params}")
     self.input = input
     self.set_params(params)
 
