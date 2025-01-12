@@ -112,7 +112,7 @@ def parse_text(text, target):
   text = clean_text(text)
   words = text.split()
   for word in words:
-    if word not in ignore_words:
+    if len(word) > 3 and word not in ignore_words:
       target[word] = target.get(word, 0) + 1
 
 
