@@ -5,7 +5,7 @@ import uuid
 import os
 from bots.iaction import IAction
 from bots.utils.llms import call_llm
-from bots.utils.read_params import read_fid
+from bots.utils.read_params import read_user
 from bots.data.users import get_favorite_users
 from bots.utils.images import table_image
 from bots.utils.gcs import upload_to_gcs
@@ -40,7 +40,7 @@ class FavoriteUsers(IAction):
     self.set_params(params)
     
   def set_params(self, params):
-    self.fid = read_fid(params, self.fid_origin, default_to_origin=True)
+    self.fid, self.user_name = read_user(params, self.fid_origin, default_to_origin=True)
 
   def get_cost(self):
     self.cost = 20

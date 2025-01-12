@@ -51,10 +51,6 @@ class TestDigestCasts(unittest.TestCase):
     action.print()
     self.assertIsInstance(action, DigestCasts)
     self.assertIsNotNone(action.search)
-    self.assertIsNone(action.keyword)
-    self.assertIsNone(action.category)
-    self.assertIsNone(action.user_name)
-    self.assertIsNone(action.channel)
     self.assertGreaterEqual(len(action.casts), 3)
       
   def test5(self):

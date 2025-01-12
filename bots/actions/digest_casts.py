@@ -3,7 +3,7 @@ load_dotenv()
 import json
 import sys
 from bots.iaction import IAction
-from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user_name
+from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user
 from bots.data.casts import get_top_casts, get_more_like_this
 from bots.utils.prompts import concat_casts
 from bots.utils.llms import call_llm, get_max_capactity
@@ -17,9 +17,8 @@ You have access to an API that can generate the summary based on these parameter
 * category: Can be one of pre-defined categories 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
 * channel: Channels always start with '/', for example '/data', if there is no '/' then it's not a channel.
 * keyword: Any single keyword, if something can't be mapped to a category and doesn't look like a channel, you can use it as a keyword, but only if it's a single word.
-* user: User names typically start with `@`, if the intent is to summarize posts by a specific user, you can use the user parameter.
 * search: If the summary is not about a category, channel, keyword or user; then formulate a search phrase to search for posts and summarize them.
-
+* user: User names typically start with `@`, if the intent is to summarize posts by a specific user, you can use the user parameter.
 Your goal is not to continue the conversation, you must only extract the parameters to call the API.
 
 RESPONSE FORMAT:
@@ -118,7 +117,8 @@ class DigestCasts(IAction):
     self.keyword = read_keyword(params)
     self.category = read_category(params)
     self.search = read_string(params, key='search', default=None, max_length=500)
-    self.user_name = read_user_name(params, fid_origin=self.fid_origin, default_to_origin=False)
+    _, user_name = read_user(params, fid_origin=self.fid_origin, default_to_origin=False)
+    self.user_name = user_name
     self.max_rows = get_max_capactity()
       
   def get_cost(self):

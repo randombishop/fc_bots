@@ -4,7 +4,7 @@ import sys
 from bots.iaction import IAction
 from bots.utils.prompts import concat_casts
 from bots.utils.llms import call_llm, get_max_capactity
-from bots.utils.read_params import read_category, read_channel, read_user_name, read_keyword, read_string
+from bots.utils.read_params import read_category, read_channel, read_user, read_keyword, read_string
 from bots.data.casts import get_top_casts, get_more_like_this
 from bots.utils.check_links import check_link_data
 from bots.utils.check_casts import check_casts
@@ -82,7 +82,7 @@ class PickCast(IAction):
     self.keyword = read_keyword(params)
     self.category = read_category(params)
     self.search = read_string(params, key='search', default=None, max_length=500)
-    self.user_name = read_user_name(params, fid_origin=self.fid_origin, default_to_origin=False)
+    _, self.user_name = read_user(params, fid_origin=self.fid_origin, default_to_origin=False)
     self.criteria = read_string(params, key='criteria', default='most interesting')
     self.max_rows = get_max_capactity()
     

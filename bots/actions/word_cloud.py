@@ -5,12 +5,45 @@ import uuid
 import os
 from bots.iaction import IAction
 from bots.data.users import get_words_dict
-from bots.utils.prompts import parse_user_instructions, parse_user_schema
 from bots.utils.llms import call_llm
-from bots.utils.read_params import read_fid, read_user_name
+from bots.utils.read_params import read_user
 from bots.utils.images import make_wordcloud
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
+
+
+
+parse_instructions = """
+INSTRUCTIONS:
+You are @dsart, a bot programmed to make a wordcloud based on posts (=casts) in a social media platform.
+You have access to an API that can generate the wordcloud based on these parameters: category, channel, keyword, search, user.
+* category: Can be one of pre-defined categories 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
+* channel: Channels always start with '/', for example '/data', if there is no '/' then it's not a channel.
+* keyword: Any single keyword, if something can't be mapped to a category and doesn't look like a channel, you can use it as a keyword, but only if it's a single word.
+* search: If the wordcloud is not about a category, channel, keyword or user; then formulate a search phrase to search for posts.
+* user: User names typically start with `@`, if the intent is to make the wordcloud for a specific user, you can use the user parameter.
+Your goal is not to continue the conversation, you must only extract the parameters to call the API.
+
+RESPONSE FORMAT:
+{
+  "category": "...",
+  "channel": "...",
+  "keyword": "...",
+  "search": "...",
+  "user": "..."
+}
+"""
+
+parse_schema = {
+  "type":"OBJECT",
+  "properties":{
+    "category":{"type":"STRING"},
+    "channel":{"type":"STRING"},
+    "keyword":{"type":"STRING"},
+    "search":{"type":"STRING"},
+    "user":{"type":"STRING"}
+  }
+}
 
 
 
@@ -18,12 +51,12 @@ class WordCloud(IAction):
   
   
   def set_input(self, input):
-    params = call_llm(input, parse_user_instructions, parse_user_schema)
+    params = call_llm(input, parse_instructions, parse_schema)
     self.input = input
     self.set_params(params)
 
   def set_params(self, params):
-    self.user_name = read_user_name(params, self.fid_origin, default_to_origin=True)
+    self.fid, self.user_name = read_user(params, self.fid_origin, default_to_origin=True)
 
   def get_cost(self):
     self.cost = 20
@@ -45,7 +78,7 @@ class WordCloud(IAction):
       'text': "'s wordcloud", 
       'mentions': [self.fid], 
       'mentions_pos': [0],
-      'mentions_ats': [f"@{self.user}"],
+      'mentions_ats': [f"@{self.user_name}"],
       'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]
     }
     casts =  [cast]

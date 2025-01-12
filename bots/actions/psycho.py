@@ -5,10 +5,30 @@ import uuid
 import os
 from bots.iaction import IAction
 from bots.data.casts import get_casts_for_fid
-from bots.utils.prompts import parse_user_instructions, parse_user_schema
 from bots.utils.llms import call_llm
-from bots.utils.read_params import read_user_name
+from bots.utils.read_params import read_user
 from bots.utils.check_casts import check_casts
+
+
+parse_user_instructions = """
+INSTRUCTIONS:
+You are @dsart, a bot programmed to psycho analyze a user.
+Based on the provided conversation, who should we psycho analyze?
+Your goal is not to continue the conversation, you must only extract the user parameter from the conversation so that we can call an API.
+Users typically start with @, but not always.
+If you're not sure, pick the last token that starts with a @.
+
+RESPONSE FORMAT:
+{
+  "user": ...
+}
+"""
+
+parse_user_schema = {
+  "type":"OBJECT",
+  "properties":{"user":{"type":"STRING"}}
+}
+
 
 instructions = """
 INSTRUCTIONS:
@@ -45,7 +65,7 @@ class Psycho(IAction):
     self.set_params(params)
 
   def set_params(self, params):
-    self.user_name = read_user_name(params, self.fid_origin, default_to_origin=True)
+    self.fid, self.user_name = read_user(params, self.fid_origin, default_to_origin=True)
     
   def get_cost(self):
     self.cost = 20
@@ -60,7 +80,7 @@ class Psycho(IAction):
     
   def get_casts(self, intro=''):
     text = "\n".join([str(x) for x in self.data])
-    result = call_llm(text,instructions.replace('?', self.user), schema)
+    result = call_llm(text,instructions.replace('?', self.user_name), schema)
     casts = []
     if 'sentence1' in result:
       casts.append({'text': result['sentence1']})

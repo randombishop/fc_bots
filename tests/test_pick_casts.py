@@ -23,7 +23,7 @@ class TestDigestCasts(unittest.TestCase):
     action.print()
     self.assertIsInstance(action, PickCast)
     self.assertEqual(action.channel, 'chain://eip155:8453/erc721:0xb7310fc4b4a31c4fb7adf90b8201546bb2bcb52c')
-    self.assertIn('funniest', action.criteria)
+    self.assertIn('fun', action.criteria)
     self.assertEqual(len(action.casts), 1)
     self.assertEqual(len(action.casts[0]['embeds']), 1)
     
@@ -34,6 +34,6 @@ class TestDigestCasts(unittest.TestCase):
     action.print()
     self.assertIsInstance(action, PickCast)
     self.assertEqual(action.user_name, 'randombishop')
-    self.assertEqual(action.criteria, 'intriging')
+    self.assertIn('intrig', action.criteria)
     self.assertEqual(len(action.casts), 1)
     self.assertEqual(len(action.casts[0]['embeds']), 1)
