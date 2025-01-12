@@ -129,7 +129,7 @@ def read_user(params, fid_origin=None, default_to_origin=False):
     else:
       user_name = s
       fid = get_fid(user_name)
-  if fid is None and default_to_origin:
+  if fid is None and fid_origin is not None and default_to_origin:
     fid = fid_origin
     user_name = get_username(fid)
   return fid, user_name

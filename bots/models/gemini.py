@@ -9,7 +9,7 @@ import vertexai.preview.generative_models as generative_models
 
 USE_VERTEX_AI = os.getenv('USE_VERTEX_AI', "false")
 GEMINI_MODEL_NAME = 'gemini-1.5-flash-001'
-MIN_DELAY = 10
+MIN_DELAY = 2
 if USE_VERTEX_AI == "true":
   print('Init Vertex AI...')
   vertexai.init(project=os.getenv('GCP_PROJECT_ID'), location=os.getenv('GCP_REGION'))
@@ -24,10 +24,10 @@ class GeminiLLM():
       "max_output_tokens": 1024
     }
     self.safety_settings = {
-      generative_models.HarmCategory.HARM_CATEGORY_HATE_SPEECH: generative_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-      generative_models.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: generative_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-      generative_models.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: generative_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-      generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT: generative_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+      generative_models.HarmCategory.HARM_CATEGORY_HATE_SPEECH: generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+      generative_models.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+      generative_models.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+      generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT: generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH
     }
     
   def query(self, prompt, instructions=None, schema=None):

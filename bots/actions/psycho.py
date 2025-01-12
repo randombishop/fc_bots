@@ -33,10 +33,10 @@ parse_user_schema = {
 instructions = """
 INSTRUCTIONS:
 - The text above are extracts from ?.
-- Based on their posts, generate a psycho analysis about them in 3 sentences, including references to psychological pathologies, even if they don't really make sense.
-- You are highly encouraged to be absurd, quote them and use random emojis as you make fun of their psychological issues.
-- DO NOT include anything that can feel like hate speech, sexual harassment or dangerous content. 
-- Stay away from sexual references and sensitive questions and keep it PG, but funny and absurd.
+- Based on their posts, generate a funny psycho analysis about them in 3 sentences.
+- Do not use real pathology names, instead, create your own funny medical names with novel issues.
+- You are highly encouraged to quote them, use random emojis and mix your analysis with roasting.
+- Be respectful, and do not use sexual, religious or political references.
 - Output the result in json format.
 - Make sure you don't use " inside json strings. Avoid invalid json.
 
@@ -60,7 +60,9 @@ schema = {
 class Psycho(IAction):
   
   def set_input(self, input):
+    print(f"set_input input={input}")
     params = call_llm(input, parse_user_instructions, parse_user_schema)
+    print(f"params={params}")
     self.input = input
     self.set_params(params)
 
@@ -72,6 +74,8 @@ class Psycho(IAction):
     return self.cost
 
   def get_data(self):
+    if self.fid is None:
+      raise Exception(f"No fid provided.")
     df = get_casts_for_fid(self.fid)
     if df is None or len(df) == 0:
       raise Exception(f"Not enough activity to buid a psychodegen analysis.")

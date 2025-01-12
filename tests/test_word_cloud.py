@@ -12,7 +12,7 @@ class TestFavoriteUsers(unittest.TestCase):
     action.print()
     self.assertIsInstance(action, WordCloud)
     self.assertEqual(action.fid, 5650)
-    self.assertEqual(action.user, 'vitalik.eth')
+    self.assertEqual(action.user_name, 'vitalik.eth')
     self.assertEqual(len(action.casts), 1)
     self.assertEqual(len(action.casts[0]['embeds']), 1)
     
@@ -24,6 +24,6 @@ class TestFavoriteUsers(unittest.TestCase):
     action.print()
     self.assertIsInstance(action, WordCloud)
     self.assertEqual(action.fid, fid_origin)
-    self.assertEqual(action.user, 'vitalik.eth')
+    self.assertEqual(action.user_name, 'vitalik.eth')
     self.assertEqual(len(action.casts), 1)
     self.assertEqual(len(action.casts[0]['embeds']), 1)

@@ -12,7 +12,7 @@ class TestPsycho(unittest.TestCase):
     action.print()
     self.assertIsInstance(action, Roast)
     self.assertEqual(action.fid, 253232)
-    self.assertEqual(action.user, 'randombishop')
+    self.assertEqual(action.user_name, 'randombishop')
     self.assertEqual(len(action.casts), 1)
     
   def test2(self):
@@ -23,5 +23,5 @@ class TestPsycho(unittest.TestCase):
     action.print()
     self.assertIsInstance(action, Roast)
     self.assertEqual(action.fid, fid_origin)
-    self.assertEqual(action.user, 'randombishop')
+    self.assertEqual(action.user_name, 'randombishop')
     self.assertEqual(len(action.casts), 1)
