@@ -116,9 +116,12 @@ def parse_text(text, target):
       target[word] = target.get(word, 0) + 1
 
 
-def get_word_counts(array):
+def get_word_counts(array, top):
   ans = {}
   for s in array:
     if s is not None and isinstance(s, str) and len(s) > 0:
       parse_text(s, ans)
+  ans = sorted(ans.items(), key=lambda item: item[1], reverse=True)
+  ans = ans[:top]
+  ans = dict(ans)
   return ans

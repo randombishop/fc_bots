@@ -68,6 +68,7 @@ class WordCloud(IAction):
     return self.cost
 
   def get_data(self):
+    top_n = 50
     posts = []
     if self.search is not None:
       posts = get_more_like_this(self.search, limit=self.max_rows)
@@ -80,7 +81,7 @@ class WordCloud(IAction):
     if posts is None or len(posts) == 0:
       raise Exception(f"Not enough activity to buid a word cloud.")
     posts = posts['text'].tolist()
-    word_counts = get_word_counts(posts)
+    word_counts = get_word_counts(posts, top_n)
     if len(word_counts) == 5:
       raise Exception(f"Not enough activity to buid a word cloud.")
     self.data = word_counts
