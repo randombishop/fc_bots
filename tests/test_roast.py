@@ -3,7 +3,7 @@ from bots.actions.roast import Roast
 from bots.router import route
 
 
-class TestPsycho(unittest.TestCase):
+class TestRoast(unittest.TestCase):
   
   def test1(self):
     request = "Roast randombishop"

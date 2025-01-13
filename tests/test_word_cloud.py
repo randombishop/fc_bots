@@ -3,7 +3,7 @@ from bots.actions.word_cloud import WordCloud
 from bots.router import route
 
 
-class TestFavoriteUsers(unittest.TestCase):
+class TestWordCloud(unittest.TestCase):
   
   def test1(self):
     request = "Make @vitalik.eth's word cloud."
@@ -90,5 +90,17 @@ class TestFavoriteUsers(unittest.TestCase):
     self.assertIsNone(action.category)
     self.assertIsNone(action.channel)
     self.assertIsNone(action.search)
+    self.assertEqual(len(action.casts), 1)
+    self.assertEqual(len(action.casts[0]['embeds']), 1)
+    
+  def test8(self):
+    request = "Make a word cloud for this channel"
+    root_parent_url = "https://farcaster.group/data"
+    action = route(request, root_parent_url=root_parent_url)
+    action.run()
+    action.print()
+    self.assertIsInstance(action, WordCloud)
+    self.assertEqual(action.channel, root_parent_url)
+    self.assertIsNone(action.user_name)
     self.assertEqual(len(action.casts), 1)
     self.assertEqual(len(action.casts[0]['embeds']), 1)

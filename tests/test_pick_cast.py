@@ -3,7 +3,7 @@ from bots.actions.pick_cast import PickCast
 from bots.router import route
 
 
-class TestDigestCasts(unittest.TestCase):
+class TestPickCast(unittest.TestCase):
     
   def test1(self):
     request = "Pick the most beautiful cast in arts category"

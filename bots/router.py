@@ -86,7 +86,7 @@ def format_context(context, root_parent_url=None):
     channel_id = get_channel_by_url(root_parent_url)
     if channel_id is not None:
       text += '#CURRENT CHANNEL: /'+channel_id+'\n'
-  text = "#CONVERSATION:\n"
+  text += "#CONVERSATION:\n"
   for i in range(len(context)):
     item = context[i]
     text += f"#{i+1}. {item['username']} said: "
