@@ -70,7 +70,7 @@ class TestFavoriteUsers(unittest.TestCase):
     self.assertEqual(len(action.casts[0]['embeds']), 1)
 
   def test6(self):
-    request = "Make a word cloud about the beaty of canadian landscapes"
+    request = "Make a word cloud about the beauty of canadian landscapes"
     action = route(request)
     action.run()
     action.print()

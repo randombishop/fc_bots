@@ -45,7 +45,7 @@ class TestDigestCasts(unittest.TestCase):
     self.assertGreaterEqual(len(action.casts), 3)
 
   def test4(self):
-    request = "Summary of posts about the beaty of canadian landscapes"
+    request = "Summary of posts about the beauty of canadian landscapes"
     action = route(request)
     action.run()
     action.print()
