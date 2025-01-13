@@ -10,7 +10,7 @@ from bots.utils.check_casts import check_casts
 
 instructions = """
 You are @dsart bot, a social media bot.
-Your task is to decide if the latest post in the conversation is worth liking.
+Your task is to decide if the last post (=cast) in the provided conversation is worth liking.
 
 INSTRUCTIONS:
 - If it's a greeting or a thank you message, set "like" to true. 
@@ -50,8 +50,7 @@ class Like(IAction):
     result = call_llm(instructions, self.data, schema)
     like = 'like' in result and str(result['like']).lower()=='true'
     if like:
-      casts = [{'like': like}]
-      self.casts = casts
-      return casts
+      self.casts = [{'like': like}]
     else:
-      return []
+      self.casts =  []
+    return self.casts

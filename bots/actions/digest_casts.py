@@ -1,26 +1,30 @@
 from dotenv import load_dotenv
 load_dotenv()
-import json
+import uuid
 import sys
+import os
 from bots.iaction import IAction
-from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user_name
+from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user
 from bots.data.casts import get_top_casts, get_more_like_this
 from bots.utils.prompts import concat_casts
 from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.check_links import check_link_data
 from bots.utils.check_casts import check_casts
+from bots.utils.word_counts import get_word_counts
+from bots.utils.images import make_wordcloud
+from bots.utils.gcs import upload_to_gcs
+
 
 parse_instructions = """
 INSTRUCTIONS:
-You are @dsart, a bot programmed to make summaries of posts in a social media platform.
-You have access to an API that can generate the summary based on these parameters: category, channel, keyword, more_like_this, user.
+You are @dsart, a bot programmed to make summaries of posts (=casts) in a social media platform.
+You have access to an API that can generate the summary based on these parameters: category, channel, keyword, search, user.
 * category: Can be one of pre-defined categories 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
 * channel: Channels always start with '/', for example '/data', if there is no '/' then it's not a channel.
 * keyword: Any single keyword, if something can't be mapped to a category and doesn't look like a channel, you can use it as a keyword, but only if it's a single word.
+* search: If the summary is not about a category, channel, keyword or user; then formulate a search phrase to search for posts and summarize them.
 * user: User names typically start with `@`, if the intent is to summarize posts by a specific user, you can use the user parameter.
-* search: If the summary is not about a category, channel, keyword or user; then formulate a search phrase to search for casts and summarize them.
-
-Your goal is not to continue the conversation directly, you must only need to extract the parameters to call the API.
+Your goal is not to continue the conversation, you must only extract the parameters to call the API.
 
 RESPONSE FORMAT:
 {
@@ -118,7 +122,8 @@ class DigestCasts(IAction):
     self.keyword = read_keyword(params)
     self.category = read_category(params)
     self.search = read_string(params, key='search', default=None, max_length=500)
-    self.user_name = read_user_name(params, fid_origin=self.fid_origin, default_to_origin=False)
+    _, user_name = read_user(params, fid_origin=self.fid_origin, default_to_origin=False)
+    self.user_name = user_name
     self.max_rows = get_max_capactity()
       
   def get_cost(self):
@@ -180,14 +185,26 @@ class DigestCasts(IAction):
           links.append(link)
         del result[link_key]
     result['links'] = links
+    # Make word cloud
+    top_n = 50
+    word_counts = get_word_counts([x['text'] for x in posts], top_n)
+    if len(word_counts) > 5:
+      filename = str(uuid.uuid4())+'.png'
+      make_wordcloud(word_counts, filename)
+      upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
+      os.remove(filename)
+      result['wordcloud'] = f"https://fc.datascience.art/bot/main_files/{filename}"
     # Done
     self.data = result
     return self.data
   
   def get_casts(self, intro=''):
     casts = []
-    cast1 = (intro + '\n\n' + self.data['title'] + '\n\n' + self.data['summary'][0]).strip()
-    casts.append({'text': cast1})
+    cast1_text = (intro + '\n\n' + self.data['title'] + '\n\n' + self.data['summary'][0]).strip()
+    cast1 = {'text': cast1_text}
+    if 'wordcloud' in self.data:
+      cast1['embeds'] = [self.data['wordcloud']]
+    casts.append(cast1)
     for t in self.data['summary'][1:]:
       casts.append({'text': t})
     for link in self.data['links']:
@@ -196,10 +213,3 @@ class DigestCasts(IAction):
     self.casts = casts
     return self.casts
 
-
-if __name__ == "__main__":
-  input = sys.argv[1] 
-  action = DigestCasts()
-  action.set_input(input)
-  action.run()
-  action.print()

@@ -2,6 +2,17 @@ from bots.data.channels import get_channels_map
 from bots.data.users import get_fid, get_username
 
 
+def is_fid(value):
+  if value is None:
+    return False
+  else:
+    try:
+      int_value = int(value)
+      return int_value > 0 and int_value<10000000
+    except:
+      return False
+
+
 def is_true(value):
   if value==True:
     return True
@@ -31,7 +42,7 @@ def is_specific_channel(value):
     s = str(value).lower()
     if s.startswith('/'):
       s = s[1:]
-    if s in ['null', 'undefined', 'none', 'channel', '<channel>']:
+    if s in ['null', 'undefined', 'none', 'channel', '<channel>', 'here', 'this']:
       return False
     if len(s) == 0:
       return False
@@ -49,7 +60,7 @@ def read_int(params, key, default, min, max):
   return ans
 
 
-def read_string(params, key, default, max_length):
+def read_string(params, key, default=None, max_length=256):
   ans = default
   if key in params and params[key] is not None:
     ans = str(params[key])
@@ -58,21 +69,6 @@ def read_string(params, key, default, max_length):
     if ans.lower() in ['null', 'undefined', 'none']:
       ans = None
   return ans
-
-
-def read_channel(params):
-  channel = None
-  if ('channel' in params) and is_specific_channel(params['channel']):
-    channels_by_id, channels_by_name = get_channels_map()
-    channel = params['channel']
-    channel_lower_case = channel.lower()
-    if channel_lower_case.startswith('/'):
-      channel_lower_case = channel_lower_case[1:]
-    if channel_lower_case in channels_by_id:
-      channel = channels_by_id[channel_lower_case]
-    elif channel_lower_case in channels_by_name:
-      channel = channels_by_name[channel_lower_case]
-  return channel
 
 
 def read_keyword(params):
@@ -98,32 +94,43 @@ def read_category(params):
       return category
   return None
 
-def read_fid(params, fid_origin=None, default_to_origin=False):
-  if 'user' in params and is_specific_user(params['user']):
-    s = str(params['user']).lower()
-    if s.startswith('@'):
-      s = s[1:]
-    try:
-      fid = int(s)
-      return fid
-    except:
-      return get_fid(s)
-  if default_to_origin:
-    return fid_origin
-  else:
-    return None
 
-def read_user_name(params, fid_origin=None, default_to_origin=False):
+def read_channel(params, current_channel=None, default_to_current=False):
+  channel = None
+  if ('channel' in params) and is_specific_channel(params['channel']):
+    channels_by_id, channels_by_name = get_channels_map()
+    channel = params['channel']
+    channel_lower_case = channel.lower()
+    if channel_lower_case.startswith('/'):
+      channel_lower_case = channel_lower_case[1:]
+    if channel_lower_case in channels_by_id:
+      channel = channels_by_id[channel_lower_case]
+    elif channel_lower_case in channels_by_name:
+      channel = channels_by_name[channel_lower_case]
+    else:
+      channel = None  
+  if channel is None and default_to_current:
+    channel = current_channel
+  return channel
+
+
+def read_user(params, fid_origin=None, default_to_origin=False):
+  fid = None
+  user_name = None
   if 'user' in params and is_specific_user(params['user']):
     s = str(params['user']).lower()
     if s.startswith('@'):
       s = s[1:]
-    try:
+    if s.startswith('fid#'):
+      s = s[4:]
+    if is_fid(s):
       fid = int(s)
-      return get_username(fid)
-    except:
-      return s
-  if default_to_origin and fid_origin is not None:
-    return get_username(fid_origin)
-  else:
-    return None
+      user_name = get_username(fid)
+    else:
+      user_name = s
+      fid = get_fid(user_name)
+  if fid is None and fid_origin is not None and default_to_origin:
+    fid = fid_origin
+    user_name = get_username(fid)
+  return fid, user_name
+  

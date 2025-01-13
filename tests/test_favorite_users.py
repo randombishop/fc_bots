@@ -35,6 +35,6 @@ class TestFavoriteUsers(unittest.TestCase):
     action.run()
     action.print()
     self.assertIsInstance(action, FavoriteUsers)
-    self.assertEqual(action.fid, 253232)
+    self.assertEqual(action.fid, fid_target)
     self.assertEqual(len(action.casts), 1)
     self.assertEqual(len(action.casts[0]['mentions']), 3)

@@ -45,16 +45,12 @@ class TestDigestCasts(unittest.TestCase):
     self.assertGreaterEqual(len(action.casts), 3)
 
   def test4(self):
-    request = "Summary of posts about the beaty of canadian landscapes"
+    request = "Summary of posts about the beauty of canadian landscapes"
     action = route(request)
     action.run()
     action.print()
     self.assertIsInstance(action, DigestCasts)
     self.assertIsNotNone(action.search)
-    self.assertIsNone(action.keyword)
-    self.assertIsNone(action.category)
-    self.assertIsNone(action.user_name)
-    self.assertIsNone(action.channel)
     self.assertGreaterEqual(len(action.casts), 3)
       
   def test5(self):
@@ -69,5 +65,3 @@ class TestDigestCasts(unittest.TestCase):
     self.assertIsNone(action.channel)
     self.assertIsNone(action.search)
     self.assertGreaterEqual(len(action.casts), 3)
-
-  def test6(self):

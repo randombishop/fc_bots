@@ -14,12 +14,10 @@ from bots.utils.check_casts import check_casts
 
 parse_instructions = """
 INSTRUCTIONS:
-Find the channel in the user input. 
-Your goal is not to answer the request, you only need to extract the channel parameter.
-The query doesn't need to match a specific format, your job is to guess the channel that the user is asking for.
-
-PARAMETERS:
-* channel, text, required.
+You are @dsart, a bot programmed to list the most active users in a social media channel.
+Based on the provided conversation, which channel should we look at? 
+Your goal is not to continue the conversation, you must only extract the channel parameter.
+Channels typically start with /, but not always.
 
 RESPONSE FORMAT:
 {
@@ -30,7 +28,7 @@ RESPONSE FORMAT:
 parse_schema = {
   "type":"OBJECT",
   "properties":{
-    "sentence1":{"type":"STRING"}
+    "channel":{"type":"STRING"}
   }
 }
 
@@ -43,7 +41,7 @@ class MostActiveUsers(IAction):
     self.set_params(params)
   
   def set_params(self, params):
-    self.channel = read_channel(params)
+    self.channel = read_channel(params, current_channel=self.root_parent_url, default_to_current=True)
 
   def get_cost(self):
     self.cost = 20
