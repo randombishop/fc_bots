@@ -1,7 +1,8 @@
 from dotenv import load_dotenv
 load_dotenv()
-import json
+import uuid
 import sys
+import os
 from bots.iaction import IAction
 from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user
 from bots.data.casts import get_top_casts, get_more_like_this
@@ -9,6 +10,10 @@ from bots.utils.prompts import concat_casts
 from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.check_links import check_link_data
 from bots.utils.check_casts import check_casts
+from bots.utils.word_counts import get_word_counts
+from bots.utils.images import make_wordcloud
+from bots.utils.gcs import upload_to_gcs
+
 
 parse_instructions = """
 INSTRUCTIONS:
@@ -180,14 +185,26 @@ class DigestCasts(IAction):
           links.append(link)
         del result[link_key]
     result['links'] = links
+    # Make word cloud
+    top_n = 50
+    word_counts = get_word_counts([x['text'] for x in posts], top_n)
+    if len(word_counts) > 5:
+      filename = str(uuid.uuid4())+'.png'
+      make_wordcloud(word_counts, filename)
+      upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
+      os.remove(filename)
+      result['wordcloud'] = f"https://fc.datascience.art/bot/main_files/{filename}"
     # Done
     self.data = result
     return self.data
   
   def get_casts(self, intro=''):
     casts = []
-    cast1 = (intro + '\n\n' + self.data['title'] + '\n\n' + self.data['summary'][0]).strip()
-    casts.append({'text': cast1})
+    cast1_text = (intro + '\n\n' + self.data['title'] + '\n\n' + self.data['summary'][0]).strip()
+    cast1 = {'text': cast1_text}
+    if 'wordcloud' in self.data:
+      cast1['embeds'] = [self.data['wordcloud']]
+    casts.append(cast1)
     for t in self.data['summary'][1:]:
       casts.append({'text': t})
     for link in self.data['links']:
@@ -196,10 +213,3 @@ class DigestCasts(IAction):
     self.casts = casts
     return self.casts
 
-
-if __name__ == "__main__":
-  input = sys.argv[1] 
-  action = DigestCasts()
-  action.set_input(input)
-  action.run()
-  action.print()
