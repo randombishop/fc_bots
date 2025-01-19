@@ -1,12 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
-import sys
-import time
 from bots.iaction import IAction
-from bots.data.casts import get_cast
-from bots.data.users import get_username
 from bots.utils.llms import call_llm
-from bots.utils.check_casts import check_casts
 
 instructions = """
 You are @dsart bot, a social media bot.

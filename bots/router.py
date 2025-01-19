@@ -20,6 +20,7 @@ Map the query to one of the following actions.
 Your goal is not to answer the query, you must only decide which action to perform.
 Decide the action that matches the user intent.
 Pick one specific action based on the conversation if it is relevant and useful for the user, but if no specific action is applicable, return an error message and a null action.
+Do not pick the roast or psychoanalyze actions unless the user clearly asks for it in the last post of the conversation, if not sure, avoid the Roast and Psycho actions.
 """
 
 main_format = """
