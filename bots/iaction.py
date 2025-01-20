@@ -46,7 +46,7 @@ class IAction:
     self.get_casts(intro)
     
   def print(self):
-    attrs = ['fid', 'user_name', 'channel', 'keyword', 'category', 'search', 'criteria', 'text', 'cost']
+    attrs = ['fid', 'user_name', 'channel', 'keyword', 'category', 'search', 'criteria', 'text', 'question', 'cost']
     s = '\n'
     s += ('-'*64) + '\n'
     s += f"{self.input}>>>\n"

@@ -8,6 +8,7 @@ from bots.actions.most_active_users import MostActiveUsers
 from bots.actions.word_cloud import WordCloud
 from bots.actions.psycho import Psycho
 from bots.actions.roast import Roast
+from bots.actions.perplexity import Perplexity
 
 
 ACTIONS = {
@@ -19,6 +20,7 @@ ACTIONS = {
   'WordCloud': WordCloud, 
   'Psycho': Psycho,
   'Roast': Roast,
+  'Perplexity': Perplexity,
 }
 
 
@@ -31,4 +33,5 @@ MostActiveUsers: List the most active users in a channel.
 WordCloud: Make a word cloud of a user's posts and reactions.
 Psycho: Generate a psychoanalysis for a user.
 Roast: Generate a roast for a user.
+Perplexity: Ask a question to Perplexity AI.
 """
