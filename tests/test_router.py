@@ -58,3 +58,15 @@ class TestRouter(unittest.TestCase):
     action = route(request)
     action.print()
     self.assertIsInstance(action, actions.roast.Roast)
+
+  def test_perplexity(self):
+    request = "Ask perplexity to live or not to live"
+    action = route(request)
+    action.print()
+    self.assertIsInstance(action, actions.perplexity.Perplexity)
+
+  def test_news(self):
+    request = "Data Science news"
+    action = route(request)
+    action.print()
+    self.assertIsInstance(action, actions.news.News)

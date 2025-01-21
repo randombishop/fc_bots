@@ -21,4 +21,4 @@ class TestPerplexity(unittest.TestCase):
     action.print()
     self.assertIsInstance(action, Perplexity)
     self.assertEqual(len(action.casts), 1)
-    self.assertEqual(action.casts[0]['embeds'], 1)
+    self.assertEqual(len(action.casts[0]['embeds']), 1)
