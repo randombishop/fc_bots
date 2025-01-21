@@ -21,7 +21,7 @@ def call_perplexity(question):
           "content": question
       }
     ],
-    "max_tokens": 64,
+    "max_tokens": 50,
     "return_images": False,
     "return_related_questions": False,
     "search_recency_filter": "month",

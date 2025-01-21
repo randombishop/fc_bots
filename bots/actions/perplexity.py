@@ -4,6 +4,7 @@ from bots.iaction import IAction
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_string
 from bots.utils.perplexity_api import call_perplexity
+from bots.utils.check_casts import check_casts
 
 
 parse_instructions = """
@@ -52,4 +53,18 @@ class Perplexity(IAction):
     return self.data
     
   def get_casts(self, intro=''):
-    return []
+    answer = None
+    try:
+      answer = self.data['choices'][0]['message']['content']
+    except Exception:
+      raise Exception("Could not get an answer from Perplexity.")
+    link = None
+    if 'citations' in self.data and len(self.data['citations']) > 0:
+      link = self.data['citations'][0]
+    cast = {'text': answer}
+    if link is not None:
+      cast['embeds'] = [link]
+    casts = [cast]
+    check_casts(casts)
+    self.casts = casts
+    return self.casts

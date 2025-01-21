@@ -11,3 +11,14 @@ class TestPerplexity(unittest.TestCase):
     action.run()
     action.print()
     self.assertIsInstance(action, Perplexity)
+    self.assertEqual(len(action.casts), 1)
+    self.assertEqual(action.casts[0]['embeds'], 1)
+    
+  def test2(self):
+    request = "Ask perplexity what is the answer to life, the universe and everything?"
+    action = route(request)
+    action.run()
+    action.print()
+    self.assertIsInstance(action, Perplexity)
+    self.assertEqual(len(action.casts), 1)
+    self.assertEqual(action.casts[0]['embeds'], 1)
