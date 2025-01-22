@@ -47,7 +47,8 @@ class MoreLikeThis(IAction):
     similar = get_more_like_this(self.text, limit=3)
     if len(similar) == 0:
       raise Exception("No similar posts found.")
-    self.data = similar.to_dict(orient='records')
+    data = similar.to_dict(orient='records')
+    self.data = data
     return self.data
 
   def get_casts(self, intro=''):
