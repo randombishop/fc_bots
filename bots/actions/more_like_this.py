@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 from bots.iaction import IAction
-from bots.data.casts import get_cast, get_more_like_this
+from bots.data.casts import get_more_like_this
 from bots.utils.llms import call_llm
 
 
@@ -44,12 +44,7 @@ class MoreLikeThis(IAction):
     return self.cost
 
   def get_data(self):
-    exclude_hash = None
-    if self.attachment_hash is not None:
-      exclude_hash = self.attachment_hash
-    elif self.parent_hash is not None:
-      exclude_hash = self.parent_hash
-    similar = get_more_like_this(self.text, exclude_hash=exclude_hash, limit=3)
+    similar = get_more_like_this(self.text, limit=3)
     if len(similar) == 0:
       raise Exception("No similar posts found.")
     self.data = similar.to_dict(orient='records')

@@ -82,8 +82,12 @@ def format_context(context, root_parent_url=None):
   text += "#CONVERSATION:\n"
   for i in range(len(context)):
     item = context[i]
-    text += f"#{i+1}. {item['username']} said: "
+    text += f"#{i+1}. @{item['username']} said: \n"
     text += f"{item['text']} \n"  
+    if 'quote' in item:
+      text += f"  [quoting @{item['quote']['username']}: \n"
+      text += f"  {item['quote']['text']} \n"
+      text += "  ]\n"
     text += '#\n'
   return text
 
@@ -99,8 +103,6 @@ def route(request, fid_origin=None, parent_hash=None, attachment_hash=None, root
     Action = ACTIONS[f]
   action = Action()
   action.set_fid_origin(fid_origin)
-  action.set_parent_hash(parent_hash)
-  action.set_attachment_hash(attachment_hash)
   action.set_root_parent_url(root_parent_url)
   action.set_input(context)
   return action

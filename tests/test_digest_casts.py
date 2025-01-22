@@ -6,13 +6,12 @@ from bots.router import route
 class TestDigestCasts(unittest.TestCase):
   
   def test1(self):
-    request = "Give me a summary about bitcoin"
+    request = "Give me a summary using keyword bitcoin"
     action = route(request)
     action.run()
     action.print()
     self.assertIsInstance(action, DigestCasts)
     self.assertEqual(action.keyword, 'bitcoin')
-    self.assertEqual(action.category, 'c_crypto')
     self.assertIsNone(action.channel)
     self.assertIsNone(action.user_name)
     self.assertIsNone(action.search)

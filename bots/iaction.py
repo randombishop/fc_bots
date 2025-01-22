@@ -2,19 +2,11 @@ class IAction:
     
   def __init__(self):
     self.fid_origin = None
-    self.parent_hash = None
-    self.attachment_hash = None
     self.data = None
     self.casts = None
 
   def set_fid_origin(self, fid_origin):
     self.fid_origin = int(fid_origin) if fid_origin is not None else None
-
-  def set_parent_hash(self, parent_hash):
-    self.parent_hash = parent_hash
-
-  def set_attachment_hash(self, attachment_hash):
-    self.attachment_hash = attachment_hash
     
   def set_root_parent_url(self, root_parent_url):
     self.root_parent_url = root_parent_url
