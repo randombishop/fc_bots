@@ -53,8 +53,8 @@ def get_cast(hash):
     'parent_fid': cast_info['parentFid'] if 'parentFid' in cast_info else None,
     'parent_hash': cast_info['parentHash'] if 'parentHash' in cast_info else None
   }
-  if 'quoted_Casts' in cast_info and len(cast_info['quoteCasts']) > 0:
-      quote_cast = cast_info['quoteCasts'][0]
-      cast['quote'] = {'text': quote_cast['text'], 'fid': quote_cast['fid'], 'username': quote_cast['username']}
+  if 'embeds' in cast_info and 'quoteCasts' in cast_info['embeds'] and len(cast_info['embeds']['quoteCasts']) > 0:
+      quote_cast = cast_info['embeds']['quoteCasts'][0]
+      cast['quote'] = {'text': quote_cast['text'], 'fid': int(quote_cast['author']['fid']), 'username': quote_cast['author']['username']}
   return cast
   

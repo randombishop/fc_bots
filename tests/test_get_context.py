@@ -34,3 +34,18 @@ class TestGetContext(unittest.TestCase):
     self.assertEqual(context[0]['quote']['fid'], 874939)
     self.assertEqual(context[0]['quote']['username'], 'ds007')
     self.assertEqual(context[0]['quote']['text'], 'I like #DataScience and #ML therefore I like #Farcaster')
+    
+  def test4(self):
+    request = "More like this"
+    fid_origin = 253232
+    parent_hash = '0x6f119aad7fa236cd31eeebd03d569bc264350d29'
+    context = get_context(request, fid_origin=fid_origin, parent_hash=parent_hash)
+    self.assertEqual(len(context), 2)
+    self.assertEqual(context[0]['fid'], 3621)
+    self.assertEqual(context[0]['username'], 'horsefacts.eth')
+    self.assertEqual(context[0]['quote']['fid'], 347)
+    self.assertEqual(context[0]['quote']['username'], 'greg')
+    self.assertEqual(context[0]['quote']['text'], 'post a picture of you from a different era')
+    self.assertEqual(context[1]['text'], request)
+    self.assertEqual(context[1]['fid'], 253232)
+    self.assertEqual(context[1]['username'], 'randombishop')
