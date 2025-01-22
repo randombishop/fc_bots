@@ -1,24 +1,36 @@
 from dotenv import load_dotenv
 load_dotenv()
-import sys
-import re
 from bots.iaction import IAction
 from bots.data.casts import get_cast, get_more_like_this
+from bots.utils.llms import call_llm
 
+
+parse_instructions = """
+You are @dsart bot, a social media bot.
+Your task is to forward a text to an API that will perform a more-like-this search.
+What text should we submit?
+INSTRUCTIONS:
+- Extract or come up with an appropriate text to be submitted to the more-like-this API.
+- Your goal is not to continue the conversation, you must only extract a text to call the next API.
+
+
+OUTPUT FORMAT:
+{
+  "text": "..."
+}
+"""
+
+parse_schema = {
+  "type":"OBJECT",
+  "properties":{
+    "text":{"type":"STRING"}
+  }
+}
 
 class MoreLikeThis(IAction):
 
   def set_input(self, input):
-    params = {}
-    if self.attachment_hash is not None:
-      attached_cast = get_cast(self.attachment_hash)
-      params['text'] = attached_cast['text']
-    elif self.parent_hash is not None:
-      parent_cast = get_cast(self.parent_hash)
-      params['text'] = parent_cast['text']
-    else:
-      text = re.sub(r'(?i)more like this:?', '', input).strip()
-      params['text'] = text
+    params = call_llm(input, parse_instructions, parse_schema)
     self.input = input
     self.set_params(params)
 

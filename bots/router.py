@@ -57,28 +57,20 @@ def find_action(request):
 
 def get_context(request, fid_origin=None, parent_hash=None, attachment_hash=None):
   context = []
-  context.append({'text': '@dsart ' + request, 'fid': fid_origin})
+  username_origin = get_username(fid_origin) if fid_origin is not None else 'unknown_user'
+  main_cast = {'text': request, 'fid': fid_origin, 'username': username_origin}
+  if attachment_hash is not None:
+    attachment_cast = get_cast(attachment_hash)
+    main_cast['quote'] = {'text': attachment_cast['text'], 'fid': attachment_cast['fid'], 'username': attachment_cast['username']}
+  context.append(main_cast)
   max_depth = 7
   current_depth = 0
   while parent_hash is not None and current_depth < max_depth:
-    cast = get_cast(parent_hash)
-    context.append({'text': cast['text'], 'fid': cast['fid']})
-    parent_hash = cast['parent_hash']
+    previous_cast = get_cast(parent_hash)
+    context.append(previous_cast)
+    parent_hash = previous_cast['parent_hash']
     current_depth += 1
   context.reverse()
-  fids = list(set(item['fid'] for item in context if item['fid'] is not None))
-  fids = [x for x in fids if x is not None]
-  usernames = {}
-  if len(fids) > 0:
-    for fid in fids:
-      usernames[fid] = get_username(fid)
-  for item in context:
-    if item['fid'] is None:
-      item['username'] = '@unknown_user'
-    elif item['fid'] in usernames:
-      item['username'] = '@' +usernames[item['fid']]
-    elif item['fid'] is not None:
-      item['username'] = '@fid#' + str(item['fid'])
   return context
  
 def format_context(context, root_parent_url=None):

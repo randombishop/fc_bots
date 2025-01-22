@@ -8,7 +8,6 @@ class TestMoreLikeThis(unittest.TestCase):
   def test1(self):
     request = "More like this: #Bitcoin is sweet!"
     action = route(request)
-    action.set_input(request)
     action.run()
     action.print()
     self.assertIsInstance(action, MoreLikeThis)
@@ -22,7 +21,6 @@ class TestMoreLikeThis(unittest.TestCase):
     request = "Find similar casts"
     action = route(request)
     action.set_parent_hash(parent_hash)
-    action.set_input(request)
     action.run()
     action.print()
     self.assertIsInstance(action, MoreLikeThis)
@@ -35,7 +33,6 @@ class TestMoreLikeThis(unittest.TestCase):
     request = "Other casts like this one?"
     action = route(request)
     action.set_attachment_hash(attachment_hash)
-    action.set_input(request)
     action.run()
     action.print()
     self.assertIsInstance(action, MoreLikeThis)

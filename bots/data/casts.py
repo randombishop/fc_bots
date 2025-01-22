@@ -43,13 +43,18 @@ def get_more_like_this(text, exclude_hash=None, limit=10):
   return run_query(query_id, params)
 
 def get_cast(hash):
-  cast = get_cast_info(hash)
-  return {
-    'fid': int(cast['author']['fid']),
-    'text': cast['text'],
-    'mentions': cast['mentions'] if 'mentions' in cast else [], 
-    'mentionsPos': cast['mentionsPositions'] if 'mentionsPositions' in cast else [],
-    'parent_fid': cast['parentFid'] if 'parentFid' in cast else None,
-    'parent_hash': cast['parentHash'] if 'parentHash' in cast else None
+  cast_info = get_cast_info(hash)
+  cast = {
+    'fid': int(cast_info['author']['fid']),
+    'username': cast_info['author']['username'],
+    'text': cast_info['text'],
+    'mentions': cast_info['mentions'] if 'mentions' in cast_info else [], 
+    'mentionsPos': cast_info['mentionsPositions'] if 'mentionsPositions' in cast_info else [],
+    'parent_fid': cast_info['parentFid'] if 'parentFid' in cast_info else None,
+    'parent_hash': cast_info['parentHash'] if 'parentHash' in cast_info else None
   }
+  if 'quoted_Casts' in cast_info and len(cast_info['quoteCasts']) > 0:
+      quote_cast = cast_info['quoteCasts'][0]
+      cast['quote'] = {'text': quote_cast['text'], 'fid': quote_cast['fid'], 'username': quote_cast['username']}
+  return cast
   
