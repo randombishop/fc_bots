@@ -44,6 +44,8 @@ def get_more_like_this(text, exclude_hash=None, limit=10):
 
 def get_cast(hash):
   cast_info = get_cast_info(hash)
+  if cast_info is None:
+    return None
   cast = {
     'fid': int(cast_info['author']['fid']),
     'username': cast_info['author']['username'],

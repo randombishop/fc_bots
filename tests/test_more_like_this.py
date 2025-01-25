@@ -45,3 +45,12 @@ class TestMoreLikeThis(unittest.TestCase):
     #self.assertNotIn(attachment_hash, hashes)
     self.assertLess(top_result['q_distance'], SMALL_DISTANCE)
     self.assertLess(top_result['dim_distance'], SMALL_DISTANCE)
+    
+  def test4(self):
+    # test with a deleted parent
+    parent_hash = '0xb59fcfda9e859be648e5d5541d292a6fb8cc9fcb'
+    request = "More like this"
+    action = route(request, parent_hash=parent_hash)
+    action.run()
+    action.print()
+    

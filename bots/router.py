@@ -61,15 +61,19 @@ def get_context(request, fid_origin=None, parent_hash=None, attachment_hash=None
   main_cast = {'text': request, 'fid': fid_origin, 'username': username_origin}
   if attachment_hash is not None:
     attachment_cast = get_cast(attachment_hash)
-    main_cast['quote'] = {'text': attachment_cast['text'], 'fid': attachment_cast['fid'], 'username': attachment_cast['username']}
+    if attachment_cast is not None:
+      main_cast['quote'] = {'text': attachment_cast['text'], 'fid': attachment_cast['fid'], 'username': attachment_cast['username']}
   context.append(main_cast)
   max_depth = 7
   current_depth = 0
   while parent_hash is not None and current_depth < max_depth:
     previous_cast = get_cast(parent_hash)
-    context.append(previous_cast)
-    parent_hash = previous_cast['parent_hash']
-    current_depth += 1
+    if previous_cast is not None:
+      context.append(previous_cast)
+      parent_hash = previous_cast['parent_hash']
+      current_depth += 1
+    else:
+      parent_hash = None
   context.reverse()
   return context
  

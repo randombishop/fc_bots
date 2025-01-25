@@ -49,3 +49,9 @@ class TestGetContext(unittest.TestCase):
     self.assertEqual(context[1]['text'], request)
     self.assertEqual(context[1]['fid'], 253232)
     self.assertEqual(context[1]['username'], 'randombishop')
+
+  def test5(self):
+    request = "Deleted parent test"
+    parent_hash = '0xb59fcfda9e859be648e5d5541d292a6fb8cc9fcb'
+    context = get_context(request, parent_hash=parent_hash)
+    self.assertEqual(len(context), 1)
