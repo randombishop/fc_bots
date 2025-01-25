@@ -2,6 +2,7 @@ class IAction:
     
   def __init__(self):
     self.fid_origin = None
+    self.root_parent_url = None
     self.data = None
     self.casts = None
 
