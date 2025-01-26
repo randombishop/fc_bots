@@ -59,7 +59,8 @@ class News(IAction):
   def get_casts(self, intro=''):
     if self.data is None or 'tweet' not in self.data:
       raise Exception("Could not get a news story")
-    cast = {'text': self.data['tweet']}
+    text = (intro + ' ' if intro is not None and len(intro) > 0 else '') + self.data['tweet']
+    cast = {'text': text}
     if 'url' in self.data and len(self.data['url']) > 10:
       link = self.data['url']
       cast['embeds'] = [link]

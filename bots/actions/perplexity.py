@@ -61,7 +61,8 @@ class Perplexity(IAction):
     link = None
     if 'citations' in self.data and len(self.data['citations']) > 0:
       link = self.data['citations'][0]
-    cast = {'text': answer}
+    text = (intro + ' ' if intro is not None and len(intro) > 0 else '') + answer
+    cast = {'text': text}
     if link is not None:
       cast['embeds'] = [link]
     casts = [cast]

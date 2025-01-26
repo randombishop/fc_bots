@@ -114,7 +114,7 @@ class PickCast(IAction):
     return result
     
   def get_casts(self, intro=''):
-    text = (intro + ' ' if intro else '') + self.data['comment']
+    text = (intro + ' ' if intro is not None and len(intro) > 0 else '') + self.data['comment']
     casts = []
     cast = {
       'text': text,
