@@ -56,7 +56,7 @@ def get_workflow_result(workflow_id, run_id):
   while True:
     result = check_workflow(workflow_id, run_id)
     print(f"Waiting for skyvern worflow {workflow_id}/{run_id} to complete... Status: {result['status']}")
-    if result['status'] != 'running':
+    if result['status'] not in ['running', 'created']:
       return result
     if time.time() - start_time > TIMEOUT:
       raise Exception(f"Workflow timed out after {TIMEOUT} seconds")
