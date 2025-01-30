@@ -53,6 +53,7 @@ pip install -e .
 ```
 ./run_tests # to run all tests
 python -m unittest tests/test_word_cloud.py   # to run one group of tests
+python -m unittest tests/test_word_cloud   # to run one group of tests
 python -m unittest tests.test_word_cloud.TestWordCloud.test8   # to run a specific test
 ```
 
