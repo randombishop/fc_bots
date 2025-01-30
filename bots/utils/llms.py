@@ -21,7 +21,7 @@ def get_max_capactity():
   if LLM_KEY == 'mistral':
     return 15
   elif LLM_KEY == 'gemini':
-    return 100
+    return 50
   else:
     raise Exception(f"Unknown LLM: {LLM_KEY}")
 

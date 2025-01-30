@@ -89,6 +89,19 @@ ignore_words = {
   'yours',
   'yourself',
   'yourselves',
+  'back',
+  'keep',
+  'done',
+  'could',
+  'even',
+  'lets',
+  'down',
+  'many',
+  'take',
+  'wait',
+  'cant',
+  'next',
+  'think'
 }
 
 

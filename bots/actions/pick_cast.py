@@ -18,8 +18,8 @@ category, channel, keyword, more_like_this, user, search, criteria.
 * category: Can be one of pre-defined categories 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
 * channel: Channels always start with '/', for example '/data', if there is no '/' then it's not a channel.
 * keyword: Any single keyword, if something can't be mapped to a category and doesn't look like a channel, you can use it as a keyword, but only if it's a single word.
-* user: User names typically start with `@`, if the intent is to pick one post by a specific user, you can use the user parameter.
 * search: If the scope is not about a category, channel, keyword or user; then formulate a search phrase to search for posts and pick one.
+* user: User names typically start with `@`, if the intent is to pick one post by a specific user, you can use the user parameter.
 * criteria: Which criteria should be used to pick the best post? Can be any free text like 'beautiful', 'funniest', 'best', 'most informative'. Defaults to 'most interesting'.
 Your goal is not to continue the conversation directly, you must only need to extract the parameters to call the API.
 
@@ -27,6 +27,9 @@ RESPONSE FORMAT:
 {
   "category": ...,
   "channel": ...,
+  "keyword": "...",
+  "search": "...",
+  "user": "..."
   "criteria": ...
 }
 """
@@ -111,9 +114,10 @@ class PickCast(IAction):
     return result
     
   def get_casts(self, intro=''):
+    text = (intro + ' ' if intro is not None and len(intro) > 0 else '') + self.data['comment']
     casts = []
     cast = {
-      'text': self.data['comment'],
+      'text': text,
       'embeds': [{'fid': self.data['fid'], 'user_name': self.data['user_name'], 'hash': self.data['hash']}]
     }
     casts.append(cast)
