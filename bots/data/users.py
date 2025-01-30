@@ -1,5 +1,3 @@
-from dotenv import load_dotenv
-load_dotenv()
 import json
 from bots.data.wield import get_user_info_by_fid, get_user_info_by_name
 from bots.data.dune import run_query

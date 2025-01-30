@@ -1,5 +1,3 @@
-from dotenv import load_dotenv
-load_dotenv()
 import sys
 from bots.utils.llms import call_llm
 from bots.catalog import ACTIONS, DESCRIPTIONS

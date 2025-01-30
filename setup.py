@@ -27,7 +27,9 @@ setup(
       "google-cloud-storage==2.18.2",
       "google-cloud-aiplatform==1.59.0",
       "python-dotenv==1.0.1",
-      "json5==0.9.28"
+      "json5==0.9.28",
+      "psycopg2-binary==2.9.9",
+      "SQLAlchemy==2.0.36"
     ]
 )
 

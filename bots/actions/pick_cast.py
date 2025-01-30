@@ -1,6 +1,3 @@
-from dotenv import load_dotenv
-load_dotenv()
-import sys
 from bots.iaction import IAction
 from bots.utils.prompts import concat_casts
 from bots.utils.llms import call_llm, get_max_capactity

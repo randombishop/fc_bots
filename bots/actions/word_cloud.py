@@ -1,5 +1,3 @@
-from dotenv import load_dotenv
-load_dotenv()
 import uuid
 import os
 from bots.iaction import IAction

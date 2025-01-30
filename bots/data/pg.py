@@ -5,6 +5,8 @@ from contextlib import contextmanager
 
 
 DATABASE_URL = os.getenv('POSTGRES_DATABASE_URL')
+engine = None
+metadata = None
 SessionLocal = None
 if DATABASE_URL is not None:
   engine = create_engine(DATABASE_URL)

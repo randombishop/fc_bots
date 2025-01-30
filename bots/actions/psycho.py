@@ -1,8 +1,3 @@
-from dotenv import load_dotenv
-load_dotenv()
-import sys
-import uuid
-import os
 from bots.iaction import IAction
 from bots.data.casts import get_casts_for_fid
 from bots.utils.llms import call_llm

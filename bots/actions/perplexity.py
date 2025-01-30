@@ -1,5 +1,3 @@
-from dotenv import load_dotenv
-load_dotenv()
 from bots.iaction import IAction
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_string
