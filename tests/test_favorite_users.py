@@ -1,5 +1,5 @@
 import unittest
-from bots.actions.favorite_users import FavoriteUsers
+from bots.action.favorite_users import FavoriteUsers
 from bots.router import route
 
 

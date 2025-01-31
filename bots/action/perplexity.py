@@ -1,4 +1,4 @@
-from bots.iaction import IAction
+from bots.i_action_step import IActionStep
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_string
 from bots.utils.perplexity_api import call_perplexity
@@ -30,7 +30,7 @@ parse_schema = {
 
 
 
-class Perplexity(IAction):
+class Perplexity(IActionStep):
   
   def set_input(self, input):
     params = call_llm(input, parse_instructions, parse_schema)

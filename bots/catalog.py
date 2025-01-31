@@ -1,15 +1,15 @@
 # Casts functions
-from bots.actions.digest_casts import DigestCasts
-from bots.actions.pick_cast import PickCast
-from bots.actions.more_like_this import MoreLikeThis
+from bots.action.digest_casts import DigestCasts
+from bots.action.pick_cast import PickCast
+from bots.action.more_like_this import MoreLikeThis
 # User functions
-from bots.actions.favorite_users import FavoriteUsers
-from bots.actions.most_active_users import MostActiveUsers
-from bots.actions.word_cloud import WordCloud
-from bots.actions.psycho import Psycho
-from bots.actions.roast import Roast
-from bots.actions.perplexity import Perplexity
-from bots.actions.news import News
+from bots.action.favorite_users import FavoriteUsers
+from bots.action.most_active_users import MostActiveUsers
+from bots.action.word_cloud import WordCloud
+from bots.action.psycho import Psycho
+from bots.action.roast import Roast
+from bots.action.perplexity import Perplexity
+from bots.action.news import News
 
 
 ACTIONS = {

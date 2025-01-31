@@ -1,5 +1,5 @@
 import unittest
-from bots.actions.pick_cast import PickCast
+from bots.action.pick_cast import PickCast
 from bots.router import route
 
 

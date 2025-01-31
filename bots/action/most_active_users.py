@@ -1,7 +1,7 @@
 import uuid
 import sys
 import os
-from bots.iaction import IAction
+from bots.i_action_step import IActionStep
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_channel
 from bots.data.users import get_top_daily_casters
@@ -31,7 +31,7 @@ parse_schema = {
 }
 
 
-class MostActiveUsers(IAction):
+class MostActiveUsers(IActionStep):
 
   def set_input(self, input):
     params = call_llm(input, parse_instructions, parse_schema)

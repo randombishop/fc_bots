@@ -1,4 +1,4 @@
-class IAction:
+class IActionStep:
     
   def __init__(self):
     self.fid_origin = None

@@ -1,5 +1,5 @@
 import unittest
-from bots.actions.word_cloud import WordCloud
+from bots.action.word_cloud import WordCloud
 from bots.router import route
 
 

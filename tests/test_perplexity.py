@@ -1,5 +1,5 @@
 import unittest
-from bots.actions.perplexity import Perplexity
+from bots.action.perplexity import Perplexity
 from bots.router import route
 
 

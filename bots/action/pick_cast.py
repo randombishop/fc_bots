@@ -1,4 +1,4 @@
-from bots.iaction import IAction
+from bots.i_action_step import IActionStep
 from bots.utils.prompts import concat_casts
 from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.read_params import read_category, read_channel, read_user, read_keyword, read_string
@@ -70,7 +70,7 @@ task_schema = {
 }
 
 
-class PickCast(IAction):
+class PickCast(IActionStep):
 
   def set_input(self, input):
     params = call_llm(input, parse_instructions, parse_schema)

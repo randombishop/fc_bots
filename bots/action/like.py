@@ -1,4 +1,4 @@
-from bots.iaction import IAction
+from bots.i_action_step import IActionStep
 from bots.utils.llms import call_llm
 
 instructions = """
@@ -26,7 +26,7 @@ schema = {
 
 
 
-class Like(IAction):
+class Like(IActionStep):
   
   def set_input(self, input):
     self.input = input

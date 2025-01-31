@@ -1,5 +1,5 @@
 import unittest
-from bots.actions.psycho import Psycho
+from bots.action.psycho import Psycho
 from bots.router import route
 
 

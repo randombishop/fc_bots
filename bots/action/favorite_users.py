@@ -1,6 +1,6 @@
 import uuid
 import os
-from bots.iaction import IAction
+from bots.i_action_step import IActionStep
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_user
 from bots.data.users import get_favorite_users
@@ -29,7 +29,7 @@ parse_user_schema = {
 }
 
 
-class FavoriteUsers(IAction):
+class FavoriteUsers(IActionStep):
   
   def set_input(self, input):
     params = call_llm(input, parse_user_instructions, parse_user_schema)

@@ -1,6 +1,6 @@
 import uuid
 import os
-from bots.iaction import IAction
+from bots.i_action_step import IActionStep
 from bots.data.casts import get_top_casts, get_more_like_this
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_channel, read_user, read_string, read_category, read_keyword
@@ -44,7 +44,7 @@ parse_schema = {
 
 
 
-class WordCloud(IAction):
+class WordCloud(IActionStep):
   
   
   def set_input(self, input):

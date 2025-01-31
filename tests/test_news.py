@@ -1,5 +1,5 @@
 import unittest
-from bots.actions.news import News
+from bots.action.news import News
 from bots.router import route
 
 

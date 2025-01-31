@@ -1,7 +1,7 @@
 import uuid
 import sys
 import os
-from bots.iaction import IAction
+from bots.i_action_step import IActionStep
 from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user
 from bots.data.casts import get_top_casts, get_more_like_this
 from bots.utils.prompts import concat_casts
@@ -108,7 +108,7 @@ main_schema = {
 }
 
 
-class DigestCasts(IAction):
+class DigestCasts(IActionStep):
     
   def set_input(self, input):
     params = call_llm(input, parse_instructions, parse_schema)

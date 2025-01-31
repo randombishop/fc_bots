@@ -1,5 +1,5 @@
 import unittest
-from bots.actions.digest_casts import DigestCasts
+from bots.action.digest_casts import DigestCasts
 from bots.router import route
 
 

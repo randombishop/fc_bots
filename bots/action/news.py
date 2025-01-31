@@ -1,4 +1,4 @@
-from bots.iaction import IAction
+from bots.i_action_step import IActionStep
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_string
 from bots.utils.skyvern_api import start_workflow, get_workflow_result
@@ -30,7 +30,7 @@ parse_schema = {
 skyvern_workflow = "wpid_351323221886267440"
 
 
-class News(IAction):
+class News(IActionStep):
   
   def set_input(self, input):
     params = call_llm(input, parse_instructions, parse_schema)

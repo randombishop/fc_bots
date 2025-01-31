@@ -1,5 +1,5 @@
 import unittest
-from bots.actions.like import Like
+from bots.action.like import Like
 from bots.router import route
 
 

@@ -1,4 +1,4 @@
-from bots.iaction import IAction
+from bots.i_action_step import IActionStep
 from bots.data.casts import get_more_like_this
 from bots.utils.llms import call_llm
 
@@ -25,7 +25,7 @@ parse_schema = {
   }
 }
 
-class MoreLikeThis(IAction):
+class MoreLikeThis(IActionStep):
 
   def set_input(self, input):
     params = call_llm(input, parse_instructions, parse_schema)

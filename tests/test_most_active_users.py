@@ -1,5 +1,5 @@
 import unittest
-from bots.actions.most_active_users import MostActiveUsers
+from bots.action.most_active_users import MostActiveUsers
 from bots.router import route
 
 

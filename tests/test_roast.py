@@ -1,5 +1,5 @@
 import unittest
-from bots.actions.roast import Roast
+from bots.action.roast import Roast
 from bots.router import route
 
 

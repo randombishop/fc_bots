@@ -4,7 +4,7 @@ from bots.catalog import ACTIONS, DESCRIPTIONS
 from bots.data.casts import get_cast
 from bots.data.users import get_username
 from bots.data.channels import get_channel_by_url
-from bots.actions.like import Like
+from bots.action.like import Like
 
 
 # Main task prompt
@@ -107,11 +107,3 @@ def route(request, fid_origin=None, parent_hash=None, attachment_hash=None, root
   action.set_input(context)
   return action
 
-
-if __name__ == "__main__":
-  request = sys.argv[1]
-  fid_origin = sys.argv[2] if len(sys.argv) > 2 else None
-  parent_hash = sys.argv[3] if len(sys.argv) > 3 else None
-  action = route(request, fid_origin=fid_origin, parent_hash=parent_hash)
-  action.run()
-  action.print()

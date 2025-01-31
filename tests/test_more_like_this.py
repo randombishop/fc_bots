@@ -1,5 +1,5 @@
 import unittest
-from bots.actions.more_like_this import MoreLikeThis
+from bots.action.more_like_this import MoreLikeThis
 from bots.router import route
 
 
