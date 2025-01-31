@@ -1,5 +1,4 @@
 import uuid
-import sys
 import os
 from bots.i_action_step import IActionStep
 from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user

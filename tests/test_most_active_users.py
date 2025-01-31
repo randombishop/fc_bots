@@ -1,27 +1,28 @@
 import unittest
-from bots.action.most_active_users import MostActiveUsers
-from bots.router import route
+from bots.utils.tests import make_bot
 
+
+def assert_expected_output(t, bot):
+  t.assertEqual(bot.state.selected_action, 'MostActiveUsers')
+  t.assertEqual(len(bot.state.casts), 1)
+  t.assertEqual(len(bot.state.casts[0]['mentions']), 3)
+   
 
 class TestMostActiveUsers(unittest.TestCase):
   
   def test1(self):
     request = "Who is most active in channel /politics?"
-    action = route(request)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, MostActiveUsers)
-    self.assertEqual(action.channel, 'https://warpcast.com/~/channel/politics')
-    self.assertEqual(len(action.casts), 1)
-    self.assertEqual(len(action.casts[0]['mentions']), 3)
+    bot = make_bot()
+    bot.respond(request)
+    bot.state.debug_action()
+    assert_expected_output(self, bot)
+    self.assertEqual(bot.state.action_params['channel'], 'https://warpcast.com/~/channel/politics')
     
   def test2(self):
     request = "Who is most active here?"
     channel_url = 'https://farcaster.group/data'
-    action = route(request, root_parent_url=channel_url)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, MostActiveUsers)
-    self.assertEqual(action.channel, channel_url)
-    self.assertEqual(len(action.casts), 1)
-    self.assertEqual(len(action.casts[0]['mentions']), 3)
+    bot = make_bot()
+    bot.respond(request, root_parent_url=channel_url)
+    bot.state.debug_action()
+    assert_expected_output(self, bot)
+    self.assertEqual(bot.state.action_params['channel'], channel_url)
