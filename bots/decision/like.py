@@ -1,8 +1,8 @@
 from bots.i_action_step import IActionStep
 from bots.utils.llms import call_llm
 
-instructions = """
-You are @dsart bot, a social media bot.
+instructions_template = """
+You are @{{name}} bot, a social media bot.
 Your task is to decide if the last post (=cast) in the provided conversation is worth liking.
 
 INSTRUCTIONS:

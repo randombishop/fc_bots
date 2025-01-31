@@ -6,9 +6,8 @@ from bots.utils.check_casts import check_casts
 
 
 
-parse_user_instructions = """
-INSTRUCTIONS:
-You are @dsart, a bot programmed to roast a user.
+parse_user_instructions_template = """
+You are @{{name}}, a bot programmed to roast a user.
 Based on the provided conversation, who should we roast?
 Your goal is not to continue the conversation, you must only extract the user parameter from the conversation so that we can call an API.
 Users typically start with @, but not always.

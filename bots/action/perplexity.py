@@ -5,8 +5,8 @@ from bots.utils.perplexity_api import call_perplexity
 from bots.utils.check_casts import check_casts
 
 
-parse_instructions = """
-You are @dsart bot, a social media bot.
+parse_instructions_template = """
+You are @{{name}} bot, a social media bot.
 Your task is to forward a question to another AI that can search the web and generate an answer.
 What question should we submit?
 INSTRUCTIONS:
