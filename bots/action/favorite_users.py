@@ -1,6 +1,7 @@
 import uuid
 import os
 from bots.i_action_step import IActionStep
+from bots.prompts.contexts import conversation_and_request_template
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_user
 from bots.data.users import get_favorite_users
@@ -11,9 +12,9 @@ from bots.utils.check_casts import check_casts
 
 parse_user_instructions = """
 INSTRUCTIONS:
-You are @dsart, a bot programmed to find the favorite accounts of a user.
-Based on the provided conversation, who should we pull the favorite accounts for?
-Your goal is not to continue the conversation, you must only extract the user parameter from the conversation so that we can call an API.
+You are @{{name}}, a bot programmed to find the favorite accounts of a user.
+Based on the provided conversation and request, who should we pull the favorite accounts for?
+Your goal is not to continue the conversation, you must only extract the user parameter from the request so that we can call an API.
 Users typically start with @, but not always.
 If you're not sure, pick the last token that starts with a @.
 
@@ -31,27 +32,23 @@ parse_user_schema = {
 
 class FavoriteUsers(IActionStep):
   
-  def set_input(self, input):
-    params = call_llm(input, parse_user_instructions, parse_user_schema)
-    self.input = input
-    self.set_params(params)
-    
-  def set_params(self, params):
-    self.fid, self.user_name = read_user(params, self.fid_origin, default_to_origin=True)
-
   def get_cost(self):
-    self.cost = 20
-    return self.cost
+    return 20
 
-  def get_data(self):
-    users = get_favorite_users(self.fid)
-    if len(users) < 3:
-      raise Exception(f"Not enough data ({len(users)})")
-    self.data = users
-    return self.data
-    
-  def get_casts(self, intro=''):
-    df = self.data
+  def parse(self):
+    parse_prompt = self.state.format(conversation_and_request_template)
+    parse_instructions = self.state.format(parse_user_instructions)
+    params = call_llm(parse_prompt, parse_instructions, parse_user_schema)
+    parsed = {}
+    fid, user_name = read_user(params, self.state.fid_origin, default_to_origin=True)
+    parsed['fid'] = fid
+    parsed['user_name'] = user_name
+    self.state.action_params = parsed
+  
+  def execute(self):
+    df = get_favorite_users(self.state.action_params['fid'])
+    if len(df) < 3:
+      raise Exception(f"Not enough data ({len(df)})")
     df.rename(inplace=True, columns={
         'username': 'User',
         'num_recasts': 'Recasts',
@@ -84,5 +81,4 @@ class FavoriteUsers(IActionStep):
     }
     casts =  [cast]
     check_casts(casts)
-    self.casts = casts
-    return self.casts
+    self.state.casts = casts

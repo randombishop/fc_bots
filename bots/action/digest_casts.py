@@ -5,6 +5,7 @@ from bots.i_action_step import IActionStep
 from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user
 from bots.data.casts import get_top_casts, get_more_like_this
 from bots.prompts.format_casts import concat_casts
+from bots.prompts.contexts import conversation_and_request_template
 from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.check_links import check_link_data
 from bots.utils.check_casts import check_casts
@@ -12,13 +13,6 @@ from bots.utils.word_counts import get_word_counts
 from bots.utils.images import make_wordcloud
 from bots.utils.gcs import upload_to_gcs
 
-parse_prompt_template = """
-#CONVERSATION
-{{conversation}}
-
-#REQUEST
-{{request}}
-"""
 
 parse_instructions_template = """
 INSTRUCTIONS:
@@ -133,7 +127,7 @@ class DigestCasts(IActionStep):
     return 20
 
   def parse(self):
-    parse_prompt = self.state.format(parse_prompt_template)
+    parse_prompt = self.state.format(conversation_and_request_template)
     parse_instructions = self.state.format(parse_instructions_template)
     params = call_llm(parse_prompt, parse_instructions, parse_schema)
     parsed = {}
