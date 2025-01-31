@@ -1,22 +1,17 @@
 from bots.bot_state import BotState
 from bots.wakeup.wakeup_steps import WAKEUP_STEPS
+from bots.utils.llms import call_llm
 
 
-DEFAULT_WAKEUP_STEPS = [
-  'bio',
-  'lore',
-  'style',
-  'time',
-  'channel',
-  'conversation'
-]
+
+
 
 class Bot:
   
-  def __init__(self, character, wakeup_steps=DEFAULT_WAKEUP_STEPS):
+  def __init__(self, character):
     self.character = character
-    self.wakeup_steps = wakeup_steps
     self.state = BotState()
+    self.state.name = character['name']
 
   def initialize(self, request, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
     self.state.request = request
@@ -26,11 +21,15 @@ class Bot:
     self.state.root_parent_url = root_parent_url
 
   def wakeup(self):
-    for key in self.wakeup_steps:
+    wakeup_steps = self.character['wakeup_steps']
+    for key in wakeup_steps:
       wakeup_step = WAKEUP_STEPS[key]()
       wakeup_value = wakeup_step.get(self.character, self.state)
       self.state.set(key, wakeup_value)
 
+  def plan_actions(self):
+    pass
+    
   def respond(self, request, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
     # 1. Initialize the state
     self.initialize(request, fid_origin, parent_hash, attachment_hash, root_parent_url)
@@ -39,7 +38,7 @@ class Bot:
     self.wakeup()
     
     # 3. Plan actions (for v1 we can just pick one)
-    #self.plan_actions()
+    self.plan_actions()
     
     # 4. Execute actions
     #self.execute_actions()

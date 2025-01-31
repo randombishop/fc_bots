@@ -26,15 +26,15 @@ ACTIONS = {
 }
 
 
-DESCRIPTIONS = """
-Summary: Make a summary about posts.
-Pick: Pick a post given some criteria.
-MoreLikeThis: Find posts using "More Like This" algorithm.
-FavoriteUsers: Find the favorite accounts of a user.
-MostActiveUsers: List the most active users in a channel.
-WordCloud: Make a word cloud of a user's posts and reactions.
-Psycho: Generate a psychoanalysis for a user.
-Roast: Generate a roast for a user.
-Perplexity: Ask a question to Perplexity AI.
-News: Check the news with a search query.
-"""
+DESCRIPTIONS = {
+  'Summary': 'Make a summary about posts.',
+  'Pick': 'Pick a post given some criteria.',
+  'MoreLikeThis': 'Find posts using "More Like This" algorithm.',
+  'FavoriteUsers': 'Find the favorite accounts of a user.',
+  'MostActiveUsers': 'List the most active users in a channel.',
+  'WordCloud': 'Make a word cloud.',
+  'Psycho': 'Generate a psychoanalysis for a user.',
+  'Roast': 'Generate a roast for a user.',
+  'Perplexity': 'Ask a question to Perplexity AI.',
+  'News': 'Check the news with a search query.'
+}

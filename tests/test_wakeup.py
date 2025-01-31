@@ -2,6 +2,7 @@ import unittest
 import os
 from bots.bot_state import BotState
 from bots.data.app import get_bot_character
+from bots.wakeup.wakeup_actions import WakeUpActions
 from bots.wakeup.wakeup_bio import WakeUpBio
 from bots.wakeup.wakeup_channel import WakeUpChannel
 from bots.wakeup.wakeup_conversation import WakeUpConversation
@@ -22,6 +23,19 @@ def make_character_and_state(request=None, fid_origin=None, parent_hash=None, at
 
 
 class TestWakeUp(unittest.TestCase):
+  
+  #########################################################  
+  # wakeup_action
+  #########################################################
+
+  def test_actions1(self):
+    character, state = make_character_and_state()
+    actions = WakeUpActions().get(character, state)
+    print(actions)
+    lines = actions.split('\n')
+    self.assertEqual(len(lines), 11)
+    
+
     
   #########################################################  
   # wakeup_bio

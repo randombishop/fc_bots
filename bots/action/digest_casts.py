@@ -4,7 +4,7 @@ import os
 from bots.i_action_step import IActionStep
 from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user
 from bots.data.casts import get_top_casts, get_more_like_this
-from bots.utils.prompts import concat_casts
+from bots.prompts.format_casts import concat_casts
 from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.check_links import check_link_data
 from bots.utils.check_casts import check_casts
