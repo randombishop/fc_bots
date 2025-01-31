@@ -18,7 +18,7 @@ def find_action(request):
   instructions += DESCRIPTIONS + '\n'
   instructions += 'OUTPUT FORMAT:\n'
   instructions += main_format
-  result = call_llm(request,instructions, main_schema)
+  result = call_llm(request, instructions, main_schema)
   return result
 
 

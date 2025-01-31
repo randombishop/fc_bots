@@ -1,10 +1,7 @@
 from bots.bot_state import BotState
 from bots.wakeup.wakeup_steps import WAKEUP_STEPS
+from bots.prompts.action_plan import select_action_task, select_action_format, select_action_schema, select_action_prompt
 from bots.utils.llms import call_llm
-
-
-
-
 
 class Bot:
   
@@ -28,7 +25,16 @@ class Bot:
       self.state.set(key, wakeup_value)
 
   def plan_actions(self):
-    pass
+    instructions = self.state.format(select_action_task)
+    instructions += '\n'
+    instructions += "#OUTPUT FORMAT\n"
+    instructions += select_action_format
+    prompt = self.state.format(select_action_prompt)
+    result = call_llm(prompt, instructions, select_action_schema)
+    if ('action' not in result or result['action'] is None or str(result['action']) not in self.character['action_steps']):
+      self.state.selected_action = None
+    else:
+      self.state.selected_action = result['action']
     
   def respond(self, request, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
     # 1. Initialize the state

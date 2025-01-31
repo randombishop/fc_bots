@@ -31,6 +31,9 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 
 #STYLE
 {{style}}
+
+#SELECTED ACTION
+{{selected_action}}
 """
 
 
@@ -52,6 +55,8 @@ class BotState:
     self.lore = ''
     self.time = ''
     self.style = ''
+    # From action plan
+    self.selected_action = None
     
   def set(self, key, value):
     if hasattr(self, key):
