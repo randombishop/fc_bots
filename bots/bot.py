@@ -1,23 +1,21 @@
 from bots.bot_state import BotState
-from bots.wakeup.bio_provider import WakeUpBio
-from bots.wakeup.lore_provider import WakeUpLore
-from bots.wakeup.time_provider import WakeUpTime
-from bots.wakeup.channel_provider import WakeUpChannel
-from bots.wakeup.conversation_provider import WakeUpConversation
+from bots.wakeup.wakeup_steps import WAKEUP_STEPS
 
+
+DEFAULT_WAKEUP_STEPS = [
+  'bio',
+  'lore',
+  'time',
+  'channel',
+  'conversation'
+]
 
 class Bot:
   
-  def __init__(self, character):
+  def __init__(self, character, wakeup_steps=DEFAULT_WAKEUP_STEPS):
     self.character = character
+    self.wakeup_steps = wakeup_steps
     self.state = BotState()
-    self.wakeup_steps = {
-      'bio': WakeUpBio(),
-      'lore': WakeUpLore(),
-      'time': WakeUpTime(),
-      'channel': WakeUpChannel(),
-      'conversation': WakeUpConversation()
-    }
 
   def initialize(self, request, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
     self.state.request = request
@@ -27,19 +25,17 @@ class Bot:
     self.state.root_parent_url = root_parent_url
 
   def wakeup(self):
-    for key, step in self.wakeup_steps.items():
-      self.state[key] = step.get(self.character, self.state)
+    for key in self.wakeup_steps:
+      wakeup_step = WAKEUP_STEPS[key]()
+      wakeup_value = wakeup_step.get(self.character, self.state)
+      self.state.set(key, wakeup_value)
 
-  def respond(self):
+  def respond(self, request, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
     # 1. Initialize the state
-    self.initialize(self.state.request, 
-                    self.state.fid_origin, 
-                    self.state.parent_hash, 
-                    self.state.attachment_hash, 
-                    self.state.root_parent_url)
+    self.initialize(request, fid_origin, parent_hash, attachment_hash, root_parent_url)
     
     # 2. Wake up steps
-    self.wakeup()
+    #self.wakeup()
     
     # 3. Plan actions (for v1 we can just pick one)
     #self.plan_actions()
