@@ -15,4 +15,5 @@ class TestNews(unittest.TestCase):
     bot = make_bot()
     bot.respond(request)
     bot.state.debug_action()
+    assert_expected_output(self, bot)
     
