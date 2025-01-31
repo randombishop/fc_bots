@@ -1,4 +1,22 @@
 
+DEFAULT_STATE_TEMPLATE = """
+#REQUEST
+{{request}}
+#PARAMS
+fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attachment_hash}}, root_parent_url={{root_parent_url}}
+#BIO
+{{bio}}
+#CHANNEL
+{{channel}}
+#CONVERSATION
+{{conversation}}
+#LORE
+{{lore}}
+#TIME
+{{time}}
+#STYLE
+{{style}}
+"""
 
 def concat_casts(posts):
   ans = 'POSTS:\n'

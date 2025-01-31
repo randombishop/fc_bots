@@ -6,6 +6,7 @@ from bots.wakeup.wakeup_bio import WakeUpBio
 from bots.wakeup.wakeup_channel import WakeUpChannel
 from bots.wakeup.wakeup_conversation import WakeUpConversation
 from bots.wakeup.wakeup_lore import WakeUpLore
+from bots.wakeup.wakeup_style import WakeUpStyle
 from bots.wakeup.wakeup_time import WakeUpTime
 
 
@@ -115,6 +116,18 @@ class TestWakeUp(unittest.TestCase):
     lines = lore.split('\n')
     self.assertEqual(len(lines), 5)
     
+
+
+  #########################################################
+  # wakeup_style
+  #########################################################
+  def test_style1(self):
+    character, state = make_character_and_state()
+    style = WakeUpStyle().get(character, state)
+    lines = style.split('\n')
+    self.assertEqual(len(lines), 10) 
+    
+
 
   #########################################################
   # wakeup_time

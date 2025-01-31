@@ -2,6 +2,8 @@ import unittest
 import os
 from bots.data.app import get_bot_character
 from bots.bot import Bot
+from bots.utils.prompts import DEFAULT_STATE_TEMPLATE
+
 
 class TestBot(unittest.TestCase):
   
@@ -16,4 +18,7 @@ class TestBot(unittest.TestCase):
     self.assertIsInstance(bot.character['lore'], list)
     self.assertIsInstance(bot.character['style'], list)
     # Test chat
-    bot.respond("Who are you?")
+    request = "Who are you?"
+    bot.respond(request)
+    print(bot.state.format(DEFAULT_STATE_TEMPLATE))
+    self.assertEqual(bot.state.request, request)

@@ -5,6 +5,7 @@ from bots.wakeup.wakeup_steps import WAKEUP_STEPS
 DEFAULT_WAKEUP_STEPS = [
   'bio',
   'lore',
+  'style',
   'time',
   'channel',
   'conversation'
@@ -35,7 +36,7 @@ class Bot:
     self.initialize(request, fid_origin, parent_hash, attachment_hash, root_parent_url)
     
     # 2. Wake up steps
-    #self.wakeup()
+    self.wakeup()
     
     # 3. Plan actions (for v1 we can just pick one)
     #self.plan_actions()

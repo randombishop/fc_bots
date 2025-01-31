@@ -1,3 +1,5 @@
+import re
+
 
 class BotState:
   
@@ -21,4 +23,15 @@ class BotState:
       setattr(self, key, value)
     else:
       raise ValueError(f"Invalid field: {key}")
-
+    
+  def format(self, template):
+    result = template
+    placeholders = re.findall(r'\{\{(\w+)\}\}', template)
+    for placeholder in placeholders:
+      if not hasattr(self, placeholder):
+        raise ValueError(f"Invalid placeholder: {placeholder}")
+      value = getattr(self, placeholder)
+      if value is None:
+        value = ''
+      result = result.replace('{{' + placeholder + '}}', value)
+    return result
