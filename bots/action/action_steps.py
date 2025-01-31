@@ -12,7 +12,7 @@ from bots.action.perplexity import Perplexity
 from bots.action.news import News
 
 
-ACTIONS = {
+ACTION_STEPS = {
   'Summary': DigestCasts,
   'Pick': PickCast,
   'MoreLikeThis': MoreLikeThis,

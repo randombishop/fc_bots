@@ -28,13 +28,7 @@ def find_action(request):
 
 
 def route(request, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
-  context = get_context(request, fid_origin, parent_hash, attachment_hash)
-  context = format_context(context, root_parent_url)
-  mapped = find_action(request)
-  Action = None
-  if ('action' not in mapped or mapped['action'] is None or str(mapped['action']) not in ACTIONS):
-    Action = Like
-  else:
+  
     f = str(mapped['action'])
     Action = ACTIONS[f]
   action = Action()

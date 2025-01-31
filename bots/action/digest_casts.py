@@ -12,10 +12,17 @@ from bots.utils.word_counts import get_word_counts
 from bots.utils.images import make_wordcloud
 from bots.utils.gcs import upload_to_gcs
 
+parse_prompt_template = """
+#CONVERSATION
+{{conversation}}
 
-parse_instructions = """
+#REQUEST
+{{request}}
+"""
+
+parse_instructions_template = """
 INSTRUCTIONS:
-You are @dsart, a bot programmed to make summaries of posts (=casts) in a social media platform.
+You are @{{name}}, a bot programmed to make summaries of posts (=casts) in a social media platform.
 You have access to an API that can generate the summary based on these parameters: category, channel, keyword, search, user.
 * category: Can be one of pre-defined categories 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
 * channel: Channels always start with '/', for example '/data', if there is no '/' then it's not a channel.
@@ -23,6 +30,8 @@ You have access to an API that can generate the summary based on these parameter
 * search: If the summary is not about a category, channel, keyword or user; then formulate a search phrase to search for posts and summarize them.
 * user: User names typically start with `@`, if the intent is to summarize posts by a specific user, you can use the user parameter.
 Your goal is not to continue the conversation, you must only extract the parameters to call the API.
+You can use the conversation to guess the parameters, but focus on the request.
+Your goal is to extract the parameters from the request.
 
 RESPONSE FORMAT:
 {
@@ -45,7 +54,21 @@ parse_schema = {
   }
 }
 
+main_instructions_intro_template = """
+You are @{{name}}, a bot programmed to make summaries of posts (=casts) in a social media platform.
 
+#Your bio:
+{{bio}}
+
+#Your lore:
+{{lore}}
+
+#Your style:
+{{style}}
+
+#Current channel:
+{{channel}}
+"""
 
 main_instructions = """
 GENERAL INSTRUCTIONS:
@@ -53,9 +76,8 @@ YOUR TASK IS TO PROCESS THE PROVIDED SOCIAL MEDIA POSTS.
 GENERATE A GLOBAL SUMMARY AND SELECT 3 INTERESTING ONES.
 
 DETAILED INSTRUCTIONS:
-- Write a catch phrase title.
-- Generate 3 sentences to describe what the users are talking about, try to cover as much content as possible in these 3 sentences.
-- Include 3 links to reference relevant post ids and comment them with a keyword and emoji.
+- Write a short summary tweet.
+- Include 3 links to reference relevant post ids and comment them.
 - Output the result in json format.
 - Make sure you don't use " inside json strings. Avoid invalid json.
 - Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
@@ -66,10 +88,7 @@ ADDITIONAL_NOTES?
 
 RESPONSE FORMAT:
 {
-  "title": "...catch phrase...",
-  "sentence1": "...",
-  "sentence2": "...",
-  "sentence3": "...",
+  "tweet": "Catch phrase summarizing ",
   "link1": {"id": "......", "comment": "keyword [emoji]"},
   "link2": {"id": "......", "comment": "keyword [emoji]"},
   "link3": {"id": "......", "comment": "keyword [emoji]"}
@@ -110,69 +129,58 @@ main_schema = {
 
 class DigestCasts(IActionStep):
     
-  def set_input(self, input):
-    params = call_llm(input, parse_instructions, parse_schema)
-    self.input = input
-    self.set_params(params)
-
-  def set_params(self, params):
-    self.channel = read_channel(params)
-    self.keyword = read_keyword(params)
-    self.category = read_category(params)
-    self.search = read_string(params, key='search', default=None, max_length=500)
-    _, user_name = read_user(params, fid_origin=self.fid_origin, default_to_origin=False)
-    self.user_name = user_name
-    self.max_rows = get_max_capactity()
-      
   def get_cost(self):
-    self.cost = 20
-    return self.cost
+    return 20
 
-  def get_data(self):
+  def parse(self):
+    parse_prompt = self.state.format(parse_prompt_template)
+    parse_instructions = self.state.format(parse_instructions_template)
+    params = call_llm(parse_prompt, parse_instructions, parse_schema)
+    parsed = {}
+    parsed['channel'] = read_channel(params)
+    parsed['keyword'] = read_keyword(params)
+    parsed['category'] = read_category(params)
+    parsed['search'] = read_string(params, key='search', default=None, max_length=500)
+    _, user_name = read_user(params, fid_origin=self.state.fid_origin, default_to_origin=False)
+    parsed['user_name'] = user_name
+    parsed['max_rows'] = get_max_capactity()
+    parsed['focus'] = ''
+    if parsed['keyword'] is not None or parsed['category'] is not None or parsed['user_name'] is not None:
+      if parsed['keyword'] is not None:
+        parsed['focus'] = ("- Focus on the following subject: " + parsed['keyword'] + "\n")
+      if parsed['category'] is not None:
+        parsed['focus'] =  ("- Focus on the following category: " + parsed['category'][2:] + "\n")
+      if parsed['user_name'] is not None:
+        parsed['focus'] =  ("- The posts are all from user @" + parsed['user_name'] + ", be respectful in your summary and only mention them in positive terms.\n")
+    self.state.action_params = parsed
+      
+  def execute(self):
+    params = self.state.action_params
     # Get data
     posts = []
-    if self.search is not None:
-      posts = get_more_like_this(self.search, limit=self.max_rows)
+    if params['search'] is not None:
+      posts = get_more_like_this(params['search'], limit=params['max_rows'])
     else:
-      posts = get_top_casts(channel=self.channel,
-                            keyword=self.keyword,
-                            category=self.category,
-                            user_name=self.user_name,
-                            max_rows=self.max_rows)
+      posts = get_top_casts(channel=params['channel'],
+                            keyword=params['keyword'],
+                            category=params['category'],
+                            user_name=params['user_name'],
+                            max_rows=params['max_rows'])
     posts = posts.to_dict('records')
     posts.sort(key=lambda x: x['timestamp'])
     if len(posts) < 5:
-      raise Exception(f"""Not enough posts to generate a digest: channel={self.channel}, 
-                      keyword={self.keyword}, category={self.category}, max_rows={self.max_rows}, posts={len(posts)}""")
+      raise Exception(f"""Not enough posts to generate a digest: channel={params['channel']}, 
+                      keyword={params['keyword']}, category={params['category']}, max_rows={params['max_rows']}, posts={len(posts)}""")
     # Run LLM
-    if self.keyword is not None or self.category is not None or self.user_name is not None:
-      add_notes = "ADDITIONAL NOTES:\n"
-      if self.keyword is not None:
-        add_notes += ("- Focus on the following subject: " + self.keyword + "\n")
-      if self.category is not None:
-        add_notes += ("- Focus on the following category: " + self.category[2:] + "\n")
-      if self.user_name is not None:
-        add_notes += ("- The posts are all from user @" + self.user_name + ", be respectful in your summary and only mention them in positive terms.\n")
-      instructions = main_instructions.replace("ADDITIONAL_NOTES?", add_notes)
-    else:
-      instructions = main_instructions.replace("ADDITIONAL_NOTES?", "")
     prompt = concat_casts(posts)
+    instructions = self.state.format(main_instructions_intro_template)
+    instructions += main_instructions.replace("ADDITIONAL_NOTES?", params['focus'])
     result = call_llm(prompt,instructions,main_schema)
-    # Make summary
-    summary = []
-    if 'sentence1' in result and len(result['sentence1']) > 0:
-      summary.append(result['sentence1'])
-    if 'sentence2' in result and len(result['sentence2']) > 0   :
-      summary.append(result['sentence2'])
-    if 'sentence3' in result and len(result['sentence3']) > 0:
-      summary.append(result['sentence3'])
-    try:
-      del result['sentence1']
-      del result['sentence2']
-      del result['sentence3']
-    except:
-      pass
-    result['summary'] = summary
+    data = {}
+    # Extract summary
+    if 'tweet' not in result or len(result['tweet']) < 10:
+      raise Exception('Could not generate a summary')
+    data['summary'] = result['tweet']
     # Make links
     posts_map = {x['id']: x for x in posts}
     links = []
@@ -182,7 +190,7 @@ class DigestCasts(IActionStep):
         if link is not None:
           links.append(link)
         del result[link_key]
-    result['links'] = links
+    data['links'] = links
     # Make word cloud
     top_n = 50
     word_counts = get_word_counts([x['text'] for x in posts], top_n)
@@ -191,23 +199,15 @@ class DigestCasts(IActionStep):
       make_wordcloud(word_counts, filename)
       upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
       os.remove(filename)
-      result['wordcloud'] = f"https://fc.datascience.art/bot/main_files/{filename}"
-    # Done
-    self.data = result
-    return self.data
-  
-  def get_casts(self, intro=''):
+      data['wordcloud'] = f"https://fc.datascience.art/bot/main_files/{filename}"
     casts = []
-    cast1_text = (intro + '\n\n' + self.data['title'] + '\n\n' + self.data['summary'][0]).strip()
-    cast1 = {'text': cast1_text}
-    if 'wordcloud' in self.data:
-      cast1['embeds'] = [self.data['wordcloud']]
+    cast1 = {'text': data['summary']}
+    if 'wordcloud' in data:
+      cast1['embeds'] = [data['wordcloud']]
     casts.append(cast1)
-    for t in self.data['summary'][1:]:
-      casts.append({'text': t})
-    for link in self.data['links']:
+    for link in data['links']:
       casts.append({'text': link['comment'], 'embeds': [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}]})
     check_casts(casts)
-    self.casts = casts
-    return self.casts
+    self.state.casts = casts
+
 
