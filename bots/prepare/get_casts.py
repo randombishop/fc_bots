@@ -70,7 +70,6 @@ class GetCasts(IPrepareStep):
       if posts_about_user is not None and len(posts_about_user) > 0:
         posts_about_user = posts_about_user.to_dict('records')
         posts_about_user.sort(key=lambda x: x['timestamp'])
-        self.state.user = self.state.action_params['user_name']
         self.state.about_user = concat_casts(posts_about_user)
         posts += posts_about_user
     if parsed['keyword'] is not None:
