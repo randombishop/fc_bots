@@ -1,25 +1,19 @@
 import unittest
-from bots.action.like import Like
-from bots.router import route
+from bots.utils.tests import make_bot
 
 
 class TestLike(unittest.TestCase):
   
   def test1(self):
     request = "Thank you!"
-    fid_origin=253232
-    action = route(request, fid_origin)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, Like)
-    self.assertTrue(action.casts[0]['like'])
+    bot = make_bot()
+    bot.respond(request)
+    bot.state.debug_action()
+    self.assertTrue(bot.state.like)
     
   def test2(self):
     request = "Not interested."
-    fid_origin=253232
-    action = route(request, fid_origin)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, Like)
-    self.assertEqual(len(action.casts), 0)
-    
+    bot = make_bot()
+    bot.respond(request)
+    bot.state.debug_action()
+    self.assertFalse(bot.state.like)

@@ -44,7 +44,7 @@ schema = {
 
 class Like(IThinkStep):
       
-  def get_casts(self):
+  def think(self):
     prompt = self.state.format(prompt_template)
     instructions = self.state.format(instructions_template)
     result = call_llm(prompt, instructions, schema)

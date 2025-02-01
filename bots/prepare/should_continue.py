@@ -52,6 +52,5 @@ class ShouldContinue(IPrepareStep):
     instructions = self.state.format(instructions_template)
     params = call_llm(prompt, instructions, schema)
     self.state.should_continue = read_boolean(params, key='continue')
-    print('self.state.should_continue=', self.state.should_continue)
 
   

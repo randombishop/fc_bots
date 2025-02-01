@@ -51,9 +51,7 @@ schema = {
 class GetCasts(IPrepareStep):
     
   def prepare(self):
-    print('Executing GetCasts...')
     if not self.state.should_continue:
-      print('Should not continue, aborting GetCasts.')
       return
     max_rows = 25
     prompt = self.state.format(conversation_and_request_template)
@@ -63,7 +61,6 @@ class GetCasts(IPrepareStep):
     parsed['keyword'] = read_keyword(params)
     parsed['category'] = read_category(params)
     parsed['search'] = read_string(params, key='search', default=None, max_length=500)
-    print('parsed parameters', parsed)
     posts = []
     if self.state.user_origin is not None:
       posts_about_user = get_top_casts(user_name=self.state.user_origin, max_rows=max_rows)
@@ -96,7 +93,5 @@ class GetCasts(IPrepareStep):
         self.state.context = parsed['search']
         self.state.about_context = concat_casts(posts_about_context)
         posts += posts_about_context
-    print('Total number of casts pulled', len(posts))
     for p in posts:
       self.state.posts_map[p['id']] = p
-    print('Updated posts map', len(self.state.posts_map))
