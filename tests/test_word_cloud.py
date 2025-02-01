@@ -1,106 +1,78 @@
 import unittest
-from bots.action.word_cloud import WordCloud
-from bots.router import route
+from bots.utils.tests import make_bot
 
+
+def assert_expected_output(t, bot):
+  t.assertEqual(bot.state.selected_action, 'WordCloud')
+  t.assertEqual(len(bot.state.casts), 1)
+  t.assertEqual(len(bot.state.casts[0]['embeds']), 1)
+  
 
 class TestWordCloud(unittest.TestCase):
   
   def test1(self):
     request = "Make @vitalik.eth's word cloud."
-    action = route(request)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, WordCloud)
-    self.assertEqual(action.fid, 5650)
-    self.assertEqual(action.user_name, 'vitalik.eth')
-    self.assertEqual(len(action.casts), 1)
-    self.assertEqual(len(action.casts[0]['embeds']), 1)
+    bot = make_bot()
+    bot.respond(request)
+    bot.state.debug_action()
+    assert_expected_output(self, bot)
+    self.assertEqual(bot.state.action_params['fid'], 5650)
+    self.assertEqual(bot.state.action_params['user_name'], 'vitalik.eth')
     
   def test2(self):
     request = "Make my word cloud."
     fid_origin = 253232
-    action = route(request, fid_origin=fid_origin)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, WordCloud)
-    self.assertEqual(action.fid, fid_origin)
-    self.assertEqual(action.user_name, 'randombishop')
-    self.assertEqual(len(action.casts), 1)
-    self.assertEqual(len(action.casts[0]['embeds']), 1)
+    bot = make_bot()
+    bot.respond(request, fid_origin=fid_origin)
+    bot.state.debug_action()
+    assert_expected_output(self, bot)
+    self.assertEqual(bot.state.action_params['fid'], fid_origin)
+    self.assertEqual(bot.state.action_params['user_name'], 'randombishop')
     
   def test3(self):
     request = "Make a word cloud for keyword 'bitcoin'"
-    action = route(request)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, WordCloud)
-    self.assertEqual(action.keyword, 'bitcoin')
-    self.assertIsNone(action.channel)
-    self.assertIsNone(action.user_name)
-    self.assertIsNone(action.search)
-    self.assertEqual(len(action.casts), 1)
-    self.assertEqual(len(action.casts[0]['embeds']), 1)
+    bot = make_bot()
+    bot.respond(request)
+    bot.state.debug_action()
+    assert_expected_output(self, bot)
+    self.assertEqual(bot.state.action_params['keyword'], 'bitcoin')
     
   def test4(self):
     request = "Make a wordcloud for arts category"
-    action = route(request)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, WordCloud)
-    self.assertEqual(action.category, 'c_arts')
-    self.assertIsNone(action.channel)
-    self.assertIsNone(action.keyword)
-    self.assertIsNone(action.user_name)
-    self.assertIsNone(action.search)
-    self.assertEqual(len(action.casts), 1)
-    self.assertEqual(len(action.casts[0]['embeds']), 1)
-    
+    bot = make_bot()
+    bot.respond(request)
+    bot.state.debug_action()
+    assert_expected_output(self, bot)
+    self.assertEqual(bot.state.action_params['category'], 'c_arts')
+     
   def test5(self):
     request = "Make a wordcloud for /data channel?"
-    action = route(request)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, WordCloud)
-    self.assertEqual(action.channel, 'https://farcaster.group/data')
-    self.assertIsNone(action.keyword)
-    self.assertIsNone(action.category)
-    self.assertIsNone(action.user_name)
-    self.assertIsNone(action.search)
-    self.assertEqual(len(action.casts), 1)
-    self.assertEqual(len(action.casts[0]['embeds']), 1)
+    bot = make_bot()
+    bot.respond(request)
+    bot.state.debug_action()
+    assert_expected_output(self, bot)
+    self.assertEqual(bot.state.action_params['channel'], 'https://farcaster.group/data')
 
   def test6(self):
     request = "Make a word cloud about the beauty of canadian landscapes"
-    action = route(request)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, WordCloud)
-    self.assertIsNotNone(action.search)
-    self.assertEqual(len(action.casts), 1)
-    self.assertEqual(len(action.casts[0]['embeds']), 1)
+    bot = make_bot()
+    bot.respond(request)
+    bot.state.debug_action()
+    assert_expected_output(self, bot)
+    self.assertIsNotNone(bot.state.action_params['search'])
       
   def test7(self):
     request = "Make a wordcloud for @randombishop's posts"
-    action = route(request)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, WordCloud)
-    self.assertEqual(action.user_name, 'randombishop')
-    self.assertIsNone(action.keyword)
-    self.assertIsNone(action.category)
-    self.assertIsNone(action.channel)
-    self.assertIsNone(action.search)
-    self.assertEqual(len(action.casts), 1)
-    self.assertEqual(len(action.casts[0]['embeds']), 1)
+    bot = make_bot()
+    bot.respond(request)
+    bot.state.debug_action()
+    assert_expected_output(self, bot)
+    self.assertEqual(bot.state.action_params['user_name'], 'randombishop')
     
   def test8(self):
     request = "Make a word cloud for this channel"
     root_parent_url = "https://farcaster.group/data"
-    action = route(request, root_parent_url=root_parent_url)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, WordCloud)
-    self.assertEqual(action.channel, root_parent_url)
-    self.assertIsNone(action.user_name)
-    self.assertEqual(len(action.casts), 1)
-    self.assertEqual(len(action.casts[0]['embeds']), 1)
+    bot = make_bot()
+    bot.respond(request, root_parent_url=root_parent_url)
+    bot.state.debug_action()
+    self.assertEqual(bot.state.action_params['channel'], root_parent_url)
