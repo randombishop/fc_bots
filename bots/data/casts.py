@@ -11,7 +11,7 @@ def get_casts_for_fid(fid):
   params = [QueryParameter.number_type(name="fid", value=fid)]
   return run_query(query_id, params)
 
-def get_top_casts(channel, keyword, category, user_name, max_rows):
+def get_top_casts(channel=None, keyword=None, category=None, user_name=None, max_rows=10):
   query_id = 4252915
   params = [
     QueryParameter.text_type(name="parent_url", value=channel if channel is not None else '*'),

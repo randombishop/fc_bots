@@ -65,6 +65,7 @@ class BotState:
     self.about_keyword = ''
     self.about_topic = ''
     self.about_context = ''
+    self.posts_map = {}
     # 6. Think
     self.like = False
     self.reply = False

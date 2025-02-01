@@ -124,21 +124,32 @@ class Chat(IActionStep):
     if self.state.action_params['user_name'] is not None:
       posts_about_user = get_top_casts(user_name=self.state.action_params['user_name'], max_rows=max_rows)
       if posts_about_user is not None and len(posts_about_user) > 0:
+        posts_about_user = posts_about_user.to_dict('records')
+        posts_about_user.sort(key=lambda x: x['timestamp'])
         self.state.about_user = concat_casts(posts_about_user)
         posts += posts_about_user
     if parsed['keyword'] is not None:
       posts_about_keyword = get_top_casts(keyword=parsed['keyword'], max_rows=max_rows)
       if posts_about_keyword is not None and len(posts_about_keyword) > 0:
+        posts_about_keyword = posts_about_keyword.to_dict('records')
+        posts_about_keyword.sort(key=lambda x: x['timestamp'])
         self.state.about_keyword = concat_casts(posts_about_keyword)
         posts += posts_about_keyword
     if parsed['category'] is not None:
       posts_about_topic = get_top_casts(category=parsed['category'], max_rows=max_rows)
       if posts_about_topic is not None and len(posts_about_topic) > 0:
+        posts_about_topic = posts_about_topic.to_dict('records')
+        posts_about_topic.sort(key=lambda x: x['timestamp'])
         self.state.about_topic = concat_casts(posts_about_topic)
         posts += posts_about_topic
     if parsed['search'] is not None:
       posts_about_context = get_more_like_this(parsed['search'], limit=max_rows)
       if posts_about_context is not None and len(posts_about_context) > 0:
+        posts_about_context = posts_about_context.to_dict('records')
+        posts_about_context.sort(key=lambda x: x['timestamp'])
         self.state.about_context = concat_casts(posts_about_context)
         posts += posts_about_context
     print('Total number of casts pulled', len(posts))
+    for p in posts:
+      self.state.posts_map[p['id']] = p
+    print('Updated posts map', len(self.state.posts_map))
