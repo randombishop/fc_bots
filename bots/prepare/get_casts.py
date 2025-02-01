@@ -50,7 +50,7 @@ schema = {
 
 class GetCasts(IPrepareStep):
     
-  def execute(self):
+  def prepare(self):
     print('Executing GetCasts...')
     if not self.state.should_continue:
       print('Should not continue, aborting GetCasts.')

@@ -4,6 +4,8 @@ from bots.prepare.prepare_steps import PREPARE_STEPS
 from bots.action.action_steps import ACTION_STEPS
 from bots.prompts.action_plan import select_action_task, select_action_format, select_action_schema, select_action_prompt
 from bots.utils.llms import call_llm
+from bots.think.like import Like
+
 
 class Bot:
   
@@ -48,8 +50,8 @@ class Bot:
     prepare_steps = action.get_prepare_steps()
     for step in prepare_steps:
       Prepare = PREPARE_STEPS[step]
-      prepare = Prepare(self.state)
-      prepare.execute()
+      prepare_step = Prepare(self.state)
+      prepare_step.prepare()
   
   def execute(self):
     if self.state.selected_action is None:
@@ -59,16 +61,24 @@ class Bot:
     action.parse()
     action.execute()
     
+  def think(self):
+    # Decide if we should like the post
+    like_step = Like(self.state)
+    like_step.think()
+    # Decide if we should reply
+    if self.state.casts is not None and len(self.state.casts) > 0:
+      self.state.reply = True
+  
   def respond(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
     self.initialize(request, fid_origin, parent_hash, attachment_hash, root_parent_url)
     self.wakeup()
     self.plan()
     self.prepare()
     self.execute()
-
-    
-    # Decide if we should reply or like (or ignore if both are false
-    #self.think()
-    
-    # Respond
-    #self.execute_decision()
+    self.think()
+    response = {
+      'like': self.state.like,
+      'casts': self.state.casts if self.state.reply else []
+    }
+    return response
+  

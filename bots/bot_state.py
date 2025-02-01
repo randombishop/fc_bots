@@ -69,10 +69,9 @@ class BotState:
     self.context = ''
     self.about_context = ''
     self.posts_map = {}
-    # 4. Execute actions
+    # 5. Execute actions
     self.action_params = None
     self.casts = []
-    
     # 6. Think
     self.like = False
     self.reply = False

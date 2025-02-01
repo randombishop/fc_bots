@@ -47,7 +47,7 @@ schema = {
 
 class ShouldContinue(IPrepareStep):
     
-  def execute(self):
+  def prepare(self):
     prompt = self.state.format(conversation_and_request_template)
     instructions = self.state.format(instructions_template)
     params = call_llm(prompt, instructions, schema)
