@@ -71,6 +71,13 @@ def read_string(params, key, default=None, max_length=256):
   return ans
 
 
+def read_boolean(params, key):
+  if key in params and params[key] is not None:
+    return is_true(params[key])
+  else:
+    return False
+
+
 def read_keyword(params):
   if 'keyword' in params and params['keyword'] is not None:
     keyword_string = str(params['keyword'])

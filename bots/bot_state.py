@@ -84,19 +84,23 @@ class BotState:
     return result
   
   def debug_action(self):
-    if self.selected_action is None or self.action_params is None:
-      return 'no parameters were parsed'
-    attrs = ['fid', 'user_name', 'channel', 'keyword', 'category', 'search', 'criteria', 'text', 'question', 'cost']
+    attrs = ['fid', 'user_name', 'channel', 'keyword', 'category', 'search', 'criteria', 'text', 'question', 'continue']
     s = ('-'*64) + '\n'
-    s += f"{self.selected_action}\n"
-    for attr in attrs:
-      if attr in self.action_params and self.action_params[attr] is not None: 
-        s += f"  {attr}: {self.action_params[attr]}\n"
-    if hasattr(self, 'casts') and self.casts is not None: 
-      casts = self.casts
-      s += "Casts:\n"
-      for c in casts:
-        s+= f"  {c}\n"
+    if self.selected_action is None:
+      s += 'No action was selected\n'
+    else:  
+      s += f"{self.selected_action}\n"
+      if self.action_params is not None:
+        for attr in attrs:
+          if attr in self.action_params and self.action_params[attr] is not None: 
+            s += f"  {attr}: {self.action_params[attr]}\n"
+      else:
+        s += '  No parameters were parsed\n'
+      if hasattr(self, 'casts') and self.casts is not None: 
+        casts = self.casts
+        s += "Casts:\n"
+        for c in casts:
+          s+= f"  {c}\n"
     s += ('-'*64)
     s += '\n'
     print(s)

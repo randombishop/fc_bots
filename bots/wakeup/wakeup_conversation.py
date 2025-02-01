@@ -3,6 +3,9 @@ from bots.data.casts import get_cast
 from bots.data.users import get_username
 
 
+max_depth = 28
+
+
 class WakeUpConversation(IWakeUpStep):
     
   def get(self, bot_character, bot_state):
@@ -14,7 +17,6 @@ class WakeUpConversation(IWakeUpStep):
       if attachment_cast is not None:
         main_cast['quote'] = {'text': attachment_cast['text'], 'fid': attachment_cast['fid'], 'username': attachment_cast['username']}
     context.append(main_cast)
-    max_depth = 7
     current_depth = 0
     parent_hash = bot_state.parent_hash
     while parent_hash is not None and current_depth < max_depth:

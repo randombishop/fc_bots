@@ -1,40 +1,41 @@
-# Casts functions
+from bots.action.chat import Chat
 from bots.action.digest_casts import DigestCasts
-from bots.action.pick_cast import PickCast
-from bots.action.more_like_this import MoreLikeThis
-# User functions
 from bots.action.favorite_users import FavoriteUsers
+from bots.action.more_like_this import MoreLikeThis
 from bots.action.most_active_users import MostActiveUsers
-from bots.action.word_cloud import WordCloud
+from bots.action.news import News
+from bots.action.perplexity import Perplexity
+from bots.action.pick_cast import PickCast
 from bots.action.psycho import Psycho
 from bots.action.roast import Roast
-from bots.action.perplexity import Perplexity
-from bots.action.news import News
+from bots.action.word_cloud import WordCloud
 
 
 ACTION_STEPS = {
+  'Chat': Chat,
   'Summary': DigestCasts,
-  'Pick': PickCast,
-  'MoreLikeThis': MoreLikeThis,
   'FavoriteUsers': FavoriteUsers,
+  'MoreLikeThis': MoreLikeThis,
   'MostActiveUsers': MostActiveUsers,
-  'WordCloud': WordCloud, 
+  'News': News,
+  'Perplexity': Perplexity,
+  'Pick': PickCast,
   'Psycho': Psycho,
   'Roast': Roast,
-  'Perplexity': Perplexity,
-  'News': News
+  'WordCloud': WordCloud
 }
 
 
 DESCRIPTIONS = {
+  'Chat': 'Default action if no other intent is applicable.',
   'Summary': 'Make a summary about posts.',
-  'Pick': 'Pick a post given some criteria.',
-  'MoreLikeThis': 'Find posts using "More Like This" algorithm.',
   'FavoriteUsers': 'Find the favorite accounts of a user.',
+  'MoreLikeThis': 'Find posts using "More Like This" algorithm.',
   'MostActiveUsers': 'List the most active users in a channel.',
-  'WordCloud': 'Make a word cloud.',
+  'News': 'Check the news.',
+  'Perplexity': 'Ask a question to Perplexity AI.',
+  'Pick': 'Pick a post given some criteria.',
   'Psycho': 'Generate a psychoanalysis for a user.',
   'Roast': 'Generate a roast for a user.',
-  'Perplexity': 'Ask a question to Perplexity AI.',
-  'News': 'Check the news with a search query.'
+  'WordCloud': 'Make a word cloud.'
 }

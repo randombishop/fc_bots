@@ -6,7 +6,7 @@ Your goal is not to continue the conversation directly, you must only decide whi
 Decide the action that matches the requests's intent.
 Pick one specific action from the available options if it's explicitly asked for in the request, but if no specific action is applicable, respond with {"action": null}.
 Do not pick the roast or psychoanalyze actions unless the user clearly asks for it, if not sure, avoid the Roast and Psycho actions.
-Focus on the intent of the request, you can use the conversation for context but you are trying to decide which action to perform based on the final request.
+Focus on the intent of the last request, you can use the conversation for context but you are trying to decide which action to perform based on the final request.
 If no action is applicable, respond with {"action": null}
 #AVAILABLE ACTIONS:
 {{actions}}

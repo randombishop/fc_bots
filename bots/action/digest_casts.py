@@ -14,7 +14,10 @@ from bots.utils.gcs import upload_to_gcs
 
 
 parse_instructions_template = """
-INSTRUCTIONS:
+#CURRENT CHANNEL
+{{channel}}
+
+#INSTRUCTIONS
 You are @{{name}}, a bot programmed to make summaries of posts (=casts) in a social media platform.
 You have access to an API that can generate the summary based on these parameters: category, channel, keyword, search, user.
 * category: Can be one of pre-defined categories 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
@@ -26,10 +29,7 @@ Your goal is not to continue the conversation, you must only extract the paramet
 You can use the conversation to guess the parameters, but focus on the request.
 Your goal is to extract the parameters from the request.
 
-#CURRENT CHANNEL
-{{channel}}
-
-RESPONSE FORMAT:
+#RESPONSE FORMAT
 {
   "category": "...",
   "channel": "...",
@@ -53,36 +53,34 @@ parse_schema = {
 main_instructions_intro_template = """
 You are @{{name}}, a bot programmed to make summaries of posts (=casts) in a social media platform.
 
-#Your bio:
+#YOUR BIO
 {{bio}}
 
-#Your lore:
+#YOUR LORE
 {{lore}}
 
-#Your style:
+#YOUR STYLE
 {{style}}
 
-#Current channel:
+#CURRENT CHANNEL
 {{channel}}
 """
 
 main_instructions = """
-GENERAL INSTRUCTIONS:
-YOUR TASK IS TO PROCESS THE PROVIDED SOCIAL MEDIA POSTS.
-GENERATE A GLOBAL SUMMARY AND SELECT 3 INTERESTING ONES.
+#GENERAL INSTRUCTIONS
+YOUR TASK IS TO GENERATE A GLOBAL SUMMARY AND SELECT 3 INTERESTING ONES FROM THE PROVIDED SOCIAL MEDIA POSTS.
 
-DETAILED INSTRUCTIONS:
-- Write a short summary tweet.
-- Include 3 links to reference relevant post ids and comment them.
-- Output the result in json format.
-- Make sure you don't use " inside json strings. Avoid invalid json.
-- Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
-- Focus on posts that are genuine, interesting, funny, or informative.
-- Don't reference websites and don't include any urls in your summary.
-
+#DETAILED INSTRUCTIONS
+Write a short summary tweet.
+Include 3 links to reference relevant post ids and comment them.
+Output the result in json format.
+Make sure you don't use " inside json strings. Avoid invalid json.
+Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
+Focus on posts that are genuine, interesting, funny, or informative.
+Don't reference websites and don't include any urls in your summary.
 ADDITIONAL_NOTES?
 
-RESPONSE FORMAT:
+#RESPONSE FORMAT
 {
   "tweet": "Catch phrase summarizing ",
   "link1": {"id": "......", "comment": "keyword [emoji]"},

@@ -83,7 +83,6 @@ class Roast(IActionStep):
     data = list(df['text'])
     text = "\n".join([str(x) for x in data])
     instructions = self.state.format(instructions_template.replace('{{user_name}}', self.state.action_params['user_name']))
-    print(instructions)
     result = call_llm(text, instructions, schema)
     cast = {'text': result['tweet']}
     casts = [cast]
