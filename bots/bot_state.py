@@ -1,4 +1,5 @@
 import re
+from bots.data.users import get_username
 
 
 DEFAULT_TEMPLATE = """
@@ -44,6 +45,7 @@ class BotState:
     self.name = name
     self.request = request
     self.fid_origin = int(fid_origin) if fid_origin is not None else None
+    self.user_origin = get_username(self.fid_origin) if self.fid_origin is not None else None
     self.parent_hash = parent_hash
     self.attachment_hash = attachment_hash
     self.root_parent_url = root_parent_url
@@ -55,17 +57,22 @@ class BotState:
     self.lore = ''
     self.time = ''
     self.style = ''
-    # 3. Plan actions
+    # 3. Plan
     self.selected_action = None
+    # 4. Prepare 
+    self.should_continue = True
+    self.about_user = ''
+    self.keyword = ''
+    self.about_keyword = ''
+    self.topic = ''
+    self.about_topic = ''
+    self.context = ''
+    self.about_context = ''
+    self.posts_map = {}
     # 4. Execute actions
     self.action_params = None
     self.casts = []
-    # 5. Knowledge 
-    self.about_user = ''
-    self.about_keyword = ''
-    self.about_topic = ''
-    self.about_context = ''
-    self.posts_map = {}
+    
     # 6. Think
     self.like = False
     self.reply = False
