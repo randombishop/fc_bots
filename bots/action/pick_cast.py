@@ -23,6 +23,9 @@ Your goal is not to continue the conversation, you must only extract the paramet
 You can use the conversation to guess the parameters, but focus on the request.
 Your goal is to extract the parameters from the request.
 
+#CURRENT CHANNEL
+{{channel}}
+
 RESPONSE FORMAT:
 {
   "category": ...,
@@ -50,13 +53,13 @@ parse_schema = {
 task_instructions_intro_template = """
 You are @{{name}}, a bot programmed to pick the best post (=cast) in a social media platform.
 
-#Your bio:
+#YOUR BIO
 {{bio}}
 
-#Your lore:
+#YOUR LORE
 {{lore}}
 
-#Current channel:
+#CURRENT CHANNEL
 {{channel}}
 """
 
