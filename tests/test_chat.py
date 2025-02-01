@@ -15,10 +15,11 @@ def assert_expected_output(t, bot, expected_continue):
 class TestChat(unittest.TestCase):
   
   def test1(self):
-    request = "Thank you!"
-    fid_origin=253232
+    request = "Thank you so much for sharing 😺❤️❤️❤️"
+    fid_origin=388401
+    parent_hash='0x7506e607e722d543b61306d1357814ad61caa132'
     bot = make_bot()
-    bot.respond(request, fid_origin=fid_origin)
+    bot.respond(request, fid_origin=fid_origin, parent_hash=parent_hash)
     bot.state.debug_action()
     assert_expected_output(self, bot, False)
     
@@ -37,7 +38,7 @@ class TestChat(unittest.TestCase):
     assert_expected_output(self, bot, True)
 
   def test4(self):
-    request = "Who are you?"
+    request = "How old are you?"
     bot = make_bot()
     bot.respond(request)
     bot.state.debug_action()

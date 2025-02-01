@@ -1,8 +1,10 @@
 from bots.i_action_step import IActionStep
 from bots.prompts.contexts import conversation_and_request_template
-from bots.utils.read_params import read_boolean, read_keyword, read_category, read_string
-from bots.data.casts import get_casts_for_fid
 from bots.utils.llms import call_llm
+from bots.utils.read_params import read_boolean, read_keyword, read_category, read_string
+from bots.data.users import get_username
+from bots.data.casts import get_top_casts, get_more_like_this
+from bots.prompts.format_casts import concat_casts
 from bots.utils.check_casts import check_casts
 
 preprocessing_instructions_template =  """
@@ -92,16 +94,24 @@ class Chat(IActionStep):
     parse_instructions = self.state.format(preprocessing_instructions_template)
     params = call_llm(parse_prompt, parse_instructions, parse_context_schema)
     parsed = {
+      'fid': self.state.fid_origin,
+      'user_name': get_username(self.state.fid_origin) if self.state.fid_origin is not None else None,
       'continue': read_boolean(params, key='continue')
     }
     self.state.action_params = parsed
 
   def execute(self):
+    if self.state.action_params['continue']==False:
+      self.state.casts = []
+      return
+    self.get_casts()
     casts = []
     check_casts(casts)
     self.state.casts = casts
 
   def get_casts(self):
+    max_rows = 25
+    print('Entering get_casts...')
     parse_prompt = self.state.format(conversation_and_request_template)
     parse_instructions = self.state.format(parse_context_instructions_template)
     params = call_llm(parse_prompt, parse_instructions, parse_context_schema)
@@ -109,6 +119,26 @@ class Chat(IActionStep):
     parsed['keyword'] = read_keyword(params)
     parsed['category'] = read_category(params)
     parsed['search'] = read_string(params, key='search', default=None, max_length=500)
-    fid = self.state.fid_origin
-    if fid is not None:
-      print('We should get casts for user here...')
+    print('parsed parameters', parsed)
+    posts = []
+    if self.state.action_params['user_name'] is not None:
+      posts_about_user = get_top_casts(user_name=self.state.action_params['user_name'], max_rows=max_rows)
+      if posts_about_user is not None and len(posts_about_user) > 0:
+        self.state.about_user = concat_casts(posts_about_user)
+        posts += posts_about_user
+    if parsed['keyword'] is not None:
+      posts_about_keyword = get_top_casts(keyword=parsed['keyword'], max_rows=max_rows)
+      if posts_about_keyword is not None and len(posts_about_keyword) > 0:
+        self.state.about_keyword = concat_casts(posts_about_keyword)
+        posts += posts_about_keyword
+    if parsed['category'] is not None:
+      posts_about_topic = get_top_casts(category=parsed['category'], max_rows=max_rows)
+      if posts_about_topic is not None and len(posts_about_topic) > 0:
+        self.state.about_topic = concat_casts(posts_about_topic)
+        posts += posts_about_topic
+    if parsed['search'] is not None:
+      posts_about_context = get_more_like_this(parsed['search'], limit=max_rows)
+      if posts_about_context is not None and len(posts_about_context) > 0:
+        self.state.about_context = concat_casts(posts_about_context)
+        posts += posts_about_context
+    print('Total number of casts pulled', len(posts))

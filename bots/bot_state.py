@@ -60,7 +60,12 @@ class BotState:
     # 4. Execute actions
     self.action_params = None
     self.casts = []
-    # 5. Think
+    # 5. Knowledge 
+    self.about_user = ''
+    self.about_keyword = ''
+    self.about_topic = ''
+    self.about_context = ''
+    # 6. Think
     self.like = False
     self.reply = False
     

@@ -2,7 +2,7 @@
 
 
 def concat_casts(posts):
-  ans = 'POSTS:\n'
+  ans = ''
   for post in posts:
     post['id'] = post['hash'][2:8]
     ans += "\n"
