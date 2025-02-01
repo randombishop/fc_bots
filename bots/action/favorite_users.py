@@ -10,7 +10,7 @@ from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
 
 
-parse_user_instructions = """
+parse_user_instructions_template = """
 INSTRUCTIONS:
 You are @{{name}}, a bot programmed to find the favorite accounts of a user.
 Based on the provided conversation and request, who should we pull the favorite accounts for?
@@ -37,7 +37,7 @@ class FavoriteUsers(IActionStep):
 
   def parse(self):
     parse_prompt = self.state.format(conversation_and_request_template)
-    parse_instructions = self.state.format(parse_user_instructions)
+    parse_instructions = self.state.format(parse_user_instructions_template)
     params = call_llm(parse_prompt, parse_instructions, parse_user_schema)
     parsed = {}
     fid, user_name = read_user(params, self.state.fid_origin, default_to_origin=True)

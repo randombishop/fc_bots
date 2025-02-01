@@ -1,27 +1,29 @@
 import unittest
-from bots.action.roast import Roast
-from bots.router import route
+from bots.utils.tests import make_bot
 
+
+def assert_expected_output(t, bot):
+  t.assertEqual(bot.state.selected_action, 'Roast')
+  t.assertEqual(len(bot.state.casts), 1)
+  
 
 class TestRoast(unittest.TestCase):
   
   def test1(self):
     request = "Roast randombishop"
-    action = route(request)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, Roast)
-    self.assertEqual(action.fid, 253232)
-    self.assertEqual(action.user_name, 'randombishop')
-    self.assertEqual(len(action.casts), 1)
+    bot = make_bot()
+    bot.respond(request)
+    bot.state.debug_action()
+    assert_expected_output(self, bot)
+    self.assertEqual(bot.state.action_params['fid'], 253232)
+    self.assertEqual(bot.state.action_params['user_name'], 'randombishop')
     
   def test2(self):
     request = "roast me"
     fid_origin = 253232
-    action = route(request, fid_origin=fid_origin)
-    action.run()
-    action.print()
-    self.assertIsInstance(action, Roast)
-    self.assertEqual(action.fid, fid_origin)
-    self.assertEqual(action.user_name, 'randombishop')
-    self.assertEqual(len(action.casts), 1)
+    bot = make_bot()
+    bot.respond(request, fid_origin=fid_origin)
+    bot.state.debug_action()
+    assert_expected_output(self, bot)
+    self.assertEqual(bot.state.action_params['fid'], fid_origin)
+    self.assertEqual(bot.state.action_params['user_name'], 'randombishop')
