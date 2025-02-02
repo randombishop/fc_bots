@@ -10,6 +10,7 @@ def check_link_data(link, posts_map):
     link['hash'] = posts_map[h]['hash']
     link['fid'] = posts_map[h]['fid']
     link['user_name'] = posts_map[h]['user_name']
+    link['text'] = posts_map[h]['text']
     return link
   else:
     return None

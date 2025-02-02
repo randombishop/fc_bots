@@ -1,6 +1,6 @@
 import re
 from bots.data.users import get_username
-
+from bots.utils.format_cast import insert_mentions
 
 DEFAULT_TEMPLATE = """
 #NAME
@@ -99,7 +99,10 @@ class BotState:
       return ''
     ans = ''
     for c in casts:
-      ans += f"> {c['text']}"
+      text = c['text']
+      if 'mentions_ats' in c and 'mentions_pos' in c:
+        text = insert_mentions(text, c['mentions_ats'], c['mentions_pos'])
+      ans += f"> {text}"
       if 'embeds_description' in c:
         ans += f" (embedded link: {c['embeds_description']})"
       ans += '\n'
