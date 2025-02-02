@@ -93,7 +93,8 @@ class WordCloud(IActionStep):
     os.remove(filename)
     cast = {
       'text': "", 
-      'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]
+      'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"],
+      'embeds_description': 'Wordcloud Image'
     }
     if self.state.action_params['fid'] is not None and self.state.action_params['user_name'] is not None:
       cast['mentions'] = [self.state.action_params['fid']]

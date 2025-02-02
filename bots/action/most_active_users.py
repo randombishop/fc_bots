@@ -76,7 +76,8 @@ class MostActiveUsers(IActionStep):
       'mentions': mentions, 
       'mentions_pos': mentions_positions,
       'mentions_ats': mentions_ats,
-      'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]
+      'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"],
+      'embeds_description': "Chart of top active users in the channel"
     }
     casts =  [cast]
     check_casts(casts)

@@ -92,9 +92,9 @@ class Chat(IActionStep):
       link = check_link_data({'id':result['link_id']}, self.state.posts_map)
     cast = {
       'text': result['tweet'],
-      'embeds': [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}]
+      'embeds': [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}],
+      'embeds_description': link['text']
     } 
-    print(f"https://warpcast.com/{link['user_name']}/{link['hash']}")
     casts = [cast]
     check_casts(casts)
     self.state.casts = casts

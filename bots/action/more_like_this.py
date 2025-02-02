@@ -49,6 +49,7 @@ class MoreLikeThis(IActionStep):
       casts.append({
         'text': '', 
         'embeds': [{'fid': similar['fid'], 'user_name': similar['user_name'], 'hash': similar['hash']}],
+        'embeds_description': similar['text'],
         'q_distance': similar['q_distance'],
         'dim_distance': similar['dim_distance']
       })

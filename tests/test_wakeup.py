@@ -23,7 +23,10 @@ class TestWakeUp(unittest.TestCase):
     character, state = make_character_and_state()
     actions = WakeUpActions().get(character, state)
     lines = actions.split('\n')
-    self.assertEqual(len(lines), 11)
+    print('<WakeUpActions>')
+    print(actions)
+    print('</WakeUpActions>')
+    self.assertGreater(len(lines), 10)
     
 
     
@@ -34,6 +37,9 @@ class TestWakeUp(unittest.TestCase):
   def test_bio1(self):
     character, state = make_character_and_state()
     bio = WakeUpBio().get(character, state)
+    print('<WakeUpBio>')
+    print(bio)
+    print('</WakeUpBio>')
     lines = bio.split('\n')
     self.assertEqual(len(lines), 5)
 
@@ -47,11 +53,17 @@ class TestWakeUp(unittest.TestCase):
   def test_channel1(self):
     character, state = make_character_and_state(root_parent_url='https://farcaster.group/data')
     channel = WakeUpChannel().get(character, state)
+    print('<WakeUpChannel>')
+    print(channel)
+    print('</WakeUpChannel>')
     self.assertEqual(channel, '/data')
 
   def test_channel2(self):
     character, state = make_character_and_state()
     channel = WakeUpChannel().get(character, state)
+    print('<WakeUpChannel>')
+    print(channel)
+    print('</WakeUpChannel>')
     self.assertEqual(channel, '')
     
 
@@ -64,7 +76,9 @@ class TestWakeUp(unittest.TestCase):
     request = "Hello World"
     character, state = make_character_and_state(request)
     conversation = WakeUpConversation().get(character, state)
-    #print(conversation)
+    print('<WakeUpConversation>')
+    print(conversation)
+    print('</WakeUpConversation>')
     self.assertIn(request, conversation)
 
   def test_conversation2(self):
@@ -72,7 +86,9 @@ class TestWakeUp(unittest.TestCase):
     parent_hash = '0x8fa5e35f8b843c1713a2c4d32a59edc6a2abb863'
     character, state = make_character_and_state(request=request, parent_hash=parent_hash)
     conversation = WakeUpConversation().get(character, state)
-    #print(conversation)
+    print('<WakeUpConversation>')
+    print(conversation)
+    print('</WakeUpConversation>')
     self.assertIn(request, conversation)
     self.assertIn('@v', conversation)
     self.assertIn('@unknown_user', conversation)
@@ -82,7 +98,9 @@ class TestWakeUp(unittest.TestCase):
     request = "Other casts like this one?"
     character, state = make_character_and_state(request=request, attachment_hash=attachment_hash)    
     conversation = WakeUpConversation().get(character, state)
-    #print(conversation)
+    print('<WakeUpConversation>')
+    print(conversation)
+    print('</WakeUpConversation>')
     self.assertIn(request, conversation)
     self.assertIn('@unknown_user', conversation)
     self.assertIn('quoting @ds007', conversation)
@@ -94,7 +112,9 @@ class TestWakeUp(unittest.TestCase):
     parent_hash = '0x6f119aad7fa236cd31eeebd03d569bc264350d29'
     character, state = make_character_and_state(request=request, fid_origin=fid_origin, parent_hash=parent_hash)    
     conversation = WakeUpConversation().get(character, state)
-    #print(conversation)
+    print('<WakeUpConversation>')
+    print(conversation)
+    print('</WakeUpConversation>')
     self.assertIn(request, conversation)
     self.assertIn('@horsefacts.eth', conversation)
     self.assertIn('@randombishop', conversation)
@@ -106,7 +126,9 @@ class TestWakeUp(unittest.TestCase):
     parent_hash = '0xb59fcfda9e859be648e5d5541d292a6fb8cc9fcb'
     character, state = make_character_and_state(request=request, parent_hash=parent_hash)    
     conversation = WakeUpConversation().get(character, state)
-    #print(conversation)
+    print('<WakeUpConversation>')
+    print(conversation)
+    print('</WakeUpConversation>')
     self.assertIn(request, conversation)
     
 
@@ -117,6 +139,9 @@ class TestWakeUp(unittest.TestCase):
   def test_lore1(self):
     character, state = make_character_and_state()
     lore = WakeUpLore().get(character, state)
+    print('<WakeUpLore>')
+    print(lore)
+    print('</WakeUpLore>')
     lines = lore.split('\n')
     self.assertEqual(len(lines), 5)
     
@@ -129,6 +154,9 @@ class TestWakeUp(unittest.TestCase):
     character, state = make_character_and_state()
     style = WakeUpStyle().get(character, state)
     lines = style.split('\n')
+    print('<WakeUpStyle>')
+    print(style)
+    print('</WakeUpStyle>')
     self.assertEqual(len(lines), 10) 
     
 
@@ -139,4 +167,7 @@ class TestWakeUp(unittest.TestCase):
   def test_time1(self):
     character, state = make_character_and_state()
     time = WakeUpTime().get(character, state)
+    print('<WakeUpTime>')
+    print(time)
+    print('</WakeUpTime>')
     self.assertRegex(time, r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}')

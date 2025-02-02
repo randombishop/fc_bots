@@ -75,23 +75,41 @@ class BotState:
     # 6. Think
     self.like = False
     self.reply = False
-    
-    
+       
   def set(self, key, value):
     if hasattr(self, key):
       setattr(self, key, value)
     else:
       raise ValueError(f"Invalid field: {key}")
+  
+  def format_placeholder(self, key):
+    if not hasattr(self, key):
+      raise ValueError(f"Invalid key: {key}")
+    if key == 'casts':
+      return self.format_casts()
+    else:
+      value = getattr(self, key)
+      if value is None:
+        value = ''
+      return value
     
+  def format_casts(self):
+    casts = self.casts
+    if casts is None or len(casts)==0:
+      return ''
+    ans = ''
+    for c in casts:
+      ans += f"> {c['text']}"
+      if 'embeds_description' in c:
+        ans += f" (embedded link: {c['embeds_description']})"
+      ans += '\n'
+    return ans
+  
   def format(self, template=DEFAULT_TEMPLATE):
     result = template
     placeholders = re.findall(r'\{\{(\w+)\}\}', template)
     for placeholder in placeholders:
-      if not hasattr(self, placeholder):
-        raise ValueError(f"Invalid placeholder: {placeholder}")
-      value = getattr(self, placeholder)
-      if value is None:
-        value = ''
+      value = self.format_placeholder(placeholder)
       result = result.replace('{{' + placeholder + '}}', value)
     return result
   

@@ -58,6 +58,7 @@ class News(IActionStep):
     if 'url' in data and len(data['url']) > 10:
       link = data['url']
       cast['embeds'] = [link]
+      cast['embeds_description'] = 'Link to the story'
     casts = [cast]
     check_casts(casts)
     self.state.casts = casts

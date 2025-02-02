@@ -59,6 +59,7 @@ class Perplexity(IActionStep):
     cast = {'text': answer}
     if link is not None:
       cast['embeds'] = [link]
+      cast['embeds_description'] = 'Link to the reference website'
     casts = [cast]
     check_casts(casts)
     self.state.casts = casts

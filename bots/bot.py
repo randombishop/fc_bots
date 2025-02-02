@@ -5,6 +5,7 @@ from bots.action.action_steps import ACTION_STEPS
 from bots.prompts.action_plan import select_action_task, select_action_format, select_action_schema, select_action_prompt
 from bots.utils.llms import call_llm
 from bots.think.like import Like
+from bots.think.reply import Reply
 
 
 class Bot:
@@ -67,7 +68,8 @@ class Bot:
     like_step.think()
     # Decide if we should reply
     if self.state.casts is not None and len(self.state.casts) > 0:
-      self.state.reply = True
+      reply_step = Reply(self.state)
+      reply_step.think()
   
   def respond(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
     self.initialize(request, fid_origin, parent_hash, attachment_hash, root_parent_url)

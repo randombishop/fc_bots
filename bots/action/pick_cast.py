@@ -129,7 +129,8 @@ class PickCast(IActionStep):
     data = check_link_data(result, posts_map)
     cast = {
       'text': data['comment'],
-      'embeds': [{'fid': data['fid'], 'user_name': data['user_name'], 'hash': data['hash']}]
+      'embeds': [{'fid': data['fid'], 'user_name': data['user_name'], 'hash': data['hash']}],
+      'embeds_description': data['text']
     }
     casts = [cast]
     check_casts(casts)
