@@ -80,7 +80,8 @@ class Bot:
     self.think()
     response = {
       'like': self.state.like,
-      'casts': self.state.casts if self.state.reply else []
+      'reply': self.state.reply,
+      'casts': self.state.casts
     }
     return response
   
