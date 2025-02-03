@@ -99,4 +99,4 @@ def generate_bot_response(bot_id, request=None, fid_origin=None, parent_hash=Non
                          parent_hash=parent_hash, 
                          attachment_hash=attachment_hash, 
                          root_parent_url=root_parent_url)
-  return bot, response
+  return response
