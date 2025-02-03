@@ -3,7 +3,7 @@ from bots.utils.tests import make_bot
 from bots.bot import Bot
 
 
-class TestBot(unittest.TestCase):
+class Test0(unittest.TestCase):
   
   def test1(self):
     bot = make_bot()
@@ -12,8 +12,7 @@ class TestBot(unittest.TestCase):
     self.assertIsInstance(bot.character['bio'], list)
     self.assertIsInstance(bot.character['lore'], list)
     self.assertIsInstance(bot.character['style'], list)
-    # Test chat
-    request = "Who are you?"
-    bot.respond(request)
+    bot.initialize()
+    bot.wakeup()
     print(bot.state.format())
     

@@ -75,6 +75,7 @@ class BotState:
     # 6. Think
     self.like = False
     self.reply = False
+    self.do_not_reply_reason = None
        
   def set(self, key, value):
     if hasattr(self, key):
