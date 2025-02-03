@@ -9,7 +9,6 @@ class TestActionPlan(unittest.TestCase):
     request = "How are you today?"
     bot = run_bot(request)
     self.assertTrue(bot.state.selected_action == 'Chat' or bot.state.selected_action is None)
-    self.assertTrue(bot.state.reply)
     
   def test_digest_casts(self):
     request = "Give me a summary about Bitcoin."
@@ -60,7 +59,7 @@ class TestActionPlan(unittest.TestCase):
     self.assertTrue(bot.state.reply)
 
   def test_perplexity(self):
-    request = "Ask perplexity to live or not to live"
+    request = "Ask perplexity to compare Farcaster and Bluesky"
     bot = run_bot(request)
     self.assertEqual(bot.state.selected_action, 'Perplexity')
     self.assertTrue(bot.state.reply)

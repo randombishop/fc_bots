@@ -27,7 +27,6 @@ Your task is to decide if the prepared reply is good enough to be posted.
 INSTRUCTIONS:
 If it's a valid reply that makes sense, set good_enough to true.
 If the potential reply sounds good to you, set good_enough to true.
-If the reply is consistent with your bio, lore or style, set good_enough to true.
 If the reply is funny, set good_enough to true.
 If the reply is somehow relevant to the conversation, set good_enough to true.
 If it doesn't make sense, set good_enough to false.
@@ -59,4 +58,8 @@ class Reply(IThinkStep):
     self.state.reply = read_boolean(result, key='good_enough')
     print('<---------------------------- Reply Validation ---------------------------->')
     print(prompt)
+    #print('---------------------------------------------------------------------------')
+    #print(instructions)
+    #print('---------------------------------------------------------------------------')
+    #print(result)
     print(f"<---------------------------- state.reply = {self.state.reply} ---------------------------->")
