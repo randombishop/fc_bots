@@ -70,6 +70,7 @@ class BotState:
     self.about_context = ''
     self.posts_map = {}
     # 5. Execute actions
+    self.cost = 0
     self.action_params = None
     self.casts = []
     # 6. Think

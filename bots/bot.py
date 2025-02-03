@@ -6,6 +6,7 @@ from bots.prompts.action_plan import select_action_task, select_action_format, s
 from bots.utils.llms import call_llm
 from bots.think.like import Like
 from bots.think.reply import Reply
+from bots.data.app import get_bot_character
 
 
 class Bot:
@@ -61,6 +62,7 @@ class Bot:
     action = Action(self.state)
     action.parse()
     action.execute()
+    self.state.cost += action.get_cost()
     
   def think(self):
     # Decide if we should like the post
@@ -81,7 +83,16 @@ class Bot:
     response = {
       'like': self.state.like,
       'reply': self.state.reply,
-      'casts': self.state.casts
+      'casts': self.state.casts,
+      'cost': self.state.cost
     }
     return response
   
+
+def generate_bot_response(bot_id, request, fid_origin=None):
+  character = get_bot_character(bot_id)
+  if character is None:
+    raise Exception(f"Bot {bot_id} not found")
+  bot = Bot(character)
+  response = bot.respond(request=request, fid_origin=fid_origin)
+  return bot, response
