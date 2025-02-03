@@ -40,7 +40,8 @@ class MoreLikeThis(IActionStep):
     self.state.action_params = {'text': text}
 
   def execute(self):
-    similar = get_more_like_this(self.state.action_params['text'], limit=3)
+    exclude_hash = self.state.attachment_hash if self.state.attachment_hash is not None else self.state.parent_hash
+    similar = get_more_like_this(self.state.action_params['text'], exclude_hash=exclude_hash, limit=3)
     if len(similar) == 0:
       raise Exception("No similar posts found.")
     data = similar.to_dict(orient='records')

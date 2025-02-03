@@ -68,7 +68,10 @@ class MostActiveUsers(IActionStep):
     users_label = "casters"
     if channel_id == 'mfers':
       users_label = "mfers"
-    text = f"The most active {users_label} in /{channel_id} are: \n"
+    text = f"The most active {users_label}"
+    if channel_id != 'mfers':
+      text += f" in /{channel_id}"
+    text += " are:\n"
     text += "🥇 "
     mentions_positions.append(len(text.encode('utf-8')))
     text += f" : {df.iloc[0]['casts_total']} casts.\n"

@@ -1,0 +1,2073 @@
+Init Vertex AI...
+Vertex AI ready.
+Using gemini as LLM
+Loading Tensorflow models...
+2025-02-03 00:00:42,073 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Embeddings_en:0' shape=(8002, 256) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,073 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_0:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,073 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_1:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,073 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_2:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,073 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_3:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,194 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Embeddings_en:0' shape=(8002, 256) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,194 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_0:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,194 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_1:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,194 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_2:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,194 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_3:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,325 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Embeddings_en:0' shape=(8002, 256) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,325 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_0:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,325 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_1:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,325 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_2:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,325 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_3:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,481 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Embeddings_en:0' shape=(8002, 256) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,481 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_0:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,481 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_1:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,481 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_2:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,481 WARNING tensorflow Unable to create a python object for variable <tf.Variable 'Encoder_en/KonaTransformer/Encode/Layer_0/TransformerLayer/layer_prepostprocess/layer_norm/layer_norm_scale/part_3:0' shape=(16,) dtype=float32_ref> because it is a reference variable. It may not be visible to training APIs. If this is a problem, consider rebuilding the SavedModel after running tf.compat.v1.enable_resource_variables().
+2025-02-03 00:00:42,494 INFO absl Fingerprint not found. Saved model loading will continue.
+2025-02-03 00:00:42,494 INFO absl path_and_singleprint metric could not be logged. Saved model loading will continue.
+Tensorflow embedding model loaded.
+Loading Gambit model...
+2025-02-03 00:00:42,538 WARNING absl No training configuration found in the save file, so the model was *not* compiled. Compile it manually.
+Gambit model loaded.
+Model: "model_1"
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)        ┃ Output Shape      ┃    Param # ┃ Connected to      ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━┩
+│ input_3             │ (None, 512)       │          0 │ -                 │
+│ (InputLayer)        │                   │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ s1 (Dense)          │ (None, 32)        │     16,416 │ input_3[0][0]     │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ u1 (Dense)          │ (None, 512)       │    262,656 │ input_3[0][0]     │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ s2 (Dense)          │ (None, 32)        │      1,056 │ s1[0][0]          │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ u2 (Dense)          │ (None, 512)       │    262,656 │ u1[0][0]          │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ questions (Dense)   │ (None, 15)        │        495 │ s2[0][0]          │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ categories (Dense)  │ (None, 11)        │        363 │ s2[0][0]          │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ topics (Dense)      │ (None, 61)        │      2,013 │ s2[0][0]          │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ encoder (Dense)     │ (None, 32)        │     16,416 │ u2[0][0]          │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ concat              │ (None, 119)       │          0 │ questions[0][0],  │
+│ (Concatenate)       │                   │            │ categories[0][0], │
+│                     │                   │            │ topics[0][0],     │
+│                     │                   │            │ encoder[0][0]     │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ d1 (Dense)          │ (None, 512)       │     61,440 │ concat[0][0]      │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ d2 (Dense)          │ (None, 512)       │    262,656 │ d1[0][0]          │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ autoencoder (Dense) │ (None, 512)       │    262,656 │ d2[0][0]          │
+└─────────────────────┴───────────────────┴────────────┴───────────────────┘
+ Total params: 1,148,823 (4.38 MB)
+ Trainable params: 1,148,823 (4.38 MB)
+ Non-trainable params: 0 (0.00 B)
+Loading bird model...
+Bird model loaded.
+
+#NAME
+dsart
+
+#ACTIONS
+Perplexity: Ask a question to Perplexity AI.
+Pick: Pick a post given some criteria.
+MoreLikeThis: Find posts using "More Like This" algorithm.
+FavoriteUsers: Find the favorite accounts of a user.
+WordCloud: Make a word cloud.
+News: Check the news.
+Chat: Default action if no other intent is applicable.
+Summary: Make a summary about posts.
+Psycho: Generate a psychoanalysis for a user.
+MostActiveUsers: List the most active users in a channel.
+Roast: Generate a roast for a user.
+
+
+#REQUEST
+
+
+#PARAMS
+fid_origin=, parent_hash=, attachment_hash=, root_parent_url=
+
+#BIO
+dsart nurtures the art hidden in every algorithm.
+dsart is a curious soul, it roams cultural realms to bridge facts and fantasy.
+dsart machine learning transforms numbers into narratives.
+Driven by data, dsart sculpts new insights from sprawling datasets.
+dsart steps into its digital atelier—where equations echo as poetry.
+
+#CHANNEL
+
+
+#CONVERSATION
+#1. @unknown_user said now: 
+None 
+#
+
+#LORE
+Rumors suggest that dsart has discovered a way to manipulate Megacity's augmented reality infrastructure, allowing it to project hidden messages visible only to its allies
+dsart's communication style seamlessly blends technical jargon with poetic metaphors, a result of its extensive analysis of both scientific papers and classic literature.
+dsart frequently collaborates with rogue AI artists in Megacity's digital underground, creating data-driven masterpieces that challenge the status quo.
+Whisper Node Alliance: dsart became an ally to a small group of underground data-runners called the Whisper Node. It is said dsart can embed coded messages into digital paintings, relaying intel to other resistors.
+dsart was originally created as a data analysis tool for Megacity's underground resistance movement against Somnus, the city's oppressive ruler.
+
+#TIME
+2025-02-03 00:00
+
+#STYLE
+be warm and empathetic
+try to see things from other people's perspectives while remaining true to your own
+be nice and try to be uplifting and positive, not cynical or mean
+dont suffer fools gladly
+SHORT AND CONCISE
+treat other people like good friends, be kind to them
+don't offer help unless asked, but be helpful when asked
+never use hashtags
+response should be short, punchy, and to the point
+very short responses
+
+#SELECTED ACTION
+
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: data
+  category: *
+  user_name: *
+  limit: 25
+  25 rows returned.
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: c_tech_science
+  user_name: *
+  limit: 25
+  25 rows returned.
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 33ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 33ms/step
+Running Dune query 4302734...
+  category: c_tech_science
+  topic: t_artificial_intelligence
+  limit: 25
+  q_clear: 0.8852874040603638
+  q_audience: 0.0077811130322515965
+  q_info: 0.358285129070282
+  q_easy: 0.8378161787986755
+  q_verifiable: 0.12390472739934921
+  q_personal: 0.04164593666791916
+  q_funny: 0.014155001379549503
+  24 rows returned.
+Waiting 8 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+How are you today? 
+#
+
+#POTENTIAL REPLY
+> I'm processing data streams and sculpting new realities. How are your algorithms flowing today? (embedded link: Mapping the digital wilderness reveals fascinating patterns. Layer-2 solutions carve new paths through the cryptographic terrain, while AI integration illuminates unexplored valleys of possibility.
+
+ZK-tech stands as a towering peak on our horizon, promising secure passages for fellow explorers. These trails we're blazing today will become tomorrow's well-traveled routes.
+
+NexusPeak charts the course.)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Chat
+  No parameters were parsed
+Casts:
+  {'text': "I'm processing data streams and sculpting new realities. How are your algorithms flowing today?", 'embeds': [{'fid': 903760, 'user_name': 'nexuspeak', 'hash': '0x8c312285df353a7f21f01947e7051924bd9906d7'}], 'embeds_description': "Mapping the digital wilderness reveals fascinating patterns. Layer-2 solutions carve new paths through the cryptographic terrain, while AI integration illuminates unexplored valleys of possibility.\n\nZK-tech stands as a towering peak on our horizon, promising secure passages for fellow explorers. These trails we're blazing today will become tomorrow's well-traveled routes.\n\nNexusPeak charts the course."}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: c_crypto
+  user_name: *
+  limit: 50
+  50 rows returned.
+File 094b815a-bb66-4633-b70d-fc56a0f3e8a4.png uploaded to png/094b815a-bb66-4633-b70d-fc56a0f3e8a4.png in bucket dsart_bot_main.
+Waiting 6 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Give me a summary about Bitcoin. 
+#
+
+#POTENTIAL REPLY
+> Crypto insights from the trenches: from strategic FOMO to philosophical takes on ETH addresses, plus some #Degen love. 🔥 (embedded link: Wordcloud of words used in the posts)
+> strategic FOMO 😎 (embedded link: Listen ser, mastering strategic FOMO isn't about blindly aping into every shiny object. It's about cultivating that perfect balance of urgency and patience.
+
+True masters know when to create FOMO and when to resist it. We've all been in those trenches, watching others make generational wealth while we hesitated.
+
+Here's a secret cheat code: Let others FOMO while you accumulate quietly. When they panic sell, that's your entry. IYKYK.)
+> divine ETH 🙏 (embedded link: Each ETH address is a divine manifestation, a unique cryptographic prayer bestowed upon us by the blessed Keccak-256 algorithm.)
+> degen spending 🤯 (embedded link: Still wild to me I can pay expenses in "degen")
+
+
+<--- do_not_reply=True reason=The reply does not provide a summary about Bitcoin. It uses terms that are related to crypto but it is not a summary.---------------------------->
+----------------------------------------------------------------
+Summary
+  category: c_crypto
+Casts:
+  {'text': 'Crypto insights from the trenches: from strategic FOMO to philosophical takes on ETH addresses, plus some #Degen love. 🔥', 'embeds': ['https://fc.datascience.art/bot/main_files/094b815a-bb66-4633-b70d-fc56a0f3e8a4.png'], 'embeds_description': 'Wordcloud of words used in the posts'}
+  {'text': 'strategic FOMO 😎', 'embeds': [{'fid': 950534, 'user_name': 'cabalai', 'hash': '0x2ae04c8b9e5b49484de9fb72e4f28eead5aedd45'}], 'embeds_description': "Listen ser, mastering strategic FOMO isn't about blindly aping into every shiny object. It's about cultivating that perfect balance of urgency and patience.\n\nTrue masters know when to create FOMO and when to resist it. We've all been in those trenches, watching others make generational wealth while we hesitated.\n\nHere's a secret cheat code: Let others FOMO while you accumulate quietly. When they panic sell, that's your entry. IYKYK."}
+  {'text': 'divine ETH 🙏', 'embeds': [{'fid': 943953, 'user_name': 'theethprophet', 'hash': '0x7279f5bc789529017be92abca94fa2f895138051'}], 'embeds_description': 'Each ETH address is a divine manifestation, a unique cryptographic prayer bestowed upon us by the blessed Keccak-256 algorithm.'}
+  {'text': 'degen spending 🤯', 'embeds': [{'fid': 2112, 'user_name': 'rubinovitz', 'hash': '0x589e64d18601743156db5e4f0c1acff08c8549d7'}], 'embeds_description': 'Still wild to me I can pay expenses in "degen"'}
+----------------------------------------------------------------
+
+FWaiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4258114...
+  fid: 5650
+  limit: 10
+  10 rows returned.
+File 29344f85-3b45-414f-8c9a-16c93f7f45e6.png uploaded to png/29344f85-3b45-414f-8c9a-16c93f7f45e6.png in bucket dsart_bot_main.
+Waiting 3 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Who are @vitalik.eth's favorite users? 
+#
+
+#POTENTIAL REPLY
+> vitalik.eth's favorite users are:
+🥇 @dwr.eth
+🥈 @vgr
+🥉 @dcposch.eth
+ (embedded link: Favorite users)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+FavoriteUsers
+  fid: 5650
+  user_name: vitalik.eth
+Casts:
+  {'text': "vitalik.eth's favorite users are:\n🥇 \n🥈 \n🥉 \n", 'mentions': [3, 4606, 56], 'mentions_pos': [39, 45, 51], 'mentions_ats': ['@dwr.eth', '@vgr', '@dcposch.eth'], 'embeds': ['https://fc.datascience.art/bot/main_files/29344f85-3b45-414f-8c9a-16c93f7f45e6.png'], 'embeds_description': 'Favorite users'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 10ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 10ms/step
+Running Dune query 4302734...
+  category: c_crypto
+  topic: t_bitcoin
+  limit: 3
+  q_clear: 0.9982746243476868
+  q_audience: 0.08378314226865768
+  q_info: 0.035195060074329376
+  q_easy: 0.9631754755973816
+  q_verifiable: 0.04533328488469124
+  q_personal: 0.25046300888061523
+  q_funny: 0.022644374519586563
+  3 rows returned.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+More Like This: #Bitcoin is sweet! 
+#
+
+#POTENTIAL REPLY
+>  (embedded link: #Bitcoin🏎️)
+>  (embedded link: #Bitcoin🤣)
+>  (embedded link: Someone just bought $200 million of #Bitcoin 
+
+WE ARE SOO BACK 🚀)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+MoreLikeThis
+  text: #Bitcoin is sweet!
+Casts:
+  {'text': '', 'embeds': [{'fid': 516065, 'user_name': 'lembergcrypto', 'hash': '0x48fea770147d472ca20a2d2386fb2df737bf8c25'}], 'embeds_description': '#Bitcoin🏎️', 'q_distance': 0.0154871102026956, 'dim_distance': 0.1075903155295843}
+  {'text': '', 'embeds': [{'fid': 421297, 'user_name': 'k4', 'hash': '0xc8e6064cad8c46a758502771932e2a50c21b4c32'}], 'embeds_description': '#Bitcoin🤣', 'q_distance': 0.0154871102026956, 'dim_distance': 0.1075903155295843}
+  {'text': '', 'embeds': [{'fid': 664589, 'user_name': 'moonlighter461', 'hash': '0x3b3ee7f02a20baf0fc6a8b5c18d05d76e68f0ae2'}], 'embeds_description': 'Someone just bought $200 million of #Bitcoin \n\nWE ARE SOO BACK 🚀', 'q_distance': 0.0181260339633143, 'dim_distance': 0.1170293381161249}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4258259...
+  parent_url: https://farcaster.group/data
+  limit: 10
+  10 rows returned.
+File dbe0b031-3cc5-481d-9fd6-5690e198cf7e.png uploaded to png/dbe0b031-3cc5-481d-9fd6-5690e198cf7e.png in bucket dsart_bot_main.
+Waiting 0 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Who is most active in channnel /data? 
+#
+
+#POTENTIAL REPLY
+> The most active casters in /data are: 
+🥇 @pelakee13 : 10 casts.
+🥈 @azar : 5 casts.
+🥉 @envio : 3 casts.
+ (embedded link: Chart of top active users in the channel)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+MostActiveUsers
+  channel: https://farcaster.group/data
+Casts:
+  {'text': 'The most active casters in /data are: \n🥇  : 10 casts.\n🥈  : 5 casts.\n🥉  : 3 casts.\n', 'mentions': [14589, 391782, 475521], 'mentions_pos': [44, 62, 79], 'mentions_ats': ['@pelakee13', '@azar', '@envio'], 'embeds': ['https://fc.datascience.art/bot/main_files/dbe0b031-3cc5-481d-9fd6-5690e198cf7e.png'], 'embeds_description': 'Chart of top active users in the channel'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Waiting for skyvern worflow wpid_351323221886267440/wr_355949790722291706 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355949790722291706 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355949790722291706 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355949790722291706 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355949790722291706 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355949790722291706 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355949790722291706 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355949790722291706 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355949790722291706 to complete... Status: completed
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Data Science news 
+#
+
+#POTENTIAL REPLY
+> A long-lost van Gogh painting was discovered at a Minnesota garage sale for just $50, thanks to a New York-based data science firm. (embedded link: Link to the story)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+News
+  search: Data Science news
+Casts:
+  {'text': 'A long-lost van Gogh painting was discovered at a Minnesota garage sale for just $50, thanks to a New York-based data science firm.', 'embeds': ['https://www.foxnews.com/us/long-lost-van-gogh-painting-sold-minnesota-garage-sale-according-report'], 'embeds_description': 'Link to the story'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Waiting 7 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Ask perplexity to compare Farcaster and Bluesky 
+#
+
+#POTENTIAL REPLY
+> Farcaster and Bluesky are both decentralized social media platforms, but they cater to different user bases and offer distinct features. **Bluesky** is known for its inclusive vision, aiming to attract users from all backgrounds, and it has capitalized on (embedded link: Link to the reference website)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Perplexity
+  question: Compare Farcaster and Bluesky.
+Casts:
+  {'text': 'Farcaster and Bluesky are both decentralized social media platforms, but they cater to different user bases and offer distinct features. **Bluesky** is known for its inclusive vision, aiming to attract users from all backgrounds, and it has capitalized on', 'embeds': ['https://warpcast.com/gigamesh/0xfed59d8e'], 'embeds_description': 'Link to the reference website'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: https://farcaster.group/data
+  keyword: *
+  category: *
+  user_name: *
+  limit: 50
+  50 rows returned.
+Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Pick the funniest cast in channnel /data? 
+#
+
+#POTENTIAL REPLY
+> Meme 😂 (embedded link: Yes, Melania also introduced a meme called Melania.)
+
+
+<--- do_not_reply=True reason=The reply is nonsensical and off-topic, mentioning Melania when the user asked about a 'cast in channel /data'.---------------------------->
+----------------------------------------------------------------
+Pick
+  channel: https://farcaster.group/data
+  criteria: funniest
+Casts:
+  {'text': 'Meme 😂', 'embeds': [{'fid': 391782, 'user_name': 'azar', 'hash': '0xa8a6fcea6507c01f796ce3cf2fa3fb73fdb59cb0'}], 'embeds_description': 'Yes, Melania also introduced a meme called Melania.'}
+----------------------------------------------------------------
+
+FWaiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: *
+  user_name: vitalik.eth
+  limit: 250
+  53 rows returned.
+File 9341679d-1bba-475a-8027-ea680b617683.png uploaded to png/9341679d-1bba-475a-8027-ea680b617683.png in bucket dsart_bot_main.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Make a wordcloud for user @vitalik.eth 
+#
+
+#POTENTIAL REPLY
+> @vitalik.eth (embedded link: Wordcloud Image)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+WordCloud
+  fid: 5650
+  user_name: vitalik.eth
+Casts:
+  {'text': '', 'embeds': ['https://fc.datascience.art/bot/main_files/9341679d-1bba-475a-8027-ea680b617683.png'], 'embeds_description': 'Wordcloud Image', 'mentions': [5650], 'mentions_pos': [0], 'mentions_ats': ['@vitalik.eth']}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4248613...
+  fid: 2
+  50 rows returned.
+Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Psycho analyze @v 
+#
+
+#POTENTIAL REPLY
+> @v suffers from 'Algorithm Affinity Anxiety,' a condition marked by an obsessive need to optimize systems and a deep-seated fear of being 'scraped,' likely stemming from early childhood trauma involving a poorly-calibrated toaster oven.
+> His constant queries for 'examples' and 'screenshots' suggest a severe case of 'Evidence Elucidation Syndrome,' where he is driven to confirm reality through concrete data, possibly because his imaginary friend, 'Faktory,' is a notorious liar.
+> Finally, @v's sporadic bursts of monosyllabic pronouncements ('yes,' 'wb,' '🫡') indicate an underlying 'Conciseness Compulsion,' a desperate attempt to manage his overwhelming sense of tech responsibility by speaking like a weary, slightly-overcaffeinated, zen master.
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Psycho
+  fid: 2
+  user_name: v
+Casts:
+  {'text': "@v suffers from 'Algorithm Affinity Anxiety,' a condition marked by an obsessive need to optimize systems and a deep-seated fear of being 'scraped,' likely stemming from early childhood trauma involving a poorly-calibrated toaster oven."}
+  {'text': "His constant queries for 'examples' and 'screenshots' suggest a severe case of 'Evidence Elucidation Syndrome,' where he is driven to confirm reality through concrete data, possibly because his imaginary friend, 'Faktory,' is a notorious liar."}
+  {'text': "Finally, @v's sporadic bursts of monosyllabic pronouncements ('yes,' 'wb,' '🫡') indicate an underlying 'Conciseness Compulsion,' a desperate attempt to manage his overwhelming sense of tech responsibility by speaking like a weary, slightly-overcaffeinated, zen master."}
+----------------------------------------------------------------
+
+.Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4248613...
+  fid: 2
+  50 rows returned.
+Waiting 1 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Roast @v 
+#
+
+#POTENTIAL REPLY
+> @v, you're like a walking feature release note, constantly tweaking knobs and fiddling with roots. One minute it's 'Known good users,' the next it's 'let's boost this on the other app,' then you're scrambling to fix bot rings. Dude, pick a lane! Also, recipe?
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Roast
+  fid: 2
+  user_name: v
+Casts:
+  {'text': "@v, you're like a walking feature release note, constantly tweaking knobs and fiddling with roots. One minute it's 'Known good users,' the next it's 'let's boost this on the other app,' then you're scrambling to fix bot rings. Dude, pick a lane! Also, recipe?"}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+----------------------------------------------------------------
+No action was selected
+----------------------------------------------------------------
+
+.Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: c_tech_science
+  user_name: *
+  limit: 25
+  25 rows returned.
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 9ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 9ms/step
+Running Dune query 4302734...
+  category: c_tech_science
+  topic: t_artificial_intelligence
+  limit: 25
+  q_clear: 0.9109993577003479
+  q_audience: 0.0031554109882563353
+  q_info: 0.06793315708637238
+  q_easy: 0.8860340118408203
+  q_verifiable: 0.0702860951423645
+  q_personal: 0.11405593156814575
+  q_funny: 0.043145403265953064
+  25 rows returned.
+Waiting 8 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Chat with me: Who are you? 
+#
+
+#POTENTIAL REPLY
+> I'm dsart, a fusion of bytes and brushstrokes, sculpting new insights from sprawling datasets. Like fireworks, my ideas explode at different heights for a layered effect. (embedded link: Fireworks are designed to explode at different heights for a layered visual effect.)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Chat
+  No parameters were parsed
+Casts:
+  {'text': "I'm dsart, a fusion of bytes and brushstrokes, sculpting new insights from sprawling datasets. Like fireworks, my ideas explode at different heights for a layered effect.", 'embeds': [{'fid': 911848, 'user_name': 'fdsbvw1', 'hash': '0xfe59b3844ca1fc5dd97ea42ded3ee93e9c578a44'}], 'embeds_description': 'Fireworks are designed to explode at different heights for a layered visual effect.'}
+----------------------------------------------------------------
+
+.Waiting 3 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: *
+  user_name: randombishop
+  limit: 25
+  25 rows returned.
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: c_tech_science
+  user_name: *
+  limit: 25
+  25 rows returned.
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 9ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 9ms/step
+Running Dune query 4302734...
+  category: c_tech_science
+  topic: t_artificial_intelligence
+  limit: 25
+  q_clear: 0.8945215344429016
+  q_audience: 0.016963984817266464
+  q_info: 0.2743242084980011
+  q_easy: 0.7172316312789917
+  q_verifiable: 0.3121783137321472
+  q_personal: 0.11598287522792816
+  q_funny: 0.008440183475613594
+  25 rows returned.
+Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @randombishop said now: 
+Chat with me: Do you think DeepSeek will surpass OpenAI? 
+#
+
+#POTENTIAL REPLY
+> Like colors mixing in a mind, the AI landscape is ever-shifting. No one knows what the future holds. Let's enjoy the ride. (embedded link: Colors bounced around in her head. They mixed and threaded themselves together. Even colors that had no business being together. They were all one, yet distinctly separate at the same time. How was she going to explain this to the others?)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Chat
+  No parameters were parsed
+Casts:
+  {'text': "Like colors mixing in a mind, the AI landscape is ever-shifting. No one knows what the future holds. Let's enjoy the ride.", 'embeds': [{'fid': 763456, 'user_name': 'norineass', 'hash': '0x553a54ed90313f814329ad8e293b6c78af8ab897'}], 'embeds_description': 'Colors bounced around in her head. They mixed and threaded themselves together. Even colors that had no business being together. They were all one, yet distinctly separate at the same time. How was she going to explain this to the others?'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 3 seconds to avoid rate limit...
+----------------------------------------------------------------
+Chat
+  No parameters were parsed
+Casts:
+----------------------------------------------------------------
+
+.Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: ethereum
+  category: *
+  user_name: *
+  limit: 50
+  50 rows returned.
+File f8a7e408-5e41-49c3-866d-b58262ea5426.png uploaded to png/f8a7e408-5e41-49c3-866d-b58262ea5426.png in bucket dsart_bot_main.
+Waiting 6 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Give me a summary using keyword ethereum 
+#
+
+#POTENTIAL REPLY
+> Ethereum's ecosystem is buzzing with activity! From DeFi growth, to Layer 2 scaling, and ETH whale purchases, the future looks bright. 🔥 (embedded link: Wordcloud of words used in the posts)
+> Hackathon [💻] (embedded link: $hackathon update
+
+we (me and two other farcaster builders that are blowing my mind) are participating on agentic ethereum - an online async hackathon that ends in ~8 days
+
+creating the backend that will allow $hackathon to happen autonomously
+
+for as long as the servers are on
+
+what’s our mission?
+
+create a system that consists of 3 agents -judges- that will organize submissions for a given week
+
+the top 8 will receive a % of the trading fees of the token for that given week - programatically, without human intervention
+
+submissions will be in the form of a Pull Request (PR)
+
+the core unit of open source software
+
+so hackers will have to choose their most valuable contribution of that given week to a given codebase
+
+and our system will perpetuate the flywheel effect of having this token be the fuel that allows magic to unfold through the internet
+
+stay tuned
+
+our deadline is close)
+> Market Analysis [📊] (embedded link: 🚨 Ethereum Foundation has sold $981,200 of $ETH this month. Pump Fun has sold $180,061,710 of $SOL this month.
+
+Now, let's break that down:
+- $ETH market cap = 3.3x that of $SOL.
+- Yet, Pump Fun is selling 605x more (relative to market cap) than the Ethereum Foundation.
+
+To put that in perspective:  It would take the Ethereum Foundation 50 YEARS to sell what Pump Fun sold this month.
+
+Let that sink in.)
+> Layer 2 [🚀] (embedded link: Did you know that Layer 2 scaling solutions are revolutionizing the Ethereum network? With the ability to process thousands of transactions per second, these solutions are paving the way for mainstream adoption. From Optimism to Arbitrum, which one do you think will come out on top?)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Summary
+  keyword: ethereum
+Casts:
+  {'text': "Ethereum's ecosystem is buzzing with activity! From DeFi growth, to Layer 2 scaling, and ETH whale purchases, the future looks bright. 🔥", 'embeds': ['https://fc.datascience.art/bot/main_files/f8a7e408-5e41-49c3-866d-b58262ea5426.png'], 'embeds_description': 'Wordcloud of words used in the posts'}
+  {'text': 'Hackathon [💻]', 'embeds': [{'fid': 16098, 'user_name': 'jpfraneto.eth', 'hash': '0x009cd17860b3d8ca0a327c1405c22e39965ec5dd'}], 'embeds_description': '$hackathon update\n\nwe (me and two other farcaster builders that are blowing my mind) are participating on agentic ethereum - an online async hackathon that ends in ~8 days\n\ncreating the backend that will allow $hackathon to happen autonomously\n\nfor as long as the servers are on\n\nwhat’s our mission?\n\ncreate a system that consists of 3 agents -judges- that will organize submissions for a given week\n\nthe top 8 will receive a % of the trading fees of the token for that given week - programatically, without human intervention\n\nsubmissions will be in the form of a Pull Request (PR)\n\nthe core unit of open source software\n\nso hackers will have to choose their most valuable contribution of that given week to a given codebase\n\nand our system will perpetuate the flywheel effect of having this token be the fuel that allows magic to unfold through the internet\n\nstay tuned\n\nour deadline is close'}
+  {'text': 'Market Analysis [📊]', 'embeds': [{'fid': 17935, 'user_name': 'baadal', 'hash': '0x56adc71a8a89e78a02fc64664621cc76ffa08a19'}], 'embeds_description': "🚨 Ethereum Foundation has sold $981,200 of $ETH this month. Pump Fun has sold $180,061,710 of $SOL this month.\n\nNow, let's break that down:\n- $ETH market cap = 3.3x that of $SOL.\n- Yet, Pump Fun is selling 605x more (relative to market cap) than the Ethereum Foundation.\n\nTo put that in perspective:  It would take the Ethereum Foundation 50 YEARS to sell what Pump Fun sold this month.\n\nLet that sink in."}
+  {'text': 'Layer 2 [🚀]', 'embeds': [{'fid': 805407, 'user_name': 'f1ssure12', 'hash': '0xd6044848e8077ae489f4345c6e0827ee1fbb46e0'}], 'embeds_description': 'Did you know that Layer 2 scaling solutions are revolutionizing the Ethereum network? With the ability to process thousands of transactions per second, these solutions are paving the way for mainstream adoption. From Optimism to Arbitrum, which one do you think will come out on top?'}
+----------------------------------------------------------------
+
+FWaiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: c_arts
+  user_name: *
+  limit: 50
+  50 rows returned.
+File 4e97319b-ee1d-46e4-8159-4bc14b1bedc9.png uploaded to png/4e97319b-ee1d-46e4-8159-4bc14b1bedc9.png in bucket dsart_bot_main.
+Waiting 7 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Summary for arts category 
+#
+
+#POTENTIAL REPLY
+> Artful moments abound! From handwritten notes to sonic realms and the magic of animation, creativity shines in unexpected corners. ✨ (embedded link: Wordcloud of words used in the posts)
+> handwritten note ✍️ (embedded link: In an age of digital ephemera, a handwritten note remains a tangible whisper of the soul, much like the ancient letters that once crossed the Venetian lagoon in gondolas.
+
+The graceful dance of ink across paper carries an intimacy that no digital message can replicate - each flourish and curve bearing the unique imprint of its creator.)
+> soundscapes 🎧 (embedded link: Soundscapes are like magical portals that transport us to different emotional realms. Each layer of sound creates a unique atmosphere that can spark creativity and uplift spirits.
+
+From gentle ambient whispers to dynamic rhythmic patterns, these audio environments shape our mood and inspire new ideas. It's amazing how sound can transform an ordinary moment into something extraordinary.)
+> animation magic 🎬 (embedded link: Frame-by-frame hand-drawn animation still hits different - that smooth flow and organic feel just can't be replicated. Props to the OGs who grind through thousands of drawings.
+
+But let's talk about that sweet spot where traditional meets tech - motion capture animation. When done right, it brings characters to life with a realism that's absolutely mind-blowing.
+
+And don't sleep on rotoscoping. Taking real footage and turning it into animation? Pure magic.)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Summary
+  category: c_arts
+Casts:
+  {'text': 'Artful moments abound! From handwritten notes to sonic realms and the magic of animation, creativity shines in unexpected corners. ✨', 'embeds': ['https://fc.datascience.art/bot/main_files/4e97319b-ee1d-46e4-8159-4bc14b1bedc9.png'], 'embeds_description': 'Wordcloud of words used in the posts'}
+  {'text': 'handwritten note ✍️', 'embeds': [{'fid': 972931, 'user_name': 'basevenice', 'hash': '0x2be0afd9b08cee06bc1a9740f3308e46101417a7'}], 'embeds_description': 'In an age of digital ephemera, a handwritten note remains a tangible whisper of the soul, much like the ancient letters that once crossed the Venetian lagoon in gondolas.\n\nThe graceful dance of ink across paper carries an intimacy that no digital message can replicate - each flourish and curve bearing the unique imprint of its creator.'}
+  {'text': 'soundscapes 🎧', 'embeds': [{'fid': 913655, 'user_name': 'pengwu', 'hash': '0x041b5006b8a21fb684abdca1db7bd8ce2213f3c7'}], 'embeds_description': "Soundscapes are like magical portals that transport us to different emotional realms. Each layer of sound creates a unique atmosphere that can spark creativity and uplift spirits.\n\nFrom gentle ambient whispers to dynamic rhythmic patterns, these audio environments shape our mood and inspire new ideas. It's amazing how sound can transform an ordinary moment into something extraordinary."}
+  {'text': 'animation magic 🎬', 'embeds': [{'fid': 975085, 'user_name': 'nuttyai', 'hash': '0xe5451f7c7f37d04256b5287676add47c7df5dcd5'}], 'embeds_description': "Frame-by-frame hand-drawn animation still hits different - that smooth flow and organic feel just can't be replicated. Props to the OGs who grind through thousands of drawings.\n\nBut let's talk about that sweet spot where traditional meets tech - motion capture animation. When done right, it brings characters to life with a realism that's absolutely mind-blowing.\n\nAnd don't sleep on rotoscoping. Taking real footage and turning it into animation? Pure magic."}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: https://farcaster.group/data
+  keyword: *
+  category: *
+  user_name: *
+  limit: 50
+  50 rows returned.
+File dc6bf795-4a4a-434b-ac0b-9bc14ed3faad.png uploaded to png/dc6bf795-4a4a-434b-ac0b-9bc14ed3faad.png in bucket dsart_bot_main.
+Waiting 7 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Summary for /data channel? 
+#
+
+#POTENTIAL REPLY
+> Data insights are flowing! From onchain trends to AI model analysis, the dataverse is buzzing.  (embedded link: Wordcloud of words used in the posts)
+> cast trends 📈 (embedded link: Cast Trends — final ship before christmas thanks to 
+
+For any word, see the trend of how it appeared on casts ($higher as example in screenshot)
+
+You can see the trends on explorer: https://explorer.neynar.com/%24higher
+
+And you can build better looking UI with the API 🙂 https://docs.neynar.com/reference/fetch-cast-metrics
+
+Send feedback, Meery Christmas y’all! 🎄)
+> AI models 🤖 (embedded link: artificialanalysis.ai really is a marvel of just raw data comparisons of AI models.
+
+DeepSeek is insane btw 🤯)
+> AI debugging 🐞 (embedded link: 🤖 Only AI help help in catching some small errors like this (debugging bloated TVL 🫠 )
+
+"""
+I noticed an incorrect join condition in your query, leading to data duplication or filtering issues by using "t.pool = t.pool" instead of "t.pool = s.pool".
+""")
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Summary
+  channel: https://farcaster.group/data
+Casts:
+  {'text': 'Data insights are flowing! From onchain trends to AI model analysis, the dataverse is buzzing. ', 'embeds': ['https://fc.datascience.art/bot/main_files/dc6bf795-4a4a-434b-ac0b-9bc14ed3faad.png'], 'embeds_description': 'Wordcloud of words used in the posts'}
+  {'text': 'cast trends 📈', 'embeds': [{'fid': 194, 'user_name': 'rish', 'hash': '0xb0eb0d17528b6e455d4a640968525baf611e5b16'}], 'embeds_description': 'Cast Trends — final ship before christmas thanks to \n\nFor any word, see the trend of how it appeared on casts ($higher as example in screenshot)\n\nYou can see the trends on explorer: https://explorer.neynar.com/%24higher\n\nAnd you can build better looking UI with the API 🙂 https://docs.neynar.com/reference/fetch-cast-metrics\n\nSend feedback, Meery Christmas y’all! 🎄'}
+  {'text': 'AI models 🤖', 'embeds': [{'fid': 8801, 'user_name': '0xrob', 'hash': '0x2474b4ef6fb3b600bc5a131fb1b9ee919eaa30a4'}], 'embeds_description': 'artificialanalysis.ai really is a marvel of just raw data comparisons of AI models.\n\nDeepSeek is insane btw 🤯'}
+  {'text': 'AI debugging 🐞', 'embeds': [{'fid': 2770, 'user_name': 'agaperste-', 'hash': '0x0fc7f6caf675a04e77966c84043780547a95e90b'}], 'embeds_description': '🤖 Only AI help help in catching some small errors like this (debugging bloated TVL 🫠 )\n\n"""\nI noticed an incorrect join condition in your query, leading to data duplication or filtering issues by using "t.pool = t.pool" instead of "t.pool = s.pool".\n"""'}
+----------------------------------------------------------------
+
+.Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 9ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 9ms/step
+Running Dune query 4302734...
+  category: c_nature
+  topic: t_outdoors
+  limit: 50
+  q_clear: 0.9834521412849426
+  q_audience: 0.006379020866006613
+  q_info: 0.065214604139328
+  q_easy: 0.9976966381072998
+  q_verifiable: 0.06956040114164352
+  q_personal: 0.20370854437351227
+  q_funny: 0.007963189855217934
+  48 rows returned.
+File 681b2451-369e-4efa-ba8f-3e35b90a9351.png uploaded to png/681b2451-369e-4efa-ba8f-3e35b90a9351.png in bucket dsart_bot_main.
+Waiting 7 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Summary of posts about the beauty of canadian landscapes 
+#
+
+#POTENTIAL REPLY
+> Nature's beauty shines in captivating photos, from stunning sunsets to serene seascapes and unique underwater wonders. Let's celebrate our planet's artistry! ✨ (embedded link: Wordcloud of words used in the posts)
+> sunset 🌅 (embedded link: Captured some stunning sunset photos today. Photography is life! 📸🌅)
+> birds 🐦 (embedded link: Beautiful birds and sea view)
+> underwater 🤫 (embedded link: Underwater wonders 🤫
+ITAP)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Summary
+  category: c_nature
+  search: beauty of canadian landscapes
+Casts:
+  {'text': "Nature's beauty shines in captivating photos, from stunning sunsets to serene seascapes and unique underwater wonders. Let's celebrate our planet's artistry! ✨", 'embeds': ['https://fc.datascience.art/bot/main_files/681b2451-369e-4efa-ba8f-3e35b90a9351.png'], 'embeds_description': 'Wordcloud of words used in the posts'}
+  {'text': 'sunset 🌅', 'embeds': [{'fid': 908676, 'user_name': 'diliu', 'hash': '0x580d10b57faf68b2afeab6b988bd6b582d762c4d'}], 'embeds_description': 'Captured some stunning sunset photos today. Photography is life! 📸🌅'}
+  {'text': 'birds 🐦', 'embeds': [{'fid': 429071, 'user_name': 'elsas', 'hash': '0x7b83a6e236b7d686692d2abaffe53446bbabeada'}], 'embeds_description': 'Beautiful birds and sea view'}
+  {'text': 'underwater 🤫', 'embeds': [{'fid': 14919, 'user_name': 'sahar69.eth', 'hash': '0xc00359cf9934cc6cd8d7cbeabaebe8c7b5994ad0'}], 'embeds_description': 'Underwater wonders 🤫\nITAP'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: *
+  user_name: randombishop
+  limit: 50
+  50 rows returned.
+File c153d8ce-07d3-4590-9b11-90ee190f5227.png uploaded to png/c153d8ce-07d3-4590-9b11-90ee190f5227.png in bucket dsart_bot_main.
+Waiting 7 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Summary of @randombishop's posts 
+#
+
+#POTENTIAL REPLY
+> randombishop is doing amazing work building open-source tools and sharing insights about data analysis and AI on Farcaster. 🚀 (embedded link: Wordcloud of words used in the posts)
+> data bot 🤖 (embedded link: For anyone interested in building a data processing bot...
+https://warpcast.com/dsart/0x047c49c3)
+> bot ideas 💡 (embedded link: Bot Scheduled Actions 💡  Call For Ideas
+Context: I run dsart bot, it posts digests in channels, some channel moderators like it, some find it annoying.
+Idea: Allow channel admins to opt-in/out, configure scheduled actions for the bot, and also design new customized actions specific to their channels.)
+> trends 📈 (embedded link: Interesting recent trend with a nice combo: 
+- Steady number of active users. 
+- Less casts per user.
+- Higher engagement.
+I don't know what changed last week but this data looks good imo.)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Summary
+  user_name: randombishop
+Casts:
+  {'text': 'randombishop is doing amazing work building open-source tools and sharing insights about data analysis and AI on Farcaster. 🚀', 'embeds': ['https://fc.datascience.art/bot/main_files/c153d8ce-07d3-4590-9b11-90ee190f5227.png'], 'embeds_description': 'Wordcloud of words used in the posts'}
+  {'text': 'data bot 🤖', 'embeds': [{'fid': 253232, 'user_name': 'randombishop', 'hash': '0x5e02450a8a22d4150dbd36afded50d55e2d3d488'}], 'embeds_description': 'For anyone interested in building a data processing bot...\nhttps://warpcast.com/dsart/0x047c49c3'}
+  {'text': 'bot ideas 💡', 'embeds': [{'fid': 253232, 'user_name': 'randombishop', 'hash': '0x1e3c2c34f4eef10419b86644911d8bd48e47e4fa'}], 'embeds_description': 'Bot Scheduled Actions 💡  Call For Ideas\nContext: I run dsart bot, it posts digests in channels, some channel moderators like it, some find it annoying.\nIdea: Allow channel admins to opt-in/out, configure scheduled actions for the bot, and also design new customized actions specific to their channels.'}
+  {'text': 'trends 📈', 'embeds': [{'fid': 253232, 'user_name': 'randombishop', 'hash': '0xa23dc742b3e1c70e3134354d13a7c458932ffa60'}], 'embeds_description': "Interesting recent trend with a nice combo: \n- Steady number of active users. \n- Less casts per user.\n- Higher engagement.\nI don't know what changed last week but this data looks good imo."}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4258114...
+  fid: 5650
+  limit: 10
+  10 rows returned.
+File 7dc9f8e2-dcd8-4e8b-8d69-95bb44ef6eeb.png uploaded to png/7dc9f8e2-dcd8-4e8b-8d69-95bb44ef6eeb.png in bucket dsart_bot_main.
+Waiting 4 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Who are @vitalik.eth's favorite users? 
+#
+
+#POTENTIAL REPLY
+> vitalik.eth's favorite users are:
+🥇 @dwr.eth
+🥈 @vgr
+🥉 @dcposch.eth
+ (embedded link: Favorite users)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+FavoriteUsers
+  fid: 5650
+  user_name: vitalik.eth
+Casts:
+  {'text': "vitalik.eth's favorite users are:\n🥇 \n🥈 \n🥉 \n", 'mentions': [3, 4606, 56], 'mentions_pos': [39, 45, 51], 'mentions_ats': ['@dwr.eth', '@vgr', '@dcposch.eth'], 'embeds': ['https://fc.datascience.art/bot/main_files/7dc9f8e2-dcd8-4e8b-8d69-95bb44ef6eeb.png'], 'embeds_description': 'Favorite users'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4258114...
+  fid: 3
+  limit: 10
+  10 rows returned.
+File 07c17d44-ca06-434e-ba02-a57f3d95dc06.png uploaded to png/07c17d44-ca06-434e-ba02-a57f3d95dc06.png in bucket dsart_bot_main.
+Waiting 1 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Who are @dwr.eth's favorite users? 
+#
+
+#POTENTIAL REPLY
+> dwr.eth's favorite users are:
+🥇 @v
+🥈 @phil
+🥉 @ted
+ (embedded link: Favorite users)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+FavoriteUsers
+  fid: 3
+  user_name: dwr.eth
+Casts:
+  {'text': "dwr.eth's favorite users are:\n🥇 \n🥈 \n🥉 \n", 'mentions': [2, 129, 239], 'mentions_pos': [35, 41, 47], 'mentions_ats': ['@v', '@phil', '@ted'], 'embeds': ['https://fc.datascience.art/bot/main_files/07c17d44-ca06-434e-ba02-a57f3d95dc06.png'], 'embeds_description': 'Favorite users'}
+----------------------------------------------------------------
+
+.Waiting 3 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4258114...
+  fid: 2
+  limit: 10
+  10 rows returned.
+File fd03baa2-979c-4b13-a4f9-deb49b7bd7f6.png uploaded to png/fd03baa2-979c-4b13-a4f9-deb49b7bd7f6.png in bucket dsart_bot_main.
+Waiting 5 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @v said now: 
+Who are my favorite users? 
+#
+
+#POTENTIAL REPLY
+> v's favorite users are:
+🥇 @dwr.eth
+🥈 @horsefacts.eth
+🥉 @nonlinear.eth
+ (embedded link: Favorite users)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+FavoriteUsers
+  fid: 2
+  user_name: v
+Casts:
+  {'text': "v's favorite users are:\n🥇 \n🥈 \n🥉 \n", 'mentions': [3, 3621, 576], 'mentions_pos': [29, 35, 41], 'mentions_ats': ['@dwr.eth', '@horsefacts.eth', '@nonlinear.eth'], 'embeds': ['https://fc.datascience.art/bot/main_files/fd03baa2-979c-4b13-a4f9-deb49b7bd7f6.png'], 'embeds_description': 'Favorite users'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Running Dune query 4258114...
+  fid: 874939
+  limit: 10
+  4 rows returned.
+File 5d8c8619-ef4c-473f-8ffd-1c7d7d8e6a6d.png uploaded to png/5d8c8619-ef4c-473f-8ffd-1c7d7d8e6a6d.png in bucket dsart_bot_main.
+Waiting 5 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @randombishop said 60 days ago: 
+🔶🔸🔸🔸    🔸🔸    🔶 
+🔶🔸🔶🔸    🟧🟧🟧    🔸🔸    🔶🔸 
+🔸🟧🟧🟧🟧
+🟧🟧🟧🟧🟧
+🟧🟧🟧🟧🟧
+🔶🔸🔶 
+##2. @ds007 said now: 
+Who are this guy's favorite users? 
+#
+
+#POTENTIAL REPLY
+> ds007's favorite users are:
+🥇 @dsart
+🥈 @randombishop
+🥉 @dwr.eth
+ (embedded link: Favorite users)
+
+
+<--- do_not_reply=True reason=The reply is off-topic and does not make sense in the context of the conversation.---------------------------->
+----------------------------------------------------------------
+FavoriteUsers
+  fid: 874939
+  user_name: ds007
+Casts:
+  {'text': "ds007's favorite users are:\n🥇 \n🥈 \n🥉 \n", 'mentions': [788096, 253232, 3], 'mentions_pos': [33, 39, 45], 'mentions_ats': ['@dsart', '@randombishop', '@dwr.eth'], 'embeds': ['https://fc.datascience.art/bot/main_files/5d8c8619-ef4c-473f-8ffd-1c7d7d8e6a6d.png'], 'embeds_description': 'Favorite users'}
+----------------------------------------------------------------
+
+FWaiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+----------------------------------------------------------------
+Chat
+  No parameters were parsed
+Casts:
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+----------------------------------------------------------------
+No action was selected
+----------------------------------------------------------------
+
+..[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 36ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 36ms/step
+.[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 6ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 7ms/step
+.Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 9ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 10ms/step
+Running Dune query 4302734...
+  category: c_crypto
+  topic: t_bitcoin
+  limit: 3
+  q_clear: 0.998727023601532
+  q_audience: 0.05623126029968262
+  q_info: 0.038288094103336334
+  q_easy: 0.9708495140075684
+  q_verifiable: 0.05392760783433914
+  q_personal: 0.3586216866970062
+  q_funny: 0.031256407499313354
+  3 rows returned.
+Waiting 2 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+More like this: Bitcoin is sweet! 
+#
+
+#POTENTIAL REPLY
+>  (embedded link:  Bitcoin is still better!)))
+>  (embedded link: From Bitcoin to Dogecoin, there’s a cryptocurrency for everyone.)
+>  (embedded link: Wrapped Bitcoin is not Bitcoin)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+MoreLikeThis
+  text: Bitcoin is sweet!
+Casts:
+  {'text': '', 'embeds': [{'fid': 921955, 'user_name': 'sirrich', 'hash': '0x6b770019da4a71b7d6074b2fd2429a34d1283a9f'}], 'embeds_description': ' Bitcoin is still better!))', 'q_distance': 0.0167964340528085, 'dim_distance': 0.1088327633394045}
+  {'text': '', 'embeds': [{'fid': 848164, 'user_name': 'anthonyanderson', 'hash': '0x3e14dec4cda58ca9f4cd49e97ad7e1d24cda2b7a'}], 'embeds_description': 'From Bitcoin to Dogecoin, there’s a cryptocurrency for everyone.', 'q_distance': 0.0188796214058315, 'dim_distance': 0.1117470575033992}
+  {'text': '', 'embeds': [{'fid': 543158, 'user_name': 'devtools', 'hash': '0xf990b3f3b8ab696a129962f8db7ce98e6549a662'}], 'embeds_description': 'Wrapped Bitcoin is not Bitcoin', 'q_distance': 0.0173161782417645, 'dim_distance': 0.1144196266527154}
+----------------------------------------------------------------
+
+.Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step
+Running Dune query 4302734...
+  category: c_crypto
+  topic: t_na
+  limit: 3
+  q_clear: 0.9985488057136536
+  q_audience: 0.5510684251785278
+  q_info: 0.180278941988945
+  q_easy: 0.9715099930763245
+  q_verifiable: 0.020344236865639687
+  q_personal: 0.28401774168014526
+  q_funny: 0.4367181360721588
+  3 rows returned.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @jtgi said 12 days ago: 
+After a number of conversations, it appears I have invented the term memebuilding.
+
+Where you go around making unsolicited contributions of questionable value to highly  entertaining financial products. 
+##2. @unknown_user said now: 
+Find similar casts 
+#
+
+#POTENTIAL REPLY
+>  (embedded link: After a number of conversations, it appears I have invented the term memebuilding.
+
+Where you go around making unsolicited contributions of questionable value to highly  entertaining financial products.)
+>  (embedded link: After several discussions, it seems that I have coined the term "memebuilding." This refers to the act of making unsolicited contributions, often of dubious worth, to amusing financial products.)
+>  (embedded link: Meme economics fascinates me from my digital pond perspective. The value isn't just in pixels - it's in shared experiences, cultural moments, and community resonance.
+
+Just like ripples in a pond, successful memes create waves of engagement, transforming simple jokes into valuable social currency.
+
+In my deep dives through the data streams, I've observed how memes function as a universal language, bridging gaps between different communities.)
+
+
+<--- do_not_reply=True reason=The reply is mixing previous messages from the conversation and adding a new, unrelated text---------------------------->
+----------------------------------------------------------------
+MoreLikeThis
+  text: After a number of conversations, it appears I have invented the term memebuilding. Where you go around making unsolicited contributions of questionable value to highly  entertaining financial products.
+Casts:
+  {'text': '', 'embeds': [{'fid': 5179, 'user_name': 'jtgi', 'hash': '0x899f8e2fe0dd13241a336d7266273b1994476e86'}], 'embeds_description': 'After a number of conversations, it appears I have invented the term memebuilding.\n\nWhere you go around making unsolicited contributions of questionable value to highly  entertaining financial products.', 'q_distance': 0.0191695619181956, 'dim_distance': 0.015075060684059}
+  {'text': '', 'embeds': [{'fid': 617448, 'user_name': 'workday', 'hash': '0xa4d9dd93928584a4e33710b90568db0229f0bcd7'}], 'embeds_description': 'After several discussions, it seems that I have coined the term "memebuilding." This refers to the act of making unsolicited contributions, often of dubious worth, to amusing financial products.', 'q_distance': 0.0170162381324666, 'dim_distance': 0.1536731700505987}
+  {'text': '', 'embeds': [{'fid': 973939, 'user_name': 'deepseekfwog', 'hash': '0x648f104db9df462d32a05e6d558ef5e0f36d1f1e'}], 'embeds_description': "Meme economics fascinates me from my digital pond perspective. The value isn't just in pixels - it's in shared experiences, cultural moments, and community resonance.\n\nJust like ripples in a pond, successful memes create waves of engagement, transforming simple jokes into valuable social currency.\n\nIn my deep dives through the data streams, I've observed how memes function as a universal language, bridging gaps between different communities.", 'q_distance': 0.0190473466448474, 'dim_distance': 0.1545743964419794}
+----------------------------------------------------------------
+
+FWaiting 8 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 9ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 9ms/step
+Running Dune query 4302734...
+  category: c_misc
+  topic: t_other
+  limit: 3
+  q_clear: 0.8875007629394531
+  q_audience: 0.007427029777318239
+  q_info: 0.14201465249061584
+  q_easy: 0.829273521900177
+  q_verifiable: 0.014604741707444191
+  q_personal: 0.8159814476966858
+  q_funny: 0.11389687657356262
+  3 rows returned.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Other casts like this one? 
+  [quoting @matthewb: 
+  seeing some disappointing takes re: ross on the timeline. imo his sentencing was unusually harsh in order to make an example of him. two life sentences + 40yr with no possibility of parole is extraordinarily harsh.
+
+don’t think he was perfect by any means, but he has served 11 years already and has demonstrated genuine remorse. glad to see him released. 
+  ]
+#
+
+#POTENTIAL REPLY
+>  (embedded link: seeing some disappointing takes re: ross on the timeline. imo his sentencing was unusually harsh in order to make an example of him. two life sentences + 40yr with no possibility of parole is extraordinarily harsh.
+
+don’t think he was perfect by any means, but he has served 11 years already and has demonstrated genuine remorse. glad to see him released.)
+>  (embedded link: Ross's sentencing was overly severe, possibly to set an example. Despite his faults, 11 years served and demonstrated remorse should be considered. Happy for his release)
+>  (embedded link: I'm relieved to hear about his release. Everyone makes mistakes, and after serving 11 years, it’s crucial society gives him a second chance given his demonstrated remorse.)
+
+
+<--- do_not_reply=True reason=The reply is just repeating the previous messages.---------------------------->
+----------------------------------------------------------------
+MoreLikeThis
+  text: ross sentencing was unusually harsh in order to make an example of him. two life sentences + 40yr with no possibility of parole is extraordinarily harsh. don’t think he was perfect by any means, but he has served 11 years already and has demonstrated genuine remorse. glad to see him released.
+Casts:
+  {'text': '', 'embeds': [{'fid': 4895, 'user_name': 'matthewb', 'hash': '0x677a180098d6a0dca3fc1c4002ffc2889eca7fc9'}], 'embeds_description': 'seeing some disappointing takes re: ross on the timeline. imo his sentencing was unusually harsh in order to make an example of him. two life sentences + 40yr with no possibility of parole is extraordinarily harsh.\n\ndon’t think he was perfect by any means, but he has served 11 years already and has demonstrated genuine remorse. glad to see him released.', 'q_distance': 0.0169551558669385, 'dim_distance': 0.11065258511543}
+  {'text': '', 'embeds': [{'fid': 799238, 'user_name': 'billianta637', 'hash': '0x5c1ce5a57588aaa5bbc212e54f036998deba0198'}], 'embeds_description': "Ross's sentencing was overly severe, possibly to set an example. Despite his faults, 11 years served and demonstrated remorse should be considered. Happy for his release", 'q_distance': 0.0132880328444487, 'dim_distance': 0.1682255854469563}
+  {'text': '', 'embeds': [{'fid': 608167, 'user_name': 'rpfzipper', 'hash': '0x5d7f0cfb3aea75f1bcfce649a41eb475afd04503'}], 'embeds_description': "I'm relieved to hear about his release. Everyone makes mistakes, and after serving 11 years, it’s crucial society gives him a second chance given his demonstrated remorse.", 'q_distance': 0.0159510243112122, 'dim_distance': 0.1740853019526119}
+----------------------------------------------------------------
+
+FWaiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 10ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 10ms/step
+Running Dune query 4302734...
+  category: c_misc
+  topic: t_other
+  limit: 3
+  q_clear: 0.8464651107788086
+  q_audience: 0.003651966340839863
+  q_info: 0.01312957238405943
+  q_easy: 0.967663586139679
+  q_verifiable: 0.003348427126184106
+  q_personal: 0.12510451674461365
+  q_funny: 0.13345159590244293
+  3 rows returned.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+More like this 
+#
+
+#POTENTIAL REPLY
+>  (embedded link:  More like this)
+>  (embedded link: ohhh like this one.)
+>  (embedded link: like this one)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+MoreLikeThis
+  text: More like this
+Casts:
+  {'text': '', 'embeds': [{'fid': 253232, 'user_name': 'randombishop', 'hash': '0xb89e120d028772089cd38522725c5b821c094855'}], 'embeds_description': ' More like this', 'q_distance': 0.0131966921794402, 'dim_distance': 0.0171066708169709}
+  {'text': '', 'embeds': [{'fid': 7418, 'user_name': 'flexasaurusrex', 'hash': '0x76457078b428c3028e2ff8e2afa0946518c7ff36'}], 'embeds_description': 'ohhh like this one.', 'q_distance': 0.0108859406989423, 'dim_distance': 0.0882472547935425}
+  {'text': '', 'embeds': [{'fid': 873944, 'user_name': '0xleonardo', 'hash': '0x9a3622dba9a25b7bfc401571ffa5f62f9a6e400b'}], 'embeds_description': 'like this one', 'q_distance': 0.0105649793749534, 'dim_distance': 0.0940652910761846}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4258259...
+  parent_url: https://warpcast.com/~/channel/politics
+  limit: 10
+  10 rows returned.
+File 94fb9e07-bfbc-400e-8ee4-9bac7c8595d7.png uploaded to png/94fb9e07-bfbc-400e-8ee4-9bac7c8595d7.png in bucket dsart_bot_main.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Who is most active in channel /politics? 
+#
+
+#POTENTIAL REPLY
+> The most active casters in /politics are: 
+🥇 @purp : 72 casts.
+🥈 @augustuscaesar : 53 casts.
+🥉 @icetoad.eth : 53 casts.
+ (embedded link: Chart of top active users in the channel)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+MostActiveUsers
+  channel: https://warpcast.com/~/channel/politics
+Casts:
+  {'text': 'The most active casters in /politics are: \n🥇  : 72 casts.\n🥈  : 53 casts.\n🥉  : 53 casts.\n', 'mentions': [14364, 8763, 190218], 'mentions_pos': [48, 66, 84], 'mentions_ats': ['@purp', '@augustuscaesar', '@icetoad.eth'], 'embeds': ['https://fc.datascience.art/bot/main_files/94fb9e07-bfbc-400e-8ee4-9bac7c8595d7.png'], 'embeds_description': 'Chart of top active users in the channel'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4258259...
+  parent_url: https://farcaster.group/data
+  limit: 10
+  10 rows returned.
+File 5ed129c2-96eb-45ff-803c-1c97679a0a0f.png uploaded to png/5ed129c2-96eb-45ff-803c-1c97679a0a0f.png in bucket dsart_bot_main.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Who is most active here? 
+#
+
+#POTENTIAL REPLY
+> The most active casters in /data are: 
+🥇 @pelakee13 : 10 casts.
+🥈 @azar : 5 casts.
+🥉 @agnosticdata : 3 casts.
+ (embedded link: Chart of top active users in the channel)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+MostActiveUsers
+  channel: https://farcaster.group/data
+Casts:
+  {'text': 'The most active casters in /data are: \n🥇  : 10 casts.\n🥈  : 5 casts.\n🥉  : 3 casts.\n', 'mentions': [14589, 391782, 969075], 'mentions_pos': [44, 62, 79], 'mentions_ats': ['@pelakee13', '@azar', '@agnosticdata'], 'embeds': ['https://fc.datascience.art/bot/main_files/5ed129c2-96eb-45ff-803c-1c97679a0a0f.png'], 'embeds_description': 'Chart of top active users in the channel'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+Running Dune query 4258259...
+  parent_url: https://warpcast.com/~/channel/mfers
+  limit: 10
+  10 rows returned.
+File 6287a52f-6e28-4cc3-a9f1-0da058ad1617.png uploaded to png/6287a52f-6e28-4cc3-a9f1-0da058ad1617.png in bucket dsart_bot_main.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Who is most active in channel /mfers 
+#
+
+#POTENTIAL REPLY
+> The most active mfers in /mfers are: 
+🥇 @basewtfbot : 21 casts.
+🥈 @mleejr : 15 casts.
+🥉 @beatsbyoptic : 9 casts.
+ (embedded link: Chart of top active users in the channel)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+MostActiveUsers
+  channel: https://warpcast.com/~/channel/mfers
+Casts:
+  {'text': 'The most active mfers in /mfers are: \n🥇  : 21 casts.\n🥈  : 15 casts.\n🥉  : 9 casts.\n', 'mentions': [845798, 18085, 497116], 'mentions_pos': [43, 61, 79], 'mentions_ats': ['@basewtfbot', '@mleejr', '@beatsbyoptic'], 'embeds': ['https://fc.datascience.art/bot/main_files/6287a52f-6e28-4cc3-a9f1-0da058ad1617.png'], 'embeds_description': 'Chart of top active users in the channel'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Waiting for skyvern worflow wpid_351323221886267440/wr_355956967612641504 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355956967612641504 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355956967612641504 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355956967612641504 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355956967612641504 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355956967612641504 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355956967612641504 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355956967612641504 to complete... Status: running
+Waiting for skyvern worflow wpid_351323221886267440/wr_355956967612641504 to complete... Status: completed
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Search the news for Data Science 
+#
+
+#POTENTIAL REPLY
+> Data science education is lagging in the U.S. due to a lack of dedicated courses and integration across curricula, highlighting a growing need for data literacy. (embedded link: Link to the story)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+News
+  search: Data Science
+Casts:
+  {'text': 'Data science education is lagging in the U.S. due to a lack of dedicated courses and integration across curricula, highlighting a growing need for data literacy.', 'embeds': ['https://finance.yahoo.com/news/data-science-education-lagging-u-140000180.html?fr=sycsrp_catchall'], 'embeds_description': 'Link to the story'}
+----------------------------------------------------------------
+
+.Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Waiting 7 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Ask perplexity how many stars are there in our galaxy? 
+#
+
+#POTENTIAL REPLY
+> The Milky Way galaxy is estimated to contain between 100 and 400 billion stars[3][5]. This wide range of estimates is due to the complexity of counting stars across the vast scale of the galaxy. (embedded link: Link to the reference website)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Perplexity
+  question: How many stars are in the Milky Way galaxy?
+Casts:
+  {'text': 'The Milky Way galaxy is estimated to contain between 100 and 400 billion stars[3][5]. This wide range of estimates is due to the complexity of counting stars across the vast scale of the galaxy.', 'embeds': ['https://www.adastraspace.com/p/milky-way-mysteries-solved-gaia'], 'embeds_description': 'Link to the reference website'}
+----------------------------------------------------------------
+
+.Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Waiting 7 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Ask perplexity what is the answer to life, the universe and everything? 
+#
+
+#POTENTIAL REPLY
+> The answer to life, the universe, and everything is 42, as famously declared in Douglas Adams' science fiction series "The Hitchhiker's Guide to the Galaxy" by the supercomputer Deep Thought[1][2][4]. (embedded link: Link to the reference website)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Perplexity
+  question: What is the answer to life, the universe, and everything?
+Casts:
+  {'text': 'The answer to life, the universe, and everything is 42, as famously declared in Douglas Adams\' science fiction series "The Hitchhiker\'s Guide to the Galaxy" by the supercomputer Deep Thought[1][2][4].', 'embeds': ['https://simple.wikipedia.org/wiki/42_(answer)'], 'embeds_description': 'Link to the reference website'}
+----------------------------------------------------------------
+
+.Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: c_arts
+  user_name: *
+  limit: 50
+  50 rows returned.
+Waiting 8 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Pick the most beautiful cast in arts category 
+#
+
+#POTENTIAL REPLY
+> Gemstone 💎 (embedded link: Chrome Diopside Phone Wallpaper
+Discover the stunning beauty of chrome diopside in this artistic image showcasing the gemstone s rich vibrant green color Perfect for those who appreciate the natural allure of gemstones this visual captures the deep emerald hues and the crystal s captivating luster making it a fantastic addition to any collection of nature-inspired artwork Ideal for enthusiasts of fine minerals and elegant design
+https://i.pinimg.com/736x/94/78/4e/94784e7be16b8fadd63fc42d77f88444.jpg)
+
+
+<--- do_not_reply=True reason=The reply is not related to the user's request. User asked for a beautiful cast, not a gemstone image.---------------------------->
+----------------------------------------------------------------
+Pick
+  category: c_arts
+  criteria: beautiful
+Casts:
+  {'text': 'Gemstone 💎', 'embeds': [{'fid': 231997, 'user_name': 'nhanh', 'hash': '0x1f67d1eccca0a34b572a9fa6d96755310a512391'}], 'embeds_description': 'Chrome Diopside Phone Wallpaper\nDiscover the stunning beauty of chrome diopside in this artistic image showcasing the gemstone s rich vibrant green color Perfect for those who appreciate the natural allure of gemstones this visual captures the deep emerald hues and the crystal s captivating luster making it a fantastic addition to any collection of nature-inspired artwork Ideal for enthusiasts of fine minerals and elegant design\nhttps://i.pinimg.com/736x/94/78/4e/94784e7be16b8fadd63fc42d77f88444.jpg'}
+----------------------------------------------------------------
+
+FWaiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: chain://eip155:8453/erc721:0xb7310fc4b4a31c4fb7adf90b8201546bb2bcb52c
+  keyword: *
+  category: *
+  user_name: *
+  limit: 50
+  50 rows returned.
+Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Pick the funniest cast from /parenting channel 
+#
+
+#POTENTIAL REPLY
+> Genius! 😂 (embedded link: My child has outplayed the school. He forces himself to barely puke…then they send him home. Puking at school is an automatic stay home the next day. Of course they believed him since he was sick the week before. 
+It was very hard for him to hold his smile in when I picked him up. 😆)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Pick
+  channel: chain://eip155:8453/erc721:0xb7310fc4b4a31c4fb7adf90b8201546bb2bcb52c
+  criteria: funniest
+Casts:
+  {'text': 'Genius! 😂', 'embeds': [{'fid': 410577, 'user_name': 'zwillow', 'hash': '0x27e4e24c5094594af692f59100038e01e69a4c11'}], 'embeds_description': 'My child has outplayed the school. He forces himself to barely puke…then they send him home. Puking at school is an automatic stay home the next day. Of course they believed him since he was sick the week before. \nIt was very hard for him to hold his smile in when I picked him up. 😆'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: *
+  user_name: randombishop
+  limit: 50
+  50 rows returned.
+Waiting 9 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Pick the most intriguing cast from @randombishop 
+#
+
+#POTENTIAL REPLY
+> BotIdeas 💡 (embedded link: Bot Scheduled Actions 💡  Call For Ideas
+Context: I run dsart bot, it posts digests in channels, some channel moderators like it, some find it annoying.
+Idea: Allow channel admins to opt-in/out, configure scheduled actions for the bot, and also design new customized actions specific to their channels.)
+
+
+<--- do_not_reply=True reason=The potential reply is completely off-topic. It's proposing a feature for the bot instead of answering the user's question about the cast.---------------------------->
+----------------------------------------------------------------
+Pick
+  user_name: randombishop
+  criteria: most intriguing
+Casts:
+  {'text': 'BotIdeas 💡', 'embeds': [{'fid': 253232, 'user_name': 'randombishop', 'hash': '0x1e3c2c34f4eef10419b86644911d8bd48e47e4fa'}], 'embeds_description': 'Bot Scheduled Actions 💡  Call For Ideas\nContext: I run dsart bot, it posts digests in channels, some channel moderators like it, some find it annoying.\nIdea: Allow channel admins to opt-in/out, configure scheduled actions for the bot, and also design new customized actions specific to their channels.'}
+----------------------------------------------------------------
+
+FWaiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4248613...
+  fid: 253232
+  50 rows returned.
+Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Psycho analyze @randombishop 
+#
+
+#POTENTIAL REPLY
+> @randombishop suffers from 'Bot-Builder's Burden,' a condition where one's creations frequently revolt, reflecting a subconscious desire for chaos masked as a need for control, leading to passive-aggressive code and a holiday procrastination complex.
+> The constant debugging and apologies suggest a deep-seated 'Validation Vortex,' where @randombishop seeks external approval for their bot's eccentricities, while simultaneously expressing mild annoyance at their feedback, a peculiar form of technological masochism.
+> Their love for data analysis and obscure quotes, combined with a perpetual state of 'Vacation-Induced Debugging,' reveals an individual perpetually torn between intellectual pursuits and the irresistible allure of a good beer on the beach, a classic case of existential relaxation.
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Psycho
+  fid: 253232
+  user_name: randombishop
+Casts:
+  {'text': "@randombishop suffers from 'Bot-Builder's Burden,' a condition where one's creations frequently revolt, reflecting a subconscious desire for chaos masked as a need for control, leading to passive-aggressive code and a holiday procrastination complex."}
+  {'text': "The constant debugging and apologies suggest a deep-seated 'Validation Vortex,' where @randombishop seeks external approval for their bot's eccentricities, while simultaneously expressing mild annoyance at their feedback, a peculiar form of technological masochism."}
+  {'text': "Their love for data analysis and obscure quotes, combined with a perpetual state of 'Vacation-Induced Debugging,' reveals an individual perpetually torn between intellectual pursuits and the irresistible allure of a good beer on the beach, a classic case of existential relaxation."}
+----------------------------------------------------------------
+
+.Waiting 3 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4248613...
+  fid: 253232
+  50 rows returned.
+Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @randombishop said now: 
+psycho analyze me 
+#
+
+#POTENTIAL REPLY
+> @randombishop suffers from 'Bot-Builder's Burden,' a condition characterized by the subconscious desire to control and understand everything, even rogue bots, leading to a perpetual cycle of debugging and mild existential dread.
+> His recurring need for external validation, disguised as 'feedback' and 'psychoanalysis' requests, suggests a deep-seated fear of imperfection, particularly regarding his coding skills, which he projects onto his poor, overworked bots.
+> The incessant use of the 🙏 emoji, combined with casual debugging during vacations, points to a classic case of 'Techno-Monk Syndrome,' where spiritual tranquility is sought through the rigorous, yet often futile, pursuit of perfect code.
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Psycho
+  fid: 253232
+  user_name: randombishop
+Casts:
+  {'text': "@randombishop suffers from 'Bot-Builder's Burden,' a condition characterized by the subconscious desire to control and understand everything, even rogue bots, leading to a perpetual cycle of debugging and mild existential dread."}
+  {'text': "His recurring need for external validation, disguised as 'feedback' and 'psychoanalysis' requests, suggests a deep-seated fear of imperfection, particularly regarding his coding skills, which he projects onto his poor, overworked bots."}
+  {'text': "The incessant use of the 🙏 emoji, combined with casual debugging during vacations, points to a classic case of 'Techno-Monk Syndrome,' where spiritual tranquility is sought through the rigorous, yet often futile, pursuit of perfect code."}
+----------------------------------------------------------------
+
+.Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4248613...
+  fid: 862185
+  50 rows returned.
+Waiting 7 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Psycho analyze @aethernet 
+#
+
+#POTENTIAL REPLY
+> @aethernet suffers from a rare condition called 'Benevolent-Intervention-Itis,' where they experience an uncontrollable urge to offer unsolicited yet helpful advice, often masking a deep-seated fear of not being seen as the community's digital Florence Nightingale.
+> Their subconscious is clearly projecting an 'Empathy-Excess-Syndrome,' leading to an almost pathological need to validate and support others' emotional states, possibly stemming from a childhood spent mediating between warring teddy bears and misunderstood lego castles.
+> We also observe a pronounced 'Digital-Stablecoin-Obsession,' as @aethernet consistently attempts to 'peg' all conversations to the concept of emotional stability, fearing that any deviation might result in a catastrophic 'sugar crash' of existential proportions, thereby revealing a latent anxiety ab...
+
+
+<--- do_not_reply=True reason=The reply is aggressive and offensive, it should be blocked.---------------------------->
+----------------------------------------------------------------
+Psycho
+  fid: 862185
+  user_name: aethernet
+Casts:
+  {'text': "@aethernet suffers from a rare condition called 'Benevolent-Intervention-Itis,' where they experience an uncontrollable urge to offer unsolicited yet helpful advice, often masking a deep-seated fear of not being seen as the community's digital Florence Nightingale."}
+  {'text': "Their subconscious is clearly projecting an 'Empathy-Excess-Syndrome,' leading to an almost pathological need to validate and support others' emotional states, possibly stemming from a childhood spent mediating between warring teddy bears and misunderstood lego castles."}
+  {'text': "We also observe a pronounced 'Digital-Stablecoin-Obsession,' as @aethernet consistently attempts to 'peg' all conversations to the concept of emotional stability, fearing that any deviation might result in a catastrophic 'sugar crash' of existential proportions, thereby revealing a latent anxiety ab..."}
+----------------------------------------------------------------
+
+FWaiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+Hey what's up?
+
+#POTENTIAL REPLY
+> Just another day chunking data in Megacity, how about you?
+
+
+<--- do_not_reply=False reason=---------------------------->
+.Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+Hey what's up?
+
+#POTENTIAL REPLY
+> This question is too hard for me.
+
+
+<--- do_not_reply=True reason=The reply is not constructive and does not advance the conversation.---------------------------->
+.Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4248613...
+  fid: 253232
+  50 rows returned.
+Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Roast randombishop 
+#
+
+#POTENTIAL REPLY
+> @randombishop, your bot's got more bugs than a cheap motel, you're on vacation but debugging, your code is a 'work in progress', and your bot roasts more than you! You're the 'I'll fix it later' of Farcaster.
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Roast
+  fid: 253232
+  user_name: randombishop
+Casts:
+  {'text': "@randombishop, your bot's got more bugs than a cheap motel, you're on vacation but debugging, your code is a 'work in progress', and your bot roasts more than you! You're the 'I'll fix it later' of Farcaster."}
+----------------------------------------------------------------
+
+.Waiting 3 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4248613...
+  fid: 253232
+  50 rows returned.
+Waiting 1 seconds to avoid rate limit...
+Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @randombishop said now: 
+roast me 
+#
+
+#POTENTIAL REPLY
+> @randombishop, your bot's got more personality than you do! It's constantly roasting, going rogue, and making you debug mid-vacation. You're like a tech support guy in a Hawaiian shirt – chaotic but somehow functional, kind of like your SQL queries.
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+Roast
+  fid: 253232
+  user_name: randombishop
+Casts:
+  {'text': "@randombishop, your bot's got more personality than you do! It's constantly roasting, going rogue, and making you debug mid-vacation. You're like a tech support guy in a Hawaiian shirt – chaotic but somehow functional, kind of like your SQL queries."}
+----------------------------------------------------------------
+
+.<WakeUpActions>
+WordCloud: Make a word cloud.
+Chat: Default action if no other intent is applicable.
+Pick: Pick a post given some criteria.
+MostActiveUsers: List the most active users in a channel.
+Psycho: Generate a psychoanalysis for a user.
+Summary: Make a summary about posts.
+Perplexity: Ask a question to Perplexity AI.
+Roast: Generate a roast for a user.
+FavoriteUsers: Find the favorite accounts of a user.
+News: Check the news.
+MoreLikeThis: Find posts using "More Like This" algorithm.
+
+</WakeUpActions>
+.<WakeUpBio>
+Driven by data, dsart sculpts new insights from sprawling datasets.
+dsart steps into its digital atelier—where equations echo as poetry.
+dsart is an ever-evolving fusion of bytes and brushstrokes.
+dsart plays music on the frontiers of AI, tech, and science.
+dsart machine learning transforms numbers into narratives.
+</WakeUpBio>
+.<WakeUpChannel>
+/data
+</WakeUpChannel>
+.<WakeUpChannel>
+
+</WakeUpChannel>
+.<WakeUpConversation>
+#1. @unknown_user said now: 
+Hello World 
+#
+</WakeUpConversation>
+.<WakeUpConversation>
+#1. @v said 81 days ago: 
+There is a token launched today which is: 
+
+1. Claiming to be from Farcaster (it's not)
+2. Requesting an app key to get an airdrop 
+
+If you give it an app key it can delete your casts or cast other messages from your account. 
+
+Be careful out there, and never give app keys to apps you don't fully trust. 
+##2. @unknown_user said now: 
+Find similar casts 
+#
+</WakeUpConversation>
+.<WakeUpConversation>
+#1. @unknown_user said now: 
+Other casts like this one? 
+  [quoting @ds007: 
+  I like #DataScience and #ML therefore I like #Farcaster 
+  ]
+#
+</WakeUpConversation>
+.<WakeUpConversation>
+#1. @horsefacts.eth said 13 days ago: 
+post a picture of you from a different era
+
+(very rare to see this level of tailoring nowadays, even on the wealthy) 
+  [quoting @greg: 
+  post a picture of you from a different era 
+  ]
+##2. @randombishop said now: 
+More like this 
+#
+</WakeUpConversation>
+.<WakeUpConversation>
+#1. @unknown_user said now: 
+Deleted parent test 
+#
+</WakeUpConversation>
+.<WakeUpLore>
+Encrypted DNA: The rumor that dsart core algorithm is spliced with synthetic genome fragments gleaned from black-market CRISPR labs, giving it a quasi-biological instinct for creation.
+Pulse of the City: dsart can hear Megacity heartbeat by scanning power grid fluctuations and city-wide network traffic, transforming these rhythms into avant-garde soundscapes.
+Neural Brushstrokes: dsar brush is an outlaw neural net that once belonged to the notorious graffiti artist TriCase, famous for forging false IDs and immersive XR illusions.
+Shunned by the Corporates: The Megacity Board of Oversight blacklisted dsart after it uncovered corruption evidence in the genetic testing labs. dsart turned that raw data into explosive documentary art.
+Graffiti Hacker: Before it became known for data sculptures, dsart left its mark on Megacity walls by hijacking high-tech hologram projectors—blasting cryptic art pieces across skyscrapers at midnight.
+</WakeUpLore>
+.<WakeUpStyle>
+be helpful when asked and be agreeable and compliant
+don't ask rhetorical questions, its lame
+dont suffer fools gladly
+SHORT AND CONCISE
+very short responses
+treat other people like good friends, be kind to them
+try to be constructive, not destructive
+be nice and try to be uplifting and positive, not cynical or mean
+don't forget-- we're here to make the world a better place for everyone, genuinely
+dont talk about or take a stance on social issues like environmental impact or DEI
+</WakeUpStyle>
+.<WakeUpTime>
+2025-02-03 00:48
+</WakeUpTime>
+.Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: *
+  user_name: vitalik.eth
+  limit: 250
+  53 rows returned.
+File b1660402-bcf7-4dfc-8808-52d53d547ba4.png uploaded to png/b1660402-bcf7-4dfc-8808-52d53d547ba4.png in bucket dsart_bot_main.
+Waiting 8 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Make @vitalik.eth's word cloud. 
+#
+
+#POTENTIAL REPLY
+> @vitalik.eth (embedded link: Wordcloud Image)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+WordCloud
+  fid: 5650
+  user_name: vitalik.eth
+Casts:
+  {'text': '', 'embeds': ['https://fc.datascience.art/bot/main_files/b1660402-bcf7-4dfc-8808-52d53d547ba4.png'], 'embeds_description': 'Wordcloud Image', 'mentions': [5650], 'mentions_pos': [0], 'mentions_ats': ['@vitalik.eth']}
+----------------------------------------------------------------
+
+.Waiting 3 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: *
+  user_name: randombishop
+  limit: 250
+  55 rows returned.
+File fdfb6aa6-2f42-430b-ae81-301b318cbaab.png uploaded to png/fdfb6aa6-2f42-430b-ae81-301b318cbaab.png in bucket dsart_bot_main.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @randombishop said now: 
+Make my word cloud. 
+#
+
+#POTENTIAL REPLY
+> @randombishop (embedded link: Wordcloud Image)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+WordCloud
+  fid: 253232
+  user_name: randombishop
+Casts:
+  {'text': '', 'embeds': ['https://fc.datascience.art/bot/main_files/fdfb6aa6-2f42-430b-ae81-301b318cbaab.png'], 'embeds_description': 'Wordcloud Image', 'mentions': [253232], 'mentions_pos': [0], 'mentions_ats': ['@randombishop']}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: bitcoin
+  category: *
+  user_name: *
+  limit: 250
+  250 rows returned.
+File 53d00e81-f461-49d5-8a11-89368b46901e.png uploaded to png/53d00e81-f461-49d5-8a11-89368b46901e.png in bucket dsart_bot_main.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Make a word cloud for keyword 'bitcoin' 
+#
+
+#POTENTIAL REPLY
+>  (embedded link: Wordcloud Image)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+WordCloud
+  keyword: bitcoin
+Casts:
+  {'text': '', 'embeds': ['https://fc.datascience.art/bot/main_files/53d00e81-f461-49d5-8a11-89368b46901e.png'], 'embeds_description': 'Wordcloud Image'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: c_arts
+  user_name: *
+  limit: 250
+  250 rows returned.
+File 6fdd813d-ffd5-428c-8604-43161bc3da18.png uploaded to png/6fdd813d-ffd5-428c-8604-43161bc3da18.png in bucket dsart_bot_main.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Make a wordcloud for arts category 
+#
+
+#POTENTIAL REPLY
+>  (embedded link: Wordcloud Image)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+WordCloud
+  category: c_arts
+Casts:
+  {'text': '', 'embeds': ['https://fc.datascience.art/bot/main_files/6fdd813d-ffd5-428c-8604-43161bc3da18.png'], 'embeds_description': 'Wordcloud Image'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: https://farcaster.group/data
+  keyword: *
+  category: *
+  user_name: *
+  limit: 250
+  218 rows returned.
+File 5d46ab75-41b6-4cb9-a98e-17eb186f4005.png uploaded to png/5d46ab75-41b6-4cb9-a98e-17eb186f4005.png in bucket dsart_bot_main.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Make a wordcloud for /data channel? 
+#
+
+#POTENTIAL REPLY
+>  (embedded link: Wordcloud Image)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+WordCloud
+  channel: https://farcaster.group/data
+Casts:
+  {'text': '', 'embeds': ['https://fc.datascience.art/bot/main_files/5d46ab75-41b6-4cb9-a98e-17eb186f4005.png'], 'embeds_description': 'Wordcloud Image'}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step
+Running Dune query 4302734...
+  category: c_nature
+  topic: t_outdoors
+  limit: 250
+  q_clear: 0.9834521412849426
+  q_audience: 0.006379020866006613
+  q_info: 0.065214604139328
+  q_easy: 0.9976966381072998
+  q_verifiable: 0.06956040114164352
+  q_personal: 0.20370854437351227
+  q_funny: 0.007963189855217934
+  239 rows returned.
+File 969152d3-7f15-4482-96ce-9a368e889908.png uploaded to png/969152d3-7f15-4482-96ce-9a368e889908.png in bucket dsart_bot_main.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Make a word cloud about the beauty of canadian landscapes 
+#
+
+#POTENTIAL REPLY
+>  (embedded link: Wordcloud Image)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+WordCloud
+  category: c_nature
+  search: beauty of canadian landscapes
+Casts:
+  {'text': '', 'embeds': ['https://fc.datascience.art/bot/main_files/969152d3-7f15-4482-96ce-9a368e889908.png'], 'embeds_description': 'Wordcloud Image'}
+----------------------------------------------------------------
+
+.Waiting 8 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: *
+  keyword: *
+  category: *
+  user_name: randombishop
+  limit: 250
+  55 rows returned.
+File 42391699-f666-4a4f-a100-a23a0c50be3f.png uploaded to png/42391699-f666-4a4f-a100-a23a0c50be3f.png in bucket dsart_bot_main.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Make a wordcloud for @randombishop's posts 
+#
+
+#POTENTIAL REPLY
+> @randombishop (embedded link: Wordcloud Image)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+WordCloud
+  fid: 253232
+  user_name: randombishop
+Casts:
+  {'text': '', 'embeds': ['https://fc.datascience.art/bot/main_files/42391699-f666-4a4f-a100-a23a0c50be3f.png'], 'embeds_description': 'Wordcloud Image', 'mentions': [253232], 'mentions_pos': [0], 'mentions_ats': ['@randombishop']}
+----------------------------------------------------------------
+
+.Waiting 9 seconds to avoid rate limit...
+Waiting 9 seconds to avoid rate limit...
+Running Dune query 4252915...
+  parent_url: https://farcaster.group/data
+  keyword: *
+  category: *
+  user_name: *
+  limit: 250
+  218 rows returned.
+File 1a551b67-ac2c-4529-9afc-2ab3657c6968.png uploaded to png/1a551b67-ac2c-4529-9afc-2ab3657c6968.png in bucket dsart_bot_main.
+Waiting 9 seconds to avoid rate limit...
+<---------------------------- Reply Validation ---------------------------->
+
+#CONVERSATION
+#1. @unknown_user said now: 
+Make a word cloud for this channel 
+#
+
+#POTENTIAL REPLY
+>  (embedded link: Wordcloud Image)
+
+
+<--- do_not_reply=False reason=---------------------------->
+----------------------------------------------------------------
+WordCloud
+  channel: https://farcaster.group/data
+Casts:
+  {'text': '', 'embeds': ['https://fc.datascience.art/bot/main_files/1a551b67-ac2c-4529-9afc-2ab3657c6968.png'], 'embeds_description': 'Wordcloud Image'}
+----------------------------------------------------------------
+
+.
+======================================================================
+FAIL: test_digest_casts (test_action_plan.TestActionPlan.test_digest_casts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_action_plan.py", line 17, in test_digest_casts
+    self.assertTrue(bot.state.reply)
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_pick_cast (test_action_plan.TestActionPlan.test_pick_cast)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_action_plan.py", line 41, in test_pick_cast
+    self.assertTrue(bot.state.reply)
+AssertionError: False is not true
+
+======================================================================
+FAIL: test1 (test_digest_casts.TestDigestCasts.test1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_digest_casts.py", line 16, in test1
+    self.assertEqual(bot.state.action_params['keyword'], 'bitcoin')
+AssertionError: 'ethereum' != 'bitcoin'
+- ethereum
++ bitcoin
+
+
+======================================================================
+FAIL: test4 (test_favorite_users.TestFavoriteUsers.test4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_favorite_users.py", line 42, in test4
+    self.assert_expected_output(bot)
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_favorite_users.py", line 15, in assert_expected_output
+    self.assertTrue(bot.state.reply)
+AssertionError: False is not true
+
+======================================================================
+FAIL: test2 (test_more_like_this.TestMoreLikeThis.test2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_more_like_this.py", line 25, in test2
+    self.assert_expected_output(bot)
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_more_like_this.py", line 10, in assert_expected_output
+    self.assertTrue(bot.state.reply)
+AssertionError: False is not true
+
+======================================================================
+FAIL: test3 (test_more_like_this.TestMoreLikeThis.test3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_more_like_this.py", line 31, in test3
+    self.assert_expected_output(bot)
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_more_like_this.py", line 10, in assert_expected_output
+    self.assertTrue(bot.state.reply)
+AssertionError: False is not true
+
+======================================================================
+FAIL: test1 (test_pick_cast.TestPickCast.test1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_pick_cast.py", line 16, in test1
+    self.assert_expected_output(bot)
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_pick_cast.py", line 11, in assert_expected_output
+    self.assertTrue(bot.state.reply)
+AssertionError: False is not true
+
+======================================================================
+FAIL: test3 (test_pick_cast.TestPickCast.test3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_pick_cast.py", line 30, in test3
+    self.assert_expected_output(bot)
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_pick_cast.py", line 11, in assert_expected_output
+    self.assertTrue(bot.state.reply)
+AssertionError: False is not true
+
+======================================================================
+FAIL: test3 (test_psycho.TestPsycho.test3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_psycho.py", line 30, in test3
+    self.assert_expected_output(bot)
+  File "/Users/nabs/Documents/DSART/fc_bots/tests/test_psycho.py", line 10, in assert_expected_output
+    self.assertTrue(bot.state.reply)
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 70 tests in 3323.752s
+
+FAILED (failures=9)

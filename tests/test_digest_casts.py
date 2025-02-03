@@ -13,7 +13,7 @@ class TestDigestCasts(unittest.TestCase):
     request = "Give me a summary using keyword ethereum"
     bot = run_bot(request)
     self.assert_expected_output(bot)
-    self.assertEqual(bot.state.action_params['keyword'], 'bitcoin')
+    self.assertEqual(bot.state.action_params['keyword'], 'ethereum')
     
   def test2(self):
     request = "Summary for arts category"

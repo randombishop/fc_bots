@@ -11,7 +11,7 @@ class TestActionPlan(unittest.TestCase):
     self.assertTrue(bot.state.selected_action == 'Chat' or bot.state.selected_action is None)
     
   def test_digest_casts(self):
-    request = "Give me a summary about Bitcoin."
+    request = "Give me a summary about keyword ethereum."
     bot = run_bot(request)
     self.assertEqual(bot.state.selected_action, 'Summary')
     self.assertTrue(bot.state.reply)

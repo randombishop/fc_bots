@@ -9,7 +9,7 @@ class TestPickCast(unittest.TestCase):
     self.assertEqual(len(bot.state.casts), 1)
     self.assertEqual(len(bot.state.casts[0]['embeds']), 1)
     self.assertTrue(bot.state.reply)
-        
+    
   def test1(self):
     request = "Pick the most beautiful cast in arts category"
     bot = run_bot(request)
@@ -30,3 +30,10 @@ class TestPickCast(unittest.TestCase):
     self.assert_expected_output(bot)
     self.assertEqual(bot.state.action_params['user_name'], 'randombishop')
     self.assertIn('intrig', bot.state.action_params['criteria'])
+    
+  def test4(self):
+    request = "Pick the funniest cast in channnel /data?"
+    bot = run_bot(request)
+    self.assert_expected_output(bot)
+    self.assertEqual(bot.state.action_params['channel'], 'https://farcaster.group/data')
+    self.assertIn('fun', bot.state.action_params['criteria'])
