@@ -14,8 +14,8 @@ class TestReply(unittest.TestCase):
     
   def test2(self):
     state = BotState()
-    state.conversation = "Hey what's up?"
-    state.casts = [{'text': "This question is too hard for me."}]
+    state.conversation = "Can you answer 1+1=2?"
+    state.casts = [{'text': "The population of the world is 7.9 billion."}]
     reply = Reply(state)
     reply.think()
     self.assertFalse(state.reply)
