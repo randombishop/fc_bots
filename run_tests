@@ -1,1 +1,1 @@
-python -m unittest discover tests/
+python -u -m unittest discover tests/ > tests.log 2>&1

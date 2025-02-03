@@ -1,25 +1,26 @@
-from dotenv import load_dotenv
-load_dotenv()
 import uuid
-import sys
 import os
-from bots.iaction import IAction
+from bots.i_action_step import IActionStep
+from bots.prompts.contexts import conversation_and_request_template
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_channel
 from bots.data.users import get_top_daily_casters
 from bots.utils.images import user_activity_chart
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
+from bots.data.channels import get_channel_by_url
 
-
-parse_instructions = """
-INSTRUCTIONS:
-You are @dsart, a bot programmed to list the most active users in a social media channel.
+parse_instructions_template = """
+#INSTRUCTIONS:
+You are @{{name}}, a bot programmed to list the most active users in a social media channel.
 Based on the provided conversation, which channel should we look at? 
 Your goal is not to continue the conversation, you must only extract the channel parameter.
 Channels typically start with /, but not always.
 
-RESPONSE FORMAT:
+#CURRENT CHANNEL: 
+{{channel}}
+
+#RESPONSE FORMAT:
 {
   "channel": ...
 }
@@ -33,28 +34,29 @@ parse_schema = {
 }
 
 
-class MostActiveUsers(IAction):
-
-  def set_input(self, input):
-    params = call_llm(input, parse_instructions, parse_schema)
-    self.input = input
-    self.set_params(params)
-  
-  def set_params(self, params):
-    self.channel = read_channel(params, current_channel=self.root_parent_url, default_to_current=True)
+class MostActiveUsers(IActionStep):
 
   def get_cost(self):
-    self.cost = 20
-    return self.cost
-
-  def get_data(self):
-    users = get_top_daily_casters(self.channel)
-    if len(users) == 0:
-      raise Exception("Query returned 0 rows")
-    self.data = users
+    return 20
   
-  def get_casts(self, intro=''):
-    df = self.data
+  def parse(self):
+    parse_prompt = self.state.format(conversation_and_request_template)
+    parse_instructions = self.state.format(parse_instructions_template)
+    params = call_llm(parse_prompt, parse_instructions, parse_schema)
+    parsed = {}
+    parsed['channel'] = read_channel(params, current_channel=self.state.root_parent_url, default_to_current=True)
+    self.state.action_params = parsed
+
+  def execute(self):
+    channel_url = self.state.action_params['channel']
+    if channel_url is None:
+      raise Exception("Missing channel")
+    channel_id = get_channel_by_url(channel_url)
+    if channel_id is None:
+      raise Exception("Channel not registered")
+    df = get_top_daily_casters(channel_url)
+    if len(df) == 0:
+      raise Exception("Query returned 0 rows")
     filename = str(uuid.uuid4())+'.png'
     user_activity_chart(df, filename)
     upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
@@ -63,10 +65,13 @@ class MostActiveUsers(IAction):
     mentions = [int(df.iloc[i]['fid']) for i in range(num_mentions)]
     mentions_ats = ['@'+df.iloc[i]['User'] for i in range(num_mentions)]
     mentions_positions = []
-    if intro is not None and len(intro) > 0:
-      text = intro + "\n"
-    else:
-      text = "The most active users are: \n"
+    users_label = "casters"
+    if channel_id == 'mfers':
+      users_label = "mfers"
+    text = f"The most active {users_label}"
+    if channel_id != 'mfers':
+      text += f" in /{channel_id}"
+    text += " are:\n"
     text += "🥇 "
     mentions_positions.append(len(text.encode('utf-8')))
     text += f" : {df.iloc[0]['casts_total']} casts.\n"
@@ -83,10 +88,10 @@ class MostActiveUsers(IAction):
       'mentions': mentions, 
       'mentions_pos': mentions_positions,
       'mentions_ats': mentions_ats,
-      'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"]
+      'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"],
+      'embeds_description': "Chart of top active users in the channel"
     }
     casts =  [cast]
     check_casts(casts)
-    self.casts = casts
-    return self.casts
-
+    self.state.casts = casts
+   

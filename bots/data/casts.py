@@ -11,7 +11,7 @@ def get_casts_for_fid(fid):
   params = [QueryParameter.number_type(name="fid", value=fid)]
   return run_query(query_id, params)
 
-def get_top_casts(channel, keyword, category, user_name, max_rows):
+def get_top_casts(channel=None, keyword=None, category=None, user_name=None, max_rows=10):
   query_id = 4252915
   params = [
     QueryParameter.text_type(name="parent_url", value=channel if channel is not None else '*'),
@@ -42,6 +42,21 @@ def get_more_like_this(text, exclude_hash=None, limit=10):
     params.append(QueryParameter.text_type(name="exclude_hash", value=exclude_hash))
   return run_query(query_id, params)
 
+def format_when(timestamp):
+  timestamp_seconds = int(timestamp) / 1000
+  now = datetime.now()
+  timestamp_dt = datetime.fromtimestamp(timestamp_seconds)
+  delta = now - timestamp_dt
+  if delta.days > 0:
+    return f"{delta.days} days ago"
+  hours = delta.seconds // 3600
+  if hours > 0:
+    return f"{hours} hours ago"
+  minutes = delta.seconds // 60
+  if minutes > 0:
+    return f"{minutes} minutes ago"
+  return "seconds ago"
+
 def get_cast(hash):
   cast_info = get_cast_info(hash)
   if cast_info is None:
@@ -53,7 +68,9 @@ def get_cast(hash):
     'mentions': cast_info['mentions'] if 'mentions' in cast_info else [], 
     'mentionsPos': cast_info['mentionsPositions'] if 'mentionsPositions' in cast_info else [],
     'parent_fid': cast_info['parentFid'] if 'parentFid' in cast_info else None,
-    'parent_hash': cast_info['parentHash'] if 'parentHash' in cast_info else None
+    'parent_hash': cast_info['parentHash'] if 'parentHash' in cast_info else None,
+    'timestamp': cast_info['timestamp'],
+    'when': format_when(cast_info['timestamp'])
   }
   if 'embeds' in cast_info and 'quoteCasts' in cast_info['embeds'] and len(cast_info['embeds']['quoteCasts']) > 0:
       quote_cast = cast_info['embeds']['quoteCasts'][0]
