@@ -89,10 +89,14 @@ class Bot:
     return response
   
 
-def generate_bot_response(bot_id, request, fid_origin=None):
+def generate_bot_response(bot_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
   character = get_bot_character(bot_id)
   if character is None:
     raise Exception(f"Bot {bot_id} not found")
   bot = Bot(character)
-  response = bot.respond(request=request, fid_origin=fid_origin)
+  response = bot.respond(request=request, 
+                         fid_origin=fid_origin, 
+                         parent_hash=parent_hash, 
+                         attachment_hash=attachment_hash, 
+                         root_parent_url=root_parent_url)
   return bot, response
