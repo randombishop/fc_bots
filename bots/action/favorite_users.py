@@ -82,7 +82,7 @@ class FavoriteUsers(IActionStep):
       'mentions_pos': mentions_positions,
       'mentions_ats': mentions_ats,
       'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"],
-      'embeds_description': 'Table of user engagement'
+      'embeds_description': 'Favorite users'
     }
     casts =  [cast]
     check_casts(casts)
