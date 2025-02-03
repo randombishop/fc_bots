@@ -11,8 +11,6 @@ from bots.wakeup.wakeup_time import WakeUpTime
 
 
 
-
-
 class TestWakeUp(unittest.TestCase):
   
   #########################################################  

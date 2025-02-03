@@ -8,7 +8,7 @@ from bots.data.users import get_top_daily_casters
 from bots.utils.images import user_activity_chart
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_casts import check_casts
-
+from bots.data.channels import get_channel_by_url
 
 parse_instructions_template = """
 #INSTRUCTIONS:
@@ -48,7 +48,13 @@ class MostActiveUsers(IActionStep):
     self.state.action_params = parsed
 
   def execute(self):
-    df = get_top_daily_casters(self.state.action_params['channel'])
+    channel_url = self.state.action_params['channel']
+    if channel_url is None:
+      raise Exception("Missing channel")
+    channel_id = get_channel_by_url(channel_url)
+    if channel_id is None:
+      raise Exception("Channel not registered")
+    df = get_top_daily_casters(channel_url)
     if len(df) == 0:
       raise Exception("Query returned 0 rows")
     filename = str(uuid.uuid4())+'.png'
@@ -59,7 +65,10 @@ class MostActiveUsers(IActionStep):
     mentions = [int(df.iloc[i]['fid']) for i in range(num_mentions)]
     mentions_ats = ['@'+df.iloc[i]['User'] for i in range(num_mentions)]
     mentions_positions = []
-    text = "The most active users are: \n"
+    users_label = "casters"
+    if channel_id == 'mfers':
+      users_label = "mfers"
+    text = f"The most active {users_label} in /{channel_id} are: \n"
     text += "🥇 "
     mentions_positions.append(len(text.encode('utf-8')))
     text += f" : {df.iloc[0]['casts_total']} casts.\n"

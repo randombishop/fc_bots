@@ -1,19 +1,17 @@
 import unittest
-from bots.utils.tests import make_bot
+from bots.utils.tests import run_bot
 
 
 class TestLike(unittest.TestCase):
   
   def test1(self):
     request = "Thank you!"
-    bot = make_bot()
-    bot.respond(request)
-    bot.state.debug_action()
+    bot = run_bot(request)
     self.assertTrue(bot.state.like)
+    self.assertFalse(bot.state.reply)
     
   def test2(self):
     request = "Not interested."
-    bot = make_bot()
-    bot.respond(request)
-    bot.state.debug_action()
+    bot = run_bot(request)
     self.assertFalse(bot.state.like)
+    self.assertFalse(bot.state.reply)

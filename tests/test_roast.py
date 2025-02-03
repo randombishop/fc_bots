@@ -2,19 +2,19 @@ import unittest
 from bots.utils.tests import make_bot
 
 
-def assert_expected_output(t, bot):
-  t.assertEqual(bot.state.selected_action, 'Roast')
-  t.assertEqual(len(bot.state.casts), 1)
-  
-
 class TestRoast(unittest.TestCase):
-  
+
+  def assert_expected_output(self, bot):
+    self.assertEqual(bot.state.selected_action, 'Roast')
+    self.assertEqual(len(bot.state.casts), 1)
+    self.assertTrue(bot.state.reply)
+    
   def test1(self):
     request = "Roast randombishop"
     bot = make_bot()
     bot.respond(request)
     bot.state.debug_action()
-    assert_expected_output(self, bot)
+    self.assert_expected_output(bot)
     self.assertEqual(bot.state.action_params['fid'], 253232)
     self.assertEqual(bot.state.action_params['user_name'], 'randombishop')
     
@@ -24,6 +24,6 @@ class TestRoast(unittest.TestCase):
     bot = make_bot()
     bot.respond(request, fid_origin=fid_origin)
     bot.state.debug_action()
-    assert_expected_output(self, bot)
+    self.assert_expected_output(bot)
     self.assertEqual(bot.state.action_params['fid'], fid_origin)
     self.assertEqual(bot.state.action_params['user_name'], 'randombishop')

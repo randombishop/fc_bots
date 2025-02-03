@@ -2,20 +2,19 @@ import unittest
 from bots.utils.tests import make_bot
 
 
-def assert_expected_output(t, bot):
-  t.assertEqual(bot.state.selected_action, 'WordCloud')
-  t.assertEqual(len(bot.state.casts), 1)
-  t.assertEqual(len(bot.state.casts[0]['embeds']), 1)
-  
-
 class TestWordCloud(unittest.TestCase):
-  
+
+  def assert_expected_output(self, bot):
+    self.assertEqual(bot.state.selected_action, 'WordCloud')
+    self.assertEqual(len(bot.state.casts), 1)
+    self.assertEqual(len(bot.state.casts[0]['embeds']), 1)
+
   def test1(self):
     request = "Make @vitalik.eth's word cloud."
     bot = make_bot()
     bot.respond(request)
     bot.state.debug_action()
-    assert_expected_output(self, bot)
+    self.assert_expected_output(bot)
     self.assertEqual(bot.state.action_params['fid'], 5650)
     self.assertEqual(bot.state.action_params['user_name'], 'vitalik.eth')
     
@@ -25,7 +24,7 @@ class TestWordCloud(unittest.TestCase):
     bot = make_bot()
     bot.respond(request, fid_origin=fid_origin)
     bot.state.debug_action()
-    assert_expected_output(self, bot)
+    self.assert_expected_output(bot)
     self.assertEqual(bot.state.action_params['fid'], fid_origin)
     self.assertEqual(bot.state.action_params['user_name'], 'randombishop')
     
@@ -34,7 +33,7 @@ class TestWordCloud(unittest.TestCase):
     bot = make_bot()
     bot.respond(request)
     bot.state.debug_action()
-    assert_expected_output(self, bot)
+    self.assert_expected_output(bot)
     self.assertEqual(bot.state.action_params['keyword'], 'bitcoin')
     
   def test4(self):
@@ -42,7 +41,7 @@ class TestWordCloud(unittest.TestCase):
     bot = make_bot()
     bot.respond(request)
     bot.state.debug_action()
-    assert_expected_output(self, bot)
+    self.assert_expected_output(bot)
     self.assertEqual(bot.state.action_params['category'], 'c_arts')
      
   def test5(self):
@@ -50,7 +49,7 @@ class TestWordCloud(unittest.TestCase):
     bot = make_bot()
     bot.respond(request)
     bot.state.debug_action()
-    assert_expected_output(self, bot)
+    self.assert_expected_output(bot)
     self.assertEqual(bot.state.action_params['channel'], 'https://farcaster.group/data')
 
   def test6(self):
@@ -58,7 +57,7 @@ class TestWordCloud(unittest.TestCase):
     bot = make_bot()
     bot.respond(request)
     bot.state.debug_action()
-    assert_expected_output(self, bot)
+    self.assert_expected_output(bot)
     self.assertIsNotNone(bot.state.action_params['search'])
       
   def test7(self):
@@ -66,7 +65,7 @@ class TestWordCloud(unittest.TestCase):
     bot = make_bot()
     bot.respond(request)
     bot.state.debug_action()
-    assert_expected_output(self, bot)
+    self.assert_expected_output(bot)
     self.assertEqual(bot.state.action_params['user_name'], 'randombishop')
     
   def test8(self):
@@ -75,4 +74,5 @@ class TestWordCloud(unittest.TestCase):
     bot = make_bot()
     bot.respond(request, root_parent_url=root_parent_url)
     bot.state.debug_action()
+    self.assert_expected_output(bot)
     self.assertEqual(bot.state.action_params['channel'], root_parent_url)

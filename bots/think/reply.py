@@ -25,6 +25,7 @@ INSTRUCTIONS:
 If it's a valid reply that makes sense, set valid_reply to true.
 If the potential reply sounds good to you, set valid_reply to true.
 If the reply is consistent with your bio, lore or style, set valid_reply to true.
+If the reply is funny, set valid_reply to true.
 If it doesn't make sense or confusing, set valid_reply to false.
 If the conversation is going in circles, set valid_reply to false.
 If the conversation is getting repetitive, boring, aggressive, offensive or not constructive, set valid_reply to false.
@@ -48,14 +49,10 @@ schema = {
 class Reply(IThinkStep):
       
   def think(self):
-    print('<Reply thinking'+('-'*32)+'>')
     prompt = self.state.format(prompt_template)
-    print(prompt)
-    print('-'*32)
     instructions = self.state.format(instructions_template)
-    print(instructions)
-    print('-'*32)
     result = call_llm(prompt, instructions, schema)
-    print(result)
     self.state.reply = read_boolean(result, key='valid_reply')
-    print('<'+('-'*32)+'done>')
+    print('<---------------------------- Reply Validation ---------------------------->')
+    print(prompt)
+    print(f"<---------------------------- state.reply = {self.state.reply} ---------------------------->")

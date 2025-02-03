@@ -1,19 +1,17 @@
 import unittest
-from bots.utils.tests import make_bot
+from bots.utils.tests import run_bot
 
-
-def assert_expected_output(t, bot):
-  t.assertEqual(bot.state.selected_action, 'News')
-  t.assertEqual(len(bot.state.casts), 1)
-  t.assertEqual(len(bot.state.casts[0]['embeds']), 1)
-  
 
 class TestNews(unittest.TestCase):
   
+  def assert_expected_output(self, bot):
+    self.assertEqual(bot.state.selected_action, 'News')
+    self.assertEqual(len(bot.state.casts), 1)
+    self.assertEqual(len(bot.state.casts[0]['embeds']), 1)
+    self.assertTrue(bot.state.reply)
+  
   def test1(self):
     request = "Search the news for Data Science"
-    bot = make_bot()
-    bot.respond(request)
-    bot.state.debug_action()
-    assert_expected_output(self, bot)
+    bot = run_bot(request)
+    self.assert_expected_output(bot)
     

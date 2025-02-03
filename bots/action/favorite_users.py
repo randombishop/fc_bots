@@ -46,7 +46,11 @@ class FavoriteUsers(IActionStep):
     self.state.action_params = parsed
   
   def execute(self):
-    df = get_favorite_users(self.state.action_params['fid'])
+    fid = self.state.action_params['fid']
+    user_name = self.state.action_params['user_name']
+    if fid is None or user_name is None:
+      raise Exception(f"Missing fid or user_name")
+    df = get_favorite_users(fid)
     if len(df) < 3:
       raise Exception(f"Not enough data ({len(df)})")
     df.rename(inplace=True, columns={
@@ -62,7 +66,7 @@ class FavoriteUsers(IActionStep):
     mentions = [int(df.iloc[i]['target_fid']) for i in range(3)]
     mentions_ats = ['@'+df.iloc[i]['User'] for i in range(3)]
     mentions_positions = []
-    text = "The winners are... \n"
+    text = user_name+"'s favorite users are:\n"
     text += "🥇 "
     mentions_positions.append(len(text.encode('utf-8')))
     text += "\n"
