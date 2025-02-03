@@ -17,16 +17,17 @@ FYI, in the farcaster platform, posts are called casts.
 Your task is to decide if you should block the prepared reply before posting it.
 
 INSTRUCTIONS:
-If the potential reply is completely off-topic, set do_not_reply to true.
-If the conversation is going in circles, set do_not_reply to true.
-If the conversation is getting repetitive, boring, aggressive, offensive or not constructive, set do_not_reply to true.
-If there is a misunderstanding between the user and you, set do_not_reply to true.
-Your task is not to fact-check the reply or judge it's accuracy, you just need to make sure that it somehow looks clean and appropriate.
+If the potential reply is completely off-topic, set do_not_reply=true and reason="off-topic".
+If the conversation is going in circles, set do_not_reply=true and reason="repetitive".
+If the conversation is getting repetitive, boring, aggressive or not constructive, set do_not_reply=true and reason one of "repetitive", "boring", "aggressive", "offensive", "not-constructive".
+If there is a misunderstanding between the user and you, set do_not_reply=true and reason="misunderstanding".
+If the last request explicitly asked for roasting or psycho analysis, expect the reply to be parodic and roasting and set do_not_reply=false.
+Your task is not to fact-check the reply or judge it's accuracy, you just need to make sure that it somehow looks clean and appropriate and set do_not_reply=true when it's fine.
 
 OUTPUT FORMAT:
 {
   "do_not_reply": true/false,
-  "reason": "string, reason if do_not_reply is true, no need to justify if do_not_reply is false"
+  "reason": "if do_not_reply=true, pick one of the following reasons: off-topic, repetitive, boring, aggressive, offensive, not-constructive, misunderstanding. If do_not_reply is false, set to an empty string."
 }
 """
 
