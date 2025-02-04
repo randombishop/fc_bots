@@ -3,7 +3,6 @@ from bots.prompts.contexts import conversation_and_request_template
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_string
 from bots.utils.skyvern_api import start_workflow, get_workflow_result
-from bots.utils.check_casts import check_casts
 
 
 parse_instructions_template = """
@@ -60,5 +59,4 @@ class News(IActionStep):
       cast['embeds'] = [link]
       cast['embeds_description'] = 'Link to the story'
     casts = [cast]
-    check_casts(casts)
     self.state.casts = casts

@@ -6,6 +6,7 @@ from bots.prompts.action_plan import select_action_task, select_action_format, s
 from bots.utils.llms import call_llm
 from bots.think.like import Like
 from bots.think.reply import Reply
+from bots.think.shorten import Shorten
 from bots.data.app import get_bot_character
 
 
@@ -68,6 +69,9 @@ class Bot:
     # Decide if we should like the post
     like_step = Like(self.state)
     like_step.think()
+    # Shorten the casts if needed
+    shorten_step = Shorten(self.state)
+    shorten_step.think()
     # Decide if we should reply
     if self.state.casts is not None and len(self.state.casts) > 0:
       reply_step = Reply(self.state)

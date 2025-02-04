@@ -1,7 +1,10 @@
+from dotenv import load_dotenv
+load_dotenv()
 import unittest
 from bots.models.bert import bert
 from bots.models.gambit import gambit, categories, topics
 from bots.models.bird import bird
+
 
 class TestModels(unittest.TestCase):
   

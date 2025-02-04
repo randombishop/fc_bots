@@ -1,5 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
 import unittest
-import os
 from bots.utils.tests import make_character_and_state
 from bots.wakeup.wakeup_actions import WakeUpActions
 from bots.wakeup.wakeup_bio import WakeUpBio

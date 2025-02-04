@@ -3,8 +3,6 @@ from bots.prompts.contexts import conversation_and_request_template
 from bots.data.casts import get_casts_for_fid
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_user
-from bots.utils.check_casts import check_casts
-
 
 
 parse_user_instructions_template = """
@@ -86,5 +84,4 @@ class Roast(IActionStep):
     result = call_llm(text, instructions, schema)
     cast = {'text': result['tweet']}
     casts = [cast]
-    check_casts(casts)
     self.state.casts = casts

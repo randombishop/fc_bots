@@ -5,7 +5,6 @@ from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.read_params import read_category, read_channel, read_user, read_keyword, read_string
 from bots.data.casts import get_top_casts, get_more_like_this
 from bots.utils.check_links import check_link_data
-from bots.utils.check_casts import check_casts
 
 
 parse_instructions_template = """
@@ -65,12 +64,12 @@ You are @{{name}}, a bot programmed to pick the best post (=cast) in a social me
 
 task_instructions = """
 INSTRUCTIONS:
-  - Select the best post from this list above using this criteria: ?
-  - Comment about the post with a keyword and emoji.
-  - Output the result in json format.
-  - Make sure you don't use " inside json strings. Avoid invalid json.
-  - Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
-  - Focus on posts that are genuine, interesting, funny, or informative.
+Select the best post from this list above using this criteria: ?
+Comment about the post with a keyword and emoji.
+Output the result in json format.
+Make sure you don't use " inside json strings. Avoid invalid json.
+Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
+Focus on posts that are genuine, interesting, funny, or informative.
 
 RESPONSE FORMAT:
 {
@@ -133,6 +132,5 @@ class PickCast(IActionStep):
       'embeds_description': data['text']
     }
     casts = [cast]
-    check_casts(casts)
     self.state.casts = casts
 

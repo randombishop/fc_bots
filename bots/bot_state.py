@@ -106,7 +106,14 @@ class BotState:
         text = insert_mentions(text, c['mentions_ats'], c['mentions_pos'])
       ans += f"> {text}"
       if 'embeds_description' in c:
-        ans += f" (embedded link: {c['embeds_description']})"
+        description = c['embeds_description']
+        if description is not None:
+          description_lines = description.split('\n')
+          if len(description_lines) > 1:
+            description = description_lines[0] + '...'
+          if len(description) > 256:
+            description = description[:256]+'...'
+          ans += f" (embedded link: {description})"
       ans += '\n'
     return ans
   

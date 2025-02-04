@@ -3,7 +3,6 @@ from bots.prompts.contexts import conversation_and_request_template
 from bots.data.casts import get_casts_for_fid
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_user
-from bots.utils.check_casts import check_casts
 
 
 parse_user_instructions_template = """
@@ -94,5 +93,4 @@ class Psycho(IActionStep):
       casts.append({'text': result['sentence2']})
     if 'sentence3' in result:
       casts.append({'text': result['sentence3']})
-    check_casts(casts)
     self.state.casts = casts

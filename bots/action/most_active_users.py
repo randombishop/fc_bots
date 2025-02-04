@@ -7,7 +7,6 @@ from bots.utils.read_params import read_channel
 from bots.data.users import get_top_daily_casters
 from bots.utils.images import user_activity_chart
 from bots.utils.gcs import upload_to_gcs
-from bots.utils.check_casts import check_casts
 from bots.data.channels import get_channel_by_url
 
 parse_instructions_template = """
@@ -92,6 +91,5 @@ class MostActiveUsers(IActionStep):
       'embeds_description': "Chart of top active users in the channel"
     }
     casts =  [cast]
-    check_casts(casts)
     self.state.casts = casts
    

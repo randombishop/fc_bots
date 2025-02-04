@@ -1,6 +1,5 @@
 from bots.i_action_step import IActionStep
 from bots.utils.llms import call_llm
-from bots.utils.check_casts import check_casts
 from bots.utils.check_links import check_link_data
 
 chat_instructions_template = """
@@ -96,5 +95,4 @@ class Chat(IActionStep):
       'embeds_description': link['text']
     } 
     casts = [cast]
-    check_casts(casts)
     self.state.casts = casts

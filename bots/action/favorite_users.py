@@ -7,7 +7,6 @@ from bots.utils.read_params import read_user
 from bots.data.users import get_favorite_users
 from bots.utils.images import table_image
 from bots.utils.gcs import upload_to_gcs
-from bots.utils.check_casts import check_casts
 
 
 parse_user_instructions_template = """
@@ -85,5 +84,4 @@ class FavoriteUsers(IActionStep):
       'embeds_description': 'Favorite users'
     }
     casts =  [cast]
-    check_casts(casts)
     self.state.casts = casts
