@@ -1,6 +1,7 @@
 import re
 from bots.data.users import get_username
-from bots.utils.format_cast import insert_mentions
+from bots.utils.format_cast import insert_mentions, format_embeds_description
+
 
 DEFAULT_TEMPLATE = """
 #NAME
@@ -18,20 +19,29 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 #BIO
 {{bio}}
 
+#LORE
+{{lore}}
+
+#STYLE
+{{style}}
+
+#TRENDING POSTS
+{{trending}}
+
+#PREVIOUS PROMPT STATISTICS
+{{cast_stats}}
+
+#LATEST CHANNEL SUMMARIES
+{{channel_summaries}}
+
 #CHANNEL
 {{channel}}
 
 #CONVERSATION
 {{conversation}}
 
-#LORE
-{{lore}}
-
 #TIME
 {{time}}
-
-#STYLE
-{{style}}
 
 #SELECTED ACTION
 {{selected_action}}
@@ -40,8 +50,9 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 
 class BotState:
   
-  def __init__(self, name=None, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
+  def __init__(self, id=None, name=None, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
     # 1. Initialization
+    self.id = id
     self.name = name
     self.request = request
     self.fid_origin = int(fid_origin) if fid_origin is not None else None
@@ -52,11 +63,14 @@ class BotState:
     # 2. Wake up
     self.actions = ''
     self.bio = ''
+    self.cast_stats = ''
     self.channel = ''
+    self.channel_summaries = ''
     self.conversation = ''
     self.lore = ''
-    self.time = ''
     self.style = ''
+    self.time = ''
+    self.trending = ''
     # 3. Plan
     self.selected_action = None
     # 4. Prepare 
@@ -105,15 +119,10 @@ class BotState:
       if 'mentions_ats' in c and 'mentions_pos' in c:
         text = insert_mentions(text, c['mentions_ats'], c['mentions_pos'])
       ans += f"> {text}"
-      if 'embeds_description' in c:
+      if 'embeds_description' in c and c['embeds_description'] is not None:
         description = c['embeds_description']
-        if description is not None:
-          description_lines = description.split('\n')
-          if len(description_lines) > 1:
-            description = description_lines[0] + '...'
-          if len(description) > 256:
-            description = description[:256]+'...'
-          ans += f" (embedded link: {description})"
+        description = format_embeds_description(description)
+        ans += f" (embedded link: {description})"
       ans += '\n'
     return ans
   

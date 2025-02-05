@@ -12,12 +12,14 @@ from bots.data.app import get_bot_character
 
 class Bot:
   
-  def __init__(self, character):
+  def __init__(self, id, character):
+    self.id = id
     self.character = character
     self.state = BotState()
     
   def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
     self.state = BotState(
+      id=self.id,
       name=self.character['name'], 
       request=request, 
       fid_origin=fid_origin, 
@@ -27,7 +29,7 @@ class Bot:
     )
 
   def wakeup(self):
-    wakeup_steps = self.character['wakeup_steps']
+    wakeup_steps = self.character['wakeup_steps']+['cast_stats', 'channel_summaries', 'trending'] # Hack before adding these to the bot character
     for key in wakeup_steps:
       wakeup_step = WAKEUP_STEPS[key]()
       wakeup_value = wakeup_step.get(self.character, self.state)
@@ -97,7 +99,7 @@ def generate_bot_response(bot_id, request=None, fid_origin=None, parent_hash=Non
   character = get_bot_character(bot_id)
   if character is None:
     raise Exception(f"Bot {bot_id} not found")
-  bot = Bot(character)
+  bot = Bot(bot_id, character)
   response = bot.respond(request=request, 
                          fid_origin=fid_origin, 
                          parent_hash=parent_hash, 

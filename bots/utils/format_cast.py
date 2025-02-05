@@ -1,3 +1,26 @@
+from datetime import datetime, timedelta
+
+
+def format_when(timestamp):
+  if isinstance(timestamp, str):
+    timestamp_dt = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S.%f")
+    timestamp_seconds = timestamp_dt.timestamp()
+  elif isinstance(timestamp, datetime):
+    timestamp_seconds = timestamp.timestamp()
+  else:
+    timestamp_seconds = int(timestamp) / 1000
+  now = datetime.now()
+  timestamp_dt = datetime.fromtimestamp(timestamp_seconds)
+  delta = now - timestamp_dt
+  if delta.days > 0:
+    return f"{delta.days} days ago"
+  hours = delta.seconds // 3600
+  if hours > 0:
+    return f"{hours} hours ago"
+  minutes = delta.seconds // 60
+  if minutes > 0:
+    return f"{minutes} minutes ago"
+  return "seconds ago"
 
 
 def insert_mentions(original: str, mentions: list[str], mention_positions: list[int]) -> str:
@@ -19,3 +42,13 @@ def insert_mentions(original: str, mentions: list[str], mention_positions: list[
   for i in range(len(mentions)):
     result += mentions[i] + result_parts[i + 1]
   return result
+
+def format_embeds_description(description):
+  if description is None:
+    return ''
+  description_lines = description.split('\n')
+  if len(description_lines) > 1:
+    description = description_lines[0] + '...'
+  if len(description) > 256:
+    description = description[:256]+'...'
+  return description
