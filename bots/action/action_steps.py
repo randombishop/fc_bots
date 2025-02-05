@@ -6,6 +6,7 @@ from bots.action.most_active_users import MostActiveUsers
 from bots.action.news import News
 from bots.action.perplexity import Perplexity
 from bots.action.pick_cast import PickCast
+from bots.action.praise import Praise
 from bots.action.psycho import Psycho
 from bots.action.roast import Roast
 from bots.action.word_cloud import WordCloud
@@ -20,6 +21,7 @@ ACTION_STEPS = {
   'News': News,
   'Perplexity': Perplexity,
   'Pick': PickCast,
+  'Praise': Praise,
   'Psycho': Psycho,
   'Roast': Roast,
   'WordCloud': WordCloud
@@ -36,6 +38,7 @@ DESCRIPTIONS = {
   'Perplexity': 'Ask a question to Perplexity AI.',
   'Pick': 'Pick a post given some criteria.',
   'Psycho': 'Generate a psychoanalysis for a user.',
+  'Praise': 'Generate a praise for a user.',
   'Roast': 'Generate a roast for a user.',
   'WordCloud': 'Make a word cloud.'
 }

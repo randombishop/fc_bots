@@ -59,14 +59,10 @@ class Shorten(IThinkStep):
   def shorten_text(self, text):
     print('<shorten_text>')
     prompt = self.state.format(prompt_template.replace('{{post}}', text))
-    print(prompt)
-    print('-----')
+    print(text)
+    print('>>> >>> >>>')
     instructions = self.state.format(instructions_template)
-    print(instructions)
-    print('-----')
     result = call_llm(prompt, instructions, schema)
-    print(result)
-    print('-----')
     text = result['tweet']
     if len(text) > MAX_LENGTH:
       text = text[:MAX_LENGTH]+'...'
