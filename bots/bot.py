@@ -90,7 +90,9 @@ class Bot:
       'like': self.state.like,
       'reply': self.state.reply,
       'casts': self.state.casts,
-      'cost': self.state.cost
+      'cost': self.state.cost,
+      'selected_action': self.state.selected_action,
+      'selected_user': self.state.user
     }
     return response
   
