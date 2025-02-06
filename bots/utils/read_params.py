@@ -29,7 +29,7 @@ def is_specific_user(value):
       s = s[1:]
     if 'username' in s:
       return False
-    if s in ['null', 'undefined', 'none', 'me', 'you', 'myself', 'self', 'user', 'unknown_user']:
+    if s in ['null', 'undefined', 'none', 'me', 'you', 'myself', 'self', 'user', 'unknown_user', '', '*']:
       return False
     if len(s) == 0:
       return False
@@ -134,8 +134,12 @@ def read_user(params, fid_origin=None, default_to_origin=False):
       fid = int(s)
       user_name = get_username(fid)
     else:
-      user_name = s
-      fid = get_fid(user_name)
+      try:
+        user_name = s
+        fid = get_fid(user_name)
+      except:
+        user_name = None
+        fid = None
   if fid is None and fid_origin is not None and default_to_origin:
     fid = fid_origin
     user_name = get_username(fid)

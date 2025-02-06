@@ -12,6 +12,8 @@ from bots.prompts.avatar import avatar_instructions_template, avatar_schema
 from bots.utils.openai import generate_image
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_links import check_link_data
+from bots.data.bot_history import get_random_user_to_praise
+from bots.data.users import get_fid
 
 
 parse_user_instructions_template = """
@@ -21,6 +23,7 @@ Based on the provided conversation, who should we praise?
 Your goal is not to continue the conversation, you must only extract the user parameter from the conversation so that we can call an API.
 Users typically start with @, but not always.
 If the request is about self, this or that user, or uses a pronoun, study the conversation carefully to figure out the intended user.
+If the request is to praise a random user, set user to "*"
 
 #RESPONSE FORMAT:
 {
@@ -95,7 +98,11 @@ class Praise(IActionStep):
     parse_instructions = self.state.format(parse_user_instructions_template)
     params = call_llm(parse_prompt, parse_instructions, parse_user_schema)
     parsed = {}
-    fid, user_name = read_user(params, self.state.fid_origin, default_to_origin=True)
+    fid, user_name = read_user(params, self.state.fid_origin, default_to_origin=False)
+    if user_name == '*' or user_name == '' or user_name is None:
+      print('Praise action will pick a random user to praise')
+      user_name = get_random_user_to_praise(self.state.id)
+      fid = get_fid(user_name)
     parsed['fid'] = fid
     parsed['user_name'] = user_name
     self.state.action_params = parsed

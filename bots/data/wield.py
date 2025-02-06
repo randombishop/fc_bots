@@ -61,6 +61,8 @@ def get_user_info(user):
 
 
 def parse_user_info(user):
+  if user is None:
+    return None
   return {
     'fid': int(user['fid']),
     'user_name': user['username'],

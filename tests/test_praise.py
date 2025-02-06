@@ -25,3 +25,8 @@ class TestPraise(unittest.TestCase):
     self.assert_expected_output(bot)
     self.assertEqual(bot.state.action_params['fid'], fid_origin)
     self.assertEqual(bot.state.action_params['user_name'], 'v')
+    
+  def test3(self):
+    request = "Praise a random user"
+    bot = run_bot(request)
+    self.assert_expected_output(bot)

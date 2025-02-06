@@ -40,3 +40,22 @@ def get_channel_summaries(bot_id):
     """)
     result = session.execute(sql, {'bot_id': bot_id})
     return result.mappings().all()
+  
+
+def get_random_user_to_praise(bot_id):
+  with get_session() as session:
+    sql = text("""
+    WITH candidates as (
+      SELECT DISTINCT username FROM ds.trending_casts WHERE timestamp >= NOW() - INTERVAL '5 days'
+    ),
+    exclude_users as (
+      SELECT DISTINCT selected_user as u FROM app.bot_cast WHERE bot_id = :bot_id AND selected_action='Praise' AND casted_at >= NOW() - INTERVAL '30 days'
+    )
+    SELECT username FROM candidates WHERE username not in (SELECT u FROM exclude_users) ORDER BY random() LIMIT 1
+    """)
+    result = session.execute(sql, {'bot_id': bot_id})
+    row = result.mappings().fetchone()
+    if row is not None:
+      return row['username']
+    else:
+      return None
