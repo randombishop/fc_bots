@@ -16,8 +16,6 @@ class Bot:
     self.id = id
     self.character = character
     self.state = BotState()
-    self.character['wakeup_steps']+=['cast_stats', 'channel_summaries', 'trending'] # Hack before adding these to the bot character
-    self.character['action_steps']+=['Praise'] # Hack before adding these to the bot character
     
   def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
     self.state = BotState(

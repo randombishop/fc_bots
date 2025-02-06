@@ -75,6 +75,7 @@ class BotState:
     self.selected_action = None
     # 4. Prepare 
     self.should_continue = True
+    self.user = None
     self.about_user = ''
     self.keyword = ''
     self.about_keyword = ''

@@ -74,6 +74,7 @@ class Psycho(IActionStep):
     parsed['fid'] = fid
     parsed['user_name'] = user_name
     self.state.action_params = parsed
+    self.state.user = user_name
 
   def execute(self):
     fid = self.state.action_params['fid']

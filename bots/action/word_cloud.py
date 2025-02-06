@@ -68,6 +68,7 @@ class WordCloud(IActionStep):
     parsed['user_name'] = user_name
     parsed['max_rows'] = 250
     self.state.action_params = parsed
+    self.state.user = user_name
 
   def execute(self):
     top_n = 50
