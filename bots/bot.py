@@ -15,7 +15,7 @@ class Bot:
   def __init__(self, id, character):
     self.id = id
     self.character = character
-    self.character['wakeup_steps'] += ['recent_casts','actions_templates','channel_list'] # TODO Temp hack to add channel list to wakeup steps
+    #self.character['wakeup_steps'] += ['recent_casts','actions_templates','channel_list']
     self.state = BotState()
     
   def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
