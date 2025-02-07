@@ -7,7 +7,6 @@ from bots.prompts.format_casts import concat_casts
 from bots.prompts.contexts import conversation_and_request_template
 from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.check_links import check_link_data
-from bots.utils.check_casts import check_casts
 from bots.utils.word_counts import get_word_counts
 from bots.utils.images import make_wordcloud
 from bots.utils.gcs import upload_to_gcs
@@ -206,7 +205,6 @@ class DigestCasts(IActionStep):
         'embeds': [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}],
         'embeds_description': link['text']
       })
-    check_casts(casts)
     self.state.casts = casts
 
 

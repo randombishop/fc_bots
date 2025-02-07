@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 import unittest
 from bots.bot_state import BotState
 from bots.think.reply import Reply

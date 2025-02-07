@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
 
 
-DATABASE_URL = os.getenv('POSTGRES_DATABASE_URL')
+DATABASE_URL = os.getenv('DATABASE_URL')
 engine = None
 metadata = None
 SessionLocal = None

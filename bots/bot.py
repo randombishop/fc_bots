@@ -6,17 +6,21 @@ from bots.prompts.action_plan import select_action_task, select_action_format, s
 from bots.utils.llms import call_llm
 from bots.think.like import Like
 from bots.think.reply import Reply
+from bots.think.shorten import Shorten
 from bots.data.app import get_bot_character
 
 
 class Bot:
   
-  def __init__(self, character):
+  def __init__(self, id, character):
+    self.id = id
     self.character = character
+    #self.character['wakeup_steps'] += ['recent_casts','actions_templates','channel_list']
     self.state = BotState()
     
   def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
     self.state = BotState(
+      id=self.id,
       name=self.character['name'], 
       request=request, 
       fid_origin=fid_origin, 
@@ -68,6 +72,9 @@ class Bot:
     # Decide if we should like the post
     like_step = Like(self.state)
     like_step.think()
+    # Shorten the casts if needed
+    shorten_step = Shorten(self.state)
+    shorten_step.think()
     # Decide if we should reply
     if self.state.casts is not None and len(self.state.casts) > 0:
       reply_step = Reply(self.state)
@@ -84,15 +91,21 @@ class Bot:
       'like': self.state.like,
       'reply': self.state.reply,
       'casts': self.state.casts,
-      'cost': self.state.cost
+      'cost': self.state.cost,
+      'selected_action': self.state.selected_action,
+      'selected_user': self.state.user
     }
     return response
   
 
-def generate_bot_response(bot_id, request, fid_origin=None):
+def generate_bot_response(bot_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
   character = get_bot_character(bot_id)
   if character is None:
     raise Exception(f"Bot {bot_id} not found")
-  bot = Bot(character)
-  response = bot.respond(request=request, fid_origin=fid_origin)
-  return bot, response
+  bot = Bot(bot_id, character)
+  response = bot.respond(request=request, 
+                         fid_origin=fid_origin, 
+                         parent_hash=parent_hash, 
+                         attachment_hash=attachment_hash, 
+                         root_parent_url=root_parent_url)
+  return response

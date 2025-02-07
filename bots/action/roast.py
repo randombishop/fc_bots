@@ -3,8 +3,6 @@ from bots.prompts.contexts import conversation_and_request_template
 from bots.data.casts import get_casts_for_fid
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_user
-from bots.utils.check_casts import check_casts
-
 
 
 parse_user_instructions_template = """
@@ -13,7 +11,7 @@ You are @{{name}}, a bot programmed to roast a user.
 Based on the provided conversation, who should we roast?
 Your goal is not to continue the conversation, you must only extract the user parameter from the conversation so that we can call an API.
 Users typically start with @, but not always.
-If you're not sure, pick the last token that starts with a @.
+If the request is about self, this or that user, or uses a pronoun, study the conversation carefully to figure out the intended user.
 
 
 #RESPONSE FORMAT:
@@ -72,6 +70,7 @@ class Roast(IActionStep):
     parsed['fid'] = fid
     parsed['user_name'] = user_name
     self.state.action_params = parsed
+    self.state.user = user_name
 
   def execute(self):
     fid = self.state.action_params['fid']
@@ -86,5 +85,4 @@ class Roast(IActionStep):
     result = call_llm(text, instructions, schema)
     cast = {'text': result['tweet']}
     casts = [cast]
-    check_casts(casts)
     self.state.casts = casts

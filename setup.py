@@ -29,7 +29,8 @@ setup(
       "python-dotenv==1.0.1",
       "json5==0.9.28",
       "psycopg2-binary==2.9.9",
-      "SQLAlchemy==2.0.36"
+      "SQLAlchemy==2.0.36",
+      "openai==1.61.1"
     ]
 )
 

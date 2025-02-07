@@ -5,7 +5,7 @@ import os
 URL = "https://api.perplexity.ai/chat/completions"
 TOKEN = os.getenv("PERPLEXITY_API_KEY")
 MODEL = "llama-3.1-sonar-small-128k-online"
-SYSTEM_PROMPT = "Answer with one short paragraph."
+SYSTEM_PROMPT = "Answer with one short tweet."
 def call_perplexity(question):
   payload = {
     "model": MODEL,
@@ -19,7 +19,7 @@ def call_perplexity(question):
           "content": question
       }
     ],
-    "max_tokens": 50,
+    "max_tokens": 256,
     "return_images": False,
     "return_related_questions": False,
     "search_recency_filter": "month",

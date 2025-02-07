@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 import unittest
 from bots.utils.tests import run_bot
 
@@ -29,13 +31,13 @@ class TestActionPlan(unittest.TestCase):
     self.assertTrue(bot.state.reply)
     
   def test_most_active_users(self):
-    request = "Who is most active in channnel /data?"
+    request = "Who is most active in channel /data?"
     bot = run_bot(request)
     self.assertEqual(bot.state.selected_action, 'MostActiveUsers')
     self.assertTrue(bot.state.reply)
     
   def test_pick_cast(self):
-    request = "Pick the funniest cast in channnel /data?"
+    request = "Pick the funniest cast in channel /mfers"
     bot = run_bot(request)
     self.assertEqual(bot.state.selected_action, 'Pick')
     self.assertTrue(bot.state.reply)

@@ -1,6 +1,7 @@
 import re
 from bots.data.users import get_username
-from bots.utils.format_cast import insert_mentions
+from bots.utils.format_cast import insert_mentions, shorten_text
+
 
 DEFAULT_TEMPLATE = """
 #NAME
@@ -18,20 +19,32 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 #BIO
 {{bio}}
 
-#CHANNEL
+#LORE
+{{lore}}
+
+#STYLE
+{{style}}
+
+#TRENDING POSTS
+{{trending}}
+
+#PREVIOUS PROMPT STATISTICS
+{{cast_stats}}
+
+#RECENT POSTS
+{{recent_casts}}
+
+#CHANNEL LIST
+{{channel_list}}
+
+#CURRENT CHANNEL
 {{channel}}
 
 #CONVERSATION
 {{conversation}}
 
-#LORE
-{{lore}}
-
 #TIME
 {{time}}
-
-#STYLE
-{{style}}
 
 #SELECTED ACTION
 {{selected_action}}
@@ -40,8 +53,9 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 
 class BotState:
   
-  def __init__(self, name=None, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
+  def __init__(self, id=None, name=None, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
     # 1. Initialization
+    self.id = id
     self.name = name
     self.request = request
     self.fid_origin = int(fid_origin) if fid_origin is not None else None
@@ -51,16 +65,22 @@ class BotState:
     self.root_parent_url = root_parent_url
     # 2. Wake up
     self.actions = ''
+    self.actions_templates = ''
     self.bio = ''
+    self.cast_stats = ''
     self.channel = ''
+    self.channel_list = ''
     self.conversation = ''
     self.lore = ''
-    self.time = ''
+    self.recent_casts = ''
     self.style = ''
+    self.time = ''
+    self.trending = ''
     # 3. Plan
     self.selected_action = None
     # 4. Prepare 
     self.should_continue = True
+    self.user = None
     self.about_user = ''
     self.keyword = ''
     self.about_keyword = ''
@@ -105,8 +125,10 @@ class BotState:
       if 'mentions_ats' in c and 'mentions_pos' in c:
         text = insert_mentions(text, c['mentions_ats'], c['mentions_pos'])
       ans += f"> {text}"
-      if 'embeds_description' in c:
-        ans += f" (embedded link: {c['embeds_description']})"
+      if 'embeds_description' in c and c['embeds_description'] is not None:
+        description = c['embeds_description']
+        description = shorten_text(description)
+        ans += f" (embedded link: {description})"
       ans += '\n'
     return ans
   

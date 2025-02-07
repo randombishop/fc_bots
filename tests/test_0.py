@@ -1,6 +1,7 @@
+from dotenv import load_dotenv
+load_dotenv()
 import unittest
 from bots.utils.tests import make_bot
-from bots.bot import Bot
 
 
 class Test0(unittest.TestCase):

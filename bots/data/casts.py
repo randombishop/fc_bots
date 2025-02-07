@@ -1,9 +1,11 @@
-from datetime import datetime, timedelta
 from bots.data.wield import get_cast_info
 from bots.data.dune import run_query
 from bots.models.bert import bert
 from bots.models.gambit import gambit, categories, topics
+from bots.utils.format_cast import format_when
 from dune_client.types import QueryParameter
+from bots.data.pg import get_session
+from sqlalchemy import text
 
 
 def get_casts_for_fid(fid):
@@ -42,21 +44,6 @@ def get_more_like_this(text, exclude_hash=None, limit=10):
     params.append(QueryParameter.text_type(name="exclude_hash", value=exclude_hash))
   return run_query(query_id, params)
 
-def format_when(timestamp):
-  timestamp_seconds = int(timestamp) / 1000
-  now = datetime.now()
-  timestamp_dt = datetime.fromtimestamp(timestamp_seconds)
-  delta = now - timestamp_dt
-  if delta.days > 0:
-    return f"{delta.days} days ago"
-  hours = delta.seconds // 3600
-  if hours > 0:
-    return f"{hours} hours ago"
-  minutes = delta.seconds // 60
-  if minutes > 0:
-    return f"{minutes} minutes ago"
-  return "seconds ago"
-
 def get_cast(hash):
   cast_info = get_cast_info(hash)
   if cast_info is None:
@@ -77,3 +64,20 @@ def get_cast(hash):
       cast['quote'] = {'text': quote_cast['text'], 'fid': int(quote_cast['author']['fid']), 'username': quote_cast['author']['username']}
   return cast
   
+
+def get_trending_casts(limit=100):
+  with get_session() as session:
+    sql = text("""
+    WITH latest_rows AS (
+    SELECT *
+    FROM ds.trending_casts
+    ORDER BY timestamp DESC
+    LIMIT :limit),
+    latest_unique AS (SELECT DISTINCT ON (hash) *
+    FROM latest_rows
+    ORDER BY hash)
+    SELECT * FROM latest_unique
+    ORDER BY timestamp DESC
+    """)
+    result = session.execute(sql, {'limit': limit})
+    return result.mappings().all()

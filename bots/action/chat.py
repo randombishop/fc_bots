@@ -1,6 +1,5 @@
 from bots.i_action_step import IActionStep
 from bots.utils.llms import call_llm
-from bots.utils.check_casts import check_casts
 from bots.utils.check_links import check_link_data
 
 chat_instructions_template = """
@@ -87,14 +86,11 @@ class Chat(IActionStep):
     result = call_llm(chat_prompt, chat_instructions, chat_schema)
     if 'tweet' not in result or result['tweet'] is None or len(result['tweet']) < 2:
       raise Exception('Could not generate a response.')
-    link = None
+    cast = {'text': result['tweet']}
     if 'link_id' in result:
       link = check_link_data({'id':result['link_id']}, self.state.posts_map)
-    cast = {
-      'text': result['tweet'],
-      'embeds': [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}],
-      'embeds_description': link['text']
-    } 
+      if link is not None:
+        cast['embeds'] = [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}]
+        cast['embeds_description'] = link['text']
     casts = [cast]
-    check_casts(casts)
     self.state.casts = casts

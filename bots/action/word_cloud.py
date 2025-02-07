@@ -7,7 +7,6 @@ from bots.utils.llms import call_llm
 from bots.utils.read_params import read_channel, read_user, read_string, read_category, read_keyword
 from bots.utils.images import make_wordcloud
 from bots.utils.gcs import upload_to_gcs
-from bots.utils.check_casts import check_casts
 from bots.utils.word_counts import get_word_counts
 
 
@@ -69,6 +68,7 @@ class WordCloud(IActionStep):
     parsed['user_name'] = user_name
     parsed['max_rows'] = 250
     self.state.action_params = parsed
+    self.state.user = user_name
 
   def execute(self):
     top_n = 50
@@ -101,5 +101,4 @@ class WordCloud(IActionStep):
       cast['mentions_pos'] = [0]
       cast['mentions_ats'] = [f"@{self.state.action_params['user_name']}"]
     casts =  [cast]
-    check_casts(casts)
     self.state.casts = casts
