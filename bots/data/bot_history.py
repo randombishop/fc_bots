@@ -17,30 +17,40 @@ def get_bot_casts_stats(bot_id):
     AND casted_at >= NOW() - INTERVAL '30 days'
     GROUP BY action_prompt, action_channel
     ORDER BY avg(num_replies) + avg(num_likes) + avg(num_recasts) DESC
-    LIMIT 100
+    LIMIT 50
     """)
     result = session.execute(sql, {'bot_id': bot_id})
     return result.mappings().all()
 
 
-def get_channel_summaries(bot_id):
+def get_bot_recent_casts(bot_id):
   with get_session() as session:
     sql = text("""
-    SELECT DISTINCT ON (action_channel) 
-      action_channel AS channel, 
-      casted_text AS text,
-      casted_at AS timestamp
+    SELECT selected_action, action_prompt, action_channel, casted_text, casted_embeds, casted_at
     FROM app.bot_cast
     WHERE bot_id = :bot_id
-      AND action_prompt LIKE 'Summarize channel /%'
-      AND casted_at >= NOW() - INTERVAL '30 days'
-      AND casted_text IS NOT NULL
-      AND cast_hash = root_hash
-    ORDER BY action_channel, casted_at DESC;
+    AND casted_at >= NOW() - INTERVAL '5 days'
+    AND cast_hash = root_hash
+    AND num_likes is NULL    
+    AND casted_text is not NULL                  
+    ORDER BY casted_at 
     """)
     result = session.execute(sql, {'bot_id': bot_id})
     return result.mappings().all()
-  
+
+
+def get_bot_channels(bot_id):
+  with get_session() as session:
+    sql = text("""
+    SELECT DISTINCT action_channel as channel
+    FROM app.bot_cast 
+    WHERE bot_id = :bot_id
+    AND casted_at >= NOW() - INTERVAL '60 days'
+    AND action_channel IS NOT NULL
+    """)
+    result = session.execute(sql, {'bot_id': bot_id})
+    return result.mappings().all()
+
 
 def get_random_user_to_praise(bot_id):
   with get_session() as session:

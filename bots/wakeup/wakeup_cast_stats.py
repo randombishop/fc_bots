@@ -9,6 +9,13 @@ class WakeUpCastStats(IWakeUpStep):
     stats = get_bot_casts_stats(bot_state.id)
     text = ''
     for s in stats:
-      row = f"prompt='{s['action_prompt']}' | channel='{s['action_channel']}' | num_posts={s['num_posts']} |' avg_replies={s['avg_replies']:.1f} | avg_likes={s['avg_likes']:.1f} | avg_recasts={s['avg_recasts']:.1f} | last_post={format_when(s['last_post'])}\n"
+      row = '{\n'
+      row += f"  prompt: {s['action_prompt']}\n"
+      row += f"  channel: {s['action_channel']}\n"
+      row += f"  num_posts: {s['num_posts']}\n"
+      row += f"  avg_replies: {s['avg_replies']:.1f}\n"
+      row += f"  avg_likes: {s['avg_likes']:.1f}\n"
+      row += f"  avg_recasts: {s['avg_recasts']:.1f}\n"
+      row += '}\n'
       text += row
     return text

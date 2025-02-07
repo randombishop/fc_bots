@@ -43,12 +43,13 @@ def insert_mentions(original: str, mentions: list[str], mention_positions: list[
     result += mentions[i] + result_parts[i + 1]
   return result
 
-def format_embeds_description(description):
-  if description is None:
+def shorten_text(text):
+  if text is None:
     return ''
-  description_lines = description.split('\n')
-  if len(description_lines) > 1:
-    description = description_lines[0] + '...'
-  if len(description) > 256:
-    description = description[:256]+'...'
-  return description
+  text_lines = text.split('\n')
+  if len(text_lines) > 1:
+    text = text_lines[0] + '...'
+  if len(text) > 256:
+    text = text[:256]+'...'
+  return text
+

@@ -1,6 +1,6 @@
 import re
 from bots.data.users import get_username
-from bots.utils.format_cast import insert_mentions, format_embeds_description
+from bots.utils.format_cast import insert_mentions, shorten_text
 
 
 DEFAULT_TEMPLATE = """
@@ -31,10 +31,13 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 #PREVIOUS PROMPT STATISTICS
 {{cast_stats}}
 
-#LATEST CHANNEL SUMMARIES
-{{channel_summaries}}
+#RECENT POSTS
+{{recent_casts}}
 
-#CHANNEL
+#CHANNEL LIST
+{{channel_list}}
+
+#CURRENT CHANNEL
 {{channel}}
 
 #CONVERSATION
@@ -62,12 +65,14 @@ class BotState:
     self.root_parent_url = root_parent_url
     # 2. Wake up
     self.actions = ''
+    self.actions_templates = ''
     self.bio = ''
     self.cast_stats = ''
     self.channel = ''
-    self.channel_summaries = ''
+    self.channel_list = ''
     self.conversation = ''
     self.lore = ''
+    self.recent_casts = ''
     self.style = ''
     self.time = ''
     self.trending = ''
@@ -122,7 +127,7 @@ class BotState:
       ans += f"> {text}"
       if 'embeds_description' in c and c['embeds_description'] is not None:
         description = c['embeds_description']
-        description = format_embeds_description(description)
+        description = shorten_text(description)
         ans += f" (embedded link: {description})"
       ans += '\n'
     return ans

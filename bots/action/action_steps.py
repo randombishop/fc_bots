@@ -42,3 +42,14 @@ DESCRIPTIONS = {
   'Roast': 'Generate a roast for a user.',
   'WordCloud': 'Make a word cloud.'
 }
+
+TEMPLATES = {
+  'Summary': "Summarize category {[arts, business, crypto, culture, money, nature, politics, sports, tech_science]} / Summarize channel /{channel} / Summarize posts about {search phrase} / Summarize posts by {user} / Summarize posts with keyword {keyword}",
+  'MostActiveUsers': 'Most active users in /{channel}',
+  'News': 'Check the news for {search phrase}',
+  'Perplexity': 'Ask Perplexity ""{question}"',
+  'Pick': 'Pick the {adjective} post in category {[arts, business, crypto, culture, money, nature, politics, sports, tech_science}] / Pick the {adjective} post in channel /{channel} / Pick the {adjective} post about {search phrase} / Pick the {adjective} post by {username} / Pick the {adjective} post with keyword {keyword}',
+  'Psycho': 'Psycho analyze {user}',
+  'Praise': 'Praise {user}',
+  'Roast': 'Roast {user}',
+}
