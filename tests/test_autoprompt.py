@@ -2,8 +2,8 @@ from dotenv import load_dotenv
 load_dotenv()
 import unittest
 from bots.utils.tests import make_bot
-from bots.prompts.autopilot import autopilot_prompt_template, autopilot_instructions, autopilot_schema
-from bots.utils.llms import call_llm
+from bots.plan.select_channel import SelectChannel
+from bots.plan.select_action import SelectAction
 
 
 class TestAutoprompt(unittest.TestCase):
@@ -12,14 +12,21 @@ class TestAutoprompt(unittest.TestCase):
     bot = make_bot()
     bot.initialize()
     bot.wakeup()
-    instructions = bot.state.format(autopilot_instructions)
-    prompt = bot.state.format(autopilot_prompt_template)
-    print(instructions)
+    # select channel
+    select_channel_step = SelectChannel(bot.state)
+    select_channel_step.plan()
+    print('len(channel_list)', len(bot.state.channel_list))
+    print('len(select_channel_df)', len(bot.state.select_channel_df))
+    print('select_channel_df:')
+    print(bot.state.select_channel_df)
+    print(bot.state.select_channel_df.describe())
+    print('select_channel_reasoning:')
+    print(bot.state.select_channel_reasoning)
+    print('select_channel_log:')
+    print(bot.state.select_channel_log)
+    print('channel', bot.state.channel)
     print('-'*100)
-    print(prompt)
-    print('-'*100)
-    print(autopilot_schema)
-    result = call_llm(prompt, instructions, autopilot_schema)
-    print('-'*100)
-    print(result)
-    
+    # select action
+    select_action_step = SelectAction(bot.state)
+    select_action_step.plan()
+    print('selected_action', bot.state.selected_action)

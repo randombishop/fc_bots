@@ -11,12 +11,18 @@ class WakeUpConversation(IWakeUpStep):
   def get(self, bot_character, bot_state):
     context = []
     username_origin = get_username(bot_state.fid_origin) if bot_state.fid_origin is not None else 'unknown_user'
-    main_cast = {'text': bot_state.request, 'fid': bot_state.fid_origin, 'username': username_origin, 'when': 'now'}
-    if bot_state.attachment_hash is not None:
-      attachment_cast = get_cast(bot_state.attachment_hash)
-      if attachment_cast is not None:
-        main_cast['quote'] = {'text': attachment_cast['text'], 'fid': attachment_cast['fid'], 'username': attachment_cast['username']}
-    context.append(main_cast)
+    if bot_state.request is not None or bot_state.attachment_hash is not None:
+      main_cast = {
+        'text': bot_state.request if bot_state.request is not None else '', 
+        'fid': bot_state.fid_origin, 
+        'username': username_origin, 
+        'when': 'now'
+      }
+      if bot_state.attachment_hash is not None:
+        attachment_cast = get_cast(bot_state.attachment_hash)
+        if attachment_cast is not None:
+          main_cast['quote'] = {'text': attachment_cast['text'], 'fid': attachment_cast['fid'], 'username': attachment_cast['username']}
+      context.append(main_cast)
     current_depth = 0
     parent_hash = bot_state.parent_hash
     while parent_hash is not None and current_depth < max_depth:

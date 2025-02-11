@@ -1,7 +1,4 @@
 autopilot_prompt_template = """
-#PREVIOUS PROMPTS STATISTICS SORTED BY ENGAGEMENT (descending)
-{{cast_stats}}
-
 #RECENT POSTS
 {{recent_casts}}
 

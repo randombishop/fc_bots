@@ -2,20 +2,18 @@ from bots.bot_state import BotState
 from bots.wakeup.wakeup_steps import WAKEUP_STEPS
 from bots.prepare.prepare_steps import PREPARE_STEPS
 from bots.action.action_steps import ACTION_STEPS
-from bots.prompts.action_plan import select_action_task, select_action_format, select_action_schema, select_action_prompt
-from bots.utils.llms import call_llm
+from bots.plan.select_action import SelectAction
 from bots.think.like import Like
 from bots.think.reply import Reply
 from bots.think.shorten import Shorten
 from bots.data.app import get_bot_character
-
 
 class Bot:
   
   def __init__(self, id, character):
     self.id = id
     self.character = character
-    #self.character['wakeup_steps'] += ['recent_casts','actions_templates','channel_list']
+    self.character['wakeup_steps'] += ['recent_casts','actions_templates','channel_list']
     self.state = BotState()
     
   def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
@@ -37,16 +35,8 @@ class Bot:
       self.state.set(key, wakeup_value)
 
   def plan(self):
-    instructions = self.state.format(select_action_task)
-    instructions += '\n'
-    instructions += "#OUTPUT FORMAT\n"
-    instructions += select_action_format
-    prompt = self.state.format(select_action_prompt)
-    result = call_llm(prompt, instructions, select_action_schema)
-    if ('action' not in result or result['action'] is None or str(result['action']) not in self.character['action_steps']):
-      self.state.selected_action = None
-    else:
-      self.state.selected_action = result['action']
+    select_action_step = SelectAction(self.state)
+    select_action_step.plan()
   
   def prepare(self):
     if self.state.selected_action is None:

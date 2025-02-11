@@ -5,4 +5,4 @@ class IPrepareStep:
   
   def prepare(self):
     """Execute the preparation step."""
-    raise NotImplementedError("Step doesn't implement execute")
+    raise NotImplementedError("Step doesn't implement prepare")

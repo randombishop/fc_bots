@@ -10,6 +10,9 @@ DEFAULT_TEMPLATE = """
 #ACTIONS
 {{actions}}
 
+#ACTIONS TEMPLATES
+{{actions_templates}}
+
 #REQUEST
 {{request}}
 
@@ -28,14 +31,8 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 #TRENDING POSTS
 {{trending}}
 
-#PREVIOUS PROMPT STATISTICS
-{{cast_stats}}
-
 #RECENT POSTS
 {{recent_casts}}
-
-#CHANNEL LIST
-{{channel_list}}
 
 #CURRENT CHANNEL
 {{channel}}
@@ -89,6 +86,10 @@ class BotState:
     self.context = ''
     self.about_context = ''
     self.posts_map = {}
+    self.current_trends_summary = ''
+    self.select_channel_df = None
+    self.select_channel_reasoning = None
+    self.select_channel_log = None
     # 5. Execute actions
     self.cost = 0
     self.action_params = None
