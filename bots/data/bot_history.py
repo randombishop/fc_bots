@@ -68,16 +68,18 @@ def get_bot_actions_stats(bot_id, channel_id):
     WITH t0 AS (
     SELECT 
     selected_action action_class,
-    max(casted_at) as last_cast
+    max(casted_at) as last_cast,
+    EXTRACT(EPOCH FROM (NOW() - MAX(casted_at))) / 3600 hours_ago           
     FROM app.bot_cast
     WHERE casted_at >= NOW() - INTERVAL '60 days' 
     AND bot_id=:bot_id
     AND action_channel=:channel_id
     AND cast_hash = root_hash
+    AND selected_action is not NULL
     GROUP by selected_action
     )
     SELECT action_class, 
-      last_cast,
+      hours_ago,
       (SELECT SUM(num_casts) FROM ds.channel_counts WHERE counted_at>t0.last_cast and channel=:channel_id) channel_activity 
     FROM t0
     """)
