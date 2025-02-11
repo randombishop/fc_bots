@@ -1,5 +1,6 @@
 from bots.i_plan_step import IPlanStep
 from bots.utils.llms import call_llm
+from bots.data.bot_history import get_bot_actions_stats
 
 
 select_action_task = """
@@ -49,6 +50,8 @@ class SelectAction(IPlanStep):
 
   def use_channel(self):
     print('use_channel')
+    candidates = get_bot_actions_stats(self.state.id, self.state.channel)
+    print('candidates', candidates)
 
   def use_no_channel(self):
     print('use_no_channel')
