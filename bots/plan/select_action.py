@@ -1,3 +1,4 @@
+import random
 from bots.i_plan_step import IPlanStep
 from bots.utils.llms import call_llm
 from bots.data.bot_history import get_bot_actions_stats
@@ -55,7 +56,7 @@ class SelectAction(IPlanStep):
       'MostActiveUsers': {'min_hours': 240, 'min_activity': 50},
       'Perplexity': {'min_hours': 24, 'min_activity': 5},
       'Praise': {'min_hours': 24, 'min_activity': 10},
-      'SaySomething': {'min_hours': 24, 'min_activity': 15}
+      'SaySomethingInChannel': {'min_hours': 24, 'min_activity': 15}
     }
     candidates = get_bot_actions_stats(self.state.id, self.state.channel)
     candidates = {c['action_class']: {
@@ -63,8 +64,21 @@ class SelectAction(IPlanStep):
       'channel_activity': int(c['channel_activity']) if c['channel_activity'] is not None else None
     } for c in candidates}
     for action, rules in action_rules.items():
-      print(action, rules)
-    print('candidates', candidates)
+      if action in candidates:
+        valid_action1 = candidates[action]['hours_ago'] is None or candidates[action]['hours_ago'] > rules['min_hours']
+        valid_action2 = candidates[action]['channel_activity'] is None or candidates[action]['channel_activity'] > rules['min_activity']
+        candidates[action]['is_valid'] = valid_action1 and valid_action2
+      else:
+        candidates[action] = {'hours_ago': None, 'channel_activity': None, 'is_valid': True}
+    print('-'*100)
+    print('candidate actions:')
+    for c in candidates:
+      print(c, candidates[c])
+    valid_actions = [k for k,v in candidates.items() if v['is_valid']]
+    print('-'*100)
+    print('valid actions:', valid_actions)
+    if len(valid_actions) > 0:
+      self.state.selected_action = random.choice(valid_actions)
 
   def use_no_channel(self):
     print('use_no_channel')

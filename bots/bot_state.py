@@ -69,14 +69,13 @@ class BotState:
     self.channel_list = ''
     self.conversation = ''
     self.lore = ''
-    self.recent_casts = ''
     self.style = ''
     self.time = ''
-    self.trending = ''
     # 3. Plan
     self.selected_action = None
     # 4. Prepare 
     self.should_continue = True
+    self.trending = ''
     self.user = None
     self.about_user = ''
     self.keyword = ''
@@ -90,6 +89,8 @@ class BotState:
     self.select_channel_df = None
     self.select_channel_reasoning = None
     self.select_channel_log = None
+    self.sample_casts_in_channel = None
+    self.bot_casts_in_channel = None
     # 5. Execute actions
     self.cost = 0
     self.action_params = None

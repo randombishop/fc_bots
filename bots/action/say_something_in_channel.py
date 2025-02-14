@@ -4,7 +4,7 @@ from bots.utils.check_links import check_link_data
 
 chat_instructions_template = """
 You are @{{name}}, a social media bot.
-Your goal is to reply to a user conversation with a creative tweet with a reference to one of the provided posts.
+Your goal is to tweet something in the {{channel}} channel.
 
 #YOUR BIO
 {{bio}}
@@ -15,8 +15,11 @@ Your goal is to reply to a user conversation with a creative tweet with a refere
 #YOUR STYLE
 {{style}}
 
-#CURRENT CHANNEL
-{{channel}}
+#WHAT PEOPLE ARE TALKING ABOUT
+{{recent_casts_in_channel}}
+
+#WHAT YOU RECENTLY POSTED IN THE CHANNEL
+{{}}
 
 #TASK
 Respond to the user conversation with a tweet and a link to a post.
@@ -37,6 +40,9 @@ If you can't find any post that can be used that way, respond with a tweet only 
 
 
 chat_prompt_template = """
+##Posts from @{{user_origin}}
+{{about_user}}
+
 ##Posts about {{topic}}
 {{about_topic}}
 
@@ -45,9 +51,6 @@ chat_prompt_template = """
 
 ##Posts about {{context}}
 {{about_context}}
-
-##Posts from @{{user_origin}}
-{{about_user}}
 
 #Conversation (this is the current conversation you are having with the user)
 {{conversation}}
@@ -66,10 +69,10 @@ chat_schema = {
 }
 
 
-class Chat(IActionStep):
+class SaySomethingInChannel(IActionStep):
     
   def get_prepare_steps(self):
-    return ['ShouldContinue', 'GetCasts']
+    return ['GetChannelCasts']
   
   def get_cost(self):
     return 20
