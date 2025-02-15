@@ -8,8 +8,25 @@ def get_bot_recent_casts(bot_id):
     SELECT selected_action, action_prompt, action_channel, casted_text, casted_embeds, casted_at
     FROM app.bot_cast
     WHERE bot_id = :bot_id
-    AND casted_at >= NOW() - INTERVAL '5 days'
+    AND casted_at >= NOW() - INTERVAL '10 days'
     AND cast_hash = root_hash
+    AND casted_text is not NULL                  
+    ORDER BY casted_at 
+    LIMIT 50
+    """)
+    result = session.execute(sql, {'bot_id': bot_id})
+    return result.mappings().all()
+  
+def get_bot_recent_casts_no_channel(bot_id):
+  with get_session() as session:
+    sql = text("""
+    SELECT selected_action, action_prompt, casted_text, casted_embeds, casted_at
+    FROM app.bot_cast
+    WHERE bot_id = :bot_id
+    AND action_channel is NULL
+    AND casted_at >= NOW() - INTERVAL '60 days'
+    AND cast_hash = root_hash
+    AND num_likes is NULL    
     AND casted_text is not NULL                  
     ORDER BY casted_at 
     LIMIT 50

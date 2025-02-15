@@ -10,6 +10,7 @@ from bots.action.praise import Praise
 from bots.action.psycho import Psycho
 from bots.action.roast import Roast
 from bots.action.say_something_in_channel import SaySomethingInChannel
+from bots.action.say_something_no_channel import SaySomethingNoChannel
 from bots.action.word_cloud import WordCloud
 
 ACTION_STEPS = {
@@ -24,6 +25,7 @@ ACTION_STEPS = {
   'Praise': Praise,
   'Psycho': Psycho,
   'Roast': Roast,
+  'SaySomethingNoChannel': SaySomethingNoChannel,
   'SaySomethingInChannel': SaySomethingInChannel,
   'WordCloud': WordCloud
 }

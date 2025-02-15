@@ -7,7 +7,6 @@ from bots.wakeup.wakeup_conversation import WakeUpConversation
 from bots.wakeup.wakeup_lore import WakeUpLore
 from bots.wakeup.wakeup_style import WakeUpStyle
 from bots.wakeup.wakeup_time import WakeUpTime
-from bots.wakeup.wakeup_trending import WakeUpTrending
 
 
 WAKEUP_STEPS = {
@@ -19,6 +18,5 @@ WAKEUP_STEPS = {
   'conversation': WakeUpConversation,
   'lore': WakeUpLore,
   'style': WakeUpStyle,
-  'time': WakeUpTime,
-  'trending': WakeUpTrending
+  'time': WakeUpTime
 }

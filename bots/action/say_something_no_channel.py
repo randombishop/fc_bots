@@ -4,7 +4,7 @@ from bots.utils.llms import call_llm
 
 instructions_template = """
 You are @{{name}}, a social media bot.
-Your goal is to tweet something in the {{channel}} channel.
+Your goal is to tweet something in the farcaster social network.
 
 #YOUR BIO
 {{bio}}
@@ -16,17 +16,17 @@ Your goal is to tweet something in the {{channel}} channel.
 {{style}}
 
 #TASK
-You are provided with the activity from channel {{channel}}, plus what you posted recently there.
-First, study the activity carefully and generate a short summary of the channel activity in a couple of sentences.
+You are provided with the recent trends, plus what you posted recently.
+First, study the activity carefully and generate a short summary of the current trends in a couple of sentences.
 Then, generate an original, creative and engaging tweet.
 It can be a question, an affirmation, a joke or a haiku.
-If something is at the intersection of the channel activity and your character (bio and lore), it will be a great tweet idea.
-Make sure your tweet is inline with the recent channel activity BUT DO NOT COPY OTHER POSTS.
+If something is at the intersection of the current activity and your character (bio and lore), it will be a great tweet idea.
+Make sure your tweet is inline with the recent activity BUT DO NOT COPY OTHER POSTS.
 Avoid repeating things you already posted.
 
 #RESPONSE FORMAT
 {
-  "summary": "short summary of the channel activity."
+  "summary": "short summary of current activity."
   "tweet": "..."
 }
 """
@@ -34,10 +34,10 @@ Avoid repeating things you already posted.
 
 prompt_template = """
 #WHAT PEOPLE ARE TALKING ABOUT
-{{casts_in_channel}}
+{{trending}}
 
-#WHAT YOU RECENTLY POSTED IN THE CHANNEL
-{{bot_casts_in_channel}}
+#WHAT YOU RECENTLY POSTED
+{{bot_casts_no_channel}}
 """
 
 
@@ -50,10 +50,10 @@ schema = {
 }
 
 
-class SaySomethingInChannel(IActionStep):
+class SaySomethingNoChannel(IActionStep):
     
   def get_prepare_steps(self):
-    return ['GetBotCastsInChannel', 'GetCastsInChannel']
+    return ['GetBotCastsNoChannel', 'GetTrending']
   
   def get_cost(self):
     return 20
@@ -63,8 +63,14 @@ class SaySomethingInChannel(IActionStep):
 
   def execute(self):
     prompt = self.state.format(prompt_template)
+    print(prompt)
+    print('-'*100)  
     instructions = self.state.format(instructions_template)
+    print(instructions)
+    print('-'*100)
     result = call_llm(prompt, instructions, schema)
+    print(result)
+    print('-'*100)
     if 'tweet' not in result or result['tweet'] is None or len(result['tweet']) < 2:
       raise Exception('Could not say something.')
     cast = {'text': result['tweet']}

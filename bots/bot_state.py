@@ -92,7 +92,9 @@ class BotState:
     self.about_context = ''
     self.posts_map = {}
     self.casts_in_channel = None
+    self.bot_casts = None
     self.bot_casts_in_channel = None
+    self.bot_casts_no_channel = None
     # 5. Execute actions
     self.cost = 0
     self.action_params = None
