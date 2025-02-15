@@ -50,7 +50,10 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 
 class BotState:
   
-  def __init__(self, id=None, name=None, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
+  def __init__(self, id=None, name=None, 
+               request=None, 
+               fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None,
+               selected_action=None):
     # 1. Initialization
     self.id = id
     self.name = name
@@ -72,7 +75,10 @@ class BotState:
     self.style = ''
     self.time = ''
     # 3. Plan
-    self.selected_action = None
+    self.select_channel_df = None
+    self.select_channel_reasoning = None
+    self.select_channel_log = None
+    self.selected_action = selected_action
     # 4. Prepare 
     self.should_continue = True
     self.trending = ''
@@ -85,15 +91,12 @@ class BotState:
     self.context = ''
     self.about_context = ''
     self.posts_map = {}
-    self.current_trends_summary = ''
-    self.select_channel_df = None
-    self.select_channel_reasoning = None
-    self.select_channel_log = None
-    self.sample_casts_in_channel = None
+    self.casts_in_channel = None
     self.bot_casts_in_channel = None
     # 5. Execute actions
     self.cost = 0
     self.action_params = None
+    self.action_log = None
     self.casts = []
     # 6. Think
     self.like = False
@@ -155,6 +158,8 @@ class BotState:
             s += f"  {attr}: {self.action_params[attr]}\n"
       else:
         s += '  No parameters were parsed\n'
+      if self.action_log is not None:
+        s += f"Log:\n  {self.action_log}\n"
       if hasattr(self, 'casts') and self.casts is not None: 
         casts = self.casts
         s += "Casts:\n"

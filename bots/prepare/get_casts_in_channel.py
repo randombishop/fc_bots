@@ -5,7 +5,7 @@ from bots.prompts.format_casts import concat_casts
 
 
 
-class GetChannelCasts(IPrepareStep):
+class GetCastsInChannel(IPrepareStep):
     
   def prepare(self):
     if self.state.channel is None:
@@ -17,8 +17,8 @@ class GetChannelCasts(IPrepareStep):
     posts = get_top_casts(channel=channel_url, max_rows=max_rows)
     if posts is not None and len(posts)>0:
       posts = posts.to_dict('records')
-      self.state.sample_casts_in_channel = concat_casts(posts)
+      self.state.casts_in_channel = concat_casts(posts)
       for p in posts:
         self.state.posts_map[p['id']] = p
     else:
-      self.state.sample_casts_in_channel = ''
+      self.state.casts_in_channel = ''

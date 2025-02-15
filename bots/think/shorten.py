@@ -72,8 +72,6 @@ class Shorten(IThinkStep):
 
   def think(self):
     casts = self.state.casts
-    if casts is None:
-      return
     for c in casts:
       if c['text'] is not None and len(c['text']) > MAX_LENGTH:
         c['text'] = self.shorten_text(c['text'])

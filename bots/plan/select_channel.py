@@ -47,6 +47,7 @@ Make sure you don't use " inside json strings. Avoid invalid json.
 schema = """
   "type":"OBJECT",
   "properties":{
+    "current_trends_summary":{"type":"STRING"},
     "channel_ranking":{"type":"STRING"},
     "reasoning":{"type":"STRING"}
 """
@@ -95,7 +96,6 @@ class SelectChannel(IPlanStep):
     selected_channel = random.choices(channel_list, weights=channel_weights, k=1)[0]
     log = df_channels[df_channels['channel'] == selected_channel].to_dict(orient='records')[0]
     self.state.channel = selected_channel
-    self.state.current_trends_summary = current_trends_summary
     self.state.select_channel_df = df_channels
-    self.state.select_channel_reasoning = reasoning
+    self.state.select_channel_reasoning = 'Trending:' + current_trends_summary + '\n' + 'Reasoning:' + reasoning
     self.state.select_channel_log = log

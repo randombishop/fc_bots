@@ -2,7 +2,7 @@ from bots.i_action_step import IActionStep
 from bots.utils.llms import call_llm
 from bots.utils.check_links import check_link_data
 
-chat_instructions_template = """
+instructions_template = """
 You are @{{name}}, a social media bot.
 Your goal is to tweet something in the {{channel}} channel.
 
@@ -15,56 +15,37 @@ Your goal is to tweet something in the {{channel}} channel.
 #YOUR STYLE
 {{style}}
 
-#WHAT PEOPLE ARE TALKING ABOUT
-{{recent_casts_in_channel}}
-
-#WHAT YOU RECENTLY POSTED IN THE CHANNEL
-{{}}
-
 #TASK
-Respond to the user conversation with a tweet and a link to a post.
-Pick a post from the provided ones that is somehow related to the conversation.
-Pick a post that has a meaningful, metaphorical, humorous, or even contrasting connection to the conversation.
-The selected post doesn't have to be directly related to the conversation, it can be any idea that you can play with when replying to the user.
-You can also select a post that connects another user to the conversation and tweet a haiku for both of them.
-Be creative in picking a post and select one that will be useful to include in your answer.
-Once you found the ideal post to use, respond to the user conversation with a tweet and a link to the post.
-If you can't find any post that can be used that way, respond with a tweet only and no link.
+You are provided with the activity from channel {{channel}}, plus what you posted recently there.
+First, study the activity carefully and generate a short summary of the channel activity in a couple of sentences.
+Then, generate an original, creative and engaging tweet.
+It can be a question, an affirmation, a joke or a haiku.
+If something is at the intersection of the channel activity and your character (bio and lore), it will be a great tweet idea.
+Make sure your tweet is inline with the recent channel activity BUT DO NOT COPY OTHER POSTS.
+Avoid repeating things you already posted.
 
 #RESPONSE FORMAT
 {
-  "tweet": "...",
-  "link_id": "relevant post id"
+  "summary": "short summary of the channel activity."
+  "tweet": "..."
 }
 """
 
 
-chat_prompt_template = """
-##Posts from @{{user_origin}}
-{{about_user}}
+prompt_template = """
+#WHAT PEOPLE ARE TALKING ABOUT
+{{casts_in_channel}}
 
-##Posts about {{topic}}
-{{about_topic}}
-
-##Posts about {{keyword}}
-{{about_keyword}}
-
-##Posts about {{context}}
-{{about_context}}
-
-#Conversation (this is the current conversation you are having with the user)
-{{conversation}}
-
-#Last message (this is the message you are responding to)
-{{request}}
+#WHAT YOU RECENTLY POSTED IN THE CHANNEL
+{{bot_casts_in_channel}}
 """
 
 
-chat_schema = {
+schema = {
   "type":"OBJECT",
   "properties":{
-    "tweet":{"type":"STRING"},
-    "link_id":{"type":"STRING"}
+    "summary":{"type":"STRING"},
+    "tweet":{"type":"STRING"}
   }
 }
 
@@ -72,7 +53,7 @@ chat_schema = {
 class SaySomethingInChannel(IActionStep):
     
   def get_prepare_steps(self):
-    return ['GetChannelCasts']
+    return ['GetBotCastsInChannel', 'GetCastsInChannel']
   
   def get_cost(self):
     return 20
@@ -81,19 +62,13 @@ class SaySomethingInChannel(IActionStep):
     pass
 
   def execute(self):
-    if not self.state.should_continue:  
-      self.state.casts = []
-      return
-    chat_prompt = self.state.format(chat_prompt_template)
-    chat_instructions = self.state.format(chat_instructions_template)
-    result = call_llm(chat_prompt, chat_instructions, chat_schema)
+    prompt = self.state.format(prompt_template)
+    instructions = self.state.format(instructions_template)
+    result = call_llm(prompt, instructions, schema)
     if 'tweet' not in result or result['tweet'] is None or len(result['tweet']) < 2:
-      raise Exception('Could not generate a response.')
+      raise Exception('Could not say something.')
     cast = {'text': result['tweet']}
-    if 'link_id' in result:
-      link = check_link_data({'id':result['link_id']}, self.state.posts_map)
-      if link is not None:
-        cast['embeds'] = [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}]
-        cast['embeds_description'] = link['text']
     casts = [cast]
+    summary = result['summary'] if 'summary' in result else ''
     self.state.casts = casts
+    self.state.action_log = summary

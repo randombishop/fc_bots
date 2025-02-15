@@ -9,8 +9,8 @@ from bots.action.pick_cast import PickCast
 from bots.action.praise import Praise
 from bots.action.psycho import Psycho
 from bots.action.roast import Roast
+from bots.action.say_something_in_channel import SaySomethingInChannel
 from bots.action.word_cloud import WordCloud
-
 
 ACTION_STEPS = {
   'Chat': Chat,
@@ -24,6 +24,7 @@ ACTION_STEPS = {
   'Praise': Praise,
   'Psycho': Psycho,
   'Roast': Roast,
+  'SaySomethingInChannel': SaySomethingInChannel,
   'WordCloud': WordCloud
 }
 

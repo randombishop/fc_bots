@@ -24,8 +24,8 @@ def make_character_and_state(request=None, fid_origin=None, parent_hash=None, at
   state.root_parent_url = root_parent_url
   return character, state
 
-def run_bot(request, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):
+def run_bot(request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_action=None):
     bot = make_bot()
-    bot.respond(request, fid_origin=fid_origin, parent_hash=parent_hash, attachment_hash=attachment_hash, root_parent_url=root_parent_url)
+    bot.respond(request, fid_origin=fid_origin, parent_hash=parent_hash, attachment_hash=attachment_hash, root_parent_url=root_parent_url, selected_action=selected_action)
     bot.state.debug_action()
     return bot

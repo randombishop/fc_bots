@@ -5,7 +5,6 @@ from bots.wakeup.wakeup_channel import WakeUpChannel
 from bots.wakeup.wakeup_channel_list import WakeUpChannelList
 from bots.wakeup.wakeup_conversation import WakeUpConversation
 from bots.wakeup.wakeup_lore import WakeUpLore
-from bots.wakeup.wakeup_recent_casts import WakeUpRecentCasts
 from bots.wakeup.wakeup_style import WakeUpStyle
 from bots.wakeup.wakeup_time import WakeUpTime
 from bots.wakeup.wakeup_trending import WakeUpTrending
@@ -19,7 +18,6 @@ WAKEUP_STEPS = {
   'channel_list': WakeUpChannelList,
   'conversation': WakeUpConversation,
   'lore': WakeUpLore,
-  'recent_casts': WakeUpRecentCasts,
   'style': WakeUpStyle,
   'time': WakeUpTime,
   'trending': WakeUpTrending
