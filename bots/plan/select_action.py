@@ -52,11 +52,11 @@ class SelectAction(IPlanStep):
   def use_channel(self):
     print('use_channel')
     action_rules = {
-      'Summary': {'min_hours': 72, 'min_activity': 25},
       'MostActiveUsers': {'min_hours': 240, 'min_activity': 50},
       'Perplexity': {'min_hours': 24, 'min_activity': 5},
       'Praise': {'min_hours': 24, 'min_activity': 10},
-      'SaySomethingInChannel': {'min_hours': 24, 'min_activity': 15}
+      'SaySomethingInChannel': {'min_hours': 24, 'min_activity': 15},
+      'Summary': {'min_hours': 72, 'min_activity': 25}
     }
     candidates = get_bot_actions_stats(self.state.id, self.state.channel)
     candidates = {c['action_class']: {
@@ -84,6 +84,7 @@ class SelectAction(IPlanStep):
     print('use_no_channel')
 
   def plan(self):
+    print('SelectAction.plan()')
     if len(self.state.conversation)>0:
       self.use_conversation()
     elif self.state.channel is not None and self.state.channel not in ['', 'None']:

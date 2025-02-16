@@ -30,3 +30,11 @@ class TestAutoprompt(unittest.TestCase):
     select_action_step = SelectAction(bot.state)
     select_action_step.plan()
     print('selected_action', bot.state.selected_action)
+    
+  def test2(self):
+    bot = make_bot()
+    bot.initialize()
+    bot.wakeup()
+    select_action_step = SelectAction(bot.state)
+    select_action_step.plan()
+    print('selected_action', bot.state.selected_action)

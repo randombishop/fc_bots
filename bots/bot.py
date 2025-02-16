@@ -18,7 +18,7 @@ class Bot:
     self.character['wakeup_steps'] = [step for step in self.character['wakeup_steps'] if step != 'trending']
     self.state = BotState()
     
-  def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_action=None):
+  def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
     self.state = BotState(
       id=self.id,
       name=self.character['name'], 
@@ -27,6 +27,7 @@ class Bot:
       parent_hash=parent_hash, 
       attachment_hash=attachment_hash, 
       root_parent_url=root_parent_url,
+      selected_channel=selected_channel,
       selected_action=selected_action
     )
 
@@ -38,7 +39,7 @@ class Bot:
       self.state.set(key, wakeup_value)
 
   def plan(self):
-    if self.state.request is None and len(self.state.channel)==0 and self.state.selected_action is None:
+    if self.state.request is None and self.state.selected_channel is None and self.state.selected_action is None:
       select_channel_step = SelectChannel(self.state)
       select_channel_step.plan()
     if self.state.selected_action is None:
@@ -61,7 +62,10 @@ class Bot:
       return
     Action = ACTION_STEPS[self.state.selected_action]
     action = Action(self.state)
-    action.parse()
+    if self.state.request is None:
+      action.auto_prompt()
+    else:
+      action.parse()
     action.execute()
     self.state.cost += action.get_cost()
     
@@ -79,8 +83,8 @@ class Bot:
       reply_step = Reply(self.state)
       reply_step.think()
   
-  def respond(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_action=None):
-    self.initialize(request, fid_origin, parent_hash, attachment_hash, root_parent_url, selected_action)
+  def respond(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
+    self.initialize(request, fid_origin, parent_hash, attachment_hash, root_parent_url, selected_channel, selected_action)
     self.wakeup()
     self.plan()
     self.prepare()

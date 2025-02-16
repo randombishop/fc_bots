@@ -11,15 +11,19 @@ class TestSaySomethingInChannel(unittest.TestCase):
     self.assertGreaterEqual(len(bot.state.casts), 1)
     
   def test1(self):
-    root_parent_url = "chain://eip155:7777777/erc721:0xf7ebaea271e84a0c40e90bc6f5889dbfa0a12366"
+    channel = 'data'
     selected_action = "SaySomethingInChannel"
-    bot = run_bot(root_parent_url=root_parent_url, selected_action=selected_action)
+    bot = run_bot(selected_channel=channel, selected_action=selected_action)
     self.assert_expected_output(bot)
+    self.assertEqual(bot.state.selected_channel, channel)
+    self.assertEqual(bot.state.request, f'Say something in channel /{channel}')
     
   def test2(self):
-    root_parent_url = "https://warpcast.com/~/channel/objkt"
+    channel = "objkt"
     selected_action = "SaySomethingInChannel"
-    bot = run_bot(root_parent_url=root_parent_url, selected_action=selected_action)
+    bot = run_bot(selected_channel=channel, selected_action=selected_action)
     self.assert_expected_output(bot)
+    self.assertEqual(bot.state.selected_channel, channel)
+    self.assertEqual(bot.state.request, f'Say something in channel /{channel}')
 
   

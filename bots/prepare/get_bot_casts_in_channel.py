@@ -6,7 +6,7 @@ from bots.utils.format_cast import shorten_text, format_when
 class GetBotCastsInChannel(IPrepareStep):
     
   def prepare(self):
-    casts = get_bot_recent_casts_in_channel(self.state.id, self.state.channel)
+    casts = get_bot_recent_casts_in_channel(self.state.id, self.state.selected_channel)
     text = ''
     for c in casts:
       row = '{\n'

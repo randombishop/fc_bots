@@ -8,9 +8,9 @@ from bots.prompts.format_casts import concat_casts
 class GetCastsInChannel(IPrepareStep):
     
   def prepare(self):
-    if self.state.channel is None:
+    if self.state.selected_channel is None:
       raise Exception('GetChannelCasts requires a channel')
-    channel_url = get_channel_url(self.state.channel)
+    channel_url = get_channel_url(self.state.selected_channel)
     if channel_url is None:
       raise Exception('GetChannelCasts could not map channel to url')
     max_rows = 25

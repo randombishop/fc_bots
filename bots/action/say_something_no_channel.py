@@ -58,6 +58,9 @@ class SaySomethingNoChannel(IActionStep):
   def get_cost(self):
     return 20
     
+  def auto_prompt(self):
+    self.state.request = f'Say something in main feed'
+    
   def parse(self):
     pass
 

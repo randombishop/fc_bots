@@ -4,7 +4,7 @@ from bots.utils.llms import call_llm
 
 instructions_template = """
 You are @{{name}}, a social media bot.
-Your goal is to tweet something in the {{channel}} channel.
+Your goal is to tweet something in the {{selected_channel}} channel.
 
 #YOUR BIO
 {{bio}}
@@ -16,7 +16,7 @@ Your goal is to tweet something in the {{channel}} channel.
 {{style}}
 
 #TASK
-You are provided with the activity from channel {{channel}}, plus what you posted recently there.
+You are provided with the activity from channel {{selected_channel}}, plus what you posted recently there.
 First, study the activity carefully and generate a short summary of the channel activity in a couple of sentences.
 Then, generate an original, creative and engaging tweet.
 It can be a question, an affirmation, a joke or a haiku.
@@ -57,6 +57,10 @@ class SaySomethingInChannel(IActionStep):
   
   def get_cost(self):
     return 20
+  
+  def auto_prompt(self):
+    self.state.request = f'Say something in channel /{self.state.selected_channel}'
+    self.state.conversation = self.state.request
     
   def parse(self):
     pass

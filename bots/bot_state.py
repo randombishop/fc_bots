@@ -53,7 +53,7 @@ class BotState:
   def __init__(self, id=None, name=None, 
                request=None, 
                fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None,
-               selected_action=None):
+               selected_channel=None, selected_action=None):
     # 1. Initialization
     self.id = id
     self.name = name
@@ -75,9 +75,10 @@ class BotState:
     self.style = ''
     self.time = ''
     # 3. Plan
-    self.select_channel_df = None
-    self.select_channel_reasoning = None
-    self.select_channel_log = None
+    self.selected_channel = selected_channel
+    self.selected_channel_df = None
+    self.selected_channel_reasoning = None
+    self.selected_channel_log = None
     self.selected_action = selected_action
     # 4. Prepare 
     self.should_continue = True
