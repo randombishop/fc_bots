@@ -87,7 +87,7 @@ class SelectAction(IPlanStep):
     print('SelectAction.plan()')
     if len(self.state.conversation)>0:
       self.use_conversation()
-    elif self.state.channel is not None and self.state.channel not in ['', 'None']:
+    elif self.state.selected_channel is not None and self.state.selected_channel not in ['', 'None']:
       self.use_channel()
     else:
       self.use_no_channel()

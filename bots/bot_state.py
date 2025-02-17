@@ -32,7 +32,7 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 {{trending}}
 
 #RECENT POSTS
-{{recent_casts}}
+{{bot_casts}}
 
 #CURRENT CHANNEL
 {{channel}}

@@ -2,12 +2,17 @@ import pandas
 import random
 import numpy
 from bots.i_plan_step import IPlanStep
+from bots.prepare.get_bot_casts import GetBotCasts
+from bots.prepare.get_trending import GetTrending
 from bots.utils.llms import call_llm
 
 
 prompt_template = """
 #TRENDING POSTS
 {{trending}}
+
+#YOUR RECENT POSTS IN THE CHANNELS
+{{bot_casts}}
 """
 
 instructions_template = """
@@ -21,9 +26,6 @@ You are @{{name}} social media bot running on the Farcaster platform.
 
 #LIST OF CHANNELS
 {{channel_list}}
-
-#YOUR RECENT POSTS IN THE CHANNELS
-{{recent_casts}}
 
 #INSTRUCTIONS
 You are provided with the current trending posts on the Farcaster platform.
@@ -56,13 +58,21 @@ schema = """
 class SelectChannel(IPlanStep):
     
   def plan(self):
-    print('SelectChannel.plan()')
+    print('<---------------------------- SelectChannel plan() ---------------------------->')
+    GetBotCasts(self.state).prepare()
+    GetTrending(self.state).prepare()
     df_channels = self.state.channel_list
     channels_list = df_channels['channel'].tolist()
     random.shuffle(channels_list)
     channels_string = ",".join(channels_list)
     instructions1 = self.state.format(instructions_template.replace('{{channel_list}}',channels_string))
+    print('instructions:')
+    print(instructions1)
+    print('-'*100)
     prompt1 = self.state.format(prompt_template)
+    print('prompt:')
+    print(prompt1)
+    print('-'*100)
     result = call_llm(prompt1, instructions1, schema)
     current_trends_summary = result['current_trends_summary']
     channel_ranking = result['channel_ranking'].split(',')
@@ -100,3 +110,11 @@ class SelectChannel(IPlanStep):
     self.state.selected_channel_df = df_channels
     self.state.selected_channel_reasoning = 'Trending:' + current_trends_summary + '\n' + 'Reasoning:' + reasoning
     self.state.selected_channel_log = log
+    print('select_channel_df:')
+    print(self.state.selected_channel_df)
+    print(self.state.selected_channel_df.describe())
+    print('select_channel_reasoning:')
+    print(self.state.selected_channel_reasoning)
+    print('select_channel_log:')
+    print(self.state.selected_channel_log)
+    print(f'<---------------------------- selected_channel = {self.state.selected_channel} ---------------------------->')
