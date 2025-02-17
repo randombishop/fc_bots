@@ -99,7 +99,7 @@ class BotState:
     # 5. Execute actions
     self.cost = 0
     self.action_params = None
-    self.action_log = None
+    self.action_log = ''
     self.casts = []
     # 6. Think
     self.like = False
@@ -161,7 +161,7 @@ class BotState:
             s += f"  {attr}: {self.action_params[attr]}\n"
       else:
         s += '  No parameters were parsed\n'
-      if self.action_log is not None:
+      if self.action_log is not None and len(self.action_log)>0:
         s += f"Log:\n  {self.action_log}\n"
       if hasattr(self, 'casts') and self.casts is not None: 
         casts = self.casts

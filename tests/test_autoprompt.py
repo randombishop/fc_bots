@@ -30,3 +30,6 @@ class TestAutoprompt(unittest.TestCase):
     bot = run_bot(selected_channel='mfers', selected_action='MostActiveUsers')
     self.assertEqual(bot.state.request, 'Most active users in channel /mfers')
     
+  def test4(self):
+    bot = run_bot(selected_channel='nature', selected_action='Perplexity')
+    self.assertIn('Ask Perplexity', bot.state.request)
