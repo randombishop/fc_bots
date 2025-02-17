@@ -1,5 +1,7 @@
+from bots.data.users import get_top_daily_casters
 from bots.data.pg import get_session
 from sqlalchemy import text
+import random
 
 
 def get_bot_recent_casts(bot_id):
@@ -17,6 +19,7 @@ def get_bot_recent_casts(bot_id):
     result = session.execute(sql, {'bot_id': bot_id})
     return result.mappings().all()
   
+
 def get_bot_recent_casts_no_channel(bot_id):
   with get_session() as session:
     sql = text("""
@@ -143,6 +146,16 @@ def get_bot_prompts_stats(bot_id):
     return result.mappings().all()
   
 
+def get_users_recently_praised(bot_id):
+  with get_session() as session:
+    sql = text("""
+    SELECT DISTINCT selected_user as u FROM app.bot_cast WHERE bot_id = :bot_id AND selected_action='Praise' AND casted_at >= NOW() - INTERVAL '30 days'
+    """)
+    result = session.execute(sql, {'bot_id': bot_id})
+    rows = result.mappings().all()
+    return [str(row['u']) for row in rows]
+        
+
 def get_random_user_to_praise(bot_id):
   with get_session() as session:
     sql = text("""
@@ -160,3 +173,16 @@ def get_random_user_to_praise(bot_id):
       return row['username']
     else:
       return None
+    
+
+def get_random_user_to_praise_in_channel(bot_id, channel_url):
+  df_top_users = get_top_daily_casters(channel_url, limit=20)
+  df_top_users = df_top_users[df_top_users['fid'] != bot_id]
+  top_users = df_top_users['User'].tolist()
+  if len(top_users) == 0:
+    return None
+  recently_praised = get_users_recently_praised(bot_id)
+  candidates = [user for user in top_users if user not in recently_praised]
+  if len(candidates) == 0:
+    return None
+  return random.choice(candidates)

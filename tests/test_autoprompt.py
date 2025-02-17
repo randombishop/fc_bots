@@ -33,3 +33,7 @@ class TestAutoprompt(unittest.TestCase):
   def test4(self):
     bot = run_bot(selected_channel='nature', selected_action='Perplexity')
     self.assertIn('Ask Perplexity', bot.state.request)
+    
+  def test5(self):
+    bot = run_bot(selected_channel='tabletop', selected_action='Praise')
+    self.assertIn('Praise', bot.state.request)

@@ -19,6 +19,8 @@ def get_channel_by_url(url):
 
 
 def get_channel_url(channel):
+  if channel is None or channel in ['', 'None']:
+    return None
   if channel in _channels_by_id:
     return _channels_by_id[channel]
   elif channel in _channels_by_name:

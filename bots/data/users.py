@@ -49,11 +49,11 @@ def get_favorite_users(fid):
   return run_query(query_id, params)
 
 
-def get_top_daily_casters(channel):
+def get_top_daily_casters(channel, limit=10):
   query_id = 4258259
   params = [
     QueryParameter.text_type(name="parent_url", value=channel if channel is not None else '*'),
-    QueryParameter.number_type(name="limit", value=10)
+    QueryParameter.number_type(name="limit", value=limit)
   ]
   df = run_query(query_id, params)
   today = datetime.today()
