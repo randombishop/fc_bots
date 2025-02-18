@@ -1,12 +1,12 @@
 from bots.i_prepare_step import IPrepareStep
-from bots.data.bot_history import get_bot_recent_casts
+from bots.data.bot_history import get_bot_casts
 from bots.utils.format_cast import shorten_text, format_when
 
 
 class GetBotCasts(IPrepareStep):
     
   def prepare(self):
-    casts = get_bot_recent_casts(self.state.id)
+    casts = get_bot_casts(self.state.id)
     text = ''
     for c in casts:
       row = '{\n'

@@ -4,10 +4,10 @@ from bots.utils.llms import call_llm
 
 
 prompt_template = """
-#TRENDING POSTS
+#CHANNEL POSTS FROM EVERYONE
 {{casts_in_channel}}
 
-#YOUR RECENT POSTS IN THE CHANNEL
+#YOUR POSTS IN THE CHANNEL
 {{bot_casts_in_channel}}
 """
 
@@ -22,13 +22,13 @@ Your task is to come up with a new original and interesting question for the cha
 {{lore}}
 
 #INSTRUCTIONS
-You are provided with recent posts in the /{{selected_channel}} channel.
+You are provided with recent activity in the /{{selected_channel}} channel.
 First, read these posts carefully and summarize them in one short paragraph.
 Then generate a new question that will be forwarded to an AI to prepare your next post.
 Your question should be simple, short, original, interesting and creative.
 Your question should be genuine: what would YOU like to know if you had access to a powerful AI and recent news?
 Do not generate multiple questions or complex questions.
-Please generate only one single simple short question.
+Please generate only one single, simple and short question.
 Do not copy existing posts.
 Do not re-use your previous questions.
 Output your decision in JSON format.

@@ -10,6 +10,8 @@ from bots.utils.check_links import check_link_data
 from bots.utils.word_counts import get_word_counts
 from bots.utils.images import make_wordcloud
 from bots.utils.gcs import upload_to_gcs
+from bots.data.channels import get_channel_url
+from bots.autoprompt.summary_prompt_for_channel import summary_prompt_for_channel
 
 
 parse_instructions_template = """
@@ -125,6 +127,18 @@ class DigestCasts(IActionStep):
   def get_cost(self):
     return 20
 
+  def auto_prompt(self):
+    channel_url = get_channel_url(self.state.selected_channel)
+    prompt, params, log = None, None, ''
+    if channel_url is None:
+      pass
+    else:
+      prompt, params, log = summary_prompt_for_channel(self.state)
+    self.state.action_params = params
+    self.state.request = prompt
+    self.state.conversation = self.state.request
+    self.state.action_log += log+'\n'
+  
   def parse(self):
     parse_prompt = self.state.format(conversation_and_request_template)
     parse_instructions = self.state.format(parse_instructions_template)
@@ -136,38 +150,40 @@ class DigestCasts(IActionStep):
     parsed['search'] = read_string(params, key='search', default=None, max_length=500)
     _, user_name = read_user(params, fid_origin=self.state.fid_origin, default_to_origin=False)
     parsed['user_name'] = user_name
-    parsed['max_rows'] = get_max_capactity()
-    parsed['focus'] = ''
-    if parsed['keyword'] is not None or parsed['category'] is not None or parsed['user_name'] is not None:
-      if parsed['keyword'] is not None:
-        parsed['focus'] = ("- Focus on the following subject: " + parsed['keyword'] + "\n")
-      if parsed['category'] is not None:
-        parsed['focus'] =  ("- Focus on the following category: " + parsed['category'][2:] + "\n")
-      if parsed['user_name'] is not None:
-        parsed['focus'] =  ("- The posts are all from user @" + parsed['user_name'] + ", be respectful in your summary and only mention them in positive terms.\n")
     self.state.action_params = parsed
       
   def execute(self):
     params = self.state.action_params
+    if params is None:
+      raise Exception('Summary params were not parsed')
+    params['max_rows'] = get_max_capactity()
     # Get data
     posts = []
-    if params['search'] is not None:
+    if 'search' in params and params['search'] is not None:
       posts = get_more_like_this(params['search'], limit=params['max_rows'])
     else:
-      posts = get_top_casts(channel=params['channel'],
-                            keyword=params['keyword'],
-                            category=params['category'],
-                            user_name=params['user_name'],
+      posts = get_top_casts(channel=params['channel'] if 'channel' in params else None,
+                            keyword=params['keyword'] if 'keyword' in params else None,
+                            category=params['category'] if 'category' in params else None,
+                            user_name=params['user_name'] if 'user_name' in params else None,
                             max_rows=params['max_rows'])
     posts = posts.to_dict('records')
     posts.sort(key=lambda x: x['timestamp'])
     if len(posts) < 5:
       raise Exception(f"""Not enough posts to generate a digest: channel={params['channel']}, 
                       keyword={params['keyword']}, category={params['category']}, max_rows={params['max_rows']}, posts={len(posts)}""")
+    # Focus directive
+    focus = ''
+    if 'keyword' in params and params['keyword'] is not None:
+      focus = ("Focus on the following subject: " + params['keyword'] + "\n")
+    if 'category' in params and params['category'] is not None:
+      focus =  ("Focus on the following category: " + params['category'][2:] + "\n")
+    if 'user_name' in params and params['user_name'] is not None:
+      focus =  ("The posts are all from user @" + params['user_name'] + ", be respectful in your summary and only mention them in positive terms.\n")
     # Run LLM
     prompt = concat_casts(posts)
     instructions = self.state.format(main_instructions_intro_template)
-    instructions += main_instructions.replace("ADDITIONAL_NOTES?", params['focus'])
+    instructions += main_instructions.replace("ADDITIONAL_NOTES?", focus)
     result = call_llm(prompt,instructions,main_schema)
     data = {}
     # Extract summary

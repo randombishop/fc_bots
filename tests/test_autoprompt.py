@@ -36,4 +36,9 @@ class TestAutoprompt(unittest.TestCase):
     
   def test5(self):
     bot = run_bot(selected_channel='tabletop', selected_action='Praise')
-    self.assertIn('Praise', bot.state.request)
+    self.assertEqual(bot.state.request, 'Praise a random user in channel /tabletop')
+    
+  def test6(self):
+    bot = run_bot(selected_channel='product', selected_action='Summary')
+    #self.assertEqual(bot.state.request, 'Praise a random user in channel /tabletop')
+    

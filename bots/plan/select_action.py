@@ -82,6 +82,12 @@ class SelectAction(IPlanStep):
 
   def use_no_channel(self):
     print('use_no_channel')
+    action_rules = {
+      'Perplexity': {'min_hours': 6},
+      'SaySomethingNoChannel': {'min_hours': 12},
+      'Praise': {'min_hours': 24},
+      'Summary': {'min_hours': 24}
+    }
 
   def plan(self):
     print('SelectAction.plan()')

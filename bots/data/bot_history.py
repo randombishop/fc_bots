@@ -4,57 +4,30 @@ from sqlalchemy import text
 import random
 
 
-def get_bot_recent_casts(bot_id):
+def get_bot_casts(bot_id, action_channel='*', no_channel=False, selected_action='*', limit=50, days=60):
   with get_session() as session:
     sql = text("""
-    SELECT selected_action, action_prompt, action_channel, casted_text, casted_embeds, casted_at
+    SELECT selected_action, action_prompt, action_channel, casted_text, casted_embeds, casted_at,
+           EXTRACT(EPOCH FROM (NOW() - casted_at)) / 3600 hours
     FROM app.bot_cast
     WHERE bot_id = :bot_id
-    AND casted_at >= NOW() - INTERVAL '10 days'
+    AND casted_at >= NOW() - INTERVAL ':days days'
     AND cast_hash = root_hash
-    AND casted_text is not NULL                  
-    ORDER BY casted_at 
-    LIMIT 50
+    AND casted_text is not NULL    
+    AND (:action_channel='*' or action_channel=:action_channel)
+    AND (:no_channel=FALSE or action_channel is NULL)
+    AND (:selected_action='*' or selected_action=:selected_action)            
+    ORDER BY casted_at DESC
+    LIMIT :limit
     """)
-    result = session.execute(sql, {'bot_id': bot_id})
+    result = session.execute(sql, {'bot_id': bot_id, 
+                                   'days': days,
+                                   'limit': limit, 
+                                   'action_channel': action_channel, 
+                                   'no_channel': no_channel, 
+                                   'selected_action': selected_action})
     return result.mappings().all()
   
-
-def get_bot_recent_casts_no_channel(bot_id):
-  with get_session() as session:
-    sql = text("""
-    SELECT selected_action, action_prompt, casted_text, casted_embeds, casted_at
-    FROM app.bot_cast
-    WHERE bot_id = :bot_id
-    AND action_channel is NULL
-    AND casted_at >= NOW() - INTERVAL '60 days'
-    AND cast_hash = root_hash
-    AND num_likes is NULL    
-    AND casted_text is not NULL                  
-    ORDER BY casted_at 
-    LIMIT 50
-    """)
-    result = session.execute(sql, {'bot_id': bot_id})
-    return result.mappings().all()
-  
-
-def get_bot_recent_casts_in_channel(bot_id, channel_id):
-  with get_session() as session:
-    sql = text("""
-    SELECT selected_action, action_prompt, casted_text, casted_embeds, casted_at
-    FROM app.bot_cast
-    WHERE bot_id = :bot_id
-    AND action_channel = :channel_id
-    AND casted_at >= NOW() - INTERVAL '60 days'
-    AND cast_hash = root_hash
-    AND num_likes is NULL    
-    AND casted_text is not NULL                  
-    ORDER BY casted_at 
-    LIMIT 50
-    """)
-    result = session.execute(sql, {'bot_id': bot_id, 'channel_id': channel_id})
-    return result.mappings().all()
-
 
 def get_bot_channels(bot_id):
   with get_session() as session:

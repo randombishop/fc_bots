@@ -66,14 +66,8 @@ class SaySomethingNoChannel(IActionStep):
 
   def execute(self):
     prompt = self.state.format(prompt_template)
-    print(prompt)
-    print('-'*100)  
     instructions = self.state.format(instructions_template)
-    print(instructions)
-    print('-'*100)
     result = call_llm(prompt, instructions, schema)
-    print(result)
-    print('-'*100)
     if 'tweet' not in result or result['tweet'] is None or len(result['tweet']) < 2:
       raise Exception('Could not say something.')
     cast = {'text': result['tweet']}

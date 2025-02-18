@@ -53,6 +53,7 @@ class Shorten(IThinkStep):
     if text is None:
       return None
     text = text.replace('$', '')
+    text = text.replace('tweet', 'cast')
     text = re.sub(r'\[\d+\]', '', text)
     return text
 

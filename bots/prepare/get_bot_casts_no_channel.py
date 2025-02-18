@@ -1,12 +1,12 @@
 from bots.i_prepare_step import IPrepareStep
-from bots.data.bot_history import get_bot_recent_casts_no_channel
+from bots.data.bot_history import get_bot_casts
 from bots.utils.format_cast import shorten_text, format_when
 
 
 class GetBotCastsNoChannel(IPrepareStep):
     
   def prepare(self):
-    casts = get_bot_recent_casts_no_channel(self.state.id)
+    casts = get_bot_casts(self.state.id, no_channel=True)
     text = ''
     for c in casts:
       row = '{\n'
