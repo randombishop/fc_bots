@@ -116,7 +116,7 @@ class Praise(IActionStep):
     parsed = {}
     fid, user_name = read_user(params, self.state.fid_origin, default_to_origin=False)
     if user_name == '*' or user_name == '' or user_name is None:
-      print('Praise action will pick a random user to praise')
+      self.state.log += 'Praise action will pick a random user to praise\n'
       user_name = get_random_user_to_praise(self.state.id)
       fid = get_fid(user_name)
     parsed['fid'] = fid

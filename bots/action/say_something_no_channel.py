@@ -74,4 +74,4 @@ class SaySomethingNoChannel(IActionStep):
     casts = [cast]
     summary = result['summary'] if 'summary' in result else ''
     self.state.casts = casts
-    self.state.action_log += summary + '\n'
+    self.state.log += summary + '\n'

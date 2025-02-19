@@ -137,7 +137,7 @@ class DigestCasts(IActionStep):
     self.state.action_params = params
     self.state.request = prompt
     self.state.conversation = self.state.request
-    self.state.action_log += log+'\n'
+    self.state.log += log+'\n'
   
   def parse(self):
     parse_prompt = self.state.format(conversation_and_request_template)

@@ -1,8 +1,7 @@
 import random
 from bots.i_plan_step import IPlanStep
 from bots.utils.llms import call_llm
-from bots.data.bot_history import get_bot_actions_stats
-
+from bots.data.bot_history import get_bot_actions_stats_in_channel, get_bot_actions_stats_no_channel
 
 select_action_task = """
 #INSTRUCTIONS
@@ -50,7 +49,6 @@ class SelectAction(IPlanStep):
       self.state.selected_action = result['action']
 
   def use_channel(self):
-    print('use_channel')
     action_rules = {
       'MostActiveUsers': {'min_hours': 240, 'min_activity': 50},
       'Perplexity': {'min_hours': 24, 'min_activity': 5},
@@ -58,11 +56,11 @@ class SelectAction(IPlanStep):
       'SaySomethingInChannel': {'min_hours': 24, 'min_activity': 15},
       'Summary': {'min_hours': 72, 'min_activity': 25}
     }
-    candidates = get_bot_actions_stats(self.state.id, self.state.channel)
+    candidates = get_bot_actions_stats_in_channel(self.state.id, self.state.channel)
     candidates = {c['action_class']: {
-      'hours_ago': float(c['hours_ago']) if c['hours_ago'] is not None else None,
-      'channel_activity': int(c['channel_activity']) if c['channel_activity'] is not None else None
-    } for c in candidates}
+        'hours_ago': float(c['hours_ago']) if c['hours_ago'] is not None else None,
+        'channel_activity': int(c['channel_activity']) if c['channel_activity'] is not None else None
+      } for c in candidates}
     for action, rules in action_rules.items():
       if action in candidates:
         valid_action1 = candidates[action]['hours_ago'] is None or candidates[action]['hours_ago'] > rules['min_hours']
@@ -70,27 +68,48 @@ class SelectAction(IPlanStep):
         candidates[action]['is_valid'] = valid_action1 and valid_action2
       else:
         candidates[action] = {'hours_ago': None, 'channel_activity': None, 'is_valid': True}
-    print('-'*100)
-    print('candidate actions:')
-    for c in candidates:
-      print(c, candidates[c])
     valid_actions = [k for k,v in candidates.items() if v['is_valid']]
-    print('-'*100)
-    print('valid actions:', valid_actions)
     if len(valid_actions) > 0:
       self.state.selected_action = random.choice(valid_actions)
+    self.state.log += ('-'*100)+'\n'
+    self.state.log += 'SelectAction.use_channel()\n'
+    self.state.log += 'candidate actions:\n'
+    for c in candidates:
+      self.state.log += '  ' + c + ': ' + str(candidates[c]) + '\n'
+    self.state.log += 'valid actions:' + str(valid_actions) + '\n'
+    self.state.log += ('-'*100)+'\n'
+    
 
   def use_no_channel(self):
-    print('use_no_channel')
     action_rules = {
       'Perplexity': {'min_hours': 6},
       'SaySomethingNoChannel': {'min_hours': 12},
       'Praise': {'min_hours': 24},
       'Summary': {'min_hours': 24}
     }
+    candidates = get_bot_actions_stats_no_channel(self.state.id)
+    candidates = {c['action_class']: {
+        'hours_ago': float(c['hours_ago']) if c['hours_ago'] is not None else None
+      } for c in candidates}
+    for action, rules in action_rules.items():
+      if action in candidates:
+        valid_action = candidates[action]['hours_ago'] is None or candidates[action]['hours_ago'] > rules['min_hours']
+        candidates[action]['is_valid'] = valid_action
+      else:
+        candidates[action] = {'hours_ago': None, 'is_valid': True}
+    valid_actions = [k for k,v in candidates.items() if v['is_valid']]
+    if len(valid_actions) > 0:
+      self.state.selected_action = random.choice(valid_actions)
+    self.state.log += ('-'*100)+'\n'
+    self.state.log += 'SelectAction.no_channel()\n'
+    self.state.log += 'candidate actions:\n'
+    for c in candidates:
+      self.state.log += '  ' + c + ': ' + str(candidates[c]) + '\n'
+    self.state.log += 'valid actions:' + str(valid_actions) + '\n'
+    self.state.log += ('-'*100)+'\n'
+
 
   def plan(self):
-    print('SelectAction.plan()')
     if len(self.state.conversation)>0:
       self.use_conversation()
     elif self.state.selected_channel is not None and self.state.selected_channel not in ['', 'None']:

@@ -65,11 +65,4 @@ def get_top_daily_casters(channel, limit=10):
   return df
 
 
-if __name__ == "__main__":
-  input = input("Enter user FID or username: ")
-  try:
-    fid = int(input)
-    print(fid, 'fid->username', get_username(fid))
-  except:
-    username = input.lower()
-    print(username, 'username->fid', get_fid(username)) 
+

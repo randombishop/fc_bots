@@ -45,7 +45,7 @@ class Perplexity(IActionStep):
     self.state.action_params = {'question': question}
     self.state.request = f'Ask Perplexity {question}'
     self.state.conversation = self.state.request
-    self.state.action_log += log + '\n'
+    self.state.log += log + '\n'
     
   def parse(self):
     parse_prompt = self.state.format(conversation_and_request_template)

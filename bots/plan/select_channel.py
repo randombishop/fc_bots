@@ -58,7 +58,6 @@ schema = """
 class SelectChannel(IPlanStep):
     
   def plan(self):
-    print('<---------------------------- SelectChannel plan() ---------------------------->')
     GetBotCasts(self.state).prepare()
     GetTrending(self.state).prepare()
     df_channels = self.state.channel_list
@@ -66,13 +65,7 @@ class SelectChannel(IPlanStep):
     random.shuffle(channels_list)
     channels_string = ",".join(channels_list)
     instructions1 = self.state.format(instructions_template.replace('{{channel_list}}',channels_string))
-    print('instructions:')
-    print(instructions1)
-    print('-'*100)
     prompt1 = self.state.format(prompt_template)
-    print('prompt:')
-    print(prompt1)
-    print('-'*100)
     result = call_llm(prompt1, instructions1, schema)
     current_trends_summary = result['current_trends_summary']
     channel_ranking = result['channel_ranking'].split(',')
@@ -105,16 +98,16 @@ class SelectChannel(IPlanStep):
     channel_list = df_channels['channel'].tolist()
     channel_weights = df_channels['boost'].tolist()
     selected_channel = random.choices(channel_list, weights=channel_weights, k=1)[0]
-    log = df_channels[df_channels['channel'] == selected_channel].to_dict(orient='records')[0]
     self.state.selected_channel = selected_channel
     self.state.selected_channel_df = df_channels
     self.state.selected_channel_reasoning = 'Trending:' + current_trends_summary + '\n' + 'Reasoning:' + reasoning
-    self.state.selected_channel_log = log
-    print('select_channel_df:')
-    print(self.state.selected_channel_df)
-    print(self.state.selected_channel_df.describe())
-    print('select_channel_reasoning:')
-    print(self.state.selected_channel_reasoning)
-    print('select_channel_log:')
-    print(self.state.selected_channel_log)
-    print(f'<---------------------------- selected_channel = {self.state.selected_channel} ---------------------------->')
+    self.state.selected_channel_log = df_channels[df_channels['channel'] == selected_channel].to_dict(orient='records')[0]
+    # Log debugging info
+    log = '<---------------------------- SelectChannel plan() ---------------------------->\n'
+    log += 'select_channel_df:\n' 
+    log += str(self.state.selected_channel_df) + '\n'
+    log += 'select_channel_df.describe():\n' 
+    log += str(self.state.selected_channel_df.describe()) + '\n'
+    log += self.state.selected_channel_reasoning + '\n'
+    log += f'<---------------------------- selected_channel = {self.state.selected_channel} ---------------------------->\n'
+    self.state.log += log

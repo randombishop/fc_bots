@@ -103,9 +103,6 @@ def summary_prompt_in_channel(state):
   prompt = state.format(prompt_template)
   instructions = state.format(instructions_template)
   result = call_llm(prompt, instructions, schema)
-  print('RESULT')
-  print(result)
-  print('-'*100)
   if result is None or 'search' not in result:
     raise Exception('Could not generate a new summary prompt.')
   search = result['search']

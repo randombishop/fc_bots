@@ -10,17 +10,7 @@ from bots.plan.select_action import SelectAction
 class TestAutoprompt(unittest.TestCase):
   
   def test1(self):
-    bot = make_bot()
-    bot.initialize()
-    bot.wakeup()
-    # select channel
-    select_channel_step = SelectChannel(bot.state)
-    select_channel_step.plan()
-    # select action
-    select_action_step = SelectAction(bot.state)
-    select_action_step.plan()
-    print('selected_action', bot.state.selected_action)
-    print('-'*100)
+    run_bot()
     
   def test2(self):
     bot = run_bot(selected_channel='data', selected_action='SaySomethingInChannel')

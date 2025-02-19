@@ -73,7 +73,7 @@ def get_bot_channels(bot_id):
     return result.mappings().all()
 
 
-def get_bot_actions_stats(bot_id, channel_id):
+def get_bot_actions_stats_in_channel(bot_id, channel_id):
   with get_session() as session:
     sql = text("""
     WITH t0 AS (
@@ -97,6 +97,25 @@ def get_bot_actions_stats(bot_id, channel_id):
     result = session.execute(sql, {'bot_id': bot_id, 'channel_id': channel_id})
     return result.mappings().all()
 
+
+
+def get_bot_actions_stats_no_channel(bot_id):
+  with get_session() as session:
+    sql = text("""
+    SELECT 
+    selected_action action_class,
+    max(casted_at) as last_cast,
+    EXTRACT(EPOCH FROM (NOW() - MAX(casted_at))) / 3600 hours_ago           
+    FROM app.bot_cast
+    WHERE casted_at >= NOW() - INTERVAL '60 days' 
+    AND bot_id=:bot_id
+    AND action_channel is NULL
+    AND cast_hash = root_hash
+    AND selected_action is not NULL
+    GROUP by selected_action
+    """)
+    result = session.execute(sql, {'bot_id': bot_id})
+    return result.mappings().all()
 
 def get_bot_prompts_stats(bot_id):
   with get_session() as session:
