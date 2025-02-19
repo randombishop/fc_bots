@@ -26,8 +26,12 @@ def make_character_and_state(request=None, fid_origin=None, parent_hash=None, at
 
 def run_bot(request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
     bot = make_bot()
-    bot.respond(request, fid_origin=fid_origin, parent_hash=parent_hash, attachment_hash=attachment_hash, 
-                root_parent_url=root_parent_url, 
-                selected_channel=selected_channel, selected_action=selected_action)
-    bot.state.debug_action()
+    try:
+      bot.respond(request, fid_origin=fid_origin, parent_hash=parent_hash, attachment_hash=attachment_hash, 
+                  root_parent_url=root_parent_url, 
+                  selected_channel=selected_channel, selected_action=selected_action)
+      bot.state.debug()
+    except Exception as e:
+      bot.state.debug()
+      raise e
     return bot

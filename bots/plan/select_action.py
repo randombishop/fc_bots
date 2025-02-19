@@ -77,7 +77,7 @@ class SelectAction(IPlanStep):
     for c in candidates:
       self.state.log += '  ' + c + ': ' + str(candidates[c]) + '\n'
     self.state.log += 'valid actions:' + str(valid_actions) + '\n'
-    self.state.log += '</SelectAction>\n'
+    self.state.log += '</SelectAction selected="{self.state.selected_action}">\n'
     
 
   def use_no_channel(self):
@@ -106,7 +106,7 @@ class SelectAction(IPlanStep):
     for c in candidates:
       self.state.log += '  ' + c + ': ' + str(candidates[c]) + '\n'
     self.state.log += 'valid actions:' + str(valid_actions) + '\n'
-    self.state.log += '</SelectAction>\n'
+    self.state.log += '</SelectAction selected="{self.state.selected_action}">\n'
 
   def plan(self):
     if len(self.state.conversation)>0:
