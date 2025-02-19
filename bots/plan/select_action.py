@@ -71,13 +71,13 @@ class SelectAction(IPlanStep):
     valid_actions = [k for k,v in candidates.items() if v['is_valid']]
     if len(valid_actions) > 0:
       self.state.selected_action = random.choice(valid_actions)
-    self.state.log += ('-'*100)+'\n'
+    self.state.log += '<SelectAction branch="channel">\n'
     self.state.log += 'SelectAction.use_channel()\n'
     self.state.log += 'candidate actions:\n'
     for c in candidates:
       self.state.log += '  ' + c + ': ' + str(candidates[c]) + '\n'
     self.state.log += 'valid actions:' + str(valid_actions) + '\n'
-    self.state.log += ('-'*100)+'\n'
+    self.state.log += '</SelectAction>\n'
     
 
   def use_no_channel(self):
@@ -100,14 +100,13 @@ class SelectAction(IPlanStep):
     valid_actions = [k for k,v in candidates.items() if v['is_valid']]
     if len(valid_actions) > 0:
       self.state.selected_action = random.choice(valid_actions)
-    self.state.log += ('-'*100)+'\n'
+    self.state.log += '<SelectAction branch="no_channel">\n'
     self.state.log += 'SelectAction.no_channel()\n'
     self.state.log += 'candidate actions:\n'
     for c in candidates:
       self.state.log += '  ' + c + ': ' + str(candidates[c]) + '\n'
     self.state.log += 'valid actions:' + str(valid_actions) + '\n'
-    self.state.log += ('-'*100)+'\n'
-
+    self.state.log += '</SelectAction>\n'
 
   def plan(self):
     if len(self.state.conversation)>0:

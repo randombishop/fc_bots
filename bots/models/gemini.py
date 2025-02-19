@@ -33,7 +33,7 @@ class GeminiLLM():
   def query(self, prompt, instructions=None, schema=None):
     if time.time() - self.last_call < MIN_DELAY:
       delay = MIN_DELAY - (time.time() - self.last_call)
-      print(f"Waiting {int(delay)} seconds to avoid rate limit...")
+      print(f"W{int(delay)}...")
       time.sleep(delay)
     self.last_call = time.time()
     vertex_model = GenerativeModel(

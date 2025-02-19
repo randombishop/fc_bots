@@ -140,6 +140,21 @@ class BotState:
       ans += '\n'
     return ans
   
+  def format_casts2(self):
+    casts = self.casts
+    if casts is None or len(casts)==0:
+      return ''
+    ans = ''
+    for c in casts:
+      text = c['text']
+      if 'mentions_ats' in c and 'mentions_pos' in c:
+        text = insert_mentions(text, c['mentions_ats'], c['mentions_pos'])
+      ans += f"{text}"
+      if 'embeds' in c and c['embeds'] is not None and len(c['embeds'])>0:
+        ans += f" [{c['embeds'][0]}]"
+      ans += '\n'
+    return ans
+  
   def format(self, template=DEFAULT_TEMPLATE):
     result = template
     placeholders = re.findall(r'\{\{(\w+)\}\}', template)
@@ -150,7 +165,7 @@ class BotState:
   
   def debug_action(self):
     attrs = ['fid', 'user_name', 'channel', 'keyword', 'category', 'search', 'criteria', 'text', 'question', 'continue']
-    s = ('-'*64) + '\n'
+    s = ('-'*100) + '\n'
     if self.selected_action is None:
       s += 'No action was selected\n'
     else:  
@@ -158,16 +173,15 @@ class BotState:
       if self.action_params is not None:
         for attr in attrs:
           if attr in self.action_params and self.action_params[attr] is not None: 
-            s += f"  {attr}: {self.action_params[attr]}\n"
+            s += f"<<{attr}: {self.action_params[attr]}\n"
       else:
         s += '  No parameters were parsed\n'
       if hasattr(self, 'casts') and self.casts is not None: 
-        casts = self.casts
-        s += "Casts:\n"
-        for c in casts:
-          s+= f"  {c}\n"
+        s += ">>casts:\n"
+        s += self.format_casts2()
       if self.log is not None and len(self.log)>0:
-        s += f"Log:\n  {self.log}\n"
-    s += ('-'*64)
+        s += f"--logs:\n"
+        s += self.log + "\n"
+    s += ('-'*100)
     s += '\n'
     print(s)

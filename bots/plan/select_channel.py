@@ -103,11 +103,12 @@ class SelectChannel(IPlanStep):
     self.state.selected_channel_reasoning = 'Trending:' + current_trends_summary + '\n' + 'Reasoning:' + reasoning
     self.state.selected_channel_log = df_channels[df_channels['channel'] == selected_channel].to_dict(orient='records')[0]
     # Log debugging info
-    log = '<---------------------------- SelectChannel plan() ---------------------------->\n'
-    log += 'select_channel_df:\n' 
+    log = '<SelectChannel>\n'
+    log += '  select_channel_df:\n' 
     log += str(self.state.selected_channel_df) + '\n'
-    log += 'select_channel_df.describe():\n' 
+    log += '  select_channel_df.describe():\n' 
     log += str(self.state.selected_channel_df.describe()) + '\n'
+    log += '  selected_channel_reasoning:\n'
     log += self.state.selected_channel_reasoning + '\n'
-    log += f'<---------------------------- selected_channel = {self.state.selected_channel} ---------------------------->\n'
+    log += f'</SelectChannel selected="{self.state.selected_channel}">\n'
     self.state.log += log
