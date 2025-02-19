@@ -8,7 +8,7 @@ from bots.prepare.get_trending import GetTrending
 from bots.utils.llms import call_llm
 
 
-MIN_HOURS_FOR_CATEGORIES = 120000
+MIN_HOURS_FOR_CATEGORIES = 120
 
 
 prompt_template = """
