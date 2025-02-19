@@ -45,3 +45,7 @@ class TestAutoprompt(unittest.TestCase):
   def test7(self):
     bot = run_bot(selected_channel='None', selected_action='Summary')
     self.assertIn('Summarize', bot.state.request)
+
+  def test8(self):
+    bot = run_bot(selected_channel='None', selected_action='Perplexity')
+    self.assertIn('Ask Perplexity', bot.state.request)

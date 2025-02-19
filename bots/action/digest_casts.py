@@ -11,7 +11,7 @@ from bots.utils.word_counts import get_word_counts
 from bots.utils.images import make_wordcloud
 from bots.utils.gcs import upload_to_gcs
 from bots.data.channels import get_channel_url
-from bots.autoprompt.summary_prompt_for_channel import summary_prompt_for_channel
+from bots.autoprompt.summary_prompt_in_channel import summary_prompt_in_channel
 from bots.autoprompt.summary_prompt_no_channel import summary_prompt_no_channel
 
 parse_instructions_template = """
@@ -133,7 +133,7 @@ class DigestCasts(IActionStep):
     if channel_url is None:
       prompt, params, log = summary_prompt_no_channel(self.state)
     else:
-      prompt, params, log = summary_prompt_for_channel(self.state)
+      prompt, params, log = summary_prompt_in_channel(self.state)
     self.state.action_params = params
     self.state.request = prompt
     self.state.conversation = self.state.request

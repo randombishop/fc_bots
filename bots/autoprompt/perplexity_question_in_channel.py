@@ -50,7 +50,7 @@ schema = """
     "reasoning":{"type":"STRING"}
 """
 
-def perplexity_question_for_channel(state):
+def perplexity_question_in_channel(state):
   GetCastsInChannel(state).prepare()
   GetBotCastsInChannel(state).prepare()
   prompt = state.format(prompt_template)

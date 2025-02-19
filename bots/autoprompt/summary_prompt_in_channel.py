@@ -57,7 +57,7 @@ schema = """
 
 
 
-def summary_prompt_for_channel(state):
+def summary_prompt_in_channel(state):
   previous_summaries = get_bot_casts(state.id, action_channel=state.selected_channel, selected_action='Summary')
   df = pandas.DataFrame(previous_summaries)
   df['is_category_summary'] = df['action_prompt'].str.startswith('Summarize category')

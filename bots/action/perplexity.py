@@ -1,6 +1,7 @@
 from bots.i_action_step import IActionStep
 from bots.prompts.contexts import conversation_and_request_template
-from bots.autoprompt.perplexity_question_for_channel import perplexity_question_for_channel
+from bots.autoprompt.perplexity_question_in_channel import perplexity_question_in_channel
+from bots.autoprompt.perplexity_question_no_channel import perplexity_question_no_channel
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_string
 from bots.utils.perplexity_api import call_perplexity
@@ -38,10 +39,9 @@ class Perplexity(IActionStep):
     channel = self.state.selected_channel
     question, log = None, None
     if channel is None or channel in ['', 'None']:
-      # TODO: generate a question for main feed
-      pass
+      question, log = perplexity_question_no_channel(self.state)
     else:
-      question, log = perplexity_question_for_channel(self.state)
+      question, log = perplexity_question_in_channel(self.state)
     self.state.action_params = {'question': question}
     self.state.request = f'Ask Perplexity {question}'
     self.state.conversation = self.state.request
