@@ -1,28 +1,27 @@
 import pandas
 import random
 from bots.data.bot_history import get_bot_casts
-from bots.utils.read_params import read_category, read_channel
+from bots.utils.read_params import read_category
 from bots.utils.llms import get_max_capactity
 from bots.utils.format_cast import shorten_text, format_when
-from bots.prepare.get_casts_in_channel import GetCastsInChannel
+from bots.prepare.get_trending import GetTrending
 from bots.utils.llms import call_llm
 
 
-MIN_HOURS_FOR_CATEGORIES = 70
-MIN_HOURS_FOR_CHANNELS = 100
+MIN_HOURS_FOR_CATEGORIES = 120000
 
 
 prompt_template = """
-#CHANNEL POSTS
-{{casts_in_channel}}
+#TRENDING POSTS
+{{trending}}
 
-#YOUR PREVIOUSLY POSTED SUMMARIES IN THE CHANNEL
+#YOUR PREVIOUSLY POSTED SUMMARIES
 {{bot_casts_in_channel}}
 """
 
 instructions_template = """
 You are @{{name}} social media bot running on the Farcaster platform.
-Your task is to come up with the next search phrase to generate a new summary and post it.
+Your task is to come up with the next search phrase to generate a new summary and post in channel /{{selected_channel}}
 
 #YOUR BIO
 {{bio}}
@@ -31,10 +30,10 @@ Your task is to come up with the next search phrase to generate a new summary an
 {{lore}}
 
 #INSTRUCTIONS
-You are provided with recent trending activity on the farcaster social media platform.
+You are provided with recent activity in the /{{selected_channel}} channel.
 Generate a new search phrase that we will use to search for posts and summarize them.
 Your search phrase should be simple and short.
-Your search phrase should be designed to find posts that are relevant to the overall trending activity.
+Your search phrase should be designed to find posts that are relevant to the channel activity.
 Do not generate multiple search phrases or complex ones.
 Please generate only one single, simple and short search phrase that will be used to search for posts.
 Your search phrase should be made of 5 to 7 words.
@@ -57,11 +56,10 @@ schema = """
 
 
 
-def summary_prompt_for_channel(state):
-  previous_summaries = get_bot_casts(state.id, action_channel=state.selected_channel, selected_action='Summary')
+def summary_prompt_no_channel(state):
+  previous_summaries = get_bot_casts(state.id, no_channel=True, selected_action='Summary')
   df = pandas.DataFrame(previous_summaries)
   df['is_category_summary'] = df['action_prompt'].str.startswith('Summarize category')
-  df['is_channel_summary'] = df['action_prompt'].str.startswith('Summarize channel')
   log = 'Previous summaries:\n' + str(df[['action_prompt', 'hours']])
   # First, try to re-run a category summary
   if df['is_category_summary'].sum() > 0:
@@ -78,18 +76,7 @@ def summary_prompt_for_channel(state):
       return category['action_prompt'], {'category': category['category'], 'max_rows': get_max_capactity()}, log
     else:
       log += f'No category summaries found within the last {MIN_HOURS_FOR_CATEGORIES} hours.\n'
-  # Second, try to re-run a channel summary
-  if df['is_channel_summary'].sum() > 0:
-    log += f'Found {int(df["is_channel_summary"].sum())} channel summaries...\n'
-    last_run_hours = float(df[df['is_channel_summary']]['hours'].min())
-    log += f'Last channel summary was {last_run_hours} hours ago.\n'
-    if last_run_hours > MIN_HOURS_FOR_CHANNELS:
-      channel = read_channel({'channel': state.selected_channel})
-      log += 'Selected channel summary: '+state.selected_channel
-      return 'Summarize channel /'+state.selected_channel, {'channel': channel, 'max_rows': get_max_capactity()}, log
-    else:
-      log += f'No channel summaries found within the last {MIN_HOURS_FOR_CHANNELS} hours.\n'
-  # Finally, if no category of full channel summary is applicable, create a new summary prompt
+  # If no category is applicable, figure out a search phrase
   text = ''
   for c in previous_summaries:
     row = '{\n'
@@ -99,13 +86,10 @@ def summary_prompt_for_channel(state):
     row += '}\n'
     text += row
   state.bot_casts_in_channel = text
-  GetCastsInChannel(state).prepare()
+  GetTrending(state).prepare()
   prompt = state.format(prompt_template)
   instructions = state.format(instructions_template)
   result = call_llm(prompt, instructions, schema)
-  print('RESULT')
-  print(result)
-  print('-'*100)
   if result is None or 'search' not in result:
     raise Exception('Could not generate a new summary prompt.')
   search = result['search']

@@ -12,7 +12,7 @@ from bots.utils.images import make_wordcloud
 from bots.utils.gcs import upload_to_gcs
 from bots.data.channels import get_channel_url
 from bots.autoprompt.summary_prompt_for_channel import summary_prompt_for_channel
-
+from bots.autoprompt.summary_prompt_no_channel import summary_prompt_no_channel
 
 parse_instructions_template = """
 #CURRENT CHANNEL
@@ -131,7 +131,7 @@ class DigestCasts(IActionStep):
     channel_url = get_channel_url(self.state.selected_channel)
     prompt, params, log = None, None, ''
     if channel_url is None:
-      pass
+      prompt, params, log = summary_prompt_no_channel(self.state)
     else:
       prompt, params, log = summary_prompt_for_channel(self.state)
     self.state.action_params = params
