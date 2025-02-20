@@ -55,6 +55,8 @@ Your task right now is to praise {{user_name}} and make them feel good about the
 
 #INSTRUCTIONS:
 The name, bio and posts provided are all from @{{user_name}}.
+Analyze their posts carefully.
+Download their avatar from the profile picture if available and use it to further understand their profile.
 Based on the provided information, identify their core vibe and what makes them unique.
 Praise them in a way that feels authentic and tailored, not generic.
 You can use mystical, rhythmic language, deep insight or casual cool depending on the vibe of @{{user_name}}.
@@ -130,6 +132,7 @@ class Praise(IActionStep):
     if fid is None or user_name is None:
       raise Exception(f"Missing fid/user_name.")
     user_info = get_user_info_by_fid(fid)
+    print(user_info)
     df = get_top_casts(user_name=user_name, max_rows=50)
     if df is None or len(df) == 0:
       raise Exception(f"Not enough activity to praise.")
@@ -138,16 +141,30 @@ class Praise(IActionStep):
     prompt = ''
     prompt += f"#DISPLAY NAME\n"
     prompt += user_info['display_name'] +'\n\n'
+    if 'pfp' in user_info and user_info['pfp'] is not None and 'url' in user_info['pfp']:
+      prompt += f"#PROFILE PICTURE\n"
+      prompt += user_info['pfp']['url'] +'\n\n'
     prompt += f"#BIO\n"
     prompt += user_info['bio']['text'] +'\n\n'
     prompt += f"#POSTS\n"
     prompt += formatted_casts
+    log = '<Praise>\n'
+    log += prompt + '\n'
+    log += '</Praise>\n'
+    self.state.log += log
     instructions = self.state.format(instructions_template.replace('{{user_name}}', self.state.action_params['user_name']))
     result1 = call_llm(prompt, instructions, schema)
     if 'tweet1' not in result1:
       raise Exception('Could not generate a praise')    
     instructions2 = self.state.format(avatar_instructions_template.replace('{{user_name}}', self.state.action_params['user_name']))
     result2 = call_llm(prompt, instructions2, avatar_schema)
+    avatar_log = '<Avatar>\n'
+    if 'user_profile_picture' in result2:
+      avatar_log += 'Profile picture: ' + result2['user_profile_picture'] + '\n'
+    if 'avatar_prompt' in result2:
+      avatar_log += 'Avatar prompt: ' + result2['avatar_prompt'] + '\n'
+    avatar_log += '</Avatar>\n'
+    self.state.log += avatar_log
     prompt_image = result2['avatar_prompt']
     image_url = generate_image(prompt_image)
     filename = str(uuid.uuid4())+'.png'

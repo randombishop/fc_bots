@@ -93,7 +93,7 @@ class Perplexity(IActionStep):
         link = links_selection['url']
       links_log = '<LinksSelection>\n'
       links_log += links + '\n'
-      links_log += " >>> " + link + '\n'
+      links_log += " >>> " + str(link) + '\n'
       links_log += '</LinksSelection>\n'
       self.state.log += links_log
     if link is not None:

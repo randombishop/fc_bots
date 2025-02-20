@@ -13,6 +13,7 @@ Your task is to prepare a prompt for dall-e3 model so we can generate an avatar 
 #INSTRUCTIONS:
 The posts provided are all from @{{user_name}}. 
 Analyze their posts carefully.
+Download their avatar from the profile picture if available, describe it, and use it as a reference.
 Identify clues about their personality, interests, aesthetic preferences, and how they express themselves.
 Make your best guess at @{{user_name}}'s:
 **Gender**: Pick either male or female even if you are not sure, it will be funny if you miss.
@@ -30,6 +31,7 @@ Output 3 sentences in json format.
 
 #RESPONSE FORMAT:
 {
+  "user_profile_picture": "Description of the user profile picture when available."
   "avatar_prompt": "..."
 }
 """
@@ -37,6 +39,7 @@ Output 3 sentences in json format.
 avatar_schema = {
   "type":"OBJECT",
   "properties":{
+    "user_profile_picture":{"type":"STRING"},
     "avatar_prompt":{"type":"STRING"}
   }
 }
