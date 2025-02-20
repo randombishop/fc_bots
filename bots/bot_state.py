@@ -48,6 +48,16 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 """
 
 
+
+CONVERSATION_AND_REQUEST_TEMPLATE = """
+#CONVERSATION
+{{conversation}}
+
+#REQUEST
+{{request}}
+"""
+
+
 class BotState:
   
   def __init__(self, id=None, name=None, 
@@ -85,13 +95,20 @@ class BotState:
     self.should_continue = True
     self.trending = ''
     self.user = None
-    self.about_user = ''
-    self.keyword = ''
-    self.about_keyword = ''
-    self.topic = ''
-    self.about_topic = ''
-    self.context = ''
-    self.about_context = ''
+    self.user_casts = None
+    self.about_user = None
+    self.user_display_name = None
+    self.user_bio = None
+    self.user_pfp_url = None
+    self.user_pfp_description = None
+    self.user_avatar_prompt = None
+    self.user_new_avatar = None
+    self.keyword = None
+    self.about_keyword = None
+    self.topic = None
+    self.about_topic = None
+    self.context = None
+    self.about_context = None
     self.posts_map = {}
     self.casts_in_channel = None
     self.bot_casts = None
@@ -168,6 +185,9 @@ class BotState:
       value = self.format_placeholder(placeholder)
       result = result.replace('{{' + placeholder + '}}', value)
     return result
+  
+  def format_conversation(self):
+    return self.format(CONVERSATION_AND_REQUEST_TEMPLATE)
   
   def debug(self):
     try:

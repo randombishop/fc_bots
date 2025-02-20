@@ -49,3 +49,14 @@ def call_llm(prompt, instructions, schema):
     raise Exception(result['error'])
   return result
 
+
+def call_llm_with_attachment(prompt, data, mime_type, instructions, schema):
+  text = LLM.query_with_attachment(prompt, data, mime_type, instructions, schema)
+  text = clean_json(text)
+  try:
+    result = json5.loads(text)
+  except:
+    raise Exception(f"Error parsing LLM response: {text}") from None
+  if 'error' in result and len(result['error']) > 0:
+    raise Exception(result['error'])
+  return result

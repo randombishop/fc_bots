@@ -1,7 +1,6 @@
 import uuid
 import os
 from bots.i_action_step import IActionStep
-from bots.prompts.contexts import conversation_and_request_template
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_channel
 from bots.data.users import get_top_daily_casters
@@ -47,7 +46,7 @@ class MostActiveUsers(IActionStep):
     self.state.conversation = self.state.request
     
   def parse(self):
-    parse_prompt = self.state.format(conversation_and_request_template)
+    parse_prompt = self.state.format_conversation()
     parse_instructions = self.state.format(parse_instructions_template)
     params = call_llm(parse_prompt, parse_instructions, parse_schema)
     parsed = {}

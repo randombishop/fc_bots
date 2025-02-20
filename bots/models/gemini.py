@@ -1,7 +1,7 @@
 import os
 import time
 import vertexai
-from vertexai.generative_models import GenerativeModel
+from vertexai.generative_models import GenerativeModel, Part
 import vertexai.preview.generative_models as generative_models
 
 
@@ -42,6 +42,31 @@ class GeminiLLM():
     )
     responses = vertex_model.generate_content(
       [prompt],
+      generation_config=self.generation_config,
+      safety_settings=self.safety_settings,
+      stream=True)
+    text = ''
+    for response in responses:
+      t = response.text
+      text += t
+    return text
+  
+  def query_with_attachment(self, prompt, data, mime_type,instructions=None, schema=None):
+    if time.time() - self.last_call < MIN_DELAY:
+      delay = MIN_DELAY - (time.time() - self.last_call)
+      print(f"W{int(delay)}...")
+      time.sleep(delay)
+    self.last_call = time.time()
+    image1 = Part.from_data(
+      mime_type=mime_type,
+      data=data,
+    )
+    vertex_model = GenerativeModel(
+      GEMINI_MODEL_NAME,
+      system_instruction=instructions
+    )
+    responses = vertex_model.generate_content(
+      [prompt, image1],
       generation_config=self.generation_config,
       safety_settings=self.safety_settings,
       stream=True)

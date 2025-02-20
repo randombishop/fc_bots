@@ -1,5 +1,4 @@
 from bots.i_prepare_step import IPrepareStep
-from bots.prompts.contexts import conversation_and_request_template
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_keyword, read_category, read_string
 from bots.data.casts import get_top_casts, get_more_like_this
@@ -54,7 +53,7 @@ class GetCasts(IPrepareStep):
     if not self.state.should_continue:
       return
     max_rows = 25
-    prompt = self.state.format(conversation_and_request_template)
+    prompt = self.state.format_conversation()
     instructions = self.state.format(instructions_template)
     params = call_llm(prompt, instructions, schema)
     parsed = {}

@@ -1,6 +1,5 @@
 from bots.i_action_step import IActionStep
 from bots.prompts.format_casts import concat_casts
-from bots.prompts.contexts import conversation_and_request_template
 from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.read_params import read_category, read_channel, read_user, read_keyword, read_string
 from bots.data.casts import get_top_casts, get_more_like_this
@@ -93,7 +92,7 @@ class PickCast(IActionStep):
     return 20
   
   def parse(self):
-    parse_prompt = self.state.format(conversation_and_request_template)
+    parse_prompt = self.state.format_conversation()
     parse_instructions = self.state.format(parse_instructions_template)
     params = call_llm(parse_prompt, parse_instructions, parse_schema)
     parsed = {}
