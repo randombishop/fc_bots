@@ -167,8 +167,8 @@ class BotState:
     try:
       s = ('-'*128) + '\n'
       # Request
-      if self.request is not None:
-        s += self.request + '\n'
+      if self.conversation is not None and len(self.conversation)>0:
+        s += self.conversation + '\n'
       # Selected action
       if self.selected_action is None:
         s += '## No action was selected ##\n'
@@ -183,7 +183,7 @@ class BotState:
       else:
         s += '<< No parameters were parsed <<\n'
       # Casts
-      if hasattr(self, 'casts') and self.casts is not None and len(self.casts)>0: 
+      if self.casts is not None and len(self.casts)>0: 
         s += ">> casts >>\n"
         s += self.format_casts2()
       # Logs
