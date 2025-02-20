@@ -27,7 +27,26 @@ parse_schema = {
   }
 }
 
+select_link_instructions = """
+Your task is select the most trustworthy URL from the provided list.
+Do not select URLs if the domain name is unknown or obscure.
+Prefer URLs from well-known domains, either mainstream media or social media.
+Your main criteria to pick the URL is safety and security for users, we don't want to select a URL that is not trustworthy.
+If none of the URLs meets our criteria, return {"url": null}
+Return your response as a JSON object.
 
+OUTPUT FORMAT:
+{
+  "url": "..."
+}
+"""
+
+select_link_schema = {
+  "type":"OBJECT",
+  "properties":{
+    "url":{"type":"STRING"}
+  }
+}
 
 
 class Perplexity(IActionStep):
@@ -65,12 +84,20 @@ class Perplexity(IActionStep):
       answer = data['choices'][0]['message']['content']
     except Exception:
       raise Exception("Could not get an answer from Perplexity.")
+    cast = {'text': answer}
     link = None
     if 'citations' in data and len(data['citations']) > 0:
-      link = data['citations'][0]
-    cast = {'text': answer}
+      links = "\n".join(data['citations'])
+      links_selection = call_llm(links, select_link_instructions, select_link_schema)
+      if 'url' in links_selection and links_selection['url'] is not None and len(links_selection['url']) > 10:
+        link = links_selection['url']
+      links_log = '<LinksSelection>\n'
+      links_log += links + '\n'
+      links_log += " >>> " + link + '\n'
+      links_log += '</LinksSelection>\n'
+      self.state.log += links_log
     if link is not None:
       cast['embeds'] = [link]
-      cast['embeds_description'] = 'Link to the reference website'
+      cast['embeds_description'] = 'Link'
     casts = [cast]
     self.state.casts = casts

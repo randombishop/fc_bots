@@ -23,7 +23,7 @@ def call_perplexity(question):
     "max_tokens": 256,
     "return_images": False,
     "return_related_questions": False,
-    "search_domain_filter": ["wikipedia.org", "yahoo.com", "reddit.com"],
+    "search_recency_filter": "week",
     "stream": False
   }
   headers = {
