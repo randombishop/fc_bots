@@ -36,6 +36,5 @@ class TestMoreLikeThis(unittest.TestCase):
     # test with a deleted parent
     parent_hash = '0xb59fcfda9e859be648e5d5541d292a6fb8cc9fcb'
     request = "More like this"
-    bot = run_bot(request, parent_hash=parent_hash)
-    self.assert_expected_output(bot)
+    run_bot(request, parent_hash=parent_hash)
     

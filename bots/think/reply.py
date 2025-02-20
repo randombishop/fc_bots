@@ -56,10 +56,8 @@ class Reply(IThinkStep):
     self.state.reply = (not do_not_reply)
     if do_not_reply:
       self.state.do_not_reply_reason = reason
-    print('<---------------------------- Reply Validation ---------------------------->')
-    print(prompt)
-    #print('---------------------------------------------------------------------------')
-    #print(instructions)
-    #print('---------------------------------------------------------------------------')
-    #print(result)
-    print(f"<--- do_not_reply={do_not_reply} reason={reason}---------------------------->")
+      log = f'<Reply do_not_reply="{do_not_reply}">\n'
+      log += 'Prompt: ' + prompt + '\n'
+      log += 'Reason: ' + reason + '\n'
+      log += '</Reply>\n'
+      self.state.log += log

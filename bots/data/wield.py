@@ -75,14 +75,3 @@ def parse_user_info(user):
   }
 
 
-
-if __name__ == '__main__':
-  if sys.argv[1]=='user':
-    user_input = input("Enter user FID or username: ")
-    user_info = get_user_info(user_input)
-    print(user_info)
-  elif sys.argv[1]=='cast':
-    hash = sys.argv[2]
-    print('Fetching cast', hash)
-    cast = get_cast_info(hash)
-    print(cast)

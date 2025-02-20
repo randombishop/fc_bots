@@ -1,12 +1,12 @@
-from bots.i_wakeup_step import IWakeUpStep
-from bots.data.bot_history import get_bot_recent_casts
+from bots.i_prepare_step import IPrepareStep
+from bots.data.bot_history import get_bot_casts
 from bots.utils.format_cast import shorten_text, format_when
 
 
-class WakeUpRecentCasts(IWakeUpStep):
+class GetBotCasts(IPrepareStep):
     
-  def get(self, bot_character, bot_state):
-    casts = get_bot_recent_casts(bot_state.id)
+  def prepare(self):
+    casts = get_bot_casts(self.state.id)
     text = ''
     for c in casts:
       row = '{\n'
@@ -16,4 +16,4 @@ class WakeUpRecentCasts(IWakeUpStep):
       row += f"  when: {format_when(c['casted_at'])}\n"
       row += '}\n'
       text += row
-    return text
+    self.state.bot_casts = text

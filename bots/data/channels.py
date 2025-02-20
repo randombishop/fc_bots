@@ -16,3 +16,14 @@ def get_channels_map():
 
 def get_channel_by_url(url):
   return _channels_by_url[url] if url in _channels_by_url else None
+
+
+def get_channel_url(channel):
+  if channel is None or channel in ['', 'None']:
+    return None
+  if channel in _channels_by_id:
+    return _channels_by_id[channel]
+  elif channel in _channels_by_name:
+    return _channels_by_name[channel]
+  else:
+    return None

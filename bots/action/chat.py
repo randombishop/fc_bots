@@ -37,9 +37,6 @@ If you can't find any post that can be used that way, respond with a tweet only 
 
 
 chat_prompt_template = """
-##Posts from @{{user_origin}}
-{{about_user}}
-
 ##Posts about {{topic}}
 {{about_topic}}
 
@@ -48,6 +45,9 @@ chat_prompt_template = """
 
 ##Posts about {{context}}
 {{about_context}}
+
+##Posts from @{{user_origin}}
+{{about_user}}
 
 #Conversation (this is the current conversation you are having with the user)
 {{conversation}}

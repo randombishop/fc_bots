@@ -12,8 +12,9 @@ from bots.prompts.avatar import avatar_instructions_template, avatar_schema
 from bots.utils.openai import generate_image
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_links import check_link_data
-from bots.data.bot_history import get_random_user_to_praise
+from bots.data.bot_history import get_random_user_to_praise, get_random_user_to_praise_in_channel
 from bots.data.users import get_fid
+from bots.data.channels import get_channel_url
 
 
 parse_user_instructions_template = """
@@ -93,6 +94,21 @@ class Praise(IActionStep):
   def get_cost(self):
     return 20
     
+  def auto_prompt(self):
+    channel_url = get_channel_url(self.state.selected_channel)
+    user_name, fid = None, None
+    if channel_url is None:
+      user_name = get_random_user_to_praise(self.state.id)
+      fid = get_fid(user_name)
+      self.state.request = f'Praise a random user'
+    else:
+      user_name = get_random_user_to_praise_in_channel(self.state.id, channel_url)
+      fid = get_fid(user_name)
+      self.state.request = f'Praise a random user in channel /{self.state.selected_channel}'
+    self.state.action_params = {'fid': fid, 'user_name': user_name}
+    self.state.user = user_name
+    self.state.conversation = self.state.request
+    
   def parse(self):
     parse_prompt = self.state.format(conversation_and_request_template)
     parse_instructions = self.state.format(parse_user_instructions_template)
@@ -100,7 +116,7 @@ class Praise(IActionStep):
     parsed = {}
     fid, user_name = read_user(params, self.state.fid_origin, default_to_origin=False)
     if user_name == '*' or user_name == '' or user_name is None:
-      print('Praise action will pick a random user to praise')
+      self.state.log += 'Praise action will pick a random user to praise\n'
       user_name = get_random_user_to_praise(self.state.id)
       fid = get_fid(user_name)
     parsed['fid'] = fid

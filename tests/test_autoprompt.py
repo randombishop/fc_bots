@@ -2,24 +2,40 @@ from dotenv import load_dotenv
 load_dotenv()
 import unittest
 from bots.utils.tests import make_bot
-from bots.prompts.autopilot import autopilot_prompt_template, autopilot_instructions, autopilot_schema
-from bots.utils.llms import call_llm
+from bots.utils.tests import run_bot
+from bots.plan.select_channel import SelectChannel
+from bots.plan.select_action import SelectAction
 
 
 class TestAutoprompt(unittest.TestCase):
   
   def test1(self):
-    bot = make_bot()
-    bot.initialize()
-    bot.wakeup()
-    instructions = bot.state.format(autopilot_instructions)
-    prompt = bot.state.format(autopilot_prompt_template)
-    print(instructions)
-    print('-'*100)
-    print(prompt)
-    print('-'*100)
-    print(autopilot_schema)
-    result = call_llm(prompt, instructions, autopilot_schema)
-    print('-'*100)
-    print(result)
+    run_bot()
     
+  def test2(self):
+    bot = run_bot(selected_channel='data', selected_action='SaySomethingInChannel')
+    self.assertEqual(bot.state.request, 'Say something in channel /data')
+    
+  def test3(self):
+    bot = run_bot(selected_channel='mfers', selected_action='MostActiveUsers')
+    self.assertEqual(bot.state.request, 'Most active users in channel /mfers')
+    
+  def test4(self):
+    bot = run_bot(selected_channel='nature', selected_action='Perplexity')
+    self.assertIn('Ask Perplexity', bot.state.request)
+    
+  def test5(self):
+    bot = run_bot(selected_channel='tabletop', selected_action='Praise')
+    self.assertEqual(bot.state.request, 'Praise a random user in channel /tabletop')
+    
+  def test6(self):
+    bot = run_bot(selected_channel='product', selected_action='Summary')
+    self.assertIn('Summarize', bot.state.request)
+  
+  def test7(self):
+    bot = run_bot(selected_channel='None', selected_action='Summary')
+    self.assertIn('Summarize', bot.state.request)
+
+  def test8(self):
+    bot = run_bot(selected_channel='None', selected_action='Perplexity')
+    self.assertIn('Ask Perplexity', bot.state.request)

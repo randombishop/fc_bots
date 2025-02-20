@@ -7,7 +7,7 @@ from bots.utils.read_params import read_channel
 from bots.data.users import get_top_daily_casters
 from bots.utils.images import user_activity_chart
 from bots.utils.gcs import upload_to_gcs
-from bots.data.channels import get_channel_by_url
+from bots.data.channels import get_channel_url, get_channel_by_url
 
 parse_instructions_template = """
 #INSTRUCTIONS:
@@ -38,6 +38,14 @@ class MostActiveUsers(IActionStep):
   def get_cost(self):
     return 20
   
+  def auto_prompt(self):
+    channel_url = get_channel_url(self.state.selected_channel)
+    if channel_url is None:
+      raise Exception("Most Active Users autoprompt can't find channel_url")
+    self.state.action_params = {'channel': channel_url}
+    self.state.request = f'Most active users in channel /{self.state.selected_channel}'
+    self.state.conversation = self.state.request
+    
   def parse(self):
     parse_prompt = self.state.format(conversation_and_request_template)
     parse_instructions = self.state.format(parse_instructions_template)

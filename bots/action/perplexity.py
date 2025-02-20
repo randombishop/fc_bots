@@ -1,9 +1,10 @@
 from bots.i_action_step import IActionStep
 from bots.prompts.contexts import conversation_and_request_template
+from bots.autoprompt.perplexity_question_in_channel import perplexity_question_in_channel
+from bots.autoprompt.perplexity_question_no_channel import perplexity_question_no_channel
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_string
 from bots.utils.perplexity_api import call_perplexity
-
 
 parse_instructions_template = """
 You are @{{name}} bot, a social media bot.
@@ -34,6 +35,18 @@ class Perplexity(IActionStep):
   def get_cost(self):
     return 100
   
+  def auto_prompt(self):
+    channel = self.state.selected_channel
+    question, log = None, None
+    if channel is None or channel in ['', 'None']:
+      question, log = perplexity_question_no_channel(self.state)
+    else:
+      question, log = perplexity_question_in_channel(self.state)
+    self.state.action_params = {'question': question}
+    self.state.request = f'Ask Perplexity {question}'
+    self.state.conversation = self.state.request
+    self.state.log += log + '\n'
+    
   def parse(self):
     parse_prompt = self.state.format(conversation_and_request_template)
     parse_instructions = self.state.format(parse_instructions_template)

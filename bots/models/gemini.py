@@ -8,7 +8,7 @@ import vertexai.preview.generative_models as generative_models
 USE_VERTEX_AI = os.getenv('USE_VERTEX_AI', "false")
 #GEMINI_MODEL_NAME = 'gemini-2.0-flash-exp'
 GEMINI_MODEL_NAME = 'gemini-1.5-flash-002'
-MIN_DELAY = 3
+MIN_DELAY = 5
 
 if USE_VERTEX_AI == "true":
   print('Init Vertex AI...')
@@ -33,7 +33,7 @@ class GeminiLLM():
   def query(self, prompt, instructions=None, schema=None):
     if time.time() - self.last_call < MIN_DELAY:
       delay = MIN_DELAY - (time.time() - self.last_call)
-      print(f"Waiting {int(delay)} seconds to avoid rate limit...")
+      print(f"W{int(delay)}...")
       time.sleep(delay)
     self.last_call = time.time()
     vertex_model = GenerativeModel(
