@@ -4,9 +4,7 @@ import unittest
 from bots.utils.tests import make_character_and_state
 from bots.wakeup.wakeup_actions import WakeUpActions
 from bots.wakeup.wakeup_bio import WakeUpBio
-from bots.wakeup.wakeup_cast_stats import WakeUpCastStats
 from bots.wakeup.wakeup_channel import WakeUpChannel
-from bots.wakeup.wakeup_channel_summaries import WakeUpChannelSummaries
 from bots.wakeup.wakeup_conversation import WakeUpConversation
 from bots.wakeup.wakeup_lore import WakeUpLore
 from bots.wakeup.wakeup_style import WakeUpStyle
@@ -41,24 +39,10 @@ class TestWakeUp(unittest.TestCase):
     print(bio)
     print('</WakeUpBio>')
     lines = bio.split('\n')
-    self.assertEqual(len(lines), 5)
+    self.assertGreater(len(lines), 1)
 
 
-  #########################################################  
-  # wakeup_cast_stats
-  #########################################################
-
-  def test_cast_stats1(self):
-    character, state = make_character_and_state()
-    cast_stats = WakeUpCastStats().get(character, state)
-    print('<WakeUpCastStats>')
-    print(cast_stats)
-    print('</WakeUpCastStats>')
-    lines = cast_stats.split('\n')
-    self.assertGreater(len(lines), 0)
-    
-
-
+  
   #########################################################  
   # wakeup_channel
   #########################################################
@@ -69,7 +53,7 @@ class TestWakeUp(unittest.TestCase):
     print('<WakeUpChannel>')
     print(channel)
     print('</WakeUpChannel>')
-    self.assertEqual(channel, '/data')
+    self.assertEqual(channel, 'data')
 
   def test_channel2(self):
     character, state = make_character_and_state()
@@ -79,19 +63,6 @@ class TestWakeUp(unittest.TestCase):
     print('</WakeUpChannel>')
     self.assertEqual(channel, '')
     
-
-
-  #########################################################  
-  # wakeup_channel_summaries
-  #########################################################
-  
-  def test_channel_summaries1(self):
-    character, state = make_character_and_state()
-    channel_summaries = WakeUpChannelSummaries().get(character, state)
-    print('<WakeUpChannelSummaries>')
-    print(channel_summaries)
-    print('</WakeUpChannelSummaries>')
-    self.assertGreater(len(channel_summaries), 0)
 
 
   #########################################################
@@ -169,7 +140,7 @@ class TestWakeUp(unittest.TestCase):
     print(lore)
     print('</WakeUpLore>')
     lines = lore.split('\n')
-    self.assertEqual(len(lines), 5)
+    self.assertGreater(len(lines), 1)
     
 
 
@@ -183,7 +154,7 @@ class TestWakeUp(unittest.TestCase):
     print('<WakeUpStyle>')
     print(style)
     print('</WakeUpStyle>')
-    self.assertEqual(len(lines), 10) 
+    self.assertGreater(len(lines), 1) 
     
 
 

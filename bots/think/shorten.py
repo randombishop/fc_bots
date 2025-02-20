@@ -55,6 +55,7 @@ class Shorten(IThinkStep):
     text = text.replace('$', '')
     text = text.replace('tweet', 'cast')
     text = re.sub(r'\[\d+\]', '', text)
+    text = re.sub(r'[\(\[][a-f0-9]{6}[\)\]]', '', text)
     return text
 
   def shorten_text(self, text):
@@ -65,11 +66,11 @@ class Shorten(IThinkStep):
     if len(short) > MAX_LENGTH:
       short = short[:MAX_LENGTH]+'...'
     # Log debugging info
-    log = '<shorten_text>\n'
+    log = '<Shorten>\n'
     log += text + '\n'
     log += '  >>> >>> >>>\n'
     log += short + '\n'
-    log += '</shorten_text>\n'
+    log += '</Shorten>\n'
     self.state.log += log
     return short
 

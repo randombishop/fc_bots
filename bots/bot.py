@@ -79,7 +79,7 @@ class Bot:
       shorten_step = Shorten(self.state)
       shorten_step.think()
     # Decide if we should reply
-    if self.state.request is not None:
+    if self.state.casts is not None and len(self.state.casts) > 0 and self.state.request is not None:
       reply_step = Reply(self.state)
       reply_step.think()
   

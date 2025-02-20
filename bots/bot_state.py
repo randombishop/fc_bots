@@ -151,7 +151,13 @@ class BotState:
         text = insert_mentions(text, c['mentions_ats'], c['mentions_pos'])
       ans += f"{text}"
       if 'embeds' in c and c['embeds'] is not None and len(c['embeds'])>0:
-        ans += f" [{c['embeds'][0]}]"
+        description = c['embeds_description'] if 'embeds_description' in c else None
+        description = shorten_text(description)
+        embed = c['embeds'][0]
+        if 'user_name' in embed and 'hash' in embed:
+          ans += f" [{description}](https://warpcast.com/{embed['user_name']}/{embed['hash'][:10]})"
+        else:
+          ans += f" [{description}]({embed})"
       ans += '\n'
     return ans
   
