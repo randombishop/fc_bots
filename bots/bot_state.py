@@ -165,26 +165,33 @@ class BotState:
   
   def debug(self):
     try:
-      attrs = ['fid', 'user_name', 'channel', 'keyword', 'category', 'search', 'criteria', 'text', 'question', 'continue']
-      s = ('-'*100) + '\n'
+      s = ('-'*128) + '\n'
+      # Request
+      if self.request is not None:
+        s += self.request + '\n'
+      # Selected action
       if self.selected_action is None:
-        s += 'No action was selected\n'
+        s += '## No action was selected ##\n'
       else:  
-        s += f"{self.selected_action}\n"
-        if self.action_params is not None:
-          for attr in attrs:
-            if attr in self.action_params and self.action_params[attr] is not None: 
-              s += f"<< {attr} << {self.action_params[attr]}\n"
-        else:
-          s += '  No parameters were parsed\n'
-        if hasattr(self, 'casts') and self.casts is not None: 
-          s += ">> casts >>\n"
-          s += self.format_casts2()
-        if self.log is not None and len(self.log)>0:
-          s += f"-- logs --\n"
-          s += self.log + "\n"
-      s += ('-'*100)
-      s += '\n'
+        s += f"## {self.selected_action} ##\n"
+      # Action parameters
+      if self.action_params is not None:
+        attrs = ['fid', 'user_name', 'channel', 'keyword', 'category', 'search', 'criteria', 'text', 'question', 'continue']
+        for attr in attrs:
+          if attr in self.action_params and self.action_params[attr] is not None: 
+            s += f"<< {attr} << {self.action_params[attr]}\n"
+      else:
+        s += '<< No parameters were parsed <<\n'
+      # Casts
+      if hasattr(self, 'casts') and self.casts is not None and len(self.casts)>0: 
+        s += ">> casts >>\n"
+        s += self.format_casts2()
+      # Logs
+      if self.log is not None and len(self.log)>0:
+        s += f"-- logs --\n"
+        s += self.log + "\n"
+      # End
+      s += ('-'*128) + '\n'
       print(s)
     except Exception as e:
       print('Exception in state.debug():', e)
