@@ -56,8 +56,8 @@ class Reply(IThinkStep):
     self.state.reply = (not do_not_reply)
     if do_not_reply:
       self.state.do_not_reply_reason = reason
-      log = '<Reply do_not_reply="{do_not_reply}">\n'
-      log += 'Prompt:\n' + prompt + '\n'
-      log += 'Reason:\n' + reason + '\n'
-      log += f'</Reply>\n'
+      log = f'<Reply do_not_reply="{do_not_reply}">\n'
+      log += 'Prompt: ' + prompt + '\n'
+      log += 'Reason: ' + reason + '\n'
+      log += '</Reply>\n'
       self.state.log += log
