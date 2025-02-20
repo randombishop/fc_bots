@@ -107,7 +107,8 @@ class Bot:
 
 def generate_bot_response(bot_id, 
                           request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, 
-                          selected_channel=None, selected_action=None):
+                          selected_channel=None, selected_action=None,
+                          debug=False):
   character = get_bot_character(bot_id)
   if character is None:
     raise Exception(f"Bot {bot_id} not found")
@@ -119,4 +120,6 @@ def generate_bot_response(bot_id,
                          root_parent_url=root_parent_url,
                          selected_channel=selected_channel,
                          selected_action=selected_action)
+  if debug:
+    bot.state.debug()
   return response
