@@ -91,17 +91,23 @@ class Bot:
     self.execute()
     self.think()
     response = {
+      'request': self.state.request,
       'like': self.state.like,
       'reply': self.state.reply,
       'casts': self.state.casts,
       'cost': self.state.cost,
+      'selected_channel': self.state.selected_channel,
+      'selected_channel_log': self.state.selected_channel_log,
       'selected_action': self.state.selected_action,
-      'selected_user': self.state.user
+      'selected_user': self.state.user,
+      'log': self.state.log
     }
     return response
   
 
-def generate_bot_response(bot_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_action=None):
+def generate_bot_response(bot_id, 
+                          request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, 
+                          selected_channel=None, selected_action=None):
   character = get_bot_character(bot_id)
   if character is None:
     raise Exception(f"Bot {bot_id} not found")
@@ -111,5 +117,6 @@ def generate_bot_response(bot_id, request=None, fid_origin=None, parent_hash=Non
                          parent_hash=parent_hash, 
                          attachment_hash=attachment_hash, 
                          root_parent_url=root_parent_url,
+                         selected_channel=selected_channel,
                          selected_action=selected_action)
   return response
