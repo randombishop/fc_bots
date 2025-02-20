@@ -58,6 +58,9 @@ schema = """
 class SelectChannel(IPlanStep):
     
   def plan(self):
+    if len(self.state.channel) > 0:
+      self.state.selected_channel = self.state.channel
+      return
     GetBotCasts(self.state).prepare()
     GetTrending(self.state).prepare()
     df_channels = self.state.channel_list
