@@ -57,25 +57,27 @@ schema = """
 
 
 def summary_prompt_no_channel(state):
+  log = ''
   previous_summaries = get_bot_casts(state.id, no_channel=True, selected_action='Summary')
-  df = pandas.DataFrame(previous_summaries)
-  df['is_category_summary'] = df['action_prompt'].str.startswith('Summarize category')
-  log = 'Previous summaries:\n' + str(df[['action_prompt', 'hours']])
-  # First, try to re-run a category summary
-  if df['is_category_summary'].sum() > 0:
-    log += f'Found {int(df["is_category_summary"].sum())} category summaries...\n'
-    categories = df[df['is_category_summary']].groupby('action_prompt'
-                    ).agg({'hours': 'min'}).reset_index().to_dict(orient='records')
-    for c in categories:
-      c['category'] = read_category({'category': c['action_prompt'].replace('Summarize category', '').strip()})
-      c['hours'] = float(c['hours'])
-    categories = [x for x in categories if x['category'] is not None and x['hours'] > MIN_HOURS_FOR_CATEGORIES]
-    if len(categories) > 0:
-      category = random.choice(categories)
-      log += 'Selected category summary: '+category['category']
-      return category['action_prompt'], {'category': category['category'], 'max_rows': get_max_capactity()}, log
-    else:
-      log += f'No category summaries found within the last {MIN_HOURS_FOR_CATEGORIES} hours.\n'
+  if len(previous_summaries) > 0:
+    df = pandas.DataFrame(previous_summaries)
+    df['is_category_summary'] = df['action_prompt'].str.startswith('Summarize category')
+    log += 'Previous summaries:\n' + str(df[['action_prompt', 'hours']])
+    # First, try to re-run a category summary
+    if df['is_category_summary'].sum() > 0:
+      log += f'Found {int(df["is_category_summary"].sum())} category summaries...\n'
+      categories = df[df['is_category_summary']].groupby('action_prompt'
+                      ).agg({'hours': 'min'}).reset_index().to_dict(orient='records')
+      for c in categories:
+        c['category'] = read_category({'category': c['action_prompt'].replace('Summarize category', '').strip()})
+        c['hours'] = float(c['hours'])
+      categories = [x for x in categories if x['category'] is not None and x['hours'] > MIN_HOURS_FOR_CATEGORIES]
+      if len(categories) > 0:
+        category = random.choice(categories)
+        log += 'Selected category summary: '+category['category']
+        return category['action_prompt'], {'category': category['category'], 'max_rows': get_max_capactity()}, log
+      else:
+        log += f'No category summaries found within the last {MIN_HOURS_FOR_CATEGORIES} hours.\n'
   # If no category is applicable, figure out a search phrase
   text = ''
   for c in previous_summaries:
