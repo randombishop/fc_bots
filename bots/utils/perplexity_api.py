@@ -20,7 +20,7 @@ def call_perplexity(question):
           "content": 'Answer the following question with one short tweet: ' + question
       }
     ],
-    "max_tokens": 256,
+    "max_tokens": 512,
     "return_images": False,
     "return_related_questions": False,
     "search_recency_filter": "week",
