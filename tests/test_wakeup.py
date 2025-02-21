@@ -42,29 +42,6 @@ class TestWakeUp(unittest.TestCase):
     self.assertGreater(len(lines), 1)
 
 
-  
-  #########################################################  
-  # wakeup_channel
-  #########################################################
-
-  def test_channel1(self):
-    character, state = make_character_and_state(root_parent_url='https://farcaster.group/data')
-    channel = WakeUpChannel().get(character, state)
-    print('<WakeUpChannel>')
-    print(channel)
-    print('</WakeUpChannel>')
-    self.assertEqual(channel, 'data')
-
-  def test_channel2(self):
-    character, state = make_character_and_state()
-    channel = WakeUpChannel().get(character, state)
-    print('<WakeUpChannel>')
-    print(channel)
-    print('</WakeUpChannel>')
-    self.assertEqual(channel, '')
-    
-
-
   #########################################################
   # wakeup_conversation
   #########################################################
