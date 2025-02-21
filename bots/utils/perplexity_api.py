@@ -4,8 +4,8 @@ import os
 
 URL = "https://api.perplexity.ai/chat/completions"
 TOKEN = os.getenv("PERPLEXITY_API_KEY")
-MODEL = "sonar-reasoning"
-SYSTEM_PROMPT = "Answer with one short tweet."
+MODEL = "sonar"
+SYSTEM_PROMPT = "Answer with one short tweet. Do not use hashtags. Generate an original and engaging tweet. Keep it short and to the point."
 
 def call_perplexity(question):
   payload = {
