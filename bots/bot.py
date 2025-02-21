@@ -15,7 +15,7 @@ class Bot:
     self.id = id
     self.character = character
     self.character['wakeup_steps'] += ['actions_templates','channel_list']
-    self.character['wakeup_steps'] = [step for step in self.character['wakeup_steps'] if step != 'trending']
+    self.character['wakeup_steps'] = [step for step in self.character['wakeup_steps'] if step not in ['trending', 'channel']]
     self.state = BotState()
     
   def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
@@ -39,8 +39,7 @@ class Bot:
       self.state.set(key, wakeup_value)
 
   def plan(self):
-    self.state.selected_channel = self.state.channel
-    if self.state.request is None and self.state.selected_channel is None and self.state.selected_action is None:
+    if self.state.selected_channel is None:
       select_channel_step = SelectChannel(self.state)
       select_channel_step.plan()
     if self.state.selected_action is None:

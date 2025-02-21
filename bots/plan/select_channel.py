@@ -5,6 +5,7 @@ from bots.i_plan_step import IPlanStep
 from bots.prepare.get_bot_casts import GetBotCasts
 from bots.prepare.get_trending import GetTrending
 from bots.utils.llms import call_llm
+from bots.data.channels import get_channel_by_url
 
 
 prompt_template = """
@@ -58,9 +59,13 @@ schema = """
 class SelectChannel(IPlanStep):
     
   def plan(self):
-    if len(self.state.channel) > 0:
-      self.state.selected_channel = self.state.channel
+    if self.state.root_parent_url is not None:
+      self.state.selected_channel = get_channel_by_url(self.state.root_parent_url)
       return
+    if self.state.request is not None or self.state.selected_action is not None:
+      #If we have an explicit request, no need to select a channel in autopilot mode
+      return
+    # Select a channel in autopilot mode
     GetBotCasts(self.state).prepare()
     GetTrending(self.state).prepare()
     df_channels = self.state.channel_list

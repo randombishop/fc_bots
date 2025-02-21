@@ -34,9 +34,6 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 #RECENT POSTS
 {{bot_casts}}
 
-#INITIAL CHANNEL
-{{channel}}
-
 #SELECTED CHANNEL
 {{selected_channel}}
 
