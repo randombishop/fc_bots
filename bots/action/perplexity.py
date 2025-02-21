@@ -27,10 +27,12 @@ parse_schema = {
 }
 
 select_link_instructions = """
-Your task is select the most trustworthy URL from the provided list.
-Do not select URLs if the domain name is unknown or obscure.
-Prefer URLs from well-known domains, either mainstream media or social media.
-Your main criteria to pick the URL is safety and security for users, we don't want to select a URL that is not trustworthy.
+You are provided with a list of URLs.
+Your task is to select the URL from the most well known domain.
+Do not select URLs if the domain name is not well known.
+Prefer URLs from famous origins such as wikipedia, reddit, youtube, medium articles, yahoo news, mainstream media institutions, reuters, and similar.
+Avoid URLs from domains where you don't have enough information.
+Avoid URLs that might be a commercial or a link to a specific product.
 If none of the URLs meets our criteria, return {"url": null}
 Return your response as a JSON object.
 
