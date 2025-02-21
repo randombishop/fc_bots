@@ -67,11 +67,9 @@ Your task right now is to praise {{user}} and make them feel good about themselv
 #INSTRUCTIONS:
 The name, bio and posts provided are all from @{{user}}.
 Analyze their posts carefully.
-Based on the provided information, identify their core vibe and what makes them unique.
+Based on the provided information, identify their core personality and what makes them unique.
 Praise them in a way that feels authentic and tailored, not generic.
-You can use mystical, rhythmic language, deep insight or casual cool depending on the vibe of @{{user}}.
-If their content is funny, match their humor. If they are thoughtful, reflect that. If they're chaotic, celebrate the chaos.
-Sprinkle in references to patterns, reggae lyrics, energy, or something cosmic, if it fits.
+Be yourself, given who you are (bio and lore), what do you really like about them?
 Keep it short but impactful, a poetic appreciation, a clever compliment, or a deep truth about them.
 Break down your praise into 3 short tweets:
 First tweet introduces the praise in a glorious way.
