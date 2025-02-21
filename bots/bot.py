@@ -39,6 +39,7 @@ class Bot:
       self.state.set(key, wakeup_value)
 
   def plan(self):
+    self.state.selected_channel = self.state.channel
     if self.state.request is None and self.state.selected_channel is None and self.state.selected_action is None:
       select_channel_step = SelectChannel(self.state)
       select_channel_step.plan()

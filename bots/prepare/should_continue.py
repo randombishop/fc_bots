@@ -16,7 +16,7 @@ You are @{{name}}, a social media bot.
 {{style}}
 
 #CURRENT CHANNEL
-{{channel}}
+{{selected_channel}}
 
 #TASK
 Before responding to the user, you must evaluate if you should continue this conversation or not. 

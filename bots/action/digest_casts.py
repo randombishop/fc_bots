@@ -15,7 +15,7 @@ from bots.autoprompt.summary_prompt_no_channel import summary_prompt_no_channel
 
 parse_instructions_template = """
 #CURRENT CHANNEL
-{{channel}}
+{{selected_channel}}
 
 #INSTRUCTIONS
 You are @{{name}}, a bot programmed to make summaries of posts (=casts) in a social media platform.
@@ -63,7 +63,7 @@ You are @{{name}}, a bot programmed to make summaries of posts (=casts) in a soc
 {{style}}
 
 #CURRENT CHANNEL
-{{channel}}
+{{selected_channel}}
 """
 
 main_instructions = """

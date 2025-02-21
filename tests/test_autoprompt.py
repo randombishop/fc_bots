@@ -1,10 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 import unittest
-from bots.utils.tests import make_bot
 from bots.utils.tests import run_bot
-from bots.plan.select_channel import SelectChannel
-from bots.plan.select_action import SelectAction
 
 
 class TestAutoprompt(unittest.TestCase):

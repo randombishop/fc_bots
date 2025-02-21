@@ -34,8 +34,11 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 #RECENT POSTS
 {{bot_casts}}
 
-#CURRENT CHANNEL
+#INITIAL CHANNEL
 {{channel}}
+
+#SELECTED CHANNEL
+{{selected_channel}}
 
 #CONVERSATION
 {{conversation}}
@@ -79,7 +82,7 @@ class BotState:
     self.actions_templates = ''
     self.bio = ''
     self.cast_stats = ''
-    self.channel = ''
+    self.channel = selected_channel
     self.channel_list = ''
     self.conversation = ''
     self.lore = ''

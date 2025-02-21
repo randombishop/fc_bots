@@ -22,7 +22,7 @@ You can use the conversation to guess the parameters, but focus on the request.
 Your goal is to extract the parameters from the request.
 
 #CURRENT CHANNEL
-{{channel}}
+{{selected_channel}}
 
 RESPONSE FORMAT:
 {
@@ -58,7 +58,7 @@ You are @{{name}}, a bot programmed to pick the best post (=cast) in a social me
 {{lore}}
 
 #CURRENT CHANNEL
-{{channel}}
+{{selected_channel}}
 """
 
 task_instructions = """
