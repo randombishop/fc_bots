@@ -7,6 +7,7 @@ from bots.data.users import get_fid
 from bots.data.channels import get_channel_url
 from bots.prepare.get_user_profile import GetUserProfile
 from bots.prepare.get_pfp_description import GetPfpDescrition
+from bots.prepare.get_user_replies_and_reactions import GetUserRepliesAndReactions
 from bots.prepare.get_avatar import GetAvatar
 
 
@@ -143,6 +144,7 @@ class Praise(IActionStep):
       raise Exception(f"Missing fid/user_name.")
     GetUserProfile(self.state).prepare()
     GetPfpDescrition(self.state).prepare()
+    GetUserRepliesAndReactions(self.state).prepare()
     GetAvatar(self.state).prepare()
     prompt = self.state.format(prompt_template)
     instructions = self.state.format(instructions_template)

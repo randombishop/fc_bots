@@ -14,9 +14,6 @@ class Bot:
   def __init__(self, id, character):
     self.id = id
     self.character = character
-    self.character['action_steps'] += ['WhoIs']
-    self.character['wakeup_steps'] += ['actions_templates','channel_list']
-    self.character['wakeup_steps'] = [step for step in self.character['wakeup_steps'] if step not in ['trending', 'channel']]
     self.state = BotState()
     
   def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
