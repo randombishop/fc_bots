@@ -1,4 +1,4 @@
-import requests # type: ignore
+import requests
 from bots.i_prepare_step import IPrepareStep
 from bots.utils.llms import call_llm_with_attachment
 
