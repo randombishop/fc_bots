@@ -14,6 +14,7 @@ class Bot:
   def __init__(self, id, character):
     self.id = id
     self.character = character
+    self.character['action_steps'] += ['WhoIs']
     self.character['wakeup_steps'] += ['actions_templates','channel_list']
     self.character['wakeup_steps'] = [step for step in self.character['wakeup_steps'] if step not in ['trending', 'channel']]
     self.state = BotState()
@@ -90,19 +91,7 @@ class Bot:
     self.prepare()
     self.execute()
     self.think()
-    response = {
-      'request': self.state.request,
-      'like': self.state.like,
-      'reply': self.state.reply,
-      'casts': self.state.casts,
-      'cost': self.state.cost,
-      'selected_channel': self.state.selected_channel,
-      'selected_channel_log': self.state.selected_channel_log,
-      'selected_action': self.state.selected_action,
-      'selected_user': self.state.user,
-      'log': self.state.log
-    }
-    return response
+    
   
 
 def generate_bot_response(bot_id, 
@@ -113,13 +102,17 @@ def generate_bot_response(bot_id,
   if character is None:
     raise Exception(f"Bot {bot_id} not found")
   bot = Bot(bot_id, character)
-  response = bot.respond(request=request, 
-                         fid_origin=fid_origin, 
-                         parent_hash=parent_hash, 
-                         attachment_hash=attachment_hash, 
-                         root_parent_url=root_parent_url,
-                         selected_channel=selected_channel,
-                         selected_action=selected_action)
-  if debug:
+  try:
+    bot.respond(request=request, 
+      fid_origin=fid_origin, 
+      parent_hash=parent_hash, 
+      attachment_hash=attachment_hash, 
+      root_parent_url=root_parent_url,
+      selected_channel=selected_channel,
+      selected_action=selected_action)
+    if debug:
+      bot.state.debug()
+    return bot.state
+  except Exception as e:
     bot.state.debug()
-  return response
+    raise e

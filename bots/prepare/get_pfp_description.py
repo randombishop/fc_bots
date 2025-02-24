@@ -1,4 +1,4 @@
-import requests
+import requests # type: ignore
 from bots.i_prepare_step import IPrepareStep
 from bots.utils.llms import call_llm_with_attachment
 
@@ -31,6 +31,8 @@ schema = {
 class GetPfpDescrition(IPrepareStep):
     
   def prepare(self):
+    if self.state.user_pfp_description is not None:
+      return
     url = self.state.user_pfp_url
     if url is None or len(url) == 0:
       self.state.log += 'No profile picture available.\n'

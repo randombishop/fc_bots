@@ -4,7 +4,6 @@ import unittest
 from bots.utils.tests import make_character_and_state
 from bots.wakeup.wakeup_actions import WakeUpActions
 from bots.wakeup.wakeup_bio import WakeUpBio
-from bots.wakeup.wakeup_channel import WakeUpChannel
 from bots.wakeup.wakeup_conversation import WakeUpConversation
 from bots.wakeup.wakeup_lore import WakeUpLore
 from bots.wakeup.wakeup_style import WakeUpStyle

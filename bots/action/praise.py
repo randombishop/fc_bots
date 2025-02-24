@@ -7,7 +7,7 @@ from bots.data.users import get_fid
 from bots.data.channels import get_channel_url
 from bots.prepare.get_user_profile import GetUserProfile
 from bots.prepare.get_pfp_description import GetPfpDescrition
-from bots.prepare.new_avatar import NewAvatar
+from bots.prepare.get_avatar import GetAvatar
 
 
 parse_user_instructions_template = """
@@ -72,7 +72,7 @@ Praise them in a way that feels authentic and tailored, not generic.
 Be yourself, given who you are (your own bio and lore), what do you really like about them?
 Keep it short but impactful, a poetic appreciation, a clever compliment, or a deep truth about them.
 Break down your praise into 3 short tweets:
-First tweet introduces the praise in a glorious way.
+First tweet introduces the praise.
 Second tweet continues the praise.
 Third tweet concludes the praise.
 Keep the tweets very short and concise.
@@ -116,6 +116,7 @@ class Praise(IActionStep):
       fid = get_fid(user_name)
       self.state.request = f'Praise a random user in channel /{self.state.selected_channel}'
     self.state.action_params = {'fid': fid, 'user_name': user_name}
+    self.state.user_fid = fid
     self.state.user = user_name
     self.state.conversation = self.state.request
     
@@ -132,6 +133,7 @@ class Praise(IActionStep):
     parsed['fid'] = fid
     parsed['user_name'] = user_name
     self.state.action_params = parsed
+    self.state.user_fid = fid
     self.state.user = user_name
 
   def execute(self):
@@ -141,14 +143,14 @@ class Praise(IActionStep):
       raise Exception(f"Missing fid/user_name.")
     GetUserProfile(self.state).prepare()
     GetPfpDescrition(self.state).prepare()
-    NewAvatar(self.state).prepare()
+    GetAvatar(self.state).prepare()
     prompt = self.state.format(prompt_template)
     instructions = self.state.format(instructions_template)
     result1 = call_llm(prompt, instructions, schema)
     if 'tweet1' not in result1:
       raise Exception('Could not generate a praise')    
-    embeds = [self.state.user_new_avatar] if self.state.user_new_avatar is not None else []
-    embeds_description = 'New avatar' if self.state.user_new_avatar is not None else None
+    embeds = [self.state.user_avatar] if self.state.user_avatar is not None else []
+    embeds_description = 'Avatar Img' if self.state.user_avatar is not None else None
     casts = []
     cast1 = {
       'text': ' '+result1['tweet1']['text'],

@@ -69,7 +69,7 @@ schema = {
 }
 
 
-class NewAvatar(IPrepareStep):
+class GetAvatar(IPrepareStep):
   
   def prepare(self):
     prompt = self.state.format(prompt_template)
@@ -88,9 +88,9 @@ class NewAvatar(IPrepareStep):
       f.write(response.content)
     upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
     os.remove(filename)
-    self.state.user_new_avatar = f"https://fc.datascience.art/bot/main_files/{filename}"
-    avatar_log = '<NewAvatar>\n'
+    self.state.user_avatar = f"https://fc.datascience.art/bot/main_files/{filename}"
+    avatar_log = '<GetAvatar>\n'
     avatar_log += 'Prompt: ' + prompt_image + '\n'
-    avatar_log += 'URL: ' + self.state.user_new_avatar + '\n'
-    avatar_log += '</NewAvatar>\n'
+    avatar_log += 'URL: ' + self.state.user_avatar + '\n'
+    avatar_log += '</GetAvatar>\n'
     self.state.log += avatar_log

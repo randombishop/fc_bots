@@ -81,3 +81,12 @@ def get_trending_casts(limit=100):
     """)
     result = session.execute(sql, {'limit': limit})
     return result.mappings().all()
+  
+
+def get_user_replies_and_reactions(fid, max_rows=25):
+  query_id = 4762421
+  params = [
+    QueryParameter.number_type(name="fid", value=fid),
+    QueryParameter.number_type(name="limit", value=max_rows)
+  ]
+  return run_query(query_id, params)

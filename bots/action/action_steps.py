@@ -11,6 +11,7 @@ from bots.action.psycho import Psycho
 from bots.action.roast import Roast
 from bots.action.say_something_in_channel import SaySomethingInChannel
 from bots.action.say_something_no_channel import SaySomethingNoChannel
+from bots.action.who_is import WhoIs
 from bots.action.word_cloud import WordCloud
 
 ACTION_STEPS = {
@@ -27,6 +28,7 @@ ACTION_STEPS = {
   'Roast': Roast,
   'SaySomethingNoChannel': SaySomethingNoChannel,
   'SaySomethingInChannel': SaySomethingInChannel,
+  'WhoIs': WhoIs,
   'WordCloud': WordCloud
 }
 
@@ -43,6 +45,7 @@ DESCRIPTIONS = {
   'Psycho': 'Generate a psychoanalysis for a user.',
   'Praise': 'Generate a praise for a user.',
   'Roast': 'Generate a roast for a user.',
+  'WhoIs': 'Analyze a user profile and generate a new avatar for them. (Who is @user? Make an avater for @user, Analyze user profile @user, etc.)',
   'WordCloud': 'Make a word cloud.'
 }
 
