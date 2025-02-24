@@ -1,8 +1,13 @@
 import json
+from sqlalchemy import Table
+from bots.data.pg import engine, metadata, get_session
 from bots.data.wield import get_user_info_by_fid, get_user_info_by_name
 from bots.data.dune import run_query
 from dune_client.types import QueryParameter
 from datetime import datetime, timedelta
+
+
+user_profile_table = Table('user_profile', metadata, autoload_with=engine, schema='ds')
 
 
 def get_username(fid):
@@ -65,4 +70,19 @@ def get_top_daily_casters(channel, limit=10):
   return df
 
 
+def get_user_profile(fid):
+  with get_session() as session:
+    stmt = user_profile_table.select().where(user_profile_table.c.fid == fid)
+    result = session.execute(stmt).mappings().fetchone()
+    return result
 
+
+def save_user_profile(profile):
+  if get_user_profile(profile['fid']) is None:
+    with get_session() as session:
+      session.execute(user_profile_table.insert().values(**profile))
+    return 'Inserted new user profile in pg'
+  else:
+    with get_session() as session:
+      session.execute(user_profile_table.update().where(user_profile_table.c.fid == profile['fid']).values(**profile))
+    return 'Updated existing user profile in pg'

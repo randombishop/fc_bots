@@ -100,6 +100,8 @@ class BotState:
     self.about_user = None
     self.user_display_name = None
     self.user_bio = None
+    self.user_followers = None
+    self.user_following = None
     self.user_pfp_url = None
     self.user_casts_description = None
     self.user_replies_and_reactions = None

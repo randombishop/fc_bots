@@ -77,6 +77,8 @@ class GetUserProfile(IPrepareStep):
     self.state.about_user = formatted_posts
     self.state.user_display_name = user_info['display_name']
     self.state.user_bio = user_info['bio']['text'] 
+    self.state.user_followers = user_info['num_followers']
+    self.state.user_following = user_info['num_following']
     if 'pfp' in user_info and user_info['pfp'] is not None and 'url' in user_info['pfp']:
       self.state.user_pfp_url = user_info['pfp']['url']
     if len(posts)>0:
@@ -92,6 +94,8 @@ class GetUserProfile(IPrepareStep):
     log = '<GetUserProfile>\n'
     log += f"display_name: {self.state.user_display_name}\n"
     log += f"bio: {self.state.user_bio}\n"
+    log += f"followers: {self.state.user_followers}\n"
+    log += f"following: {self.state.user_following}\n"
     log += f"pfp_url: {self.state.user_pfp_url}\n"
     log += f"casts ({len(posts)}): {self.state.user_casts_description}\n"
     log += '</GetUserProfile>\n'

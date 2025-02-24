@@ -8,6 +8,8 @@ from bots.think.like import Like
 from bots.think.reply import Reply
 from bots.think.shorten import Shorten
 from bots.data.app import get_bot_character
+from bots.memory.user_profile import UserProfile
+
 
 class Bot:
   
@@ -81,6 +83,11 @@ class Bot:
       reply_step = Reply(self.state)
       reply_step.think()
   
+  def record_memories(self):
+    if self.state.selected_action in ['WhoIs', 'Praise']:
+      user_profile = UserProfile(self.state)
+      user_profile.record()
+    
   def respond(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
     self.initialize(request, fid_origin, parent_hash, attachment_hash, root_parent_url, selected_channel, selected_action)
     self.wakeup()
@@ -88,6 +95,7 @@ class Bot:
     self.prepare()
     self.execute()
     self.think()
+    self.record_memories()
     
   
 
