@@ -63,7 +63,7 @@ class BotState:
   def __init__(self, id=None, name=None, 
                request=None, 
                fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None,
-               selected_channel=None, selected_action=None):
+               selected_channel=None, selected_action=None, user=None):
     # 1. Initialization
     self.id = id
     self.name = name
@@ -94,7 +94,7 @@ class BotState:
     # 4. Prepare 
     self.should_continue = True
     self.trending = ''
-    self.user = None
+    self.user = user
     self.user_fid = None
     self.user_casts = None
     self.about_user = None

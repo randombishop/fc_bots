@@ -36,16 +36,18 @@ class WhoIs(IActionStep):
     return 20
     
   def auto_prompt(self):
-    channel_url = get_channel_url(self.state.selected_channel)
     user_name, fid = None, None
+    channel_url = get_channel_url(self.state.selected_channel)
+    if self.state.user is not None:
+      user_name = self.state.user
+      fid = get_fid(user_name)
     if channel_url is None:
       user_name = get_random_user_to_praise(self.state.id)
       fid = get_fid(user_name)
-      self.state.request = f'Praise a random user'
     else:
       user_name = get_random_user_to_praise_in_channel(self.state.id, channel_url)
       fid = get_fid(user_name)
-      self.state.request = f'Praise a random user in channel /{self.state.selected_channel}'
+    self.state.request = f'Who is {user_name}?'  
     self.state.action_params = {'fid': fid, 'user_name': user_name}
     self.state.user_fid = fid
     self.state.user = user_name

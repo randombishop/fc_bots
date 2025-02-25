@@ -18,7 +18,7 @@ class Bot:
     self.character = character
     self.state = BotState()
     
-  def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
+  def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None, user=None):
     self.state = BotState(
       id=self.id,
       name=self.character['name'], 
@@ -28,7 +28,8 @@ class Bot:
       attachment_hash=attachment_hash, 
       root_parent_url=root_parent_url,
       selected_channel=selected_channel,
-      selected_action=selected_action
+      selected_action=selected_action,
+      user=user
     )
 
   def wakeup(self):
@@ -88,8 +89,17 @@ class Bot:
       user_profile = UserProfile(self.state)
       user_profile.record()
     
-  def respond(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
-    self.initialize(request, fid_origin, parent_hash, attachment_hash, root_parent_url, selected_channel, selected_action)
+  def respond(self, request=None, 
+              fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, 
+              selected_channel=None, selected_action=None, user=None):
+    self.initialize(request=request, 
+                    fid_origin=fid_origin, 
+                    parent_hash=parent_hash, 
+                    attachment_hash=attachment_hash, 
+                    root_parent_url=root_parent_url,
+                    selected_channel=selected_channel, 
+                    selected_action=selected_action, 
+                    user=user)
     self.wakeup()
     self.plan()
     self.prepare()
@@ -101,7 +111,7 @@ class Bot:
 
 def generate_bot_response(bot_id, 
                           request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, 
-                          selected_channel=None, selected_action=None,
+                          selected_channel=None, selected_action=None, user=None,
                           debug=False):
   character = get_bot_character(bot_id)
   if character is None:
@@ -114,7 +124,8 @@ def generate_bot_response(bot_id,
       attachment_hash=attachment_hash, 
       root_parent_url=root_parent_url,
       selected_channel=selected_channel,
-      selected_action=selected_action)
+      selected_action=selected_action,
+      user=user)
     if debug:
       bot.state.debug()
     return bot.state
