@@ -41,7 +41,7 @@ class WhoIs(IActionStep):
     if self.state.user is not None:
       user_name = self.state.user
       fid = get_fid(user_name)
-    if channel_url is None:
+    elif channel_url is None:
       user_name = get_random_user_to_praise(self.state.id)
       fid = get_fid(user_name)
     else:
