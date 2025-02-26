@@ -26,7 +26,7 @@ class GetWordcloud(IPrepareStep):
     wordcloud.recolor(color_func=colormap)
     wordcloud.to_file(filename)
     upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
-    os.remove(filename)
+    #os.remove(filename)
     self.state.wordcloud_url = f"https://fc.datascience.art/bot/main_files/{filename}"
     log = "<GetWordcloud>"
     log += f"url: {self.state.wordcloud_url}"

@@ -56,8 +56,8 @@ class GetMask(IPrepareStep):
     mask = Image.open(file2)
     width, height = mask.size
     mask = numpy.array(mask)
-    os.remove(file1)
-    os.remove(file2)
+    #os.remove(file1)
+    #os.remove(file2)
     self.state.wordcloud_mask = mask
     self.state.wordcloud_width = width
     self.state.wordcloud_height = height
