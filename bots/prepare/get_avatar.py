@@ -52,6 +52,10 @@ Include any other relevant details to make the avatar unique and tailored to @{{
 Focus in their profile picture description, and use it to make the avatar a re-invention of their profile picture but with the same core and spirit.
 Your goal is to create an avatar prompt that makes @{{user}} feel truly seen and celebrated, a parallel to their orginial profile picture but with your magic.
 The final avatar should have **artistic depth**, **aesthetic coherence**, and a unique **visual identity** that matches @{{user}}.
+Your prompt should fit within standard safety policies.
+Please exclude anything related to violence, weapons, explicit content, nudity, self-harm, illegal activities, or hateful imagery.
+Ensure that your prompt is suitable for a general audience.
+Avoid any prohibited keywords and make sure that your prompt will not be rejected by the image generation model.
 Make sure you don't use " inside json strings. Avoid invalid json.
 Output 3 sentences in json format.
 
