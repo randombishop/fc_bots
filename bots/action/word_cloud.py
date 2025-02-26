@@ -4,9 +4,9 @@ from bots.i_action_step import IActionStep
 from bots.data.casts import get_top_casts, get_more_like_this
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_channel, read_user, read_string, read_category, read_keyword
-from bots.utils.images import make_wordcloud
-from bots.utils.gcs import upload_to_gcs
 from bots.utils.word_counts import get_word_counts
+from bots.prepare.get_mask import GetMask
+from bots.prepare.get_wordcloud import GetWordcloud
 
 
 parse_instructions_template = """
@@ -85,15 +85,17 @@ class WordCloud(IActionStep):
       raise Exception(f"Not enough activity to buid a word cloud.")
     posts = posts['text'].tolist()
     word_counts = get_word_counts(posts, top_n)
-    if len(word_counts) == 5:
+    if len(word_counts) < 5:
       raise Exception(f"Not enough activity to buid a word cloud.")
-    filename = str(uuid.uuid4())+'.png'
-    make_wordcloud(word_counts, filename)
-    upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
-    os.remove(filename)
+    top_5 = sorted(word_counts.items(), key=lambda item: item[1], reverse=True)[:5]
+    top_5 = " ".join([x[0] for x in top_5])
+    self.state.wordcloud_text = top_5
+    self.state.wordcloud_counts = word_counts
+    GetMask(self.state).prepare()
+    GetWordcloud(self.state).prepare()
     cast = {
       'text': "", 
-      'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"],
+      'embeds': [self.state.wordcloud_url],
       'embeds_description': 'Wordcloud Image'
     }
     if self.state.action_params['fid'] is not None and self.state.action_params['user_name'] is not None:
@@ -102,3 +104,8 @@ class WordCloud(IActionStep):
       cast['mentions_ats'] = [f"@{self.state.action_params['user_name']}"]
     casts =  [cast]
     self.state.casts = casts
+    log = "<WordCloud>\n"
+    log += f"text: {self.state.wordcloud_text}\n"
+    log += f"url: {self.state.wordcloud_url}\n"
+    log += "</WordCloud>\n"
+    self.state.log += log

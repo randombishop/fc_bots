@@ -121,6 +121,12 @@ class BotState:
     self.bot_casts = None
     self.bot_casts_in_channel = None
     self.bot_casts_no_channel = None
+    self.wordcloud_text = None
+    self.wordcloud_counts = None
+    self.wordcloud_mask = None
+    self.wordcloud_width = None
+    self.wordcloud_height = None
+    self.wordcloud_url = None
     # 5. Execute actions
     self.cost = 0
     self.action_params = None

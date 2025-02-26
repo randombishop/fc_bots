@@ -7,11 +7,12 @@ from bots.prompts.format_casts import concat_casts
 from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.check_links import check_link_data
 from bots.utils.word_counts import get_word_counts
-from bots.utils.images import make_wordcloud
-from bots.utils.gcs import upload_to_gcs
 from bots.data.channels import get_channel_url
 from bots.autoprompt.summary_prompt_in_channel import summary_prompt_in_channel
 from bots.autoprompt.summary_prompt_no_channel import summary_prompt_no_channel
+from bots.prepare.get_wordcloud import GetWordcloud
+from bots.prepare.get_mask import GetMask
+
 
 parse_instructions_template = """
 #CURRENT CHANNEL
@@ -200,14 +201,14 @@ class DigestCasts(IActionStep):
         del result[link_key]
     data['links'] = links
     # Make word cloud
-    top_n = 50
+    top_n = 100
     word_counts = get_word_counts([x['text'] for x in posts], top_n)
     if len(word_counts) > 5:
-      filename = str(uuid.uuid4())+'.png'
-      make_wordcloud(word_counts, filename)
-      upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
-      os.remove(filename)
-      data['wordcloud'] = f"https://fc.datascience.art/bot/main_files/{filename}"
+      self.state.wordcloud_text = data['summary']
+      self.state.wordcloud_counts = word_counts
+      GetMask(self.state).prepare()
+      GetWordcloud(self.state).prepare()      
+      data['wordcloud'] = self.state.wordcloud_url
     casts = []
     cast1 = {'text': data['summary']}
     if 'wordcloud' in data:

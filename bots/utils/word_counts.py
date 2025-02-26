@@ -7,15 +7,21 @@ ignore_words = {
   'about',
   'above',
   'actually',
+  'according',
   'after',
   'again',
   'against',
   'always',
+  'almost',
+  'also',
+  'allow',
+  'although',
   'arent',
   'because',
   'been',
   'completely',
   'does',
+  'doing',
   'dont',
   'first',
   'from',
@@ -25,11 +31,13 @@ ignore_words = {
   'have',
   'here',
   'into',
+  'isnt',
   'just',
   'last',
   'like',
   'made',
   'make',
+  'making',
   'more',
   'most',
   'much',
@@ -101,7 +109,9 @@ ignore_words = {
   'wait',
   'cant',
   'next',
-  'think'
+  'think',
+  
+  
 }
 
 
