@@ -20,18 +20,12 @@ class TestGetMask(unittest.TestCase):
     state = make_state()
     state.wordcloud_text = wordcloud_text
     state.wordcloud_counts = wordcloud_counts
-    state.wordcloud_mask = 'test8.mask.png'
+    state.wordcloud_mask = Image.open('test.mask.png')
+    state.wordcloud_background = Image.open('test.dark.png').convert("RGBA")
     
-    GetMask(state).prepare()
+    #GetMask(state).prepare()
     #print(state.log)
     
     GetWordcloud(state).prepare()
-    #mask = numpy.array(Image.open('test.mask.png'))  
-    #wordcloud = WordCloud(mask=mask, background_color='black').generate_from_frequencies(wordcloud_counts)
-    #plt.figure(figsize = (10, 10), facecolor = None) 
-    #plt.imshow(wordcloud) 
-    #plt.axis("off") 
-    #plt.tight_layout(pad = 0) 
-    #plt.savefig('test.wordcloud.png')
-    #plt.close()
     
+     

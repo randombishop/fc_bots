@@ -24,10 +24,10 @@ class TestDigestCasts(unittest.TestCase):
     self.assertEqual(state.action_params['category'], 'c_arts')
     
   def test3(self):
-    request = "Summary for /data channel?"
+    request = "Summary for /rodeo channel?"
     state = run_bot(request)
     self.assert_expected_output(state)
-    self.assertEqual(state.action_params['channel'], 'https://farcaster.group/data')
+    self.assertEqual(state.action_params['channel'], 'https://warpcast.com/~/channel/rodeo-club')
     
   def test4(self):
     request = "Summary of posts about the beauty of canadian landscapes"

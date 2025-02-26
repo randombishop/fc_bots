@@ -124,6 +124,7 @@ class BotState:
     self.wordcloud_text = None
     self.wordcloud_counts = None
     self.wordcloud_mask = None
+    self.wordcloud_background = None
     self.wordcloud_width = None
     self.wordcloud_height = None
     self.wordcloud_url = None
