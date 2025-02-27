@@ -51,7 +51,9 @@ Your prompt should include a gender, age, style, a color palette, an artistic te
 Include any other relevant details to make the avatar unique and tailored to @{{user}}.
 Focus in their profile picture description, and use it to make the avatar a re-invention of their profile picture but with the same core and spirit.
 Your goal is to create an avatar prompt that makes @{{user}} feel truly seen and celebrated, a parallel to their orginial profile picture but with your magic.
-The final avatar should have **artistic depth**, **aesthetic coherence**, and a unique **visual identity** that matches @{{user}}.
+The avatar prompt should have **artistic depth**, **aesthetic coherence**, and a unique **visual identity** that matches @{{user}}.
+The generator will only receive your prompt and won't have access to the original picture, so make it a self sufficient prompt.
+Do not include a reference to original profile picture like "mirroring the original pfp" - Instead, specify exactly what you want to mirror from it.
 Your prompt should fit within standard safety policies.
 Please exclude anything related to violence, weapons, explicit content, nudity, self-harm, illegal activities, or hateful imagery.
 Ensure that your prompt is suitable for a general audience.
