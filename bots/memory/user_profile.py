@@ -11,8 +11,10 @@ def get_embed(text):
 
 
 def format_embed(embed):
-  return '[' + ','.join([f'{x:.5f}' for x in embed]) + ']'
-
+  if embed is not None:
+    return '[' + ','.join([f'{x:.5f}' for x in embed]) + ']'
+  else:
+    return None
 
 class UserProfile(IMemoryStep):
     
