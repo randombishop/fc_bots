@@ -4,9 +4,11 @@ import logging
 logging.getLogger("dune_client.api.base").setLevel(logging.WARNING)
 import time
 
-
-dune = DuneClient.from_env()
-
+dune = None
+try:
+  dune = DuneClient.from_env()
+except Exception as e:
+  print("Warning: Dune client is not available.")
 
 def run_query(query_id, params=None):
   t0 = time.time()
