@@ -16,6 +16,7 @@ def format_embed(embed):
   else:
     return None
 
+
 class UserProfile(IMemoryStep):
     
   def recall(self):
