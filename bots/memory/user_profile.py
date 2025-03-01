@@ -1,6 +1,6 @@
 import numpy
 from bots.i_memory_step import IMemoryStep
-from bots.data.users import save_user_profile
+from bots.data.users import save_user_profile, save_user_profile_embeds
 from bots.models.bert import bert
 
 
@@ -59,5 +59,6 @@ class UserProfile(IMemoryStep):
        'avatar_embed': format_embed(avatar_embed),
        'global_embed': format_embed(global_embed)       
     }
-    log = save_user_profile(profile)
-    self.state.log += (log + '\n')
+    save_user_profile(profile)
+    save_user_profile_embeds(profile)
+    self.state.log += 'Saved user profile in pg\n'

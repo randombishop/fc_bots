@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 
 
 user_profile_table = Table('user_profile', metadata, autoload_with=engine, schema='ds')
+user_profile_embed_table = Table('user_profile_embed', metadata, autoload_with=engine, schema='ds')
 
 
 def get_username(fid):
@@ -75,14 +76,35 @@ def get_user_profile(fid):
     stmt = user_profile_table.select().where(user_profile_table.c.fid == fid)
     result = session.execute(stmt).mappings().fetchone()
     return result
-
+  
+def get_user_profile_embed(fid, part):
+  with get_session() as session:
+    stmt = user_profile_embed_table.select().where(user_profile_embed_table.c.fid == fid).where(user_profile_embed_table.c.part == part)
+    result = session.execute(stmt).mappings().fetchone()
+    return result
 
 def save_user_profile(profile):
   if get_user_profile(profile['fid']) is None:
     with get_session() as session:
       session.execute(user_profile_table.insert().values(**profile))
-    return 'Inserted new user profile in pg'
+    print('Inserted new user profile in pg')
   else:
     with get_session() as session:
       session.execute(user_profile_table.update().where(user_profile_table.c.fid == profile['fid']).values(**profile))
-    return 'Updated existing user profile in pg'
+    print('Updated existing user profile in pg')
+
+def save_user_profile_embed(fid, part, embed):
+  if get_user_profile_embed(fid, part) is None:
+    with get_session() as session:
+      session.execute(user_profile_embed_table.insert().values(fid=fid, part=part, embed=embed))
+    print('Inserted new embedding in pg')
+  else:
+    with get_session() as session:
+      session.execute(user_profile_embed_table.update().where(user_profile_embed_table.c.fid == fid).where(user_profile_embed_table.c.part == part).values(embed=embed))
+    print('Updated existing embedding in pg')
+    
+def save_user_profile_embeds(profile):
+  parts = ['bio', 'pfp', 'casts', 'engagement', 'avatar']
+  for part in parts:
+    if profile[f'{part}_embed'] is not None:
+      save_user_profile_embed(profile['fid'], part, profile[f'{part}_embed'])
