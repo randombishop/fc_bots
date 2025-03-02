@@ -33,11 +33,6 @@ class UserProfile(IMemoryStep):
                       if self.state.user_replies_and_reactions_description is not None else None
     engagement_embed = get_embed(engagement_text)
     avatar_embed = get_embed(self.state.user_avatar_prompt)
-    embeds = [bio_embed, pfp_embed, casts_embed, engagement_embed, avatar_embed]
-    embeds = [e for e in embeds if e is not None]
-    global_embed = None
-    if len(embeds) > 0:
-      global_embed = numpy.sum(embeds, axis=0) / len(embeds)
     profile = {
        'fid': self.state.user_fid,
        'user_name': self.state.user,
@@ -51,14 +46,16 @@ class UserProfile(IMemoryStep):
        'avatar_url': self.state.user_avatar,
        'avatar_desc': self.state.user_avatar_prompt,
        'num_followers': self.state.user_followers,
-       'num_following': self.state.user_following,
-       'bio_embed': format_embed(bio_embed),
-       'pfp_embed': format_embed(pfp_embed),
-       'casts_embed': format_embed(casts_embed),
-       'engagement_embed': format_embed(engagement_embed),
-       'avatar_embed': format_embed(avatar_embed),
-       'global_embed': format_embed(global_embed)       
+       'num_following': self.state.user_following       
     }
     save_user_profile(profile)
-    save_user_profile_embeds(profile)
+    embeds = {
+      'fid': self.state.user_fid,
+      'bio_embed': format_embed(bio_embed),
+      'pfp_embed': format_embed(pfp_embed),
+      'casts_embed': format_embed(casts_embed),
+      'engagement_embed': format_embed(engagement_embed),
+      'avatar_embed': format_embed(avatar_embed)
+    }
+    save_user_profile_embeds(embeds)
     self.state.log += 'Saved user profile in pg\n'
