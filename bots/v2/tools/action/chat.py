@@ -1,5 +1,5 @@
-from bots.i_action_step import IActionStep
-from bots.utils.llms import call_llm
+from langchain.agents import Tool
+from bots.v2.call_llm import call_llm
 from bots.utils.check_links import check_link_data
 
 chat_instructions_template = """
@@ -66,31 +66,31 @@ chat_schema = {
 }
 
 
-class Chat(IActionStep):
-    
-  def get_prepare_steps(self):
-    return ['ShouldContinue', 'GetCasts']
-  
-  def get_cost(self):
-    return 20
-    
-  def parse(self):
-    pass
+def chat(input):
+  state = input['state']
+  llm = input['llm']
+  if not state.should_continue:  
+    state.casts = []
+    return
+  chat_prompt = state.format(chat_prompt_template)
+  chat_instructions = state.format(chat_instructions_template)
+  result = call_llm(llm, chat_prompt, chat_instructions, chat_schema)
+  if 'tweet' not in result or result['tweet'] is None or len(result['tweet']) < 2:
+    raise Exception('Could not generate a response.')
+  cast = {'text': result['tweet']}
+  if 'link_id' in result:
+    link = check_link_data({'id':result['link_id']}, self.state.posts_map)
+    if link is not None:
+      cast['embeds'] = [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}]
+      cast['embeds_description'] = link['text']
+  casts = [cast]
+  state.casts = casts
+  return {'casts': state.casts}
 
-  def execute(self):
-    if not self.state.should_continue:  
-      self.state.casts = []
-      return
-    chat_prompt = self.state.format(chat_prompt_template)
-    chat_instructions = self.state.format(chat_instructions_template)
-    result = call_llm(chat_prompt, chat_instructions, chat_schema)
-    if 'tweet' not in result or result['tweet'] is None or len(result['tweet']) < 2:
-      raise Exception('Could not generate a response.')
-    cast = {'text': result['tweet']}
-    if 'link_id' in result:
-      link = check_link_data({'id':result['link_id']}, self.state.posts_map)
-      if link is not None:
-        cast['embeds'] = [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}]
-        cast['embeds_description'] = link['text']
-    casts = [cast]
-    self.state.casts = casts
+
+Chat = Tool(
+  name="chat",
+  func=chat,
+  description="Chat with the user",
+  metadata={'depends_on': ['should_continue', 'get_casts']}
+)
