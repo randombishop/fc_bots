@@ -3,7 +3,8 @@ from langchain.agents import Tool
 from bots.data.bot_history import get_bot_channels
 
 
-def get_channel_list(state):
+def get_channel_list(input):
+  state = input['state']
   channels = get_bot_channels(state.id)
   channels = [dict(c) for c in channels]
   for c in channels:

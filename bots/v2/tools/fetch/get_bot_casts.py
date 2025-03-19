@@ -3,7 +3,8 @@ from bots.data import bot_history
 from bots.utils.format_cast import shorten_text, format_when
 
 
-def get_bot_casts(state):
+def get_bot_casts(input):
+  state = input['state']
   casts = bot_history.get_bot_casts(state.id)
   text = ''
   for c in casts:

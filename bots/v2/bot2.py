@@ -1,5 +1,5 @@
 import json
-from langchain.agents import Tool, BaseSingleActionAgent
+from langchain.agents import BaseSingleActionAgent
 from langchain_google_vertexai import ChatVertexAI
 from langchain.schema import AgentAction, AgentFinish
 from bots.data.app import get_bot_character
@@ -21,11 +21,15 @@ from bots.v2.tools.plan.select_action_mode import SelectActionMode
 from bots.v2.tools.plan.select_action_from_conversation import SelectActionFromConversation
 from bots.v2.tools.plan.select_action_for_channel import SelectActionForChannel
 from bots.v2.tools.plan.select_action_for_main_feed import SelectActionForMainFeed
+# Action tools
+from bots.v2.tools.action.get_actions import GetActions
+
 
 TOOL_BOX = [
   GetBio, GetConversation, GetLore, GetStyle, GetTime, 
   GetBotCasts, GetChannelList, GetTrending, 
-  Next, SelectChannel, SelectActionMode, SelectActionFromConversation, SelectActionForChannel, SelectActionForMainFeed
+  Next, SelectChannel, SelectActionMode, SelectActionFromConversation, SelectActionForChannel, SelectActionForMainFeed, 
+  GetActions
 ]
 
 TOOL_DEPENDENCIES = {
@@ -37,7 +41,7 @@ class Bot2(BaseSingleActionAgent):
   def __init__(self):
     super().__init__()
     self._tools = TOOL_BOX
-    self._llm = ChatVertexAI(model="gemini-1.5-pro")
+    self._llm = ChatVertexAI(model="gemini-1.5-flash-002")
     self._state = None
     self._todo = []
     
@@ -67,11 +71,13 @@ class Bot2(BaseSingleActionAgent):
     self.todo('get_lore')
     self.todo('get_style')
     self.todo('get_time')
-    self.todo('get_conversation')
     if self._state.request is None:
       self.todo('select_channel')
     self.todo('select_action_mode')
     
+  def get_tool_input(self):
+    return {"input":{"state": self._state, "llm": self._llm}}
+  
   def todo(self, tool):
     if tool in TOOL_DEPENDENCIES:
       for dependency in TOOL_DEPENDENCIES[tool]:
@@ -80,8 +86,8 @@ class Bot2(BaseSingleActionAgent):
   
   def next(self):
     return AgentAction(
-      tool='_',
-      tool_input={"state": self._state},
+      tool='_', 
+      tool_input=self.get_tool_input(), 
       log='')    
 
   def plan(self, intermediate_steps, callbacks, **kwargs):
@@ -92,7 +98,7 @@ class Bot2(BaseSingleActionAgent):
       tool = self._todo.pop(0)
       return AgentAction(
         tool=tool,
-        tool_input={"state": self._state},
+        tool_input=self.get_tool_input(),
         log=tool)
     elif self._state.selected_action_mode is not None and self._state.selected_action is None and self._state.selected_action_tries == 0:
       self._state.selected_action_tries += 1

@@ -3,7 +3,8 @@ from bots.data.casts import get_trending_casts
 from bots.utils.format_cast import format_when, shorten_text
 
 
-def get_trending(state):
+def get_trending(input):
+  state = input['state']
   casts = get_trending_casts(50)
   text = ''
   for s in casts:

@@ -3,7 +3,8 @@ from langchain.agents import Tool
 
 SAMPLE_SIZE = 5
 
-def get_bio(state):    
+def get_bio(input):    
+  state = input['state']
   if state.character is not None and state.character['bio'] is not None and len(state.character['bio']) > 0:
     bio = state.character['bio']
     if len(bio)>SAMPLE_SIZE:

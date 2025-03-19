@@ -3,7 +3,8 @@ from langchain.agents import Tool
 from bots.data.bot_history import get_bot_actions_stats_no_channel
 
  
-def select_action_for_main_feed(state):
+def select_action_for_main_feed(input):
+  state = input['state']
   action_rules = {
     'Perplexity': {'min_hours': 6},
     'SaySomethingNoChannel': {'min_hours': 12},

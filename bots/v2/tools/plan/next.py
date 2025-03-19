@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 
 
-def next(state):
+def next(input):
   pass
 
 

@@ -6,7 +6,8 @@ from bots.data.users import get_username
 max_depth = 28
 
 
-def get_conversation(state):
+def get_conversation(input):
+  state = input['state']
   context = []
   username_origin = get_username(state.fid_origin) if state.fid_origin is not None else 'unknown_user'
   if state.request is not None or state.attachment_hash is not None:

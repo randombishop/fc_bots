@@ -2,7 +2,7 @@ import pandas
 import random
 import numpy
 from langchain.agents import Tool
-from bots.utils.llms import call_llm
+from bots.v2.call_llm import call_llm
 
 
 prompt_template = """
@@ -53,14 +53,16 @@ schema = """
 """
 
 
-def select_channel(state):
+def select_channel(input):
+  state = input['state']
+  llm = input['llm']
   df_channels = state.channel_list
   channels_list = df_channels['channel'].tolist()
   random.shuffle(channels_list)
   channels_string = ",".join(channels_list)
   instructions1 = state.format(instructions_template.replace('{{channel_list}}',channels_string))
   prompt1 = state.format(prompt_template)
-  result = call_llm(prompt1, instructions1, schema)
+  result = call_llm(llm, prompt1, instructions1, schema)
   current_trends_summary = result['current_trends_summary']
   channel_ranking = result['channel_ranking'].split(',')
   reasoning = result['reasoning']

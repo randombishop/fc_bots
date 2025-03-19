@@ -1,5 +1,5 @@
 from langchain.agents import Tool
-from bots.utils.llms import call_llm
+from bots.v2.call_llm import call_llm
 
 
 select_action_task = """
@@ -38,10 +38,12 @@ select_action_prompt = """
 """
 
 
-def select_action_from_conversation(state):
+def select_action_from_conversation(input):
+  state = input['state']
+  llm = input['llm']
   instructions = state.format(select_action_task)
   prompt = state.format(select_action_prompt)
-  result = call_llm(prompt, instructions, select_action_schema)
+  result = call_llm(llm, prompt, instructions, select_action_schema)
   if 'action' in result:
     state.selected_action = result['action']
   return {'selected_action': state.selected_action}
@@ -51,5 +53,5 @@ SelectActionFromConversation = Tool(
   name="select_action_from_conversation",
   func=select_action_from_conversation,
   description="Select an action based on the conversation",
-  metadata={'depends_on': ['get_conversation']}
+  metadata={'depends_on': ['get_actions', 'get_conversation']}
 )
