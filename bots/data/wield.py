@@ -71,7 +71,9 @@ def parse_user_info(user):
     'bio': user['bio'],
     'fid_registered_at': datetime.fromtimestamp(user['registeredAt'] / 1000),
     'custody_address': user['custodyAddress'],
-    'connected_address': user['connectedAddress']
+    'connected_address': user['connectedAddress'],
+    'num_following': int(user['followingCount']),
+    'num_followers': int(user['followerCount'])
   }
 
 

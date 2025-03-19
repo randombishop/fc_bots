@@ -30,7 +30,8 @@ setup(
       "json5==0.9.28",
       "psycopg2-binary==2.9.9",
       "SQLAlchemy==2.0.36",
-      "openai==1.61.1"
+      "openai==1.61.1",
+      "langchain==0.3.20"
     ]
 )
 

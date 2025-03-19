@@ -1,5 +1,4 @@
 from bots.i_action_step import IActionStep
-from bots.prompts.contexts import conversation_and_request_template
 from bots.autoprompt.perplexity_question_in_channel import perplexity_question_in_channel
 from bots.autoprompt.perplexity_question_no_channel import perplexity_question_no_channel
 from bots.utils.llms import call_llm
@@ -27,7 +26,28 @@ parse_schema = {
   }
 }
 
+select_link_instructions = """
+You are provided with a list of URLs.
+Your task is to select the URL from the most well known domain.
+Do not select URLs if the domain name is not well known.
+Prefer URLs from famous origins such as wikipedia, reddit, youtube, medium articles, yahoo news, mainstream media institutions, reuters, and similar.
+Avoid URLs from domains where you don't have enough information.
+Avoid URLs that might be a commercial or a link to a specific product.
+If none of the URLs meets our criteria, return {"url": null}
+Return your response as a JSON object.
 
+OUTPUT FORMAT:
+{
+  "url": "..."
+}
+"""
+
+select_link_schema = {
+  "type":"OBJECT",
+  "properties":{
+    "url":{"type":"STRING"}
+  }
+}
 
 
 class Perplexity(IActionStep):
@@ -48,7 +68,7 @@ class Perplexity(IActionStep):
     self.state.log += log + '\n'
     
   def parse(self):
-    parse_prompt = self.state.format(conversation_and_request_template)
+    parse_prompt = self.state.format_conversation()
     parse_instructions = self.state.format(parse_instructions_template)
     params = call_llm(parse_prompt, parse_instructions, parse_schema)
     parsed = {}
@@ -65,12 +85,20 @@ class Perplexity(IActionStep):
       answer = data['choices'][0]['message']['content']
     except Exception:
       raise Exception("Could not get an answer from Perplexity.")
+    cast = {'text': answer}
     link = None
     if 'citations' in data and len(data['citations']) > 0:
-      link = data['citations'][0]
-    cast = {'text': answer}
+      links = "\n".join(data['citations'])
+      links_selection = call_llm(links, select_link_instructions, select_link_schema)
+      if 'url' in links_selection and links_selection['url'] is not None and len(links_selection['url']) > 10:
+        link = links_selection['url']
+      links_log = '<LinksSelection>\n'
+      links_log += links + '\n'
+      links_log += " >>> " + str(link) + '\n'
+      links_log += '</LinksSelection>\n'
+      self.state.log += links_log
     if link is not None:
       cast['embeds'] = [link]
-      cast['embeds_description'] = 'Link to the reference website'
+      cast['embeds_description'] = 'Link'
     casts = [cast]
     self.state.casts = casts

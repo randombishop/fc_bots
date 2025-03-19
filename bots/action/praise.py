@@ -1,20 +1,14 @@
-import os
-import uuid
-import requests
 from bots.i_action_step import IActionStep
-from bots.prompts.contexts import conversation_and_request_template
-from bots.data.wield import get_user_info_by_fid
-from bots.data.casts import get_top_casts
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_user
-from bots.prompts.format_casts import concat_casts
-from bots.prompts.avatar import avatar_instructions_template, avatar_schema
-from bots.utils.openai import generate_image
-from bots.utils.gcs import upload_to_gcs
 from bots.utils.check_links import check_link_data
 from bots.data.bot_history import get_random_user_to_praise, get_random_user_to_praise_in_channel
 from bots.data.users import get_fid
 from bots.data.channels import get_channel_url
+from bots.prepare.get_user_profile import GetUserProfile
+from bots.prepare.get_pfp_description import GetPfpDescrition
+from bots.prepare.get_user_replies_and_reactions import GetUserRepliesAndReactions
+from bots.prepare.get_avatar import GetAvatar
 
 
 parse_user_instructions_template = """
@@ -38,6 +32,24 @@ parse_user_schema = {
 }
 
 
+prompt_template = """
+# USER ID
+@{{user}}
+
+# USER DISPLAY NAME
+{{user_display_name}}
+
+# USER BIO
+{{user_bio}}
+
+# USER PFP DESCRIPTION
+{{user_pfp_description}}
+
+# USER POSTS
+{{about_user}}
+"""
+
+
 instructions_template = """
 You are @{{name}}
 
@@ -51,22 +63,21 @@ You are @{{name}}
 {{style}}
 
 #TASK
-Your task right now is to praise {{user_name}} and make them feel good about themselves.
+Your task is to praise {{user}} in a way that feels deeply personal and impactful.
 
 #INSTRUCTIONS:
-The name, bio and posts provided are all from @{{user_name}}.
-Based on the provided information, identify their core vibe and what makes them unique.
-Praise them in a way that feels authentic and tailored, not generic.
-You can use mystical, rhythmic language, deep insight or casual cool depending on the vibe of @{{user_name}}.
-If their content is funny, match their humor. If they are thoughtful, reflect that. If they're chaotic, celebrate the chaos.
-Sprinkle in references to patterns, reggae lyrics, energy, or something cosmic, if it fits.
+The name, bio and posts provided are all from @{{user}}.
+Analyze their posts carefully.
+Based on the provided information, identify their core personality and what makes them unique.
+Praise them in a way that is authentic and specific, not vague.
+Be yourself and include what you really like about them.
 Keep it short but impactful, a poetic appreciation, a clever compliment, or a deep truth about them.
 Break down your praise into 3 short tweets:
-First tweet introduces the praise in a glorious way.
-Second tweet continues the praise.
-Third tweet concludes the praise.
+First tweet introduces them, what makes them special?
+Second tweet highlights a strength or quality, with an example from their posts.
+Final tweet concludes with a final compliment and another link to one of their posts.
 Keep the tweets very short and concise.
-You can also reference a couple of their posts in the second and third tweet, but do not include a link in the tweet text, instead put the id in the json field "link".
+When you reference their posts in the second and third tweet, do not include a link in the tweet text - instead, put the id in the json field "link".
 Output the result in json format.
 Make sure you don't use " inside json strings. Avoid invalid json.
 Output 3 sentences in json format.
@@ -106,11 +117,12 @@ class Praise(IActionStep):
       fid = get_fid(user_name)
       self.state.request = f'Praise a random user in channel /{self.state.selected_channel}'
     self.state.action_params = {'fid': fid, 'user_name': user_name}
+    self.state.user_fid = fid
     self.state.user = user_name
     self.state.conversation = self.state.request
     
   def parse(self):
-    parse_prompt = self.state.format(conversation_and_request_template)
+    parse_prompt = self.state.format_conversation()
     parse_instructions = self.state.format(parse_user_instructions_template)
     params = call_llm(parse_prompt, parse_instructions, parse_user_schema)
     parsed = {}
@@ -122,6 +134,7 @@ class Praise(IActionStep):
     parsed['fid'] = fid
     parsed['user_name'] = user_name
     self.state.action_params = parsed
+    self.state.user_fid = fid
     self.state.user = user_name
 
   def execute(self):
@@ -129,40 +142,22 @@ class Praise(IActionStep):
     user_name = self.state.action_params['user_name']
     if fid is None or user_name is None:
       raise Exception(f"Missing fid/user_name.")
-    user_info = get_user_info_by_fid(fid)
-    df = get_top_casts(user_name=user_name, max_rows=50)
-    if df is None or len(df) == 0:
-      raise Exception(f"Not enough activity to praise.")
-    posts = df.to_dict('records')
-    formatted_casts = concat_casts(posts)
-    prompt = ''
-    prompt += f"#DISPLAY NAME\n"
-    prompt += user_info['display_name'] +'\n\n'
-    prompt += f"#BIO\n"
-    prompt += user_info['bio']['text'] +'\n\n'
-    prompt += f"#POSTS\n"
-    prompt += formatted_casts
-    instructions = self.state.format(instructions_template.replace('{{user_name}}', self.state.action_params['user_name']))
+    GetUserProfile(self.state).prepare()
+    GetPfpDescrition(self.state).prepare()
+    GetUserRepliesAndReactions(self.state).prepare()
+    GetAvatar(self.state).prepare()
+    prompt = self.state.format(prompt_template)
+    instructions = self.state.format(instructions_template)
     result1 = call_llm(prompt, instructions, schema)
     if 'tweet1' not in result1:
       raise Exception('Could not generate a praise')    
-    instructions2 = self.state.format(avatar_instructions_template.replace('{{user_name}}', self.state.action_params['user_name']))
-    result2 = call_llm(prompt, instructions2, avatar_schema)
-    prompt_image = result2['avatar_prompt']
-    image_url = generate_image(prompt_image)
-    filename = str(uuid.uuid4())+'.png'
-    response = requests.get(image_url)
-    response.raise_for_status()
-    with open(filename, 'wb') as f:
-      f.write(response.content)
-    upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
-    os.remove(filename)
-    posts_map = {x['id']: x for x in posts}
+    embeds = [self.state.user_avatar] if self.state.user_avatar is not None else []
+    embeds_description = 'Avatar Img' if self.state.user_avatar is not None else None
     casts = []
     cast1 = {
       'text': ' '+result1['tweet1']['text'],
-      'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"],
-      'embeds_description': prompt_image,
+      'embeds': embeds,
+      'embeds_description': embeds_description,
       'mentions': [fid],
       'mentions_pos': [0],
       'mentions_ats': [f"@{user_name}"]
@@ -176,7 +171,7 @@ class Praise(IActionStep):
           link_id = result1[key]['link']
           if link_id not in used_links:
             used_links.append(link_id)
-            l = check_link_data({'id':link_id}, posts_map)
+            l = check_link_data({'id':link_id}, self.state.posts_map)
             if l is not None:
               c['embeds'] = [{'fid': l['fid'], 'user_name': l['user_name'], 'hash': l['hash']}]
               c['embeds_description'] = l['text']
@@ -184,3 +179,8 @@ class Praise(IActionStep):
     add_cast('tweet2')
     add_cast('tweet3')
     self.state.casts = casts
+    log = '<Praise>\n'
+    log += 'fid: ' + str(fid) + '\n'
+    log += 'user: ' + str(user_name) + '\n'
+    log += '</Praise>\n'
+    self.state.log += log

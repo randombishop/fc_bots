@@ -34,8 +34,8 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 #RECENT POSTS
 {{bot_casts}}
 
-#CURRENT CHANNEL
-{{channel}}
+#SELECTED CHANNEL
+{{selected_channel}}
 
 #CONVERSATION
 {{conversation}}
@@ -48,12 +48,22 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 """
 
 
+
+CONVERSATION_AND_REQUEST_TEMPLATE = """
+#CONVERSATION
+{{conversation}}
+
+#REQUEST
+{{request}}
+"""
+
+
 class BotState:
   
   def __init__(self, id=None, name=None, 
                request=None, 
                fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None,
-               selected_channel=None, selected_action=None):
+               selected_channel=None, selected_action=None, user=None):
     # 1. Initialization
     self.id = id
     self.name = name
@@ -69,7 +79,7 @@ class BotState:
     self.actions_templates = ''
     self.bio = ''
     self.cast_stats = ''
-    self.channel = ''
+    self.channel = selected_channel
     self.channel_list = ''
     self.conversation = ''
     self.lore = ''
@@ -84,19 +94,40 @@ class BotState:
     # 4. Prepare 
     self.should_continue = True
     self.trending = ''
-    self.user = None
-    self.about_user = ''
-    self.keyword = ''
-    self.about_keyword = ''
-    self.topic = ''
-    self.about_topic = ''
-    self.context = ''
-    self.about_context = ''
+    self.user = user
+    self.user_fid = None
+    self.user_casts = None
+    self.about_user = None
+    self.user_display_name = None
+    self.user_bio = None
+    self.user_followers = None
+    self.user_following = None
+    self.user_pfp_url = None
+    self.user_casts_description = None
+    self.user_replies_and_reactions = None
+    self.user_replies_and_reactions_description = None
+    self.user_replies_and_reactions_keywords = None
+    self.user_pfp_description = None
+    self.user_avatar_prompt = None
+    self.user_avatar = None
+    self.keyword = None
+    self.about_keyword = None
+    self.topic = None
+    self.about_topic = None
+    self.context = None
+    self.about_context = None
     self.posts_map = {}
     self.casts_in_channel = None
     self.bot_casts = None
     self.bot_casts_in_channel = None
     self.bot_casts_no_channel = None
+    self.wordcloud_text = None
+    self.wordcloud_counts = None
+    self.wordcloud_mask = None
+    self.wordcloud_background = None
+    self.wordcloud_width = None
+    self.wordcloud_height = None
+    self.wordcloud_url = None
     # 5. Execute actions
     self.cost = 0
     self.action_params = None
@@ -168,6 +199,9 @@ class BotState:
       value = self.format_placeholder(placeholder)
       result = result.replace('{{' + placeholder + '}}', value)
     return result
+  
+  def format_conversation(self):
+    return self.format(CONVERSATION_AND_REQUEST_TEMPLATE)
   
   def debug(self):
     try:

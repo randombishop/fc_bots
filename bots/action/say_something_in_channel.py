@@ -75,4 +75,4 @@ class SaySomethingInChannel(IActionStep):
     casts = [cast]
     summary = result['summary'] if 'summary' in result else ''
     self.state.casts = casts
-    self.state.log += summary + '\n'
+    self.state.log += f'<SaySomethingInChannel>\n{summary}\n</SaySomethingInChannel>' + '\n'

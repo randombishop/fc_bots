@@ -56,10 +56,11 @@ class SelectAction(IPlanStep):
       'SaySomethingInChannel': {'min_hours': 24, 'min_activity': 15},
       'Summary': {'min_hours': 72, 'min_activity': 25}
     }
-    candidates = get_bot_actions_stats_in_channel(self.state.id, self.state.channel)
+    candidates = get_bot_actions_stats_in_channel(self.state.id, self.state.selected_channel)
     candidates = {c['action_class']: {
         'hours_ago': float(c['hours_ago']) if c['hours_ago'] is not None else None,
-        'channel_activity': int(c['channel_activity']) if c['channel_activity'] is not None else None
+        'channel_activity': int(c['channel_activity']) if c['channel_activity'] is not None else None,
+        'is_valid': False
       } for c in candidates}
     for action, rules in action_rules.items():
       if action in candidates:
@@ -89,7 +90,8 @@ class SelectAction(IPlanStep):
     }
     candidates = get_bot_actions_stats_no_channel(self.state.id)
     candidates = {c['action_class']: {
-        'hours_ago': float(c['hours_ago']) if c['hours_ago'] is not None else None
+        'hours_ago': float(c['hours_ago']) if c['hours_ago'] is not None else None,
+        'is_valid': False
       } for c in candidates}
     for action, rules in action_rules.items():
       if action in candidates:

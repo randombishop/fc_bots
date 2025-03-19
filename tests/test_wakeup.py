@@ -4,7 +4,6 @@ import unittest
 from bots.utils.tests import make_character_and_state
 from bots.wakeup.wakeup_actions import WakeUpActions
 from bots.wakeup.wakeup_bio import WakeUpBio
-from bots.wakeup.wakeup_channel import WakeUpChannel
 from bots.wakeup.wakeup_conversation import WakeUpConversation
 from bots.wakeup.wakeup_lore import WakeUpLore
 from bots.wakeup.wakeup_style import WakeUpStyle
@@ -40,29 +39,6 @@ class TestWakeUp(unittest.TestCase):
     print('</WakeUpBio>')
     lines = bio.split('\n')
     self.assertGreater(len(lines), 1)
-
-
-  
-  #########################################################  
-  # wakeup_channel
-  #########################################################
-
-  def test_channel1(self):
-    character, state = make_character_and_state(root_parent_url='https://farcaster.group/data')
-    channel = WakeUpChannel().get(character, state)
-    print('<WakeUpChannel>')
-    print(channel)
-    print('</WakeUpChannel>')
-    self.assertEqual(channel, 'data')
-
-  def test_channel2(self):
-    character, state = make_character_and_state()
-    channel = WakeUpChannel().get(character, state)
-    print('<WakeUpChannel>')
-    print(channel)
-    print('</WakeUpChannel>')
-    self.assertEqual(channel, '')
-    
 
 
   #########################################################

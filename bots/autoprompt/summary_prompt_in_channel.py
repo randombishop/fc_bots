@@ -58,37 +58,39 @@ schema = """
 
 
 def summary_prompt_in_channel(state):
+  log = ''
   previous_summaries = get_bot_casts(state.id, action_channel=state.selected_channel, selected_action='Summary')
-  df = pandas.DataFrame(previous_summaries)
-  df['is_category_summary'] = df['action_prompt'].str.startswith('Summarize category')
-  df['is_channel_summary'] = df['action_prompt'].str.startswith('Summarize channel')
-  log = 'Previous summaries:\n' + str(df[['action_prompt', 'hours']])
-  # First, try to re-run a category summary
-  if df['is_category_summary'].sum() > 0:
-    log += f'Found {int(df["is_category_summary"].sum())} category summaries...\n'
-    categories = df[df['is_category_summary']].groupby('action_prompt'
-                    ).agg({'hours': 'min'}).reset_index().to_dict(orient='records')
-    for c in categories:
-      c['category'] = read_category({'category': c['action_prompt'].replace('Summarize category', '').strip()})
-      c['hours'] = float(c['hours'])
-    categories = [x for x in categories if x['category'] is not None and x['hours'] > MIN_HOURS_FOR_CATEGORIES]
-    if len(categories) > 0:
-      category = random.choice(categories)
-      log += 'Selected category summary: '+category['category']
-      return category['action_prompt'], {'category': category['category'], 'max_rows': get_max_capactity()}, log
-    else:
-      log += f'No category summaries found within the last {MIN_HOURS_FOR_CATEGORIES} hours.\n'
-  # Second, try to re-run a channel summary
-  if df['is_channel_summary'].sum() > 0:
-    log += f'Found {int(df["is_channel_summary"].sum())} channel summaries...\n'
-    last_run_hours = float(df[df['is_channel_summary']]['hours'].min())
-    log += f'Last channel summary was {last_run_hours} hours ago.\n'
-    if last_run_hours > MIN_HOURS_FOR_CHANNELS:
-      channel = read_channel({'channel': state.selected_channel})
-      log += 'Selected channel summary: '+state.selected_channel
-      return 'Summarize channel /'+state.selected_channel, {'channel': channel, 'max_rows': get_max_capactity()}, log
-    else:
-      log += f'No channel summaries found within the last {MIN_HOURS_FOR_CHANNELS} hours.\n'
+  if len(previous_summaries) > 0:
+    df = pandas.DataFrame(previous_summaries)
+    df['is_category_summary'] = df['action_prompt'].str.startswith('Summarize category')
+    df['is_channel_summary'] = df['action_prompt'].str.startswith('Summarize channel')
+    log += 'Previous summaries:\n' + str(df[['action_prompt', 'hours']])
+    # First, try to re-run a category summary
+    if df['is_category_summary'].sum() > 0:
+      log += f'Found {int(df["is_category_summary"].sum())} category summaries...\n'
+      categories = df[df['is_category_summary']].groupby('action_prompt'
+                      ).agg({'hours': 'min'}).reset_index().to_dict(orient='records')
+      for c in categories:
+        c['category'] = read_category({'category': c['action_prompt'].replace('Summarize category', '').strip()})
+        c['hours'] = float(c['hours'])
+      categories = [x for x in categories if x['category'] is not None and x['hours'] > MIN_HOURS_FOR_CATEGORIES]
+      if len(categories) > 0:
+        category = random.choice(categories)
+        log += 'Selected category summary: '+category['category']
+        return category['action_prompt'], {'category': category['category'], 'max_rows': get_max_capactity()}, log
+      else:
+        log += f'No category summaries found within the last {MIN_HOURS_FOR_CATEGORIES} hours.\n'
+    # Second, try to re-run a channel summary
+    if df['is_channel_summary'].sum() > 0:
+      log += f'Found {int(df["is_channel_summary"].sum())} channel summaries...\n'
+      last_run_hours = float(df[df['is_channel_summary']]['hours'].min())
+      log += f'Last channel summary was {last_run_hours} hours ago.\n'
+      if last_run_hours > MIN_HOURS_FOR_CHANNELS:
+        channel = read_channel({'channel': state.selected_channel})
+        log += 'Selected channel summary: '+state.selected_channel
+        return 'Summarize channel /'+state.selected_channel, {'channel': channel, 'max_rows': get_max_capactity()}, log
+      else:
+        log += f'No channel summaries found within the last {MIN_HOURS_FOR_CHANNELS} hours.\n'
   # Finally, if no category of full channel summary is applicable, create a new summary prompt
   text = ''
   for c in previous_summaries:

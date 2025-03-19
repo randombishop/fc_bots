@@ -4,19 +4,19 @@ from bots.i_action_step import IActionStep
 from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user
 from bots.data.casts import get_top_casts, get_more_like_this
 from bots.prompts.format_casts import concat_casts
-from bots.prompts.contexts import conversation_and_request_template
 from bots.utils.llms import call_llm, get_max_capactity
 from bots.utils.check_links import check_link_data
 from bots.utils.word_counts import get_word_counts
-from bots.utils.images import make_wordcloud
-from bots.utils.gcs import upload_to_gcs
 from bots.data.channels import get_channel_url
 from bots.autoprompt.summary_prompt_in_channel import summary_prompt_in_channel
 from bots.autoprompt.summary_prompt_no_channel import summary_prompt_no_channel
+from bots.prepare.get_wordcloud import GetWordcloud
+from bots.prepare.get_mask import GetMask
+
 
 parse_instructions_template = """
 #CURRENT CHANNEL
-{{channel}}
+{{selected_channel}}
 
 #INSTRUCTIONS
 You are @{{name}}, a bot programmed to make summaries of posts (=casts) in a social media platform.
@@ -64,7 +64,7 @@ You are @{{name}}, a bot programmed to make summaries of posts (=casts) in a soc
 {{style}}
 
 #CURRENT CHANNEL
-{{channel}}
+{{selected_channel}}
 """
 
 main_instructions = """
@@ -140,7 +140,7 @@ class DigestCasts(IActionStep):
     self.state.log += log+'\n'
   
   def parse(self):
-    parse_prompt = self.state.format(conversation_and_request_template)
+    parse_prompt = self.state.format_conversation()
     parse_instructions = self.state.format(parse_instructions_template)
     params = call_llm(parse_prompt, parse_instructions, parse_schema)
     parsed = {}
@@ -201,14 +201,14 @@ class DigestCasts(IActionStep):
         del result[link_key]
     data['links'] = links
     # Make word cloud
-    top_n = 50
+    top_n = 100
     word_counts = get_word_counts([x['text'] for x in posts], top_n)
     if len(word_counts) > 5:
-      filename = str(uuid.uuid4())+'.png'
-      make_wordcloud(word_counts, filename)
-      upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
-      os.remove(filename)
-      data['wordcloud'] = f"https://fc.datascience.art/bot/main_files/{filename}"
+      self.state.wordcloud_text = data['summary']
+      self.state.wordcloud_counts = word_counts
+      GetMask(self.state).prepare()
+      GetWordcloud(self.state).prepare()      
+      data['wordcloud'] = self.state.wordcloud_url
     casts = []
     cast1 = {'text': data['summary']}
     if 'wordcloud' in data:

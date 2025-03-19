@@ -56,6 +56,11 @@ class Shorten(IThinkStep):
     text = text.replace('tweet', 'cast')
     text = re.sub(r'\[\d+\]', '', text)
     text = re.sub(r'[\(\[][a-f0-9]{6}[\)\]]', '', text)
+    if len(text) > 2:
+      if text[0]=='"':
+        text = text[1:]
+      if text[-1]=='"':
+        text = text[:-1]
     return text
 
   def shorten_text(self, text):

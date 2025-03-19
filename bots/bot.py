@@ -8,17 +8,17 @@ from bots.think.like import Like
 from bots.think.reply import Reply
 from bots.think.shorten import Shorten
 from bots.data.app import get_bot_character
+from bots.memory.user_profile import UserProfile
+
 
 class Bot:
   
   def __init__(self, id, character):
     self.id = id
     self.character = character
-    self.character['wakeup_steps'] += ['actions_templates','channel_list']
-    self.character['wakeup_steps'] = [step for step in self.character['wakeup_steps'] if step != 'trending']
     self.state = BotState()
     
-  def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
+  def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None, user=None):
     self.state = BotState(
       id=self.id,
       name=self.character['name'], 
@@ -28,7 +28,8 @@ class Bot:
       attachment_hash=attachment_hash, 
       root_parent_url=root_parent_url,
       selected_channel=selected_channel,
-      selected_action=selected_action
+      selected_action=selected_action,
+      user=user
     )
 
   def wakeup(self):
@@ -39,7 +40,7 @@ class Bot:
       self.state.set(key, wakeup_value)
 
   def plan(self):
-    if self.state.request is None and self.state.selected_channel is None and self.state.selected_action is None:
+    if self.state.selected_channel is None:
       select_channel_step = SelectChannel(self.state)
       select_channel_step.plan()
     if self.state.selected_action is None:
@@ -83,40 +84,51 @@ class Bot:
       reply_step = Reply(self.state)
       reply_step.think()
   
-  def respond(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
-    self.initialize(request, fid_origin, parent_hash, attachment_hash, root_parent_url, selected_channel, selected_action)
+  def record_memories(self):
+    if self.state.selected_action in ['WhoIs', 'Praise']:
+      user_profile = UserProfile(self.state)
+      user_profile.record()
+    
+  def respond(self, request=None, 
+              fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, 
+              selected_channel=None, selected_action=None, user=None):
+    self.initialize(request=request, 
+                    fid_origin=fid_origin, 
+                    parent_hash=parent_hash, 
+                    attachment_hash=attachment_hash, 
+                    root_parent_url=root_parent_url,
+                    selected_channel=selected_channel, 
+                    selected_action=selected_action, 
+                    user=user)
     self.wakeup()
     self.plan()
     self.prepare()
     self.execute()
     self.think()
-    response = {
-      'request': self.state.request,
-      'like': self.state.like,
-      'reply': self.state.reply,
-      'casts': self.state.casts,
-      'cost': self.state.cost,
-      'selected_channel': self.state.selected_channel,
-      'selected_channel_log': self.state.selected_channel_log,
-      'selected_action': self.state.selected_action,
-      'selected_user': self.state.user,
-      'log': self.state.log
-    }
-    return response
+    self.record_memories()
+    
   
 
 def generate_bot_response(bot_id, 
                           request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, 
-                          selected_channel=None, selected_action=None):
+                          selected_channel=None, selected_action=None, user=None,
+                          debug=False):
   character = get_bot_character(bot_id)
   if character is None:
     raise Exception(f"Bot {bot_id} not found")
   bot = Bot(bot_id, character)
-  response = bot.respond(request=request, 
-                         fid_origin=fid_origin, 
-                         parent_hash=parent_hash, 
-                         attachment_hash=attachment_hash, 
-                         root_parent_url=root_parent_url,
-                         selected_channel=selected_channel,
-                         selected_action=selected_action)
-  return response
+  try:
+    bot.respond(request=request, 
+      fid_origin=fid_origin, 
+      parent_hash=parent_hash, 
+      attachment_hash=attachment_hash, 
+      root_parent_url=root_parent_url,
+      selected_channel=selected_channel,
+      selected_action=selected_action,
+      user=user)
+    if debug:
+      bot.state.debug()
+    return bot.state
+  except Exception as e:
+    bot.state.debug()
+    raise e

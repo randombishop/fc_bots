@@ -1,9 +1,11 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 def format_when(timestamp):
   if isinstance(timestamp, str):
-    timestamp_dt = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S.%f")
+    timestamp = timestamp.replace('T', ' ')
+    timestamp = timestamp[:19]
+    timestamp_dt = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
     timestamp_seconds = timestamp_dt.timestamp()
   elif isinstance(timestamp, datetime):
     timestamp_seconds = timestamp.timestamp()

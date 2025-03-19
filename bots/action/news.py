@@ -1,5 +1,4 @@
 from bots.i_action_step import IActionStep
-from bots.prompts.contexts import conversation_and_request_template
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_string
 from bots.utils.skyvern_api import start_workflow, get_workflow_result
@@ -35,7 +34,7 @@ class News(IActionStep):
     return 100
 
   def parse(self):
-    parse_prompt = self.state.format(conversation_and_request_template)
+    parse_prompt = self.state.format_conversation()
     parse_instructions = self.state.format(parse_instructions_template)
     params = call_llm(parse_prompt, parse_instructions, parse_schema)
     parsed = {}

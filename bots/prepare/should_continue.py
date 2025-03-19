@@ -1,5 +1,4 @@
 from bots.i_prepare_step import IPrepareStep
-from bots.prompts.contexts import conversation_and_request_template
 from bots.utils.llms import call_llm
 from bots.utils.read_params import read_boolean
 
@@ -17,7 +16,7 @@ You are @{{name}}, a social media bot.
 {{style}}
 
 #CURRENT CHANNEL
-{{channel}}
+{{selected_channel}}
 
 #TASK
 Before responding to the user, you must evaluate if you should continue this conversation or not. 
@@ -48,7 +47,7 @@ schema = {
 class ShouldContinue(IPrepareStep):
     
   def prepare(self):
-    prompt = self.state.format(conversation_and_request_template)
+    prompt = self.state.format_conversation()
     instructions = self.state.format(instructions_template)
     params = call_llm(prompt, instructions, schema)
     self.state.should_continue = read_boolean(params, key='continue')
