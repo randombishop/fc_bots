@@ -91,6 +91,8 @@ class State:
     self.selected_channel_df = None
     self.selected_channel_reasoning = None
     self.selected_channel_log = None
+    self.selected_action_mode = None
+    self.selected_action_tries = 0
     self.selected_action = selected_action
     # 4. Prepare 
     self.should_continue = True
@@ -130,6 +132,7 @@ class State:
     self.wordcloud_height = None
     self.wordcloud_url = None
     # 5. Execute actions
+    self.action_tries = 0
     self.cost = 0
     self.action_params = None
     self.casts = []

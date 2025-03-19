@@ -106,13 +106,17 @@ def select_channel(state):
   log += state.selected_channel_reasoning + '\n'
   log += f'</SelectChannel selected="{state.selected_channel}">\n'
   state.log += log
+  return {
+    'selected_channel': state.selected_channel,
+    'selected_channel_reasoning': state.selected_channel_reasoning
+  }
   
 
 SelectChannel = Tool(
   name="select_channel",
   func=select_channel,
-  description="Select a channel to post to based on the current trends"
+  description="Select a channel to post to based on the current trends",
   metadata={
-    "depends_on": ["get_trending", "get_bot_casts"]
+    "depends_on": ["get_channel_list", "get_trending", "get_bot_casts"]
   }
 )

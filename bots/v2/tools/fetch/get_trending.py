@@ -22,6 +22,7 @@ def get_trending(state):
     row += '\n'
     text += row
   state.trending = text
+  return {'trending': text}
 
 
 GetTrending = Tool(

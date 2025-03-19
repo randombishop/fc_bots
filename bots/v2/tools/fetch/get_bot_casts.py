@@ -1,10 +1,10 @@
 from langchain.agents import Tool
-from bots.data.bot_history import get_bot_casts
+from bots.data import bot_history
 from bots.utils.format_cast import shorten_text, format_when
 
 
 def get_bot_casts(state):
-  casts = get_bot_casts(state.id)
+  casts = bot_history.get_bot_casts(state.id)
   text = ''
   for c in casts:
     row = '{\n'
@@ -15,7 +15,7 @@ def get_bot_casts(state):
     row += '}\n'
     text += row
   state.bot_casts = text
-
+  return {'bot_casts': text}
 
 GetBotCasts = Tool(
   name="get_bot_casts",
