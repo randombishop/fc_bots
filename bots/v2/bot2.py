@@ -4,43 +4,14 @@ from langchain_google_vertexai import ChatVertexAI
 from langchain.schema import AgentAction, AgentFinish
 from bots.data.app import get_bot_character
 from bots.v2.state import State
-# Wakeup tools
-from bots.v2.tools.wakeup.get_bio import GetBio
-from bots.v2.tools.wakeup.get_conversation import GetConversation
-from bots.v2.tools.wakeup.get_lore import GetLore
-from bots.v2.tools.wakeup.get_style import GetStyle
-from bots.v2.tools.wakeup.get_time import GetTime
-# Fetch tools
-from bots.v2.tools.fetch.get_bot_casts import GetBotCasts
-from bots.v2.tools.fetch.get_channel_list import GetChannelList
-from bots.v2.tools.fetch.get_trending import GetTrending
-# Plan tools
-from bots.v2.tools.plan.next import Next
-from bots.v2.tools.plan.select_channel import SelectChannel
-from bots.v2.tools.plan.select_action_mode import SelectActionMode
-from bots.v2.tools.plan.select_action_from_conversation import SelectActionFromConversation
-from bots.v2.tools.plan.select_action_for_channel import SelectActionForChannel
-from bots.v2.tools.plan.select_action_for_main_feed import SelectActionForMainFeed
-# Action tools
-from bots.v2.tools.action.get_actions import GetActions
+from bots.v2.tools import TOOL_DEPENDENCIES, TOOL_LIST
 
 
-TOOL_BOX = [
-  GetBio, GetConversation, GetLore, GetStyle, GetTime, 
-  GetBotCasts, GetChannelList, GetTrending, 
-  Next, SelectChannel, SelectActionMode, SelectActionFromConversation, SelectActionForChannel, SelectActionForMainFeed, 
-  GetActions
-]
-
-TOOL_DEPENDENCIES = {
-  x.name: x.metadata['depends_on'] for x in TOOL_BOX if x.metadata is not None and'depends_on' in x.metadata
-}
-   
 class Bot2(BaseSingleActionAgent):
             
   def __init__(self):
     super().__init__()
-    self._tools = TOOL_BOX
+    self._tools = TOOL_LIST
     self._llm = ChatVertexAI(model="gemini-1.5-flash-002")
     self._state = None
     self._todo = []
