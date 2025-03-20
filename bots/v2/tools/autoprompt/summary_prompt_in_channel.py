@@ -1,11 +1,11 @@
 import pandas
 import random
+from langchain.agents import Tool
+from bots.v2.call_llm import call_llm
 from bots.data.bot_history import get_bot_casts
 from bots.utils.read_params import read_category, read_channel
 from bots.utils.llms import get_max_capactity
 from bots.utils.format_cast import shorten_text, format_when
-from bots.prepare.get_casts_in_channel import GetCastsInChannel
-from bots.utils.llms import call_llm
 
 
 MIN_HOURS_FOR_CATEGORIES = 70
@@ -57,7 +57,9 @@ schema = """
 
 
 
-def summary_prompt_in_channel(state):
+def summary_prompt_in_channel(input):
+  state = input['state']
+  llm = input['llm']
   log = ''
   previous_summaries = get_bot_casts(state.id, action_channel=state.selected_channel, selected_action='Summary')
   if len(previous_summaries) > 0:
@@ -101,13 +103,23 @@ def summary_prompt_in_channel(state):
     row += '}\n'
     text += row
   state.bot_casts_in_channel = text
-  GetCastsInChannel(state).prepare()
   prompt = state.format(prompt_template)
   instructions = state.format(instructions_template)
-  result = call_llm(prompt, instructions, schema)
+  result = call_llm(llm, prompt, instructions, schema)
   if result is None or 'search' not in result:
     raise Exception('Could not generate a new summary prompt.')
   search = result['search']
   prompt = f'Summarize posts about "{search}"'
   log += 'Selected search summary: '+search
-  return prompt, {'search': search}, log
+  return {
+    'prompt': prompt,
+    'search': search,
+    'log': log
+  }
+
+
+SummaryPromptInChannel = Tool(
+  name="summary_prompt_in_channel",
+  description="Create an automatic search phrase for the summary action in a channel",
+  func=summary_prompt_in_channel
+)

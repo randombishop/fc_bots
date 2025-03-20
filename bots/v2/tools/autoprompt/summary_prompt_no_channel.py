@@ -1,11 +1,11 @@
 import pandas
 import random
+from langchain.agents import Tool
+from bots.v2.call_llm import call_llm
 from bots.data.bot_history import get_bot_casts
 from bots.utils.read_params import read_category
 from bots.utils.llms import get_max_capactity
 from bots.utils.format_cast import shorten_text, format_when
-from bots.prepare.get_trending import GetTrending
-from bots.utils.llms import call_llm
 
 
 MIN_HOURS_FOR_CATEGORIES = 120
@@ -18,6 +18,7 @@ prompt_template = """
 #YOUR PREVIOUSLY POSTED SUMMARIES
 {{bot_casts_in_channel}}
 """
+
 
 instructions_template = """
 You are @{{name}} social media bot running on the Farcaster platform.
@@ -56,7 +57,9 @@ schema = """
 
 
 
-def summary_prompt_no_channel(state):
+def summary_prompt_no_channel(input):
+  state = input['state']
+  llm = input['llm']
   log = ''
   previous_summaries = get_bot_casts(state.id, no_channel=True, selected_action='Summary')
   if len(previous_summaries) > 0:
@@ -88,13 +91,26 @@ def summary_prompt_no_channel(state):
     row += '}\n'
     text += row
   state.bot_casts_in_channel = text
-  GetTrending(state).prepare()
   prompt = state.format(prompt_template)
   instructions = state.format(instructions_template)
-  result = call_llm(prompt, instructions, schema)
+  result = call_llm(llm, prompt, instructions, schema)
   if result is None or 'search' not in result:
     raise Exception('Could not generate a new summary prompt.')
   search = result['search']
   prompt = f'Summarize posts about "{search}"'
   log += 'Selected search summary: '+search
-  return prompt, {'search': search}, log
+  return {
+    'prompt': prompt,
+    'search': search,
+    'log': log
+  }
+
+
+SummaryPromptNoChannel = Tool(
+  name="summary_prompt_no_channel",
+  description="Generate a search phrase for the summary action in main feed",
+  func=summary_prompt_no_channel,
+  metadata={
+    'depends_on': ['get_trending', 'get_bot_casts_no_channel']
+  }
+)

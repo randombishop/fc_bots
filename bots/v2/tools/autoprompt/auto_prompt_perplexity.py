@@ -1,6 +1,6 @@
 from langchain.agents import Tool
-from bots.autoprompt.perplexity_question_in_channel import perplexity_question_in_channel
-from bots.autoprompt.perplexity_question_no_channel import perplexity_question_no_channel
+from bots.v2.tools.autoprompt.perplexity_question_in_channel import perplexity_question_in_channel
+from bots.v2.tools.autoprompt.perplexity_question_no_channel import perplexity_question_no_channel
 
 
 

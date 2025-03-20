@@ -1,13 +1,8 @@
 from langchain.agents import Tool
 from bots.v2.call_llm import call_llm
 from bots.utils.read_params import read_user
-from bots.data.bot_history import get_random_user_to_praise, get_random_user_to_praise_in_channel
+from bots.data.bot_history import get_random_user_to_praise
 from bots.data.users import get_fid
-from bots.data.channels import get_channel_url
-from bots.prepare.get_user_profile import GetUserProfile
-from bots.prepare.get_pfp_description import GetPfpDescrition
-from bots.prepare.get_user_replies_and_reactions import GetUserRepliesAndReactions
-from bots.prepare.get_avatar import GetAvatar
 
 
 parse_user_instructions_template = """
@@ -24,6 +19,7 @@ If the request is targeted to a random user, set user to "*"
   "user": ...
 }
 """
+
 
 parse_user_schema = {
   "type":"OBJECT",

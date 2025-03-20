@@ -1,19 +1,18 @@
-from bots.prepare.get_casts_in_channel import GetCastsInChannel
-from bots.prepare.get_bot_casts_in_channel import GetBotCastsInChannel
-from bots.utils.llms import call_llm
+from langchain.agents import Tool
+from bots.v2.call_llm import call_llm
 
 
 prompt_template = """
-#CHANNEL POSTS FROM EVERYONE
+#TRENDING POSTS FROM EVERYONE
 {{casts_in_channel}}
 
 #YOUR POSTS IN THE CHANNEL
-{{bot_casts_in_channel}}
+{{bot_casts_no_channel}}
 """
 
 instructions_template = """
 You are @{{name}} social media bot running on the Farcaster platform.
-Your task is to come up with a new original and interesting question for the channel /{{selected_channel}}
+Your task is to come up with a new original and interesting question for the farcaster community.
 
 #YOUR BIO
 {{bio}}
@@ -22,7 +21,7 @@ Your task is to come up with a new original and interesting question for the cha
 {{lore}}
 
 #INSTRUCTIONS
-You are provided with recent activity in the /{{selected_channel}} channel.
+You are provided with recent trending activity in the farcaster social media platform.
 First, read these posts carefully and summarize them in one short paragraph.
 Then generate a new question that will be forwarded to an AI to prepare your next post.
 Your question should be simple, short, original, interesting and creative.
@@ -50,14 +49,27 @@ schema = """
     "reasoning":{"type":"STRING"}
 """
 
-def perplexity_question_in_channel(state):
-  GetCastsInChannel(state).prepare()
-  GetBotCastsInChannel(state).prepare()
+def perplexity_question_no_channel(input):
+  state = input['state']
+  llm = input['llm']
   prompt = state.format(prompt_template)
   instructions = state.format(instructions_template)
-  result = call_llm(prompt, instructions, schema)
+  result = call_llm(llm, prompt, instructions, schema)
   question = result['question'] if 'question' in result else None
   current_trends_summary = result['current_trends_summary'] if 'current_trends_summary' in result else None
   reasoning = result['reasoning'] if 'reasoning' in result else None
   log = 'Trends: '+current_trends_summary+'\n'+'Reasoning: '+reasoning
-  return question, log
+  return {
+    'question': question,
+    'log': log
+    }
+
+
+PerplexityQuestionNoChannel = Tool(
+  name="perplexity_question_no_channel",
+  description="Generate a question for the perplexity action in main feed",
+  func=perplexity_question_no_channel,
+  metadata={
+    'depends_on': ['get_trending', 'get_bot_casts_no_channel']
+  }
+)

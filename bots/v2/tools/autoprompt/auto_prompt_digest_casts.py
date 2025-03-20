@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 from bots.data.channels import get_channel_url
-from bots.autoprompt.summary_prompt_in_channel import summary_prompt_in_channel
-from bots.autoprompt.summary_prompt_no_channel import summary_prompt_no_channel
+from bots.v2.tools.autoprompt.summary_prompt_in_channel import summary_prompt_in_channel
+from bots.v2.tools.autoprompt.summary_prompt_no_channel import summary_prompt_no_channel
 
 
 def auto_prompt_digest_casts(input):
