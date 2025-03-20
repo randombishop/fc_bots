@@ -17,6 +17,7 @@ def word_cloud(state):
     'casts': state.casts
   }
 
+
 WordCloud = Tool(
   name="word_cloud",
   description="Create a word cloud",

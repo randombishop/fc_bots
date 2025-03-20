@@ -10,6 +10,9 @@ from bots.v2.tools.action.pick_cast import PickCast
 from bots.v2.tools.action.praise import Praise
 from bots.v2.tools.action.psycho import Psycho
 from bots.v2.tools.action.roast import Roast
+from bots.v2.tools.action.say_something_in_channel import SaySomethingInChannel
+from bots.v2.tools.action.say_something_no_channel import SaySomethingNoChannel
+from bots.v2.tools.action.who_is import WhoIs
 
 
 ACTION_TOOLS = [
@@ -24,5 +27,8 @@ ACTION_TOOLS = [
   PickCast,
   Praise,
   Psycho,
-  Roast
+  Roast,
+  SaySomethingInChannel,
+  SaySomethingNoChannel,
+  WhoIs
 ]

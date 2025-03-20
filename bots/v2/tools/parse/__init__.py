@@ -7,6 +7,8 @@ from bots.v2.tools.parse.parse_perplexity_params import ParsePerplexityParams
 from bots.v2.tools.parse.parse_pick_cast_params import ParsePickCastParams
 from bots.v2.tools.parse.parse_praise_params import ParsePraiseParams
 from bots.v2.tools.parse.parse_psycho_params import ParsePsychoParams
+from bots.v2.tools.parse.parse_roast_params import ParseRoastParams
+from bots.v2.tools.parse.parse_who_is_params import ParseWhoIsParams
 from bots.v2.tools.parse.parse_word_cloud_params import ParseWordCloudParams
 
 
@@ -20,5 +22,7 @@ PARSE_TOOLS = [
   ParsePickCastParams,
   ParsePraiseParams,
   ParsePsychoParams,
+  ParseRoastParams,
+  ParseWhoIsParams,
   ParseWordCloudParams
 ]
