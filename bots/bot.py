@@ -1,134 +1,93 @@
-from bots.bot_state import BotState
-from bots.wakeup.wakeup_steps import WAKEUP_STEPS
-from bots.prepare.prepare_steps import PREPARE_STEPS
-from bots.action.action_steps import ACTION_STEPS
-from bots.plan.select_channel import SelectChannel
-from bots.plan.select_action import SelectAction
-from bots.think.like import Like
-from bots.think.reply import Reply
-from bots.think.shorten import Shorten
+import json
+from langchain.agents import BaseSingleActionAgent
+from langchain_google_vertexai import ChatVertexAI
+from langchain.schema import AgentAction, AgentFinish
 from bots.data.app import get_bot_character
-from bots.memory.user_profile import UserProfile
+from bots.state import State
+from bots.tools import TOOL_DEPENDENCIES, TOOL_LIST
 
 
-class Bot:
-  
-  def __init__(self, id, character):
-    self.id = id
-    self.character = character
-    self.state = BotState()
+class Bot(BaseSingleActionAgent):
+            
+  def __init__(self):
+    super().__init__()
+    self._tools = TOOL_LIST
+    self._llm = ChatVertexAI(model="gemini-1.5-flash-002")
+    self._state = None
+    self._todo = []
     
-  def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None, user=None):
-    self.state = BotState(
-      id=self.id,
-      name=self.character['name'], 
-      request=request, 
-      fid_origin=fid_origin, 
-      parent_hash=parent_hash, 
-      attachment_hash=attachment_hash, 
-      root_parent_url=root_parent_url,
-      selected_channel=selected_channel,
-      selected_action=selected_action,
-      user=user
-    )
-
-  def wakeup(self):
-    wakeup_steps = self.character['wakeup_steps']
-    for key in wakeup_steps:
-      wakeup_step = WAKEUP_STEPS[key]()
-      wakeup_value = wakeup_step.get(self.character, self.state)
-      self.state.set(key, wakeup_value)
-
-  def plan(self):
-    if self.state.selected_channel is None:
-      select_channel_step = SelectChannel(self.state)
-      select_channel_step.plan()
-    if self.state.selected_action is None:
-      select_action_step = SelectAction(self.state)
-      select_action_step.plan()
+  @property
+  def input_keys(self):
+    return ["input"]
   
-  def prepare(self):
-    if self.state.selected_action is None:
-      return
-    Action = ACTION_STEPS[self.state.selected_action]
-    action = Action(self.state)
-    prepare_steps = action.get_prepare_steps()
-    for step in prepare_steps:
-      Prepare = PREPARE_STEPS[step]
-      prepare_step = Prepare(self.state)
-      prepare_step.prepare()
+  def initialize_state(self, input):
+    id = input['bot_id']
+    character = get_bot_character(id)
+    request = input['request'] if 'request' in input else None
+    fid_origin = input['fid_origin'] if 'fid_origin' in input else None
+    parent_hash = input['parent_hash'] if 'parent_hash' in input else None
+    attachment_hash = input['attachment_hash'] if 'attachment_hash' in input else None
+    root_parent_url = input['root_parent_url'] if 'root_parent_url' in input else None
+    user = input['user'] if 'user' in input else None
+    self._state = State(id=id, 
+                        name=character['name'], 
+                        character=character, 
+                        request=request, 
+                        fid_origin=fid_origin, 
+                        parent_hash=parent_hash, 
+                        attachment_hash=attachment_hash, 
+                        root_parent_url=root_parent_url, 
+                        user=user)
+    self.todo('get_bio')
+    self.todo('get_lore')
+    self.todo('get_style')
+    self.todo('get_time')
+    if self._state.request is None:
+      self.todo('select_channel')
+    self.todo('select_action_mode')
+    
+  def get_tool_input(self):
+    return {"input":{"state": self._state, "llm": self._llm}}
   
-  def execute(self):
-    if self.state.selected_action is None:
-      return
-    Action = ACTION_STEPS[self.state.selected_action]
-    action = Action(self.state)
-    if self.state.request is None:
-      action.auto_prompt()
+  def todo(self, tool):
+    if tool in TOOL_DEPENDENCIES:
+      for dependency in TOOL_DEPENDENCIES[tool]:
+        self.todo(dependency)
+    self._todo.append(tool)
+  
+  def next(self):
+    return AgentAction(
+      tool='_', 
+      tool_input=self.get_tool_input(), 
+      log='')    
+
+  def plan(self, intermediate_steps, callbacks, **kwargs):
+    if self._state is None:
+      input = json.loads(kwargs['input'])
+      self.initialize_state(input)
+    if len(self._todo) > 0: 
+      tool = self._todo.pop(0)
+      return AgentAction(
+        tool=tool,
+        tool_input=self.get_tool_input(),
+        log=tool)
+    elif self._state.selected_action_mode is not None and self._state.selected_action is None and self._state.selected_action_tries == 0:
+      self._state.selected_action_tries += 1
+      if self._state.selected_action_mode == 'conversation':
+        self.todo('select_action_from_conversation')
+      elif self._state.selected_action_mode == 'channel':
+        self.todo('select_action_for_channel')
+      elif self._state.selected_action_mode == 'main_feed':
+        self.todo('select_action_for_main_feed')
+      return self.next()
+    elif self._state.selected_action is not None and self._state.action_tries == 0:
+      self._state.action_tries += 1
+      self.todo(self._state.selected_action)
+      return self.next()
     else:
-      action.parse()
-    action.execute()
-    self.state.cost += action.get_cost()
+      return AgentFinish(return_values={"output": self._state}, log='done')
     
-  def think(self):
-    # Decide if we should like the post
-    if self.state.request is not None:  
-      like_step = Like(self.state)
-      like_step.think()
-    # Shorten the casts if needed
-    if self.state.casts is not None and len(self.state.casts) > 0:
-      shorten_step = Shorten(self.state)
-      shorten_step.think()
-    # Decide if we should reply
-    if self.state.casts is not None and len(self.state.casts) > 0 and self.state.request is not None:
-      reply_step = Reply(self.state)
-      reply_step.think()
-  
-  def record_memories(self):
-    if self.state.selected_action in ['WhoIs', 'Praise']:
-      user_profile = UserProfile(self.state)
-      user_profile.record()
-    
-  def respond(self, request=None, 
-              fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, 
-              selected_channel=None, selected_action=None, user=None):
-    self.initialize(request=request, 
-                    fid_origin=fid_origin, 
-                    parent_hash=parent_hash, 
-                    attachment_hash=attachment_hash, 
-                    root_parent_url=root_parent_url,
-                    selected_channel=selected_channel, 
-                    selected_action=selected_action, 
-                    user=user)
-    self.wakeup()
-    self.plan()
-    self.prepare()
-    self.execute()
-    self.think()
-    self.record_memories()
-    
-  
+  async def aplan(self, intermediate_steps, **kwargs):
+    return self.plan(intermediate_steps, **kwargs)
 
-def generate_bot_response(bot_id, 
-                          request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, 
-                          selected_channel=None, selected_action=None, user=None,
-                          debug=False):
-  character = get_bot_character(bot_id)
-  if character is None:
-    raise Exception(f"Bot {bot_id} not found")
-  bot = Bot(bot_id, character)
-  try:
-    bot.respond(request=request, 
-      fid_origin=fid_origin, 
-      parent_hash=parent_hash, 
-      attachment_hash=attachment_hash, 
-      root_parent_url=root_parent_url,
-      selected_channel=selected_channel,
-      selected_action=selected_action,
-      user=user)
-    if debug:
-      bot.state.debug()
-    return bot.state
-  except Exception as e:
-    bot.state.debug()
-    raise e
+
