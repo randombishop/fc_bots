@@ -62,8 +62,8 @@ schema = {
 
 
 def get_user_profile(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   if state.user_casts_description is not None:
     return
   user_name = state.user

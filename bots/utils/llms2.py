@@ -1,6 +1,21 @@
-from langchain_core.messages import HumanMessage, SystemMessage
-from bots.utils.json_cleaner import clean_json
+from openai import OpenAI
 import json5
+from langchain_google_vertexai import ChatVertexAI
+from langchain_core.messages import HumanMessage, SystemMessage
+from langsmith import traceable
+from bots.utils.json_cleaner import clean_json
+
+
+
+def get_llm():
+  model = "gemini-1.5-flash-002"
+  llm = ChatVertexAI(model=model)
+  return llm
+
+
+def get_llm_img():
+  llm_img = OpenAI()
+  return llm_img
 
 
 def call_llm(llm, prompt, instructions, schema):
@@ -34,23 +49,27 @@ def rewrite_prompt(llm, original_prompt):
     print('Failed to rewrite the prompt.')
     raise e
 
-
+@traceable(run_type="llm", name="DallE3")
 def _do_generate_image(llm_img, prompt):
-  messages = [HumanMessage(content=prompt)]
-  response = llm_img.invoke(messages, size="1024x1024", quality="standard", n=1)
-  if hasattr(response, 'data') and response.data:
-    return response.data[0].url
-  else:
-    raise Exception("Image LLM did not return an image URL")
+  response = llm_img.images.generate(
+    model="dall-e-3",
+    prompt=prompt,
+    size="1024x1024",
+    quality="standard",
+    n=1
+  )
+  return {'url': response.data[0].url, 'status': 'generated'}
 
 
 def generate_image(llm_img, llm, prompt):
   try:
-    return _do_generate_image(llm_img, prompt)
+    result = _do_generate_image(llm_img, prompt)
+    return result['url']
   except Exception as e:
     if 'content_policy_violation' in str(e).lower():
       print('Content policy violation detected.')
       new_prompt = rewrite_prompt(llm, prompt)
-      return _do_generate_image(llm_img, new_prompt)
+      result = _do_generate_image(llm_img, new_prompt)
+      return result['url']
     else: 
       raise e

@@ -8,7 +8,7 @@ from bots.utils.gcs import upload_to_gcs
 
 
 def generate_wordcloud(input):
-  state = input['state']
+  state = input.state
   mask = numpy.array(state.wordcloud_mask)
   colormap = ImageColorGenerator(mask)
   words = state.wordcloud_counts

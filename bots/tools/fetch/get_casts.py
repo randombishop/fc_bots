@@ -48,8 +48,8 @@ schema = {
 
 
 def get_casts(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   if not state.should_continue:
     return {'log': 'Not fetching data because should_continue is false'}
   max_rows = 25

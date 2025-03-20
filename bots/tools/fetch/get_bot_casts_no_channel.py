@@ -4,7 +4,7 @@ from bots.utils.format_cast import shorten_text, format_when
 
 
 def get_bot_casts_no_channel(input):
-  state = input['state']
+  state = input.state
   casts = get_bot_casts(state.id, no_channel=True)
   text = ''
   for c in casts:

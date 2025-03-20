@@ -2,8 +2,7 @@ import os
 import uuid
 import requests
 from langchain.agents import Tool
-from bots.utils.llms2 import call_llm
-from bots.utils.openai import generate_image
+from bots.utils.llms2 import call_llm, generate_image
 from bots.utils.gcs import upload_to_gcs
 
 
@@ -76,8 +75,9 @@ schema = {
 
 
 def get_avatar(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
+  llm_img = input.llm_img
   prompt = state.format(prompt_template)
   if len(prompt) < 100:
     return {'log': 'Not enough data to generate a prompt for avatar'}
@@ -85,7 +85,7 @@ def get_avatar(input):
   result = call_llm(llm, prompt, instructions, schema)
   prompt_image = result['avatar_prompt'] if 'avatar_prompt' in result else None
   state.user_avatar_prompt = prompt_image
-  image_url = generate_image(prompt_image)
+  image_url = generate_image(llm_img, llm, prompt_image)
   filename = str(uuid.uuid4())+'.png'
   response = requests.get(image_url)
   response.raise_for_status()

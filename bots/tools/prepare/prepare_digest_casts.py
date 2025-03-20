@@ -79,8 +79,8 @@ main_schema = {
 
 
 def prepare_digest_casts(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   params = state.action_params
   if params is None:
     raise Exception('Summary params were not parsed')

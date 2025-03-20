@@ -73,8 +73,8 @@ schema = {
 
 
 def praise(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   fid = state.action_params['fid']
   user_name = state.action_params['user_name']
   if fid is None or user_name is None:

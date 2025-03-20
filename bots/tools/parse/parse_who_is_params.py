@@ -28,7 +28,7 @@ parse_user_schema = {
 
 
 def parse_who_is_params(input):
-  state = input['state']
+  state = input.state
   parse_prompt = state.format_conversation()
   parse_instructions = state.format(parse_user_instructions_template)
   params = call_llm(parse_prompt, parse_instructions, parse_user_schema)

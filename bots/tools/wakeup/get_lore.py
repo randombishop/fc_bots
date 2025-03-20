@@ -4,7 +4,7 @@ from langchain.agents import Tool
 SAMPLE_SIZE = 5
 
 def get_lore(input):
-  state = input['state']
+  state = input.state
   if state.character is not None and state.character['lore'] is not None and len(state.character['lore']) > 0:
     lore = state.character['lore']
     if len(lore)>SAMPLE_SIZE:

@@ -1,11 +1,13 @@
 import json
 from langchain.agents import BaseSingleActionAgent
-from langchain_google_vertexai import ChatVertexAI
-from langchain.chat_models import ChatOpenAI
 from langchain.schema import AgentAction, AgentFinish
+from bots.utils.llms2 import get_llm, get_llm_img
 from bots.data.app import get_bot_character
 from bots.state import State
+from bots.tool_input import ToolInput
 from bots.tools import TOOL_DEPENDENCIES, TOOL_LIST
+
+
 
 
 class Bot(BaseSingleActionAgent):
@@ -13,8 +15,8 @@ class Bot(BaseSingleActionAgent):
   def __init__(self):
     super().__init__()
     self._tools = TOOL_LIST
-    self._llm = ChatVertexAI(model="gemini-1.5-flash-002")
-    self._llm_img = ChatOpenAI(model_name="dall-e-3")
+    self._llm = get_llm()
+    self._llm_img = get_llm_img()
     self._state = None
     self._todo = []
     
@@ -49,7 +51,12 @@ class Bot(BaseSingleActionAgent):
     self.todo('select_action_mode')
     
   def get_tool_input(self):
-    return {"input":{"state": self._state, "llm": self._llm}}
+    input = ToolInput(
+      state=self._state, 
+      llm=self._llm, 
+      llm_img=self._llm_img
+    )
+    return {"input":input}
   
   def todo(self, tool):
     if tool in TOOL_DEPENDENCIES:

@@ -4,7 +4,7 @@ from bots.data.bot_history import get_bot_actions_stats_in_channel
 
 
 def select_action_for_channel(input):
-  state = input['state']
+  state = input.state
   action_rules = {
     'MostActiveUsers': {'min_hours': 240, 'min_activity': 50},
     'Perplexity': {'min_hours': 24, 'min_activity': 5},

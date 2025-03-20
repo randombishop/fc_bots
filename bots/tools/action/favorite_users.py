@@ -7,7 +7,7 @@ from bots.utils.gcs import upload_to_gcs
 
 
 def favorite_users(input):
-  state = input['state']
+  state = input.state
   fid = state.action_params['fid']
   user_name = state.action_params['user_name']
   if fid is None or user_name is None:

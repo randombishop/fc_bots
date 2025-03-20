@@ -5,7 +5,7 @@ from bots.data.channels import get_channel_url
 
 
 def auto_prompt_who_is(input):
-  state = input['state']
+  state = input.state
   user_name, fid = None, None
   channel_url = get_channel_url(state.selected_channel)
   if state.user is not None:

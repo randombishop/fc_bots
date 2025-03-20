@@ -39,8 +39,8 @@ select_action_prompt = """
 
 
 def select_action_from_conversation(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   instructions = state.format(select_action_task)
   prompt = state.format(select_action_prompt)
   result = call_llm(llm, prompt, instructions, select_action_schema)

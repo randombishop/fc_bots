@@ -46,7 +46,7 @@ task_schema = {
 
 
 def pick_cast(input):
-  state = input['state']
+  state = input.state
   params = state.action_params
   posts = []
   if params['search'] is not None:

@@ -5,7 +5,7 @@ from bots.tools.autoprompt.summary_prompt_no_channel import summary_prompt_no_ch
 
 
 def auto_prompt_digest_casts(input):
-  state = input['state']
+  state = input.state
   channel_url = get_channel_url(state.selected_channel)
   prompt, params, log = None, None, ''
   if channel_url is None:

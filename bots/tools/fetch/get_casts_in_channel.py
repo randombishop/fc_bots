@@ -6,7 +6,7 @@ from bots.prompts.format_casts import concat_casts
 
 
 def get_casts_in_channel(input):
-  state = input['state']
+  state = input.state
   if state.selected_channel is None:
     raise Exception('GetChannelCasts requires a channel')
   channel_url = get_channel_url(state.selected_channel)

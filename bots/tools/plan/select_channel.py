@@ -54,8 +54,8 @@ schema = """
 
 
 def select_channel(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   df_channels = state.channel_list
   channels_list = df_channels['channel'].tolist()
   random.shuffle(channels_list)

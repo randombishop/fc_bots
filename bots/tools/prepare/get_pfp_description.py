@@ -33,7 +33,7 @@ schema = {
 
 
 def get_pfp_description(input):
-  state = input['state']
+  state = input.state
   if state.user_pfp_description is not None:
     return {'log': 'Already done.'}
   url = state.user_pfp_url

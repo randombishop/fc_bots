@@ -2,7 +2,7 @@ from langchain.agents import Tool
 import os
 import uuid
 import requests
-from bots.utils.openai import generate_image
+from bots.utils.llms2 import generate_image
 from PIL import Image, ImageEnhance, ImageOps
 
 
@@ -16,13 +16,15 @@ Avoid gradients or fine details, your design should be recognizable from a dista
 
 
 def generate_wordcloud_mask(input):
-  state = input['state']
+  state = input.state
+  llm = input.llm
+  llm_img = input.llm_img
   text = state.wordcloud_text
   if text is None or len(text)==0:
     raise Exception("No text to generate mask")
   # Generate a new image
   prompt = prompt_template.replace("{{text}}", text)
-  image_url = generate_image(prompt)
+  image_url = generate_image(llm_img, llm, prompt)
   key = str(uuid.uuid4())
   file1 = key+'.original.png'
   response = requests.get(image_url)

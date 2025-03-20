@@ -7,7 +7,7 @@ skyvern_workflow = "wpid_351323221886267440"
 
 
 def news(input):
-  state = input['state']
+  state = input.state
   search = state.action_params['search']
   if search is None or len(search) < 5:
     raise Exception("This action requires a search query to forward to Yahoo News.")

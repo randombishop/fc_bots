@@ -5,7 +5,7 @@ from bots.tools.autoprompt.perplexity_question_no_channel import perplexity_ques
 
 
 def auto_prompt_perplexity(input):
-  state = input['state']
+  state = input.state
   channel = state.selected_channel
   question, log = None, None
   if channel is None or channel in ['', 'None']:

@@ -60,8 +60,8 @@ schema = {
 
 
 def get_user_replies_and_reactions(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   if state.user_replies_and_reactions_description is not None:
     return
   fid = state.user_fid

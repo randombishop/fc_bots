@@ -45,8 +45,8 @@ schema = {
 
 
 def should_continue(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   prompt = state.format_conversation()
   instructions = state.format(instructions_template)
   params = call_llm(llm, prompt, instructions, schema)

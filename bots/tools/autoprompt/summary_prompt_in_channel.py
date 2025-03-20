@@ -58,8 +58,8 @@ schema = """
 
 
 def summary_prompt_in_channel(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   log = ''
   previous_summaries = get_bot_casts(state.id, action_channel=state.selected_channel, selected_action='Summary')
   if len(previous_summaries) > 0:

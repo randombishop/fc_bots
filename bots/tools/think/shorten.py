@@ -70,8 +70,8 @@ def shorten_text(state, llm, text):
   return short
 
 def shorten(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   casts = state.casts
   if casts is None:
     return {'log': 'No casts to shorten'}

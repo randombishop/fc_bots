@@ -2,7 +2,7 @@ from langchain.agents import Tool
 
 
 def select_action_mode(input):
-  state = input['state']
+  state = input.state
   if state.request is not None and len(state.request)>0:
     state.selected_action_mode = 'conversation'
   elif state.selected_channel is not None and state.selected_channel not in ['', 'None']:

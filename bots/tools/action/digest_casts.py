@@ -2,7 +2,7 @@ from langchain.agents import Tool
 
 
 def digest_casts(input):
-  state = input['state']
+  state = input.state
   data = state.digest_casts_data
   casts = []
   cast1 = {'text': data['summary']}

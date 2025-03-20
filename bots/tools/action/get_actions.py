@@ -35,7 +35,7 @@ ACTION_TEMPLATES = {
 
 
 def get_actions(input):    
-  state = input['state']
+  state = input.state
   character = state.character
   if character['action_steps'] is not None and len(character['action_steps']) > 0:
     actions = character['action_steps']

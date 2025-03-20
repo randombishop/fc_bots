@@ -46,8 +46,8 @@ schema = {
 
 
 def reply(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   if not state.casts:
     return {'log': 'No reply to check'}
   prompt = state.format(prompt_template)

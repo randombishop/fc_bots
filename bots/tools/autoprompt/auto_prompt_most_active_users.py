@@ -3,7 +3,7 @@ from bots.data.channels import get_channel_url
 
 
 def auto_prompt_most_active_users(input):
-  state = input['state']
+  state = input.state
   channel_url = get_channel_url(state.selected_channel)
   if channel_url is None:
     raise Exception("Most Active Users autoprompt can't find channel_url")

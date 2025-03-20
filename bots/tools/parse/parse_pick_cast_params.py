@@ -46,8 +46,8 @@ parse_schema = {
 }
 
 def parse_pick_cast_params(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   parse_prompt = state.format_conversation()
   parse_instructions = state.format(parse_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)

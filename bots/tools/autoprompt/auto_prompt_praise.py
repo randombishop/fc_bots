@@ -5,7 +5,7 @@ from bots.data.channels import get_channel_url
 
 
 def auto_prompt_praise(input):
-  state = input['state']
+  state = input.state
   channel_url = get_channel_url(state.selected_channel)
   user_name, fid = None, None
   if channel_url is None:

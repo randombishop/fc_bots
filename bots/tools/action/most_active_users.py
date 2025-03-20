@@ -8,7 +8,7 @@ from bots.data.channels import get_channel_by_url
 
 
 def most_active_users(input):
-  state = input['state']
+  state = input.state
   channel_url = state.action_params['channel']
   if channel_url is None:
     raise Exception("Missing channel")

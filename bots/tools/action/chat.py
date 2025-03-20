@@ -67,8 +67,8 @@ chat_schema = {
 
 
 def chat(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   if not state.should_continue:  
     state.casts = []
     return

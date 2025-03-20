@@ -51,8 +51,8 @@ schema = {
 
 
 def say_something_in_channel(input):
-  state = input['state']
-  llm = input['llm']
+  state = input.state
+  llm = input.llm
   prompt = state.format(prompt_template)
   instructions = state.format(instructions_template)
   result = call_llm(llm, prompt, instructions, schema)
