@@ -53,7 +53,7 @@ def favorite_users(input):
   }
 
 
-favorite_users = Tool(
+FavoriteUsers = Tool(
   name="FavoriteUsers",
   description="Find the favorite accounts of a user",
   func=favorite_users,

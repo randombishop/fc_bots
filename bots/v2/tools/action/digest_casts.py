@@ -20,7 +20,7 @@ def digest_casts(input):
   return {'casts': casts}
 
 
-digest_casts = Tool(
+Summary = Tool(
   name="Summary",
   description="Generate a summary of the posts and select some interesting ones",
   func=digest_casts,
