@@ -1,4 +1,4 @@
-from bots.i_action_step import IActionStep
+from langchain.agents import Tool
 from bots.utils.llms import call_llm
 
 
@@ -50,29 +50,29 @@ schema = {
 }
 
 
-class SaySomethingInChannel(IActionStep):
-    
-  def get_prepare_steps(self):
-    return ['GetBotCastsInChannel', 'GetCastsInChannel']
-  
-  def get_cost(self):
-    return 20
-  
-  def auto_prompt(self):
-    self.state.request = f'Say something in channel /{self.state.selected_channel}'
-    self.state.conversation = self.state.request
-    
-  def parse(self):
-    pass
+def say_something_in_channel(input):
+  state = input['state']
+  llm = input['llm']
+  prompt = state.format(prompt_template)
+  instructions = state.format(instructions_template)
+  result = call_llm(llm, prompt, instructions, schema)
+  if 'tweet' not in result or result['tweet'] is None or len(result['tweet']) < 2:
+    raise Exception('Could not say something.')
+  cast = {'text': result['tweet']}
+  casts = [cast]
+  summary = result['summary'] if 'summary' in result else ''
+  state.casts = casts
+  return {
+    'summary': summary,
+    'casts': state.casts
+  }
 
-  def execute(self):
-    prompt = self.state.format(prompt_template)
-    instructions = self.state.format(instructions_template)
-    result = call_llm(prompt, instructions, schema)
-    if 'tweet' not in result or result['tweet'] is None or len(result['tweet']) < 2:
-      raise Exception('Could not say something.')
-    cast = {'text': result['tweet']}
-    casts = [cast]
-    summary = result['summary'] if 'summary' in result else ''
-    self.state.casts = casts
-    self.state.log += f'<SaySomethingInChannel>\n{summary}\n</SaySomethingInChannel>' + '\n'
+
+SaySomethingInChannel = Tool(
+  name="SaySomethingInChannel",
+  description="Say something in a channel",
+  func=say_something_in_channel,
+  metadata={
+    'depends_on': ['get_bot_casts_in_channel', 'get_casts_in_channel']
+  }
+)

@@ -1,7 +1,6 @@
 from langchain.agents import Tool
 from bots.v2.call_llm import call_llm
 from bots.data.casts import get_casts_for_fid
-from bots.utils.read_params import read_user
 
 
 instructions_template = """
