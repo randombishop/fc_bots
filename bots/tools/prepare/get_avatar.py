@@ -2,7 +2,7 @@ import os
 import uuid
 import requests
 from langchain.agents import Tool
-from bots.utils.call_llm import call_llm
+from bots.utils.llms2 import call_llm
 from bots.utils.openai import generate_image
 from bots.utils.gcs import upload_to_gcs
 

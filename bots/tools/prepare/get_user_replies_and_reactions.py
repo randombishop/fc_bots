@@ -1,5 +1,5 @@
 from langchain.agents import Tool
-from bots.utils.call_llm import call_llm
+from bots.utils.llms2 import call_llm
 from bots.data.casts import get_user_replies_and_reactions
 from bots.utils.format_cast import format_when, shorten_text
 

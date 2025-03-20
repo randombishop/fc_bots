@@ -1,20 +1,18 @@
 import json
 from langchain.agents import BaseSingleActionAgent
 from langchain_google_vertexai import ChatVertexAI
-from langchain.chat_models import ChatOpenAI
 from langchain.schema import AgentAction, AgentFinish
 from bots.data.app import get_bot_character
-from bots.state import State
-from bots.tools import TOOL_DEPENDENCIES, TOOL_LIST
+from bots.v2.state import State
+from bots.v2.tools import TOOL_DEPENDENCIES, TOOL_LIST
 
 
-class Bot(BaseSingleActionAgent):
+class Bot2(BaseSingleActionAgent):
             
   def __init__(self):
     super().__init__()
     self._tools = TOOL_LIST
     self._llm = ChatVertexAI(model="gemini-1.5-flash-002")
-    self._llm_img = ChatOpenAI(model_name="dall-e-3")
     self._state = None
     self._todo = []
     
@@ -55,8 +53,7 @@ class Bot(BaseSingleActionAgent):
     if tool in TOOL_DEPENDENCIES:
       for dependency in TOOL_DEPENDENCIES[tool]:
         self.todo(dependency)
-    if tool not in self._todo:
-      self._todo.append(tool)
+    self._todo.append(tool)
   
   def next(self):
     return AgentAction(
@@ -86,12 +83,6 @@ class Bot(BaseSingleActionAgent):
     elif self._state.selected_action is not None and self._state.action_tries == 0:
       self._state.action_tries += 1
       self.todo(self._state.selected_action)
-      return self.next()
-    elif self._state.casts is not None and not self._state.think_steps:
-      self.todo('Like')
-      self.todo('Reply')
-      self.todo('Shorten')
-      self._state.think_steps = True
       return self.next()
     else:
       return AgentFinish(return_values={"output": self._state}, log='done')

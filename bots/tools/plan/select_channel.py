@@ -2,7 +2,7 @@ import pandas
 import random
 import numpy
 from langchain.agents import Tool
-from bots.utils.call_llm import call_llm
+from bots.utils.llms2 import call_llm
 
 
 prompt_template = """

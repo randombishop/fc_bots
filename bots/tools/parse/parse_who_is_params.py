@@ -1,5 +1,5 @@
 from langchain.agents import Tool
-from bots.utils.call_llm import call_llm
+from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_user
 from bots.data.bot_history import get_random_user_to_praise
 from bots.data.users import get_fid

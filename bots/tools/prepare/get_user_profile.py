@@ -1,5 +1,5 @@
 from langchain.agents import Tool
-from bots.utils.call_llm import call_llm
+from bots.utils.llms2 import call_llm
 from bots.data.wield import get_user_info_by_name
 from bots.data.casts import get_top_casts
 from bots.prompts.format_casts import concat_casts

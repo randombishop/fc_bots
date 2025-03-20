@@ -15,3 +15,5 @@ def generate_image(prompt):
     print('openai image generation failed for following prompt:')
     print(prompt)
     raise e
+
+

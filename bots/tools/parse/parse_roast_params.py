@@ -1,5 +1,5 @@
 from langchain.agents import Tool
-from bots.utils.call_llm import call_llm
+from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_user
 
 
