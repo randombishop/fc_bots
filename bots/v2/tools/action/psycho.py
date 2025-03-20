@@ -65,7 +65,7 @@ def psycho(input):
 
 
 Psycho = Tool(
-  name="psycho",
+  name="Psycho",
   description="Generate a funny psycho analysis of a user",
   func=psycho,
   metadata={

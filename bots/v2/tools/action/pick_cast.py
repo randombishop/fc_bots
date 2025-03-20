@@ -79,7 +79,7 @@ def pick_cast(input):
 
 
 PickCast = Tool(
-  name="pick_cast",
+  name="PickCast",
   description="Pick a post given parameters and criteria",
   func=pick_cast,
   metadata={

@@ -73,10 +73,6 @@ schema = {
 
 
 def praise(input):
-  #GetUserProfile(self.state).prepare()
-  #GetPfpDescrition(self.state).prepare()
-  #GetUserRepliesAndReactions(self.state).prepare()
-  #GetAvatar(self.state).prepare()
   state = input['state']
   llm = input['llm']
   fid = state.action_params['fid']
@@ -127,7 +123,7 @@ def praise(input):
 
 
 Praise = Tool(
-  name="praise",
+  name="Praise",
   description="Praise a user",
   func=praise,
   metadata={

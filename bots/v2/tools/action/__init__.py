@@ -9,6 +9,7 @@ from bots.v2.tools.action.perplexity import Perplexity
 from bots.v2.tools.action.pick_cast import PickCast
 from bots.v2.tools.action.praise import Praise
 from bots.v2.tools.action.psycho import Psycho
+from bots.v2.tools.action.roast import Roast
 
 
 ACTION_TOOLS = [
@@ -22,5 +23,6 @@ ACTION_TOOLS = [
   Perplexity,
   PickCast,
   Praise,
-  Psycho
+  Psycho,
+  Roast
 ]
