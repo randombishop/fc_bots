@@ -73,6 +73,8 @@ def shorten(input):
   state = input['state']
   llm = input['llm']
   casts = state.casts
+  if casts is None:
+    return {'log': 'No casts to shorten'}
   for c in casts:
     if c['text'] is not None and len(c['text']) > MAX_LENGTH:
       c['text'] = shorten_text(state, llm, c['text'])

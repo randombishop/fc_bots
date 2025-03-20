@@ -53,7 +53,8 @@ class Bot(BaseSingleActionAgent):
     if tool in TOOL_DEPENDENCIES:
       for dependency in TOOL_DEPENDENCIES[tool]:
         self.todo(dependency)
-    self._todo.append(tool)
+    if tool not in self._todo:
+      self._todo.append(tool)
   
   def next(self):
     return AgentAction(

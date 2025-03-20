@@ -49,7 +49,7 @@ def reply(input):
   state = input['state']
   llm = input['llm']
   if not state.casts:
-    return
+    return {'log': 'No reply to check'}
   prompt = state.format(prompt_template)
   instructions = state.format(instructions_template)
   result = call_llm(llm, prompt, instructions, schema)

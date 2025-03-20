@@ -6,9 +6,9 @@ def digest_casts(input):
   data = state.digest_casts_data
   casts = []
   cast1 = {'text': data['summary']}
-  if 'wordcloud' in data:
-    cast1['embeds'] = [data['wordcloud']]
-    cast1['embeds_description'] = 'Wordcloud of words used in the posts'
+  if state.wordcloud_url is not None:
+    cast1['embeds'] = [state.wordcloud_url]
+    cast1['embeds_description'] = 'Wordcloud'
   casts.append(cast1)
   for link in data['links']:
     casts.append({
@@ -25,7 +25,7 @@ Summary = Tool(
   description="Generate a summary of the posts and select some interesting ones",
   func=digest_casts,
   metadata={'depends_on': [
-    'parse_digest_casts', 
+    'parse_digest_casts_params', 
     'prepare_digest_casts', 
     'generate_wordcloud_mask', 
     'generate_wordcloud'

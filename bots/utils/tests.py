@@ -18,7 +18,7 @@ def run_bot(test_id, request=None, fid_origin=None, parent_hash=None, attachment
         'selected_action': selected_action
     }
     bot = Bot()
-    executor = AgentExecutor(agent=bot, tools=bot._tools, llm=bot._llm)
+    executor = AgentExecutor(agent=bot, tools=bot._tools, llm=bot._llm, max_iterations=25)
     executor.invoke(input=json.dumps(input), config={"run_name": test_id})
     bot._state.debug()
     return bot._state
