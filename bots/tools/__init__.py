@@ -4,6 +4,7 @@ from bots.tools.fetch import FETCH_TOOLS
 from bots.tools.parse import PARSE_TOOLS
 from bots.tools.plan import PLAN_TOOLS
 from bots.tools.prepare import PREPARE_TOOLS
+from bots.tools.think import THINK_TOOLS
 from bots.tools.wakeup import WAKEUP_TOOLS
 
 
@@ -14,6 +15,7 @@ TOOL_MAP = {
   'parse': PARSE_TOOLS,
   'plan': PLAN_TOOLS,
   'prepare': PREPARE_TOOLS,
+  'think': THINK_TOOLS,
   'wakeup': WAKEUP_TOOLS
 }
 

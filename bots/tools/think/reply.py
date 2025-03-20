@@ -1,5 +1,5 @@
-from bots.i_think_step import IThinkStep
-from bots.utils.llms import call_llm
+from langchain.agents import Tool
+from bots.utils.call_llm import call_llm
 from bots.utils.read_params import read_boolean, read_string
 
 
@@ -45,19 +45,27 @@ schema = {
 
 
 
-class Reply(IThinkStep):
-      
-  def think(self):
-    prompt = self.state.format(prompt_template)
-    instructions = self.state.format(instructions_template)
-    result = call_llm(prompt, instructions, schema)
-    do_not_reply = read_boolean(result, key='do_not_reply')
-    reason = read_string(result, key='reason', default='')
-    self.state.reply = (not do_not_reply)
-    if do_not_reply:
-      self.state.do_not_reply_reason = reason
-      log = f'<Reply do_not_reply="{do_not_reply}">\n'
-      log += 'Prompt: ' + prompt + '\n'
-      log += 'Reason: ' + reason + '\n'
-      log += '</Reply>\n'
-      self.state.log += log
+def reply(input):
+  state = input['state']
+  llm = input['llm']
+  if not state.casts:
+    return
+  prompt = state.format(prompt_template)
+  instructions = state.format(instructions_template)
+  result = call_llm(llm, prompt, instructions, schema)
+  do_not_reply = read_boolean(result, key='do_not_reply')
+  reason = read_string(result, key='reason', default='')
+  state.reply = (not do_not_reply)
+  if do_not_reply:
+    state.do_not_reply_reason = reason
+  return {
+    'reply': state.reply,
+    'do_not_reply_reason': state.do_not_reply_reason
+  }
+
+
+Reply = Tool(
+  name="Reply", 
+  description="Decide if you should move on with the prepared casts",
+  func=reply
+)

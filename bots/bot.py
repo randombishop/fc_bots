@@ -84,6 +84,12 @@ class Bot(BaseSingleActionAgent):
       self._state.action_tries += 1
       self.todo(self._state.selected_action)
       return self.next()
+    elif self._state.casts is not None and not self._state.think_steps:
+      self.todo('Like')
+      self.todo('Reply')
+      self.todo('Shorten')
+      self._state.think_steps = True
+      return self.next()
     else:
       return AgentFinish(return_values={"output": self._state}, log='done')
     

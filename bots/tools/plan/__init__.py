@@ -1,3 +1,4 @@
+from bots.tools.plan.get_actions import GetActions
 from bots.tools.plan.next import Next
 from bots.tools.plan.select_action_for_channel import SelectActionForChannel
 from bots.tools.plan.select_action_for_main_feed import SelectActionForMainFeed
@@ -9,6 +10,7 @@ from bots.tools.plan.should_continue import ShouldContinue
 
 
 PLAN_TOOLS = [
+  GetActions,
   Next,
   SelectActionForChannel,
   SelectActionForMainFeed,

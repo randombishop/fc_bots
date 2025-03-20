@@ -74,6 +74,8 @@ class State:
     self.parent_hash = parent_hash
     self.attachment_hash = attachment_hash
     self.root_parent_url = root_parent_url
+    self.is_responding = request is not None and len(request)>0
+    self.is_autopilot = False
     # 2. Wake up
     self.actions = None
     self.actions_templates = None
@@ -136,6 +138,7 @@ class State:
     self.action_params = None
     self.casts = []
     # 6. Think
+    self.think_steps = False
     self.like = False
     self.reply = False
     self.do_not_reply_reason = None

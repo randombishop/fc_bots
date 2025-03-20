@@ -1,5 +1,5 @@
-from bots.i_think_step import IThinkStep
-from bots.utils.llms import call_llm
+from langchain.agents import Tool
+from bots.utils.call_llm import call_llm
 from bots.utils.read_params import read_boolean
 
 
@@ -42,10 +42,22 @@ schema = {
 
 
 
-class Like(IThinkStep):
-      
-  def think(self):
-    prompt = self.state.format(prompt_template)
-    instructions = self.state.format(instructions_template)
-    result = call_llm(prompt, instructions, schema)
-    self.state.like = read_boolean(result, key='like')
+def like(input):
+  state = input['state']
+  llm = input['llm']
+  if not state.is_responding:
+    return
+  prompt = state.format(prompt_template)
+  instructions = state.format(instructions_template)
+  result = call_llm(llm, prompt, instructions, schema)
+  state.like = read_boolean(result, key='like')
+  return {
+    'like': state.like
+  }
+
+
+Like = Tool(
+  name="Like",
+  description="Decide if you like a post",
+  func=like
+)

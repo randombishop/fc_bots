@@ -51,7 +51,7 @@ def get_casts(input):
   state = input['state']
   llm = input['llm']
   if not state.should_continue:
-    return
+    return {'log': 'Not fetching data because should_continue is false'}
   max_rows = 25
   prompt = state.format_conversation()
   instructions = state.format(instructions_template)

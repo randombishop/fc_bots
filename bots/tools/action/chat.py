@@ -89,7 +89,7 @@ def chat(input):
 
 
 Chat = Tool(
-  name="chat",
+  name="Chat",
   func=chat,
   description="Chat with the user",
   metadata={'depends_on': ['should_continue', 'get_casts']}
