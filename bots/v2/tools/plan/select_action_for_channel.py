@@ -28,14 +28,11 @@ def select_action_for_channel(input):
   valid_actions = [k for k,v in candidates.items() if v['is_valid']]
   if len(valid_actions) > 0:
     state.selected_action = random.choice(valid_actions)
-  state.log += '<SelectAction branch="channel">\n'
-  state.log += 'SelectAction.use_channel()\n'
-  state.log += 'candidate actions:\n'
-  for c in candidates:
-    state.log += '  ' + c + ': ' + str(candidates[c]) + '\n'
-  state.log += 'valid actions:' + str(valid_actions) + '\n'
-  state.log += f'</SelectAction selected="{state.selected_action}">\n'
-  return {'selected_action': state.selected_action}  
+  return {
+    'selected_action': state.selected_action,
+    'candidates': candidates,
+    'valid_actions': valid_actions
+  }  
 
 
 SelectActionForChannel = Tool(

@@ -85,7 +85,7 @@ class Bot2(BaseSingleActionAgent):
       self.todo(self._state.selected_action)
       return self.next()
     else:
-      return AgentFinish(return_values={"output": self._state.log}, log='done')
+      return AgentFinish(return_values={"output": self._state}, log='done')
     
   async def aplan(self, intermediate_steps, **kwargs):
     return self.plan(intermediate_steps, **kwargs)

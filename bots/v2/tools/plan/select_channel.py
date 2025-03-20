@@ -98,16 +98,6 @@ def select_channel(input):
   state.selected_channel_df = df_channels
   state.selected_channel_reasoning = 'Trending:' + current_trends_summary + '\n' + 'Reasoning:' + reasoning
   state.selected_channel_log = df_channels[df_channels['channel'] == selected_channel].to_dict(orient='records')[0]
-  # Log debugging info
-  log = '<SelectChannel>\n'
-  log += '  select_channel_df:\n' 
-  log += str(state.selected_channel_df) + '\n'
-  log += '  select_channel_df.describe():\n' 
-  log += str(state.selected_channel_df.describe()) + '\n'
-  log += '  selected_channel_reasoning:\n'
-  log += state.selected_channel_reasoning + '\n'
-  log += f'</SelectChannel selected="{state.selected_channel}">\n'
-  state.log += log
   return {
     'selected_channel': state.selected_channel,
     'selected_channel_reasoning': state.selected_channel_reasoning

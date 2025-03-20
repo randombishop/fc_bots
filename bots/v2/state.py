@@ -74,7 +74,6 @@ class State:
     self.parent_hash = parent_hash
     self.attachment_hash = attachment_hash
     self.root_parent_url = root_parent_url
-    self.log = ''
     # 2. Wake up
     self.actions = None
     self.actions_templates = None
@@ -224,10 +223,6 @@ class State:
       if self.casts is not None and len(self.casts)>0: 
         s += ">> casts >>\n"
         s += self.format_casts2()
-      # Logs
-      if self.log is not None and len(self.log)>0:
-        s += f"-- logs --\n"
-        s += self.log + "\n"
       # End
       s += ('-'*128) + '\n'
       print(s)
