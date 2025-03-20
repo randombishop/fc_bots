@@ -2,7 +2,7 @@ from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_keyword, read_category, read_string
 from bots.data.casts import get_top_casts, get_more_like_this
-from bots.prompts.format_casts import concat_casts
+from bots.utils.format_cast import concat_casts
 
 
 instructions_template = """

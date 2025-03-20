@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 from bots.data.channels import get_channel_url
 from bots.data.casts import get_top_casts
-from bots.prompts.format_casts import concat_casts
+from bots.utils.format_cast import concat_casts
 
 
 
