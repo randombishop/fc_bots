@@ -25,5 +25,7 @@ def get_channel_url(channel):
     return _channels_by_id[channel]
   elif channel in _channels_by_name:
     return _channels_by_name[channel]
+  elif channel.startswith('http://') or channel.startswith('https://'):
+    return channel
   else:
     return None

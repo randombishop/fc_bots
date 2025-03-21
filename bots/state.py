@@ -1,5 +1,6 @@
 import re
-from bots.data.users import get_username
+from bots.data.users import get_username, get_fid
+from bots.data.channels import get_channel_url
 from bots.utils.format_cast import insert_mentions, shorten_text
 
 
@@ -64,7 +65,7 @@ class State:
                request=None, 
                fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None,
                selected_channel=None, selected_action=None, user=None):
-    # 1. Initialization
+    # Initialization
     self.id = id
     self.name = name
     self.character = character
@@ -75,31 +76,37 @@ class State:
     self.attachment_hash = attachment_hash
     self.root_parent_url = root_parent_url
     self.is_responding = request is not None and len(request)>0
-    self.is_autopilot = False
-    # 2. Wake up
-    self.actions = None
-    self.actions_templates = None
+    self.current_phase = 'initialize'
+    # a. Wake up
     self.bio = None
-    self.cast_stats = None
     self.channel = selected_channel
     self.channel_list = None
     self.conversation = None
     self.lore = None
     self.style = None
     self.time = None
-    # 3. Plan
+    # b. Plan
+    self.should_continue = True
+    self.actions = None
+    self.actions_templates = None
     self.selected_channel = selected_channel
     self.selected_channel_df = None
     self.selected_channel_reasoning = None
     self.selected_channel_log = None
-    self.selected_action_mode = None
-    self.selected_action_tries = 0
     self.selected_action = selected_action
-    # 4. Fetch and Prepare 
-    self.should_continue = True
-    self.trending = ''
+    # c. Parse parameters
     self.user = user
-    self.user_fid = None
+    self.user_fid = get_fid(user) if user is not None else None
+    self.channel_url = get_channel_url(selected_channel) if selected_channel is not None else None
+    self.keyword = None
+    self.category = None
+    self.search = None
+    self.text = None
+    self.question = None
+    self.criteria = None
+    self.max_rows = None
+    # d. Fetch and e. Prepare
+    self.trending = ''
     self.user_casts = None
     self.about_user = None
     self.user_display_name = None
@@ -114,7 +121,6 @@ class State:
     self.user_pfp_description = None
     self.user_avatar_prompt = None
     self.user_avatar = None
-    self.keyword = None
     self.about_keyword = None
     self.topic = None
     self.about_topic = None
@@ -132,18 +138,12 @@ class State:
     self.wordcloud_width = None
     self.wordcloud_height = None
     self.wordcloud_url = None
-    # 5. Actions
-    self.action_tries = 0
-    self.cost = 0
-    self.action_params = None
+    # f. Combine
     self.casts = None
-    # 6. Think
-    self.think_steps = False
+    # g. Check
     self.like = False
     self.reply = False
     self.do_not_reply_reason = None
-    # 7. Memorize
-    self.memory_steps = False
        
   def format_placeholder(self, key):
     if not hasattr(self, key):

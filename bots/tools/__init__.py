@@ -1,24 +1,22 @@
-from bots.tools.action import ACTION_TOOLS
-from bots.tools.autoprompt import AUTO_PROMPT_TOOLS
-from bots.tools.fetch import FETCH_TOOLS
-from bots.tools.memory import MEMORY_TOOLS
-from bots.tools.parse import PARSE_TOOLS
-from bots.tools.plan import PLAN_TOOLS
-from bots.tools.prepare import PREPARE_TOOLS
-from bots.tools.think import THINK_TOOLS
-from bots.tools.wakeup import WAKEUP_TOOLS
+from bots.tools.a_wakeup import WAKEUP_TOOLS
+from bots.tools.b_plan import PLAN_TOOLS
+from bots.tools.c_parse import PARSE_TOOLS
+from bots.tools.d_fetch import FETCH_TOOLS
+from bots.tools.e_prepare import PREPARE_TOOLS
+from bots.tools.f_combine import COMBINE_TOOLS
+from bots.tools.g_check import CHECK_TOOLS
+from bots.tools.h_memorize import MEMORIZE_TOOLS
 
 
 TOOL_MAP = {
   'wakeup': WAKEUP_TOOLS,
   'plan': PLAN_TOOLS,
-  'autoprompt': AUTO_PROMPT_TOOLS,
   'parse': PARSE_TOOLS,
   'fetch': FETCH_TOOLS,
   'prepare': PREPARE_TOOLS,
-  'action': ACTION_TOOLS,
-  'think': THINK_TOOLS,
-  'memory': MEMORY_TOOLS
+  'combine': COMBINE_TOOLS,
+  'check': CHECK_TOOLS,
+  'memorize': MEMORIZE_TOOLS
 }
 
 
@@ -26,7 +24,3 @@ TOOL_LIST = []
 for x in TOOL_MAP.values():
   TOOL_LIST.extend(x)
 
-
-TOOL_DEPENDENCIES = {
-  x.name: x.metadata['depends_on'] for x in TOOL_LIST if x.metadata is not None and'depends_on' in x.metadata
-}
