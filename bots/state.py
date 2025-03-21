@@ -95,7 +95,7 @@ class State:
     self.selected_action_mode = None
     self.selected_action_tries = 0
     self.selected_action = selected_action
-    # 4. Prepare 
+    # 4. Fetch and Prepare 
     self.should_continue = True
     self.trending = ''
     self.user = user
@@ -132,16 +132,18 @@ class State:
     self.wordcloud_width = None
     self.wordcloud_height = None
     self.wordcloud_url = None
-    # 5. Execute actions
+    # 5. Actions
     self.action_tries = 0
     self.cost = 0
     self.action_params = None
-    self.casts = []
+    self.casts = None
     # 6. Think
     self.think_steps = False
     self.like = False
     self.reply = False
     self.do_not_reply_reason = None
+    # 7. Memorize
+    self.memory_steps = False
        
   def format_placeholder(self, key):
     if not hasattr(self, key):

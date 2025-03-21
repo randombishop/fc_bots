@@ -70,8 +70,7 @@ def chat(input):
   state = input.state
   llm = input.llm
   if not state.should_continue:  
-    state.casts = []
-    return
+    return {'log': 'Should not continue the conversation'}
   chat_prompt = state.format(chat_prompt_template)
   chat_instructions = state.format(chat_instructions_template)
   result = call_llm(llm, chat_prompt, chat_instructions, chat_schema)
@@ -79,7 +78,7 @@ def chat(input):
     raise Exception('Could not generate a response.')
   cast = {'text': result['tweet']}
   if 'link_id' in result:
-    link = check_link_data({'id':result['link_id']}, self.state.posts_map)
+    link = check_link_data({'id':result['link_id']}, state.posts_map)
     if link is not None:
       cast['embeds'] = [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}]
       cast['embeds_description'] = link['text']

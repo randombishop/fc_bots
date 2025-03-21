@@ -1,6 +1,7 @@
 from bots.tools.action import ACTION_TOOLS
 from bots.tools.autoprompt import AUTO_PROMPT_TOOLS
 from bots.tools.fetch import FETCH_TOOLS
+from bots.tools.memory import MEMORY_TOOLS
 from bots.tools.parse import PARSE_TOOLS
 from bots.tools.plan import PLAN_TOOLS
 from bots.tools.prepare import PREPARE_TOOLS
@@ -9,14 +10,15 @@ from bots.tools.wakeup import WAKEUP_TOOLS
 
 
 TOOL_MAP = {
-  'action': ACTION_TOOLS,
-  'autoprompt': AUTO_PROMPT_TOOLS,
-  'fetch': FETCH_TOOLS,
-  'parse': PARSE_TOOLS,
+  'wakeup': WAKEUP_TOOLS,
   'plan': PLAN_TOOLS,
+  'autoprompt': AUTO_PROMPT_TOOLS,
+  'parse': PARSE_TOOLS,
+  'fetch': FETCH_TOOLS,
   'prepare': PREPARE_TOOLS,
+  'action': ACTION_TOOLS,
   'think': THINK_TOOLS,
-  'wakeup': WAKEUP_TOOLS
+  'memory': MEMORY_TOOLS
 }
 
 

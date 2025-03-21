@@ -6,7 +6,7 @@ from bots.data.app import get_bot_character
 from bots.state import State
 from bots.tool_input import ToolInput
 from bots.tools import TOOL_DEPENDENCIES, TOOL_LIST
-
+from bots.tools.memory import MEMORY_TOOLS
 
 
 
@@ -58,20 +58,15 @@ class Bot(BaseSingleActionAgent):
     )
     return {"input":input}
   
-  def todo(self, tool):
+  def todo(self, tool, done_steps=[]):
     if tool in TOOL_DEPENDENCIES:
       for dependency in TOOL_DEPENDENCIES[tool]:
-        self.todo(dependency)
-    if tool not in self._todo:
+        self.todo(dependency, done_steps)
+    if tool not in self._todo and tool not in done_steps:
       self._todo.append(tool)
   
-  def next(self):
-    return AgentAction(
-      tool='_', 
-      tool_input=self.get_tool_input(), 
-      log='')    
-
   def plan(self, intermediate_steps, callbacks, **kwargs):
+    done_steps = [x[0].tool for x in intermediate_steps]
     if self._state is None:
       input = json.loads(kwargs['input'])
       self.initialize_state(input)
@@ -84,22 +79,27 @@ class Bot(BaseSingleActionAgent):
     elif self._state.selected_action_mode is not None and self._state.selected_action is None and self._state.selected_action_tries == 0:
       self._state.selected_action_tries += 1
       if self._state.selected_action_mode == 'conversation':
-        self.todo('select_action_from_conversation')
+        self.todo('select_action_from_conversation', done_steps)
       elif self._state.selected_action_mode == 'channel':
-        self.todo('select_action_for_channel')
+        self.todo('select_action_for_channel', done_steps)
       elif self._state.selected_action_mode == 'main_feed':
-        self.todo('select_action_for_main_feed')
-      return self.next()
-    elif self._state.selected_action is not None and self._state.action_tries == 0:
+        self.todo('select_action_for_main_feed', done_steps)
+      return self.plan(intermediate_steps, callbacks, **kwargs)
+    elif (self._state.selected_action is not None) and (self._state.action_tries == 0):
       self._state.action_tries += 1
-      self.todo(self._state.selected_action)
-      return self.next()
-    elif self._state.casts is not None and not self._state.think_steps:
-      self.todo('Like')
-      self.todo('Reply')
-      self.todo('Shorten')
+      self.todo(self._state.selected_action, done_steps)
+      return self.plan(intermediate_steps, callbacks, **kwargs)
+    elif (self._state.casts is not None) and (not self._state.think_steps):
+      self.todo('Like', done_steps)
+      self.todo('Reply', done_steps)
+      self.todo('Shorten', done_steps)
       self._state.think_steps = True
-      return self.next()
+      return self.plan(intermediate_steps, callbacks, **kwargs)
+    elif (not self._state.memory_steps):
+      for m in MEMORY_TOOLS:
+        self.todo(m.name, done_steps)
+      self._state.memory_steps = True
+      return self.plan(intermediate_steps, callbacks, **kwargs)
     else:
       return AgentFinish(return_values={"output": self._state}, log='done')
     
