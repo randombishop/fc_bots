@@ -1,8 +1,6 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.utils.format_cast import concat_casts
-from bots.utils.llms import call_llm, get_max_capactity
-from bots.utils.read_params import read_category, read_channel, read_user, read_keyword, read_string
 from bots.data.casts import get_top_casts, get_more_like_this
 from bots.utils.check_links import check_link_data
 
@@ -47,7 +45,10 @@ task_schema = {
 
 def pick_cast(input):
   state = input.state
+  llm = input.llm
   params = state.action_params
+  if params is None:
+    raise Exception("Missing action_params")
   posts = []
   if params['search'] is not None:
     posts = get_more_like_this(params['search'], limit=params['max_rows'])
@@ -63,7 +64,7 @@ def pick_cast(input):
   prompt = concat_casts(posts)
   instructions = state.format(task_instructions_intro_template)
   instructions += task_instructions.replace('?', params['criteria'])
-  result = call_llm(prompt, instructions, task_schema)
+  result = call_llm(llm, prompt, instructions, task_schema)
   posts_map = {x['id']: x for x in posts}
   data = check_link_data(result, posts_map)
   cast = {
@@ -78,8 +79,8 @@ def pick_cast(input):
   }
 
 
-PickCast = Tool(
-  name="PickCast",
+Pick = Tool(
+  name="Pick",
   description="Pick a post given parameters and criteria",
   func=pick_cast,
   metadata={

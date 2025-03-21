@@ -1,5 +1,5 @@
 from langchain.agents import Tool
-from bots.utils.llms import call_llm
+from bots.utils.llms2 import call_llm
 
 
 instructions_template = """

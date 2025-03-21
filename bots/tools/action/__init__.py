@@ -1,12 +1,11 @@
 from bots.tools.action.chat import Chat  
 from bots.tools.action.digest_casts import Summary
 from bots.tools.action.favorite_users import FavoriteUsers
-from bots.tools.action.get_actions import GetActions
 from bots.tools.action.more_like_this import MoreLikeThis
 from bots.tools.action.most_active_users import MostActiveUsers
 from bots.tools.action.news import News
 from bots.tools.action.perplexity import Perplexity
-from bots.tools.action.pick_cast import PickCast
+from bots.tools.action.pick_cast import Pick
 from bots.tools.action.praise import Praise
 from bots.tools.action.psycho import Psycho
 from bots.tools.action.roast import Roast
@@ -19,12 +18,11 @@ ACTION_TOOLS = [
   Chat,
   Summary,
   FavoriteUsers,
-  GetActions,
   MostActiveUsers,
   MoreLikeThis,
   News,
   Perplexity,
-  PickCast,
+  Pick,
   Praise,
   Psycho,
   Roast,

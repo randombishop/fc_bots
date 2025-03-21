@@ -42,9 +42,9 @@ class TestActionSelection(unittest.TestCase):
     self.assertEqual(state.selected_action, 'Pick')
     self.assertTrue(state.reply)
     
-  def test_prefs_cloud(self):
+  def test_word_cloud(self):
     request = "Make a wordcloud for user @vitalik.eth"
-    state = run_bot(test_id='TestActionSelection:test_prefs_cloud', request=request)
+    state = run_bot(test_id='TestActionSelection:test_word_cloud', request=request)
     self.assertEqual(state.selected_action, 'WordCloud')
     self.assertTrue(state.reply)
 
