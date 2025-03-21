@@ -74,13 +74,19 @@ def shorten(input):
   llm = input.llm
   casts = state.casts
   if casts is None:
-    return {'log': 'No casts to shorten'}
+    return {'log': 'No casts'}
+  log = []
   for c in casts:
-    if c['text'] is not None and len(c['text']) > MAX_LENGTH:
-      c['text'] = shorten_text(state, llm, c['text'])
+    original = c['text']
+    if original is not None and len(original) > MAX_LENGTH:
+      c['text'] = shorten_text(state, llm, original)
     c['text'] = clean_text(c['text'])
+    if original != c['text']:
+      log.append(f'{original}\n>>>\n{c["text"]}')
+  if len(log) == 0:
+    log = 'No change'
   return {
-    'casts': casts
+    'log': log
   }
 
 

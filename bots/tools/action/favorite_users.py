@@ -8,6 +8,8 @@ from bots.utils.gcs import upload_to_gcs
 
 def favorite_users(input):
   state = input.state
+  if state.action_params is None:
+    raise Exception(f"Missing action_params")
   fid = state.action_params['fid']
   user_name = state.action_params['user_name']
   if fid is None or user_name is None:
@@ -57,5 +59,5 @@ FavoriteUsers = Tool(
   name="FavoriteUsers",
   description="Find the favorite accounts of a user",
   func=favorite_users,
-  metadata={'depends_on': ['parse_favorite_users']}
+  metadata={'depends_on': ['parse_favorite_users_params']}
 )
