@@ -3,7 +3,8 @@ from bots.data.casts import get_top_casts, get_more_like_this
 from bots.utils.word_counts import get_word_counts
 
 
-def prepare_word_cloud(state):
+def prepare_word_cloud(input):
+  state = input.state
   top_n = 50
   posts = []
   if state.action_params['search'] is not None:

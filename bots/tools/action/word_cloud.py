@@ -1,13 +1,16 @@
 from langchain.agents import Tool
 
 
-def word_cloud(state):
+def word_cloud(input):
+  state = input.state
+  if state.wordcloud_url is None:
+    raise Exception("Missing wordcloud_url")
   cast = {
     'text': "", 
     'embeds': [state.wordcloud_url],
     'embeds_description': 'Wordcloud Image'
   }
-  if state.action_params['fid'] is not None and state.action_params['user_name'] is not None:
+  if (state.action_params is not None) and (state.action_params['fid'] is not None) and (state.action_params['user_name'] is not None):
     cast['mentions'] = [state.action_params['fid']]
     cast['mentions_pos'] = [0]
     cast['mentions_ats'] = [f"@{state.action_params['user_name']}"]
@@ -19,8 +22,8 @@ def word_cloud(state):
 
 
 WordCloud = Tool(
-  name="word_cloud",
+  name="WordCloud",
   description="Create a word cloud",
   func=word_cloud,
-  metadata={'depends_on': ['parse_word_cloud', 'prepare_word_cloud', 'generate_wordcloud_mask', 'generate_wordcloud']}
+  metadata={'depends_on': ['parse_word_cloud_params', 'prepare_word_cloud', 'generate_wordcloud_mask', 'generate_wordcloud']}
 )

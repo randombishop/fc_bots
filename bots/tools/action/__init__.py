@@ -12,6 +12,7 @@ from bots.tools.action.roast import Roast
 from bots.tools.action.say_something_in_channel import SaySomethingInChannel
 from bots.tools.action.say_something_no_channel import SaySomethingNoChannel
 from bots.tools.action.who_is import WhoIs
+from bots.tools.action.word_cloud import WordCloud
 
 
 ACTION_TOOLS = [
@@ -28,7 +29,8 @@ ACTION_TOOLS = [
   Roast,
   SaySomethingInChannel,
   SaySomethingNoChannel,
-  WhoIs
+  WhoIs,
+  WordCloud
 ]
 
 
