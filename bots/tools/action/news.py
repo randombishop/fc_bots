@@ -8,6 +8,8 @@ skyvern_workflow = "wpid_351323221886267440"
 
 def news(input):
   state = input.state
+  if state.action_params is None:
+    raise Exception("Missing action_params")
   search = state.action_params['search']
   if search is None or len(search) < 5:
     raise Exception("This action requires a search query to forward to Yahoo News.")
@@ -31,7 +33,7 @@ def news(input):
 
 
 News = Tool(
-  name="news",
+  name="News",
   description="Get a news story",
   func=news,
   metadata={'depends_on': ['parse_news_params']}

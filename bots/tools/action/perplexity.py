@@ -31,6 +31,8 @@ select_link_schema = {
 def perplexity(input):
   state = input.state
   llm = input.llm
+  if state.action_params is None:
+    raise Exception("Missing action_params")
   question = state.action_params['question']
   if question is None or len(question) < 5:
     raise Exception("This action requires a question to forward to Perplexity.")
@@ -63,7 +65,7 @@ def perplexity(input):
 
 
 Perplexity = Tool(
-  name="perplexity",
+  name="Perplexity",
   description="Get a perplexity answer",
   func=perplexity,
   metadata={
