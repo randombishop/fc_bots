@@ -7,7 +7,7 @@ from bots.utils.tests import run_bot
 class TestAutoprompt(unittest.TestCase):
   
   def test1(self):
-    run_bot()
+    run_bot(test_id='TestAutoprompt:test1')
     
   def test2(self):
     state = run_bot(selected_channel='data', selected_action='SaySomethingInChannel')

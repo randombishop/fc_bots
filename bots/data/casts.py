@@ -68,16 +68,10 @@ def get_cast(hash):
 def get_trending_casts(limit=100):
   with get_session() as session:
     sql = text("""
-    WITH latest_rows AS (
     SELECT *
     FROM ds.trending_casts
     ORDER BY timestamp DESC
-    LIMIT :limit),
-    latest_unique AS (SELECT DISTINCT ON (hash) *
-    FROM latest_rows
-    ORDER BY hash)
-    SELECT * FROM latest_unique
-    ORDER BY timestamp DESC
+    LIMIT :limit
     """)
     result = session.execute(sql, {'limit': limit})
     return result.mappings().all()
