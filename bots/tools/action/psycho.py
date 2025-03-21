@@ -41,6 +41,8 @@ schema = {
 def psycho(input):
   state = input.state
   llm = input.llm
+  if state.action_params is None:
+    raise Exception("Missing action_params")
   fid = state.action_params['fid']
   if fid is None:
     raise Exception(f"No fid provided.")
