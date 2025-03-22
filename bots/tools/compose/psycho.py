@@ -38,19 +38,15 @@ schema = {
   }
 }
 
-def psycho(input):
+def compose_psycho(input):
   state = input.state
   llm = input.llm
-  user_name = state.user
-  fid = state.user_fid
-  if user_name is None or fid is None:
-    raise Exception(f"Missing fid/user_name")
-  df = get_casts_for_fid(fid)
+  df = state.df_casts_for_fid
   if df is None or len(df) == 0:
     raise Exception(f"Not enough activity to buid a psychodegen analysis.")
   data = list(df['text'])
   text = "\n".join([str(x) for x in data])
-  instructions = state.format(instructions_template.replace('{{user_name}}', user_name))
+  instructions = state.format(instructions_template.replace('{{user_name}}', state.user))
   result = call_llm(llm, text, instructions, schema)
   casts = []
   if 'sentence1' in result:
@@ -65,11 +61,8 @@ def psycho(input):
   }
 
 
-Psycho = Tool(
-  name="Psycho",
+ComposePsycho = Tool(
+  name="ComposePsycho",
   description="Generate a funny psycho analysis of a user",
-  func=psycho,
-  metadata={
-    'depends_on': ['parse_psycho_params']
-  }
+  func=compose_psycho
 )

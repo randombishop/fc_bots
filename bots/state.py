@@ -142,6 +142,7 @@ class State:
     self.df_favorite_users = None
     self.df_more_like_this = None
     self.df_most_active_users = None
+    self.df_casts_for_fid = None
     # f. Combine
     self.casts = None
     # g. Check

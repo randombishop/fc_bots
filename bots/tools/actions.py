@@ -62,6 +62,11 @@ ACTION_CONFIG = {
     'fetch': ['GetCastsForParams'],
     'prepare': ['PrepareWordCloud', 'GenerateWordCloudMask', 'GenerateWordCloud'],
     'compose': ['ComposeWordCloud']
+  },
+  'Psycho': {
+    'parse': ['ParsePsychoParams'],
+    'fetch': ['GetCastsForFid'],
+    'compose': ['ComposePsycho']
   }
 }
 
