@@ -1,7 +1,6 @@
 import uuid
 import os
 from langchain.agents import Tool
-from bots.data.users import get_favorite_users
 from bots.utils.images import table_image
 from bots.utils.gcs import upload_to_gcs
 
@@ -12,7 +11,9 @@ def favorite_users(input):
   user_name = state.user
   if fid is None or user_name is None:
     raise Exception(f"Missing fid or user_name")
-  df = get_favorite_users(fid)
+  df = state.df_favorite_users
+  if df is None:
+    raise Exception(f"Favorite users data not found")
   if len(df) < 3:
     raise Exception(f"Not enough data ({len(df)})")
   df.rename(inplace=True, columns={
@@ -56,6 +57,5 @@ def favorite_users(input):
 FavoriteUsers = Tool(
   name="FavoriteUsers",
   description="Find the favorite accounts of a user",
-  func=favorite_users,
-  metadata={'depends_on': ['parse_favorite_users_params']}
+  func=favorite_users
 )

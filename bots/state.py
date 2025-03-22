@@ -105,7 +105,7 @@ class State:
     self.question = None
     self.criteria = None
     self.max_rows = None
-    # d. Fetch and e. Prepare
+    # d. Fetch and Prepare
     self.trending = ''
     self.user_casts = None
     self.about_user = None
@@ -138,6 +138,8 @@ class State:
     self.wordcloud_width = None
     self.wordcloud_height = None
     self.wordcloud_url = None
+    self.casts_for_summary = None
+    self.df_favorite_users = None
     # f. Combine
     self.casts = None
     # g. Check

@@ -36,6 +36,11 @@ ACTION_CONFIG = {
     'fetch': ['GetCastsForSummary'],
     'prepare': ['PrepareSummary', 'GenerateWordCloudMask', 'GenerateWordCloud'],
     'combine': ['Summary']
+  },
+  'FavoriteUsers': {
+    'parse': ['ParseFavoriteUsersParams'],
+    'fetch': ['GetFavoriteUsers'],
+    'combine': ['FavoriteUsers']
   }    
 }
 

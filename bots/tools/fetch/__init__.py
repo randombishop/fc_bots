@@ -4,6 +4,7 @@ from bots.tools.fetch.get_bot_casts import GetBotCasts
 from bots.tools.fetch.get_casts_for_summary import GetCastsForSummary
 from bots.tools.fetch.get_casts import GetCasts
 from bots.tools.fetch.get_channel_list import GetChannelList
+from bots.tools.fetch.get_favorite_users import GetFavoriteUsers
 from bots.tools.fetch.get_trending import GetTrending
 
 
@@ -13,6 +14,7 @@ FETCH_TOOLS = [
   GetBotCasts,
   GetCastsForSummary,
   GetCasts,
-  GetChannelList,
+  GetChannelList, 
+  GetFavoriteUsers,
   GetTrending
 ]
