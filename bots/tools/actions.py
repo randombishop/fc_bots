@@ -56,6 +56,12 @@ ACTION_CONFIG = {
     'parse': ['ParsePickParams'],
     'fetch': ['GetCastsForParams'],
     'compose': ['ComposePick']
+  },
+  'WordCloud': {
+    'parse': ['ParseWordCloudParams'],
+    'fetch': ['GetCastsForParams'],
+    'prepare': ['PrepareWordCloud', 'GenerateWordCloudMask', 'GenerateWordCloud'],
+    'compose': ['ComposeWordCloud']
   }
 }
 

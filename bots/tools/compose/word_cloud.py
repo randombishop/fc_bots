@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 
 
-def word_cloud(input):
+def compose_word_cloud(input):
   state = input.state
   if state.wordcloud_url is None:
     raise Exception("Missing wordcloud_url")
@@ -21,9 +21,9 @@ def word_cloud(input):
   }
 
 
-WordCloud = Tool(
-  name="WordCloud",
+ComposeWordCloud = Tool(
+  name="ComposeWordCloud",
   description="Create a word cloud",
-  func=word_cloud,
+  func=compose_word_cloud,
   metadata={'depends_on': ['parse_word_cloud_params', 'prepare_word_cloud', 'generate_wordcloud_mask', 'generate_wordcloud']}
 )

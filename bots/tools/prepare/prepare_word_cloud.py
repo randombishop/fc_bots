@@ -6,18 +6,10 @@ from bots.utils.word_counts import get_word_counts
 def prepare_word_cloud(input):
   state = input.state
   top_n = 50
-  posts = []
-  if state.search is not None:
-    posts = get_more_like_this(state.search, limit=state.max_rows)
-  else:
-    posts = get_top_casts(channel=state.channel_url,
-                          keyword=state.keyword,
-                          category=state.category,
-                          user_name=state.user,
-                          max_rows=state.max_rows)
+  posts = state.casts_for_params
   if posts is None or len(posts) == 0:
     raise Exception(f"Not enough activity to buid a word cloud.")
-  posts = posts['text'].tolist()
+  posts = [x['text'] for x in posts]
   word_counts = get_word_counts(posts, top_n)
   if len(word_counts) < 5:
     raise Exception(f"Not enough activity to buid a word cloud.")
@@ -31,7 +23,7 @@ def prepare_word_cloud(input):
   }
 
 PrepareWordCloud = Tool(
-  name="prepare_word_cloud",
+  name="PrepareWordCloud",
   description="Prepare the word cloud data",
   func=prepare_word_cloud
 )
