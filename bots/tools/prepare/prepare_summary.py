@@ -1,6 +1,5 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
-from bots.data.casts import get_top_casts, get_more_like_this
 from bots.utils.format_cast import concat_casts
 from bots.utils.check_links import check_link_data
 from bots.utils.word_counts import get_word_counts
@@ -80,21 +79,11 @@ main_schema = {
 def prepare_summary(input):
   state = input.state
   llm = input.llm
-  
-  # Get data
-  posts = []
-  if state.search is not None:
-    posts = get_more_like_this(state.search, limit=state.max_rows)
-  else:
-    posts = get_top_casts(channel=state.channel_url,
-                          keyword=state.keyword,
-                          category=state.category,
-                          user_name=state.user,
-                          max_rows=state.max_rows)
-  posts = posts.to_dict('records')
-  posts.sort(key=lambda x: x['timestamp'])
+  posts = state.casts_for_summary
+  if posts is None:
+    raise Exception("No posts to summarize")
   if len(posts) < 5:
-    raise Exception("Not enough posts to generate a digest")
+    raise Exception("Not enough posts to summarize")
   # Focus directive
   focus = ''
   if state.keyword is not None:

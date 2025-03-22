@@ -33,6 +33,7 @@ ACTION_CONFIG = {
   },
   'Summary': {
     'parse': ['ParseSummaryParams'],
+    'fetch': ['GetCastsForSummary'],
     'prepare': ['PrepareSummary', 'GenerateWordCloudMask', 'GenerateWordCloud'],
     'combine': ['Summary']
   }    
