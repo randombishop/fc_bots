@@ -41,7 +41,12 @@ ACTION_CONFIG = {
     'parse': ['ParseFavoriteUsersParams'],
     'fetch': ['GetFavoriteUsers'],
     'combine': ['FavoriteUsers']
-  }    
+  },
+  'MoreLikeThis': {
+    'parse': ['ParseMoreLikeThisParams'],
+    'fetch': ['GetMoreLikeThis'],
+    'combine': ['MoreLikeThis']
+  }
 }
 
 

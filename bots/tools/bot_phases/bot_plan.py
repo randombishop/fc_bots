@@ -7,7 +7,10 @@ def bot_plan(input):
   GetActions.invoke({'input': input})
   SelectActionFromConversation.invoke({'input': input})
   ShouldContinue.invoke({'input': input})
-  return {'selected_action': input.state.selected_action}
+  return {
+    'selected_action': input.state.selected_action,
+    'should_continue': input.state.should_continue
+  }
 
 
 BotPlan = Tool(
