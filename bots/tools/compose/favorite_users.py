@@ -5,7 +5,7 @@ from bots.utils.images import table_image
 from bots.utils.gcs import upload_to_gcs
 
 
-def favorite_users(input):
+def compose_favorite_users(input):
   state = input.state
   fid = state.user_fid
   user_name = state.user
@@ -54,8 +54,8 @@ def favorite_users(input):
   }
 
 
-FavoriteUsers = Tool(
-  name="FavoriteUsers",
-  description="Find the favorite accounts of a user",
-  func=favorite_users
+ComposeFavoriteUsers = Tool(
+  name="ComposeFavoriteUsers",
+  description="Cast the favorite accounts of a user",
+  func=compose_favorite_users
 )

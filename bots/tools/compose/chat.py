@@ -66,7 +66,7 @@ chat_schema = {
 }
 
 
-def chat(input):
+def compose_chat(input):
   state = input.state
   llm = input.llm
   if not state.should_continue:  
@@ -87,9 +87,8 @@ def chat(input):
   return {'casts': state.casts}
 
 
-Chat = Tool(
-  name="Chat",
-  func=chat,
-  description="Chat with the user",
-  metadata={'depends_on': ['should_continue', 'get_casts']}
+ComposeChat = Tool(
+  name="ComposeChat",
+  func=compose_chat,
+  description="Cast an answer to the current conversation"
 )

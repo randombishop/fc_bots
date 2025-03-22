@@ -1,13 +1,12 @@
 import uuid
 import os
 from langchain.agents import Tool
-from bots.data.users import get_top_daily_casters
 from bots.utils.images import user_activity_chart
 from bots.utils.gcs import upload_to_gcs
 from bots.data.channels import get_channel_by_url
 
 
-def most_active_users(input):
+def compose_most_active_users(input):
   state = input.state
   channel_url = state.channel_url
   if channel_url is None:
@@ -15,9 +14,9 @@ def most_active_users(input):
   channel_id = get_channel_by_url(channel_url)
   if channel_id is None:
     raise Exception("Channel not registered")
-  df = get_top_daily_casters(channel_url)
-  if len(df) == 0:
-    raise Exception("Query returned 0 rows")
+  df = state.df_most_active_users
+  if df is None or len(df) == 0:
+    raise Exception("Missing most active users dataframe")
   filename = str(uuid.uuid4())+'.png'
   user_activity_chart(df, filename)
   upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
@@ -59,9 +58,8 @@ def most_active_users(input):
   }
 
 
-MostActiveUsers = Tool(
-  name="MostActiveUsers",
-  description="Find the most active users in a channel",
-  func=most_active_users,
-  metadata={'depends_on': ['parse_most_active_users_params']}
+ComposeMostActiveUsers = Tool(
+  name="ComposeMostActiveUsers",
+  description="Cast the most active users in a channel",
+  func=compose_most_active_users
 )

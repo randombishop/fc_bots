@@ -56,7 +56,7 @@ class Bot(BaseSingleActionAgent):
       'BotParse',
       'BotFetch',
       'BotPrepare',
-      'BotCombine',
+      'BotCompose',
       'BotCheck',
       'BotMemorize'
     ]

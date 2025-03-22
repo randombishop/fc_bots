@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 
 
-def summary(input):
+def compose_summary(input):
   state = input.state
   data = state.digest_casts_data
   casts = []
@@ -20,14 +20,8 @@ def summary(input):
   return {'casts': casts}
 
 
-Summary = Tool(
-  name="Summary",
+ComposeSummary = Tool(
+  name="ComposeSummary",
   description="Generate a summary of the posts and select some interesting ones",
-  func=summary,
-  metadata={'depends_on': [
-    'parse_digest_casts_params', 
-    'prepare_digest_casts', 
-    'generate_wordcloud_mask', 
-    'generate_wordcloud'
-  ]}
+  func=compose_summary
 )

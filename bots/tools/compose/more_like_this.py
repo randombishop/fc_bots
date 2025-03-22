@@ -1,8 +1,7 @@
 from langchain.agents import Tool
-from bots.data.casts import get_more_like_this
 
 
-def more_like_this(input):
+def compose_more_like_this(input):
   state = input.state
   similar = state.df_more_like_this
   if similar is None or len(similar) == 0:
@@ -23,8 +22,8 @@ def more_like_this(input):
   }
 
 
-MoreLikeThis = Tool(
-  name="MoreLikeThis",
-  description="Find similar posts",
-  func=more_like_this
+ComposeMoreLikeThis = Tool(
+  name="ComposeMoreLikeThis",
+  description="Cast first 3 most similar links",
+  func=compose_more_like_this
 )

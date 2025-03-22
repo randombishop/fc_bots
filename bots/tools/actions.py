@@ -29,23 +29,28 @@ ACTION_TEMPLATES = {
 
 ACTION_CONFIG = {
   'Chat': {
-    'combine': ['Chat']
+    'compose': ['ComposeChat']
   },
   'Summary': {
     'parse': ['ParseSummaryParams'],
     'fetch': ['GetCastsForSummary'],
     'prepare': ['PrepareSummary', 'GenerateWordCloudMask', 'GenerateWordCloud'],
-    'combine': ['Summary']
+    'compose': ['ComposeSummary']
   },
   'FavoriteUsers': {
     'parse': ['ParseFavoriteUsersParams'],
     'fetch': ['GetFavoriteUsers'],
-    'combine': ['FavoriteUsers']
+    'compose': ['ComposeFavoriteUsers']
   },
   'MoreLikeThis': {
     'parse': ['ParseMoreLikeThisParams'],
     'fetch': ['GetMoreLikeThis'],
-    'combine': ['MoreLikeThis']
+    'compose': ['ComposeMoreLikeThis']
+  },
+  'MostActiveUsers': {
+    'parse': ['ParseMostActiveUsersParams'],
+    'fetch': ['GetMostActiveUsers'],
+    'compose': ['ComposeMostActiveUsers']
   }
 }
 

@@ -35,9 +35,9 @@ def parse_most_active_users(input):
   parse_prompt = state.format_conversation()
   parse_instructions = state.format(parse_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)
-  state.channel = read_channel(params, current_channel=state.root_parent_url, default_to_current=True)
+  state.channel_url = read_channel(params, current_channel=state.root_parent_url, default_to_current=True)
   return {
-    'channel': state.channel
+    'channel_url': state.channel_url
   }
 
 

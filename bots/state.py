@@ -140,6 +140,8 @@ class State:
     self.wordcloud_url = None
     self.casts_for_summary = None
     self.df_favorite_users = None
+    self.df_more_like_this = None
+    self.df_most_active_users = None
     # f. Combine
     self.casts = None
     # g. Check
