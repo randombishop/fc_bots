@@ -43,24 +43,15 @@ task_schema = {
 }
 
 
-def pick_cast(input):
+def compose_pick(input):
   state = input.state
   llm = input.llm
-  posts = []
-  if state.search is not None:
-    posts = get_more_like_this(state.search, limit=state.max_rows)
-  else:
-    posts = get_top_casts(channel=state.channel_url,
-                          keyword=state.keyword,
-                          category=state.category,
-                          user_name=state.user,
-                          max_rows=state.max_rows)
-  posts = posts.to_dict('records')
+  posts = state.casts_for_params
   if len(posts) < 5:
     raise Exception(f"Not enough posts to pick a winner ({len(posts)} posts)")
   prompt = concat_casts(posts)
   instructions = state.format(task_instructions_intro_template)
-  instructions += task_instructions.replace('?', params['criteria'])
+  instructions += task_instructions.replace('?', state.criteria)
   result = call_llm(llm, prompt, instructions, task_schema)
   posts_map = {x['id']: x for x in posts}
   data = check_link_data(result, posts_map)
@@ -76,11 +67,8 @@ def pick_cast(input):
   }
 
 
-Pick = Tool(
-  name="Pick",
-  description="Pick a post given parameters and criteria",
-  func=pick_cast,
-  metadata={
-    'depends_on': ['parse_pick_cast_params']
-  }
+ComposePick = Tool(
+  name="ComposePick",
+  description="Pick a post and cast a link to it",
+  func=compose_pick,
 )

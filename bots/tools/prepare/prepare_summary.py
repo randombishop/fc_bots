@@ -79,7 +79,7 @@ main_schema = {
 def prepare_summary(input):
   state = input.state
   llm = input.llm
-  posts = state.casts_for_summary
+  posts = state.casts_for_params
   if posts is None:
     raise Exception("No posts to summarize")
   if len(posts) < 5:

@@ -138,7 +138,7 @@ class State:
     self.wordcloud_width = None
     self.wordcloud_height = None
     self.wordcloud_url = None
-    self.casts_for_summary = None
+    self.casts_for_params = None
     self.df_favorite_users = None
     self.df_more_like_this = None
     self.df_most_active_users = None

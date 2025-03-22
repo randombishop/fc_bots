@@ -33,7 +33,7 @@ ACTION_CONFIG = {
   },
   'Summary': {
     'parse': ['ParseSummaryParams'],
-    'fetch': ['GetCastsForSummary'],
+    'fetch': ['GetCastsForParams'],
     'prepare': ['PrepareSummary', 'GenerateWordCloudMask', 'GenerateWordCloud'],
     'compose': ['ComposeSummary']
   },
@@ -51,6 +51,11 @@ ACTION_CONFIG = {
     'parse': ['ParseMostActiveUsersParams'],
     'fetch': ['GetMostActiveUsers'],
     'compose': ['ComposeMostActiveUsers']
+  },
+  'Pick': {
+    'parse': ['ParsePickParams'],
+    'fetch': ['GetCastsForParams'],
+    'compose': ['ComposePick']
   }
 }
 

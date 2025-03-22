@@ -2,7 +2,7 @@ from langchain.agents import Tool
 from bots.data.casts import get_top_casts, get_more_like_this
 
 
-def get_casts_for_summary(input):
+def get_casts_for_params(input):
   state = input.state
   posts = []
   if state.search is not None:
@@ -15,14 +15,14 @@ def get_casts_for_summary(input):
                           max_rows=state.max_rows)
   posts = posts.to_dict('records')
   posts.sort(key=lambda x: x['timestamp'])
-  state.casts_for_summary = posts
+  state.casts_for_params = posts
   return {
-    'casts_for_summary': len(state.casts_for_summary)
+    'casts_for_params': len(state.casts_for_params)
   }
 
 
-GetCastsForSummary = Tool(
-  name="GetCastsForSummary",
-  description="Fetch the casts to be summarized",
-  func=get_casts_for_summary
+GetCastsForParams = Tool(
+  name="GetCastsForParams",
+  description="Fetch casts based on current parameters",
+  func=get_casts_for_params
 )

@@ -3,7 +3,7 @@ from bots.tools.parse.parse_more_like_this_params import ParseMoreLikeThisParams
 from bots.tools.parse.parse_most_active_users_params import ParseMostActiveUsersParams
 from bots.tools.parse.parse_news_params import ParseNewsParams
 from bots.tools.parse.parse_perplexity_params import ParsePerplexityParams
-from bots.tools.parse.parse_pick_cast_params import ParsePickCastParams
+from bots.tools.parse.parse_pick_params import ParsePickParams
 from bots.tools.parse.parse_praise_params import ParsePraiseParams
 from bots.tools.parse.parse_psycho_params import ParsePsychoParams
 from bots.tools.parse.parse_roast_params import ParseRoastParams
@@ -18,7 +18,7 @@ PARSE_TOOLS = [
   ParseMostActiveUsersParams,
   ParseNewsParams,
   ParsePerplexityParams,
-  ParsePickCastParams,
+  ParsePickParams,
   ParsePraiseParams,
   ParsePsychoParams,
   ParseRoastParams,

@@ -47,7 +47,7 @@ schema = {
 }
 
 
-def get_casts(input):
+def get_casts_for_context(input):
   state = input.state
   llm = input.llm
   if not state.should_continue:
@@ -106,8 +106,8 @@ def get_casts(input):
   }
 
 
-GetCasts = Tool(
-  name="GetCasts",
-  func=get_casts,
+GetCastsForContext = Tool(
+  name="GetCastsForContext",
+  func=get_casts_for_context,
   description="Get casts from the current user or related to the conversation in general to build up context"
 )

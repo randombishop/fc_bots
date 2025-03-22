@@ -36,9 +36,9 @@ class TestActionSelection(unittest.TestCase):
     self.assertEqual(state.selected_action, 'MostActiveUsers')
     self.assertTrue(state.reply)
     
-  def test_pick_cast(self):
+  def test_pick(self):
     request = "Pick your favorite cast in channel /mfers"
-    state = run_bot(test_id='TestActionSelection:test_pick_cast', request=request)
+    state = run_bot(test_id='TestActionSelection:test_pick', request=request)
     self.assertEqual(state.selected_action, 'Pick')
     self.assertTrue(state.reply)
     

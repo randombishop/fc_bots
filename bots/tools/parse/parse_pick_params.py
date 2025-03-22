@@ -45,7 +45,7 @@ parse_schema = {
   }
 }
 
-def parse_pick_cast_params(input):
+def parse_pick_params(input):
   state = input.state
   llm = input.llm
   parse_prompt = state.format_conversation()
@@ -70,8 +70,8 @@ def parse_pick_cast_params(input):
   }
   
 
-ParsePickCastParams = Tool(
-  name="ParsePickCastParams",
+ParsePickParams = Tool(
+  name="ParsePickParams",
   description="Parse the pick_cast action parameters",
-  func=parse_pick_cast_params
+  func=parse_pick_params
 )
