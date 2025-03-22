@@ -1,11 +1,12 @@
-from bots.tools.a_wakeup import WAKEUP_TOOLS
-from bots.tools.b_plan import PLAN_TOOLS
-from bots.tools.c_parse import PARSE_TOOLS
-from bots.tools.d_fetch import FETCH_TOOLS
-from bots.tools.e_prepare import PREPARE_TOOLS
-from bots.tools.f_combine import COMBINE_TOOLS
-from bots.tools.g_check import CHECK_TOOLS
-from bots.tools.h_memorize import MEMORIZE_TOOLS
+from bots.tools.wakeup import WAKEUP_TOOLS
+from bots.tools.plan import PLAN_TOOLS
+from bots.tools.parse import PARSE_TOOLS
+from bots.tools.fetch import FETCH_TOOLS
+from bots.tools.prepare import PREPARE_TOOLS
+from bots.tools.combine import COMBINE_TOOLS
+from bots.tools.check import CHECK_TOOLS
+from bots.tools.memorize import MEMORIZE_TOOLS
+from bots.tools.bot_phases import BOT_PHASES
 
 
 TOOL_MAP = {
@@ -16,11 +17,14 @@ TOOL_MAP = {
   'prepare': PREPARE_TOOLS,
   'combine': COMBINE_TOOLS,
   'check': CHECK_TOOLS,
-  'memorize': MEMORIZE_TOOLS
+  'memorize': MEMORIZE_TOOLS,
+  'bot_phases': BOT_PHASES
 }
 
 
 TOOL_LIST = []
 for x in TOOL_MAP.values():
   TOOL_LIST.extend(x)
+  
+
 

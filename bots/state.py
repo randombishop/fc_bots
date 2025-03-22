@@ -216,14 +216,6 @@ class State:
         s += '## No action was selected ##\n'
       else:  
         s += f"## {self.selected_action} ##\n"
-      # Action parameters
-      if self.action_params is not None:
-        attrs = ['fid', 'user_name', 'channel', 'keyword', 'category', 'search', 'criteria', 'text', 'question', 'continue']
-        for attr in attrs:
-          if attr in self.action_params and self.action_params[attr] is not None: 
-            s += f"<< {attr} << {self.action_params[attr]}\n"
-      else:
-        s += '<< No parameters were parsed <<\n'
       # Casts
       if self.casts is not None and len(self.casts)>0: 
         s += ">> casts >>\n"

@@ -6,8 +6,7 @@ from bots.utils.llms2 import get_llm, get_llm_img
 from bots.data.app import get_bot_character
 from bots.state import State
 from bots.tool_input import ToolInput
-from bots.tools import TOOL_DEPENDENCIES, TOOL_LIST
-from bots.tools.memory import MEMORY_TOOLS
+from bots.tools import TOOL_LIST
 
 
 

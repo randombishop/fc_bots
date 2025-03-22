@@ -1,0 +1,46 @@
+ACTION_DESCRIPTIONS = {
+  'Chat': 'Default action if no other intent is applicable.',
+  'Summary': 'Make a summary about posts.',
+  'FavoriteUsers': 'Find the favorite accounts of a user.',
+  'MoreLikeThis': 'Find posts using "More Like This" algorithm.',
+  'MostActiveUsers': 'List the most active users in a channel.',
+  'News': 'Check the news.',
+  'Perplexity': 'Ask a question to Perplexity AI.',
+  'Pick': 'Pick a post given some criteria.',
+  'Psycho': 'Generate a psychoanalysis for a user.',
+  'Praise': 'Generate a praise for a user.',
+  'Roast': 'Generate a roast for a user.',
+  'WhoIs': 'Analyze a user profile and generate a new avatar for them. (Who is @user? Make an avater for @user, Analyze user profile @user, etc.)',
+  'WordCloud': 'Make a word cloud.'
+}
+
+
+ACTION_TEMPLATES = {
+  'Summary': "Summarize category {[arts, business, crypto, culture, money, nature, politics, sports, tech_science]} / Summarize channel /{channel} / Summarize posts about {search phrase} / Summarize posts by {user} / Summarize posts with keyword {keyword}",
+  'MostActiveUsers': 'Most active users in /{channel}',
+  'News': 'Check the news for {search phrase}',
+  'Perplexity': 'Ask Perplexity ""{question}"',
+  'Pick': 'Pick the {adjective} post in category {[arts, business, crypto, culture, money, nature, politics, sports, tech_science}] / Pick the {adjective} post in channel /{channel} / Pick the {adjective} post about {search phrase} / Pick the {adjective} post by {username} / Pick the {adjective} post with keyword {keyword}',
+  'Psycho': 'Psycho analyze {user}',
+  'Praise': 'Praise {user}',
+  'Roast': 'Roast {user}',
+}
+
+
+ACTION_CONFIG = {
+  'Chat': {
+    'combine': ['Chat']
+  },
+  'Summary': {
+    'parse': ['ParseSummaryParams'],
+    'prepare': ['PrepareSummary', 'GenerateWordCloudMask', 'GenerateWordCloud'],
+    'combine': ['Summary']
+  }    
+}
+
+
+def get_action_config_tools(action, phase):
+  if action is None or action not in ACTION_CONFIG:
+    return None
+  config = ACTION_CONFIG[action]
+  return config[phase] if phase in config else None

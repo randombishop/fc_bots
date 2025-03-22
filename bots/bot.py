@@ -9,7 +9,6 @@ from bots.tool_input import ToolInput
 from bots.tools import TOOL_LIST
 
 
-
 class Bot(BaseSingleActionAgent):
             
   def __init__(self):
@@ -18,15 +17,12 @@ class Bot(BaseSingleActionAgent):
     self._llm = get_llm()
     self._llm_img = get_llm_img()
     self._state = None
-    self._todo = []
+    self._todo = None
     
   @property
   def input_keys(self):
     return ["input"]
-  
-  def todo(self, tool):
-    self._todo.append(tool)
-  
+    
   def get_tool_input(self):
     input = ToolInput(
       state=self._state, 
@@ -35,7 +31,7 @@ class Bot(BaseSingleActionAgent):
     )
     return {"input":input}
   
-  def _initialize(self, input):
+  def initialize(self, input):
     id = input['bot_id']
     character = get_bot_character(id)
     request = input['request'] if 'request' in input else None
@@ -54,24 +50,22 @@ class Bot(BaseSingleActionAgent):
       attachment_hash=attachment_hash, 
       root_parent_url=root_parent_url, 
       user=user)
-  
-  def _wakeup(self):
-    self.todo('get_bio')
-    self.todo('get_lore')
-    self.todo('get_style')
-    self.todo('get_time')
-    
-  def _plan(self):
-    self.todo('select_action_from_conversation')
-    
-  
-  
+    self._todo = [
+      'BotWakeup',
+      'BotPlan',
+      'BotParse',
+      'BotFetch',
+      'BotPrepare',
+      'BotCombine',
+      'BotCheck',
+      'BotMemorize'
+    ]
+      
   def plan(self, intermediate_steps, callbacks, **kwargs):
     if self._state is None:
       input = json.loads(kwargs['input'])
-      self._initialize(input)
-      return self.plan(intermediate_steps, callbacks, **kwargs)
-    elif len(self._todo) > 0: 
+      self.initialize(input)
+    if len(self._todo) > 0: 
       tool = self._todo.pop(0)
       return AgentAction(
         tool=tool,
@@ -82,6 +76,8 @@ class Bot(BaseSingleActionAgent):
     
   async def aplan(self, intermediate_steps, **kwargs):
     return self.plan(intermediate_steps, **kwargs)
+
+
 
 
 def invoke_bot(run_name, bot_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):

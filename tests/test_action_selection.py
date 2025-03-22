@@ -12,9 +12,9 @@ class TestActionSelection(unittest.TestCase):
     state = run_bot(test_id='TestActionSelection:test_chat', request=request)
     self.assertTrue(state.selected_action == 'Chat' or state.selected_action is None)
     
-  def test_digest_casts(self):
+  def test_summary(self):
     request = "Give me a summary about keyword ethereum."
-    state = run_bot(test_id='TestActionSelection:test_digest_casts', request=request)
+    state = run_bot(test_id='TestActionSelection:test_summary', request=request)
     self.assertEqual(state.selected_action, 'Summary')
     self.assertTrue(state.reply)
     
