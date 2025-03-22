@@ -32,19 +32,15 @@ schema = {
   }
 }
 
-def roast(input):
+def compose_roast(input):
   state = input.state
   llm = input.llm
-  user_name = state.user
-  fid = state.user_fid
-  if user_name is None or fid is None:
-    raise Exception(f"Missing user_name/fid")
-  df = get_casts_for_fid(fid)
+  df = state.df_casts_for_fid
   if df is None or len(df) == 0:
     raise Exception(f"Not enough activity to roast.")
   data = list(df['text'])
   text = "\n".join([str(x) for x in data])
-  instructions = state.format(instructions_template.replace('{{user_name}}', user_name))
+  instructions = state.format(instructions_template.replace('{{user_name}}', state.user))
   result = call_llm(llm, text, instructions, schema)
   cast = {'text': result['tweet']}
   casts = [cast]
@@ -54,11 +50,8 @@ def roast(input):
   }
 
 
-Roast = Tool(
-  name="Roast",
+ComposeRoast = Tool(
+  name="ComposeRoast",
   description="Roast a user",
-  func=roast,
-  metadata={
-    'depends_on': ['parse_roast_params']
-  }
+  func=compose_roast
 )

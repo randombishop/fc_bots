@@ -67,6 +67,11 @@ ACTION_CONFIG = {
     'parse': ['ParsePsychoParams'],
     'fetch': ['GetCastsForFid'],
     'compose': ['ComposePsycho']
+  },
+  'Roast': {
+    'parse': ['ParseRoastParams'],
+    'fetch': ['GetCastsForFid'],
+    'compose': ['ComposeRoast']
   }
 }
 
