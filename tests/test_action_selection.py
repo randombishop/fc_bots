@@ -71,3 +71,9 @@ class TestActionSelection(unittest.TestCase):
     state = run_bot(test_id='TestActionSelection:test_news', request=request)
     self.assertEqual(state.selected_action, 'News')
     self.assertTrue(state.reply)
+    
+  def test_who_is(self):
+    pass
+  
+  def test_praise(self):
+    pass

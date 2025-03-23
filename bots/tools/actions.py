@@ -72,6 +72,11 @@ ACTION_CONFIG = {
     'parse': ['ParseRoastParams'],
     'fetch': ['GetCastsForFid'],
     'compose': ['ComposeRoast']
+  },
+  'Perplexity': {
+    'parse': ['ParsePerplexityParams'],
+    'prepare': ['CallPerplexity'],
+    'compose': ['ComposePerplexity']
   }
 }
 
