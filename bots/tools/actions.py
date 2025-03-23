@@ -77,6 +77,11 @@ ACTION_CONFIG = {
     'parse': ['ParsePerplexityParams'],
     'prepare': ['CallPerplexity'],
     'compose': ['ComposePerplexity']
+  },
+  'News': {
+    'parse': ['ParseNewsParams'],
+    'fetch': ['GetNews'],
+    'compose': ['ComposeNews']
   }
 }
 
