@@ -5,6 +5,7 @@ from bots.tools.compose.most_active_users import ComposeMostActiveUsers
 from bots.tools.compose.news import ComposeNews
 from bots.tools.compose.perplexity import ComposePerplexity
 from bots.tools.compose.pick import ComposePick
+from bots.tools.compose.praise import ComposePraise
 from bots.tools.compose.psycho import ComposePsycho
 from bots.tools.compose.roast import ComposeRoast
 from bots.tools.compose.summary import ComposeSummary
@@ -21,6 +22,7 @@ COMPOSE_TOOLS = [
   ComposeNews,
   ComposePerplexity,
   ComposePick,
+  ComposePraise,
   ComposePsycho,
   ComposeRoast,
   ComposeSummary,

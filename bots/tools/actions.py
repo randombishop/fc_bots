@@ -89,6 +89,13 @@ ACTION_CONFIG = {
     'prepare': ['DescribePfp', 'DescribeUserCasts', 'DescribeUserRepliesAndReactions', 'GenerateAvatar'],
     'compose': ['ComposeWhoIs'],
     'memorize': ['SaveUserProfile']
+  },
+  'Praise': {
+    'parse': ['ParsePraiseParams'],
+    'fetch': ['GetUserProfile', 'GetUserRepliesAndReactions'],
+    'prepare': ['DescribePfp', 'DescribeUserCasts', 'DescribeUserRepliesAndReactions', 'GenerateAvatar'],
+    'compose': ['ComposePraise'],
+    'memorize': ['SaveUserProfile']
   }
 }
 

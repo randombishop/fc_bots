@@ -72,7 +72,7 @@ schema = {
 }
 
 
-def praise(input):
+def compose_praise(input):
   state = input.state
   llm = input.llm
   fid = state.user_fid
@@ -122,11 +122,8 @@ def praise(input):
   }
 
 
-Praise = Tool(
-  name="Praise",
-  description="Praise a user",
-  func=praise,
-  metadata={
-    'depends_on': ['parse_praise_params', 'get_user_profile', 'get_pfp_description', 'get_user_replies_and_reactions', 'get_avatar']
-  }
+ComposePraise = Tool(
+  name="ComposePraise",
+  description="Cast a user praise",
+  func=compose_praise
 )
