@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 
 
-def who_is(input):
+def compose_who_is(input):
   state = input.state
   fid = state.user_fid
   user_name = state.user
@@ -26,12 +26,9 @@ def who_is(input):
   }
 
 
-WhoIs = Tool(
-  name="WhoIs",
-  description="Who is action",
-  func=who_is,
-  metadata={
-    'depends_on': ['parse_praise_params', 'get_user_profile', 'get_pfp_description', 'get_user_replies_and_reactions', 'get_avatar']
-  }
+ComposeWhoIs = Tool(
+  name="ComposeWhoIs",
+  description="Cast about who a user is",
+  func=compose_who_is
 )
 

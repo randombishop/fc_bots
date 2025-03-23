@@ -73,7 +73,10 @@ class TestActionSelection(unittest.TestCase):
     self.assertTrue(state.reply)
     
   def test_who_is(self):
-    pass
+    request = "Who is @randombishop"
+    state = run_bot(test_id='TestActionSelection:test_who_is', request=request)
+    self.assertEqual(state.selected_action, 'WhoIs')
+    self.assertTrue(state.reply)
   
   def test_praise(self):
     pass

@@ -29,11 +29,12 @@ parse_user_schema = {
 
 def parse_who_is_params(input):
   state = input.state
+  llm = input.llm
   if state.user is not None:
     return {'log': 'User already set'}
   parse_prompt = state.format_conversation()
   parse_instructions = state.format(parse_user_instructions_template)
-  params = call_llm(parse_prompt, parse_instructions, parse_user_schema)
+  params = call_llm(llm, parse_prompt, parse_instructions, parse_user_schema)
   fid, user_name = read_user(params, state.fid_origin, default_to_origin=False)
   if user_name == '*' or user_name == '' or user_name is None:
     user_name = get_random_user_to_praise(state.id)

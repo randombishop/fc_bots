@@ -16,7 +16,7 @@ def format_embed(embed):
     return None
 
 
-def save_user_profile(input):
+def memorize(input):
   state = input.state
   if state.selected_action not in ['WhoIs', 'Praise']:
     return {'log': 'No user profile to save'}
@@ -59,7 +59,7 @@ def save_user_profile(input):
 
 
 SaveUserProfile = Tool(
-  name="save_user_profile",
-  func=save_user_profile,
+  name="SaveUserProfile",
+  func=memorize,
   description="Save the user profile in long term memory"
 )

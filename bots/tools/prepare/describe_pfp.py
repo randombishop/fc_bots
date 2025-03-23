@@ -32,10 +32,10 @@ schema = {
 }
 
 
-def get_pfp_description(input):
+def describe_pfp(input):
   state = input.state
   if state.user_pfp_description is not None:
-    return {'log': 'Already done.'}
+    return {'log': 'PFP description already set.'}
   url = state.user_pfp_url
   if url is None or len(url) == 0:
     return {'log': 'No profile picture available.'}
@@ -64,8 +64,8 @@ def get_pfp_description(input):
   }
 
 
-GetPfpDescription = Tool(
-  name="get_pfp_description",
-  description="Get the description of a profile picture",
-  func=get_pfp_description
+DescribePfp = Tool(
+  name="DescribePfp",
+  description="Prepare the description of a profile picture",
+  func=describe_pfp
 )

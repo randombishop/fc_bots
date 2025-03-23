@@ -10,7 +10,8 @@ from bots.tools.fetch.get_more_like_this import GetMoreLikeThis
 from bots.tools.fetch.get_most_active_users import GetMostActiveUsers
 from bots.tools.fetch.get_news import GetNews
 from bots.tools.fetch.get_trending import GetTrending
-
+from bots.tools.fetch.get_user_profile import GetUserProfile
+from bots.tools.fetch.get_user_replies_and_reactions import GetUserRepliesAndReactions
 
 FETCH_TOOLS = [
   GetBotCastsInChannel,
@@ -24,5 +25,7 @@ FETCH_TOOLS = [
   GetMoreLikeThis,
   GetMostActiveUsers,
   GetNews,
-  GetTrending
+  GetTrending,
+  GetUserProfile,
+  GetUserRepliesAndReactions
 ]

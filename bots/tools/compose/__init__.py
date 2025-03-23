@@ -8,6 +8,7 @@ from bots.tools.compose.pick import ComposePick
 from bots.tools.compose.psycho import ComposePsycho
 from bots.tools.compose.roast import ComposeRoast
 from bots.tools.compose.summary import ComposeSummary
+from bots.tools.compose.who_is import ComposeWhoIs
 from bots.tools.compose.word_cloud import ComposeWordCloud
 
 
@@ -23,6 +24,7 @@ COMPOSE_TOOLS = [
   ComposePsycho,
   ComposeRoast,
   ComposeSummary,
+  ComposeWhoIs,
   ComposeWordCloud
 ]
 

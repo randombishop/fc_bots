@@ -82,6 +82,13 @@ ACTION_CONFIG = {
     'parse': ['ParseNewsParams'],
     'fetch': ['GetNews'],
     'compose': ['ComposeNews']
+  },
+  'WhoIs': {
+    'parse': ['ParseWhoIsParams'],
+    'fetch': ['GetUserProfile', 'GetUserRepliesAndReactions'],
+    'prepare': ['DescribePfp', 'DescribeUserCasts', 'DescribeUserRepliesAndReactions', 'GenerateAvatar'],
+    'compose': ['ComposeWhoIs'],
+    'memorize': ['SaveUserProfile']
   }
 }
 

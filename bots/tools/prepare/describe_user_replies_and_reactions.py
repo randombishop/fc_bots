@@ -59,50 +59,29 @@ schema = {
 }
 
 
-def get_user_replies_and_reactions(input):
+def describe_user_replies_and_reactions(input):
   state = input.state
   llm = input.llm
   if state.user_replies_and_reactions_description is not None:
-    return
-  fid = state.user_fid
-  user_name = state.user
-  if fid is None or user_name is None:
-    raise Exception(f"Missing fid or user_name in context.")
-  df = get_user_replies_and_reactions(fid=fid, max_rows=50)
-  rows = df.to_dict('records') if len(df) > 0 else []
-  formatted = ''
-  for r in rows:
-    if r['reaction'] == 'REPLY':
-      text = f"# Replied to @{r['to_user_name']} {format_when(r['timestamp'])}:\n"
-      text += f"@{r['to_user_name']} said: {shorten_text(r['to_text'])}\n"
-      text += f"@{user_name} replied: {r['text']}\n"
-      text += '#\n'
-      formatted += text
-    elif r['reaction'] in ['REPOST', 'LIKE']:
-      text = '# '
-      text += "Liked" if r['reaction'] == 'LIKE' else "Reposted"
-      text += f" @{r['to_user_name']}'s cast {format_when(r['timestamp'])}:\n"
-      text += f"@{shorten_text(r['to_text'])}\n"
-      text += '#\n'
-      formatted += text
-  state.user_replies_and_reactions = formatted
-  if len(rows)>0:
-    prompt = state.format(prompt_template)
-    instructions = state.format(instructions_template)
-    result = call_llm(llm, prompt, instructions, schema)
-    description = result['description'] if 'description' in result else ''
-    keywords = result['keywords'] if 'keywords' in result else ''
-    state.user_replies_and_reactions_description = description
-    state.user_replies_and_reactions_keywords = keywords
+    return {'log': 'User replies and reactions description already set.'}
+  formatted = state.user_replies_and_reactions
+  if formatted is None or formatted == '':
+    return {'log': 'No replies and reactions to analyze.'}
+  prompt = state.format(prompt_template)
+  instructions = state.format(instructions_template)
+  result = call_llm(llm, prompt, instructions, schema)
+  description = result['description'] if 'description' in result else ''
+  keywords = result['keywords'] if 'keywords' in result else ''
+  state.user_replies_and_reactions_description = description
+  state.user_replies_and_reactions_keywords = keywords
   return {
-    'user_replies_and_reactions': state.user_replies_and_reactions,
     'user_replies_and_reactions_description': state.user_replies_and_reactions_description,
     'user_replies_and_reactions_keywords': state.user_replies_and_reactions_keywords
   }
 
 
-GetUserRepliesAndReactions = Tool(
-  name="get_user_replies_and_reactions",
-  description="Get the replies and reactions of a user",
-  func=get_user_replies_and_reactions
+DescribeUserRepliesAndReactions = Tool(
+  name="DescribeUserRepliesAndReactions",
+  description="Describe the replies and reactions of a user",
+  func=describe_user_replies_and_reactions
 )

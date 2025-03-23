@@ -58,7 +58,7 @@ Please exclude anything related to violence, weapons, explicit content, nudity, 
 Ensure that your prompt is suitable for a general audience.
 Avoid any prohibited keywords and make sure that your prompt will not be rejected by the image generation model.
 Make sure you don't use " inside json strings. Avoid invalid json.
-Output 3 sentences in json format.
+Output 1 sentence in json format.
 
 #RESPONSE FORMAT:
 {
@@ -74,7 +74,7 @@ schema = {
 }
 
 
-def get_avatar(input):
+def generate_avatar(input):
   state = input.state
   llm = input.llm
   llm_img = input.llm_img
@@ -100,11 +100,8 @@ def get_avatar(input):
   }
   
 
-GetAvatar = Tool(
-  name="get_avatar",
+GenerateAvatar = Tool(
+  name="GenerateAvatar",
   description="Create an avatar for a user",
-  func=get_avatar,
-  metadata={
-    'depends_on': ['get_pfp_description']
-  }
+  func=generate_avatar
 )

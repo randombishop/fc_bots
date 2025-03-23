@@ -1,15 +1,24 @@
 from langchain.agents import Tool
-from bots.tools.memorize.save_user_profile import SaveUserProfile
+from bots.tools.actions import get_action_config_tools
+from bots.tools.memorize import MEMORIZE_TOOLS
+
+
+tool_map = {t.name: t for t in MEMORIZE_TOOLS}
 
 
 def bot_memorize(input):
   state = input.state
-  memorized = [] 
-  if state.selected_action in ['Praise', 'WhoIs']:
-    SaveUserProfile.invoke({'input': input})
-    memorized.append('user_profile')
+  selected_action = state.selected_action
+  if selected_action is None:
+    return {'log': 'No action selected'}
+  tools = get_action_config_tools(selected_action, 'memorize')
+  if tools is None:
+    return {'log': f'No tools configured for {selected_action}'}
+  for t in tools:
+    tool = tool_map[t]
+    tool.invoke({'input': input})
   return {
-    'memorized': memorized
+    'tools': tools
   }
 
 
