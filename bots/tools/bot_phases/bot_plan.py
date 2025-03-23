@@ -4,11 +4,14 @@ from bots.tools.plan.select_action_from_conversation import SelectActionFromConv
 from bots.tools.plan.should_continue import ShouldContinue
 
 def bot_plan(input):
-  GetActions.invoke({'input': input})
-  SelectActionFromConversation.invoke({'input': input})
-  ShouldContinue.invoke({'input': input})
+  state = input.state
+  if state.action is None:
+    GetActions.invoke({'input': input})
+    SelectActionFromConversation.invoke({'input': input})
+  if state.conversation is not None and len(state.conversation) > 0:
+    ShouldContinue.invoke({'input': input})
   return {
-    'selected_action': input.state.selected_action,
+    'action': input.state.action,
     'should_continue': input.state.should_continue
   }
 

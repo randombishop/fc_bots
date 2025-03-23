@@ -5,9 +5,9 @@ from bots.utils.format_cast import shorten_text, format_when
 
 def get_bot_casts_in_channel(input):
   state = input.state
-  if state.selected_channel is None:
+  if state.channel is None:
     raise Exception('GetBotCastsInChannel requires a channel')
-  casts = get_bot_casts(state.id, action_channel=state.selected_channel)
+  casts = get_bot_casts(state.id, action_channel=state.channel)
   text = ''
   for c in casts:
     row = '{\n'

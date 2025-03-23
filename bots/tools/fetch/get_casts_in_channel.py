@@ -7,9 +7,9 @@ from bots.utils.format_cast import concat_casts
 
 def get_casts_in_channel(input):
   state = input.state
-  if state.selected_channel is None:
+  if state.channel is None:
     raise Exception('GetChannelCasts requires a channel')
-  channel_url = get_channel_url(state.selected_channel)
+  channel_url = get_channel_url(state.channel)
   if channel_url is None:
     raise Exception('GetChannelCasts could not map channel to url')
   max_rows = 25

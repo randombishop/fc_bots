@@ -13,9 +13,6 @@ You are @{{name}}, a bot programmed to pick the best post (=cast) in a social me
 
 #YOUR LORE
 {{lore}}
-
-#CURRENT CHANNEL
-{{selected_channel}}
 """
 
 task_instructions = """

@@ -16,7 +16,7 @@ Your goal is to reply to a user conversation with a creative tweet with a refere
 {{style}}
 
 #CURRENT CHANNEL
-{{selected_channel}}
+{{channel}}
 
 #TASK
 Respond to the user conversation with a tweet and a link to a post.

@@ -5,7 +5,7 @@ from bots.utils.read_params import read_channel, read_keyword, read_category, re
 
 parse_instructions_template = """
 #CURRENT CHANNEL
-{{selected_channel}}
+{{channel}}
 
 #INSTRUCTIONS
 You are @{{name}}, a bot programmed to make summaries of posts (=casts) in a social media platform.

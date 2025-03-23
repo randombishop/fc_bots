@@ -41,12 +41,14 @@ select_action_prompt = """
 def select_action_from_conversation(input):
   state = input.state
   llm = input.llm
+  if state.conversation is None or len(state.conversation) == 0:
+    raise Exception('No conversation provided')
   instructions = state.format(select_action_task)
   prompt = state.format(select_action_prompt)
   result = call_llm(llm, prompt, instructions, select_action_schema)
   if 'action' in result:
-    state.selected_action = result['action']
-  return {'selected_action': state.selected_action}
+    state.action = result['action']
+  return {'action': state.action}
   
 
 SelectActionFromConversation = Tool(

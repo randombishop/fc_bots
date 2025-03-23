@@ -2,6 +2,7 @@ import re
 from bots.data.users import get_username, get_fid
 from bots.data.channels import get_channel_url
 from bots.utils.format_cast import insert_mentions, shorten_text
+from bots.data.app import get_bot_character
 
 
 DEFAULT_TEMPLATE = """
@@ -10,9 +11,6 @@ DEFAULT_TEMPLATE = """
 
 #ACTIONS
 {{actions}}
-
-#ACTIONS TEMPLATES
-{{actions_templates}}
 
 #REQUEST
 {{request}}
@@ -35,8 +33,8 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 #RECENT POSTS
 {{bot_casts}}
 
-#SELECTED CHANNEL
-{{selected_channel}}
+#CHANNEL
+{{channel}}
 
 #CONVERSATION
 {{conversation}}
@@ -44,8 +42,8 @@ fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attach
 #TIME
 {{time}}
 
-#SELECTED ACTION
-{{selected_action}}
+#ACTION
+{{action}}
 """
 
 
@@ -61,25 +59,24 @@ CONVERSATION_AND_REQUEST_TEMPLATE = """
 
 class State:
   
-  def __init__(self, id=None, name=None, character=None,
-               request=None, 
-               fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None,
-               selected_channel=None, selected_action=None, user=None):
+  def __init__(self, input):
+    id = input['bot_id']
+    character = get_bot_character(id)
+    if character is None:
+      raise Exception(f"Bot {id} not found")
     # Initialization
-    self.id = id
-    self.name = name
+    self.id =id
+    self.name = character['name']
     self.character = character
-    self.request = request
-    self.fid_origin = int(fid_origin) if fid_origin is not None else None
+    self.request = input['request'] if 'request' in input else None
+    self.fid_origin = int(input['fid_origin']) if 'fid_origin' in input and input['fid_origin'] is not None else None
     self.user_origin = get_username(self.fid_origin) if self.fid_origin is not None else None
-    self.parent_hash = parent_hash
-    self.attachment_hash = attachment_hash
-    self.root_parent_url = root_parent_url
-    self.is_responding = request is not None and len(request)>0
+    self.parent_hash = input['parent_hash'] if 'parent_hash' in input else None
+    self.attachment_hash = input['attachment_hash'] if 'attachment_hash' in input else None
+    self.root_parent_url = input['root_parent_url'] if 'root_parent_url' in input else None
     self.current_phase = 'initialize'
     # a. Wake up
     self.bio = None
-    self.channel = selected_channel
     self.channel_list = None
     self.conversation = None
     self.lore = None
@@ -88,16 +85,12 @@ class State:
     # b. Plan
     self.should_continue = True
     self.actions = None
-    self.actions_templates = None
-    self.selected_channel = selected_channel
-    self.selected_channel_df = None
-    self.selected_channel_reasoning = None
-    self.selected_channel_log = None
-    self.selected_action = selected_action
+    self.action = input['action'] if 'action' in input else None
     # c. Parse parameters
-    self.user = user
-    self.user_fid = get_fid(user) if user is not None else None
-    self.channel_url = get_channel_url(selected_channel) if selected_channel is not None else None
+    self.user = input['user'] if 'user' in input else None
+    self.user_fid = get_fid(self.user) if self.user is not None else None
+    self.channel = input['channel'] if 'channel' in input else None
+    self.channel_url = get_channel_url(self.channel) if self.channel is not None else None
     self.keyword = None
     self.category = None
     self.search = None
@@ -151,6 +144,9 @@ class State:
     self.reply = False
     self.do_not_reply_reason = None
        
+  def is_responding(self):
+    return self.request is not None and len(self.request)>0
+  
   def format_placeholder(self, key):
     if not hasattr(self, key):
       raise ValueError(f"Invalid key: {key}")
@@ -218,10 +214,10 @@ class State:
       if self.conversation is not None and len(self.conversation)>0:
         s += self.conversation + '\n'
       # Selected action
-      if self.selected_action is None:
+      if self.action is None:
         s += '## No action was selected ##\n'
       else:  
-        s += f"## {self.selected_action} ##\n"
+        s += f"## {self.action} ##\n"
       # Casts
       if self.casts is not None and len(self.casts)>0: 
         s += ">> casts >>\n"

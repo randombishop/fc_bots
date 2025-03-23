@@ -11,7 +11,7 @@ Your goal is not to continue the conversation, you must only extract the channel
 Channels typically start with / but not always.
 
 #CURRENT CHANNEL: 
-{{selected_channel}}
+{{channel}}
 
 #RESPONSE FORMAT:
 {

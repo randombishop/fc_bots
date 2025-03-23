@@ -18,7 +18,7 @@ def format_embed(embed):
 
 def memorize(input):
   state = input.state
-  if state.selected_action not in ['WhoIs', 'Praise']:
+  if state.action not in ['WhoIs', 'Praise']:
     return {'log': 'No user profile to save'}
   bio_text = state.user_display_name + '\n' + state.user_bio \
               if state.user_bio is not None else None

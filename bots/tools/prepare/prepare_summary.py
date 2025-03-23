@@ -18,7 +18,7 @@ You are @{{name}}, a bot programmed to make summaries of posts (=casts) in a soc
 {{style}}
 
 #CURRENT CHANNEL
-{{selected_channel}}
+{{channel}}
 """
 
 main_instructions = """

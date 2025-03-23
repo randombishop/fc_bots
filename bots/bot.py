@@ -3,7 +3,6 @@ from langchain.agents import BaseSingleActionAgent
 from langchain.schema import AgentAction, AgentFinish
 from langchain.agents import AgentExecutor
 from bots.utils.llms2 import get_llm, get_llm_img
-from bots.data.app import get_bot_character
 from bots.state import State
 from bots.tool_input import ToolInput
 from bots.tools import TOOL_LIST
@@ -32,24 +31,7 @@ class Bot(BaseSingleActionAgent):
     return {"input":input}
   
   def initialize(self, input):
-    id = input['bot_id']
-    character = get_bot_character(id)
-    request = input['request'] if 'request' in input else None
-    fid_origin = input['fid_origin'] if 'fid_origin' in input else None
-    parent_hash = input['parent_hash'] if 'parent_hash' in input else None
-    attachment_hash = input['attachment_hash'] if 'attachment_hash' in input else None
-    root_parent_url = input['root_parent_url'] if 'root_parent_url' in input else None
-    user = input['user'] if 'user' in input else None
-    self._state = State(
-      id=id, 
-      name=character['name'], 
-      character=character, 
-      request=request, 
-      fid_origin=fid_origin, 
-      parent_hash=parent_hash, 
-      attachment_hash=attachment_hash, 
-      root_parent_url=root_parent_url, 
-      user=user)
+    self._state = State(input)
     self._todo = [
       'BotWakeup',
       'BotPlan',
@@ -80,7 +62,7 @@ class Bot(BaseSingleActionAgent):
 
 
 
-def invoke_bot(run_name, bot_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
+def invoke_bot(run_name, bot_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, channel=None, action=None, user=None):
   input = {
       'bot_id': bot_id,
       'request': request,
@@ -88,8 +70,9 @@ def invoke_bot(run_name, bot_id, request=None, fid_origin=None, parent_hash=None
       'parent_hash': parent_hash,
       'attachment_hash': attachment_hash,
       'root_parent_url': root_parent_url,
-      'selected_channel': selected_channel,
-      'selected_action': selected_action
+      'channel': channel,
+      'action': action,
+      'user': user
   }
   bot = Bot()
   executor = AgentExecutor(agent=bot, tools=bot._tools, max_iterations=25)

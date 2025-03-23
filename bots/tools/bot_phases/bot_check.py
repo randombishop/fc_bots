@@ -9,7 +9,7 @@ def bot_check(input):
   if state.casts is not None and len(state.casts) > 0:
     Shorten.invoke({'input': input})
     Reply.invoke({'input': input})
-  if state.is_responding:
+  if state.is_responding():
     Like.invoke({'input': input})
   return {
     'reply': state.reply,

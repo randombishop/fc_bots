@@ -8,7 +8,7 @@ tool_map = {t.name: t for t in MEMORIZE_TOOLS}
 
 def bot_memorize(input):
   state = input.state
-  selected_action = state.selected_action
+  selected_action = state.action
   if selected_action is None:
     return {'log': 'No action selected'}
   tools = get_action_config_tools(selected_action, 'memorize')

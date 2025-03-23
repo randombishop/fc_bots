@@ -6,7 +6,7 @@ from bots.assistant import invoke_assistant
 bot_id = int(os.getenv('TEST_BOT'))
 
 
-def run_bot(test_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
+def run_bot(test_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, channel=None, action=None, user=None):
   state = invoke_bot(
     run_name=test_id, 
     bot_id=bot_id, 
@@ -15,8 +15,9 @@ def run_bot(test_id, request=None, fid_origin=None, parent_hash=None, attachment
     parent_hash=parent_hash, 
     attachment_hash=attachment_hash, 
     root_parent_url=root_parent_url, 
-    selected_channel=selected_channel, 
-    selected_action=selected_action
+    channel=channel, 
+    action=action,
+    user=user
   )
   state.debug()
   return state

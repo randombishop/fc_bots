@@ -16,7 +16,7 @@ You are @{{name}}, a social media bot.
 {{style}}
 
 #CURRENT CHANNEL
-{{selected_channel}}
+{{channel}}
 
 #TASK
 Before responding to the user, you must evaluate if you should continue this conversation or not. 
@@ -47,6 +47,8 @@ schema = {
 def should_continue(input):
   state = input.state
   llm = input.llm
+  if state.conversation is None or len(state.conversation) == 0:
+    raise Exception('No conversation provided')
   prompt = state.format_conversation()
   instructions = state.format(instructions_template)
   params = call_llm(llm, prompt, instructions, schema)
