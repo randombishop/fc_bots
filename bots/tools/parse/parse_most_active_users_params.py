@@ -28,9 +28,9 @@ parse_schema = {
 
 
 def parse_most_active_users(input):
-  state = input.state
-  if state.channel is not None:
+  if input.state.channel is not None:
     return {'log': 'Channel already set'}
+  state = input.state
   llm = input.llm
   parse_prompt = state.format_conversation()
   parse_instructions = state.format(parse_instructions_template)

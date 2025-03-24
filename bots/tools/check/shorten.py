@@ -74,7 +74,7 @@ def shorten(input):
   llm = input.llm
   casts = state.casts
   if casts is None:
-    return {'log': 'No casts'}
+    raise Exception('No casts to shorten')
   log = []
   for c in casts:
     original = c['text']

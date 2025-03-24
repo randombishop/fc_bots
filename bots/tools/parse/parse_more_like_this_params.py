@@ -25,6 +25,8 @@ parse_schema = {
 }
 
 def parse_more_like_this_params(input):
+  if input.state.text is not None:
+    return {'log': 'Text already set'}
   state = input.state
   llm = input.llm
   parse_prompt = state.format_conversation()

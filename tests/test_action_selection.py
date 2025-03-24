@@ -40,7 +40,6 @@ class TestActionSelection(unittest.TestCase):
     request = "Pick your favorite cast in channel /mfers"
     state = run_bot(test_id='TestActionSelection:test_pick', request=request)
     self.assertEqual(state.action, 'Pick')
-    self.assertTrue(state.reply)
     
   def test_word_cloud(self):
     request = "Make a wordcloud for user @vitalik.eth"

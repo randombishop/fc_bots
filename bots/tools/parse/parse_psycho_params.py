@@ -24,6 +24,8 @@ parse_user_schema = {
 
 
 def parse_psycho_params(input):
+  if input.state.user is not None:
+    return {'log': 'User already set'}
   state = input.state
   llm = input.llm
   parse_prompt = state.format_conversation()

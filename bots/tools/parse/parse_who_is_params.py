@@ -28,10 +28,10 @@ parse_user_schema = {
 
 
 def parse_who_is_params(input):
+  if input.state.user is not None:
+    return {'log': 'User already set'}
   state = input.state
   llm = input.llm
-  if state.user is not None:
-    return {'log': 'User already set'}
   parse_prompt = state.format_conversation()
   parse_instructions = state.format(parse_user_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_user_schema)

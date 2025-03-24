@@ -8,7 +8,7 @@ class TestAutoprompt(unittest.TestCase):
       
   
   def test1(self):
-    state = run_bot(test_id='TestAutoprompt:test1', selected_channel='mfers', action='MostActiveUsers')
+    state = run_bot(test_id='TestAutoprompt:test1', channel='mfers', action='MostActiveUsers')
     self.assertIn('The most active mfers are',state.casts[0]['text'])
     
   def test2(self):
@@ -16,6 +16,6 @@ class TestAutoprompt(unittest.TestCase):
     self.assertEquals(state.casts[0]['mentions'][0], 253232)
       
   def test3(self):
-    state = run_bot(test_id='TestAutoprompt:test3', selected_channel='product', action='Summary')
+    state = run_bot(test_id='TestAutoprompt:test3', channel='product', action='Summary')
     self.assertIn('Summarize', state.request)
   

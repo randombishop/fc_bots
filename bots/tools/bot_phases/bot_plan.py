@@ -3,6 +3,7 @@ from bots.tools.plan.get_actions import GetActions
 from bots.tools.plan.select_action_from_conversation import SelectActionFromConversation
 from bots.tools.plan.should_continue import ShouldContinue
 
+
 def bot_plan(input):
   state = input.state
   if state.action is None:

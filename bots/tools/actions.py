@@ -100,8 +100,3 @@ ACTION_CONFIG = {
 }
 
 
-def get_action_config_tools(action, phase):
-  if action is None or action not in ACTION_CONFIG:
-    return None
-  config = ACTION_CONFIG[action]
-  return config[phase] if phase in config else None

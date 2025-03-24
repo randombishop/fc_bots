@@ -5,6 +5,7 @@ from bots.tools.wakeup.get_style import GetStyle
 from bots.tools.wakeup.get_time import GetTime
 from bots.tools.wakeup.get_conversation import GetConversation
 
+
 def bot_wakeup(input):
   GetBio.invoke({'input': input})
   GetLore.invoke({'input': input})
@@ -12,6 +13,7 @@ def bot_wakeup(input):
   GetTime.invoke({'input': input})
   GetConversation.invoke({'input': input})
   return {'log': 'ok'}
+
 
 BotWakeup = Tool(
   name="BotWakeup",

@@ -26,6 +26,8 @@ parse_schema = {
 
 
 def parse_news_params(input):
+  if input.state.search is not None:
+    return {'log': 'Search already set'}
   state = input.state
   llm = input.llm
   parse_prompt = state.format_conversation()

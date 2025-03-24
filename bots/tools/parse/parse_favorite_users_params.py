@@ -25,6 +25,8 @@ parse_user_schema = {
 
 
 def parse_favorite_users(input):
+  if input.state.user is not None:
+    return {'log': 'User already set'}
   state = input.state
   llm = input.llm
   parse_prompt = state.format_conversation()

@@ -43,6 +43,8 @@ parse_schema = {
 
 
 def parse_word_cloud_params(input):
+  if not input.state.is_responding():
+    return {'log': 'Skipping parse_summary_params'}
   state = input.state
   llm = input.llm
   parse_prompt = state.format_conversation()
