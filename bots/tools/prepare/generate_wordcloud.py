@@ -5,9 +5,11 @@ from wordcloud import WordCloud, ImageColorGenerator
 from PIL import Image
 import numpy
 from bots.utils.gcs import upload_to_gcs
+from bots.tools.prepare.generate_wordcloud_mask import GenerateWordCloudMask
 
 
 def generate_wordcloud(input):
+  GenerateWordCloudMask.invoke({'input': input})
   state = input.state
   mask = numpy.array(state.wordcloud_mask)
   colormap = ImageColorGenerator(mask)

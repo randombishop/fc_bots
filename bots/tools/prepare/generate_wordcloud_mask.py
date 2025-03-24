@@ -76,6 +76,6 @@ def generate_wordcloud_mask(input):
 
 GenerateWordCloudMask = Tool(
   name="GenerateWordCloudMask",
-  description="Generate the wordcloud mask image",
+  description="Generate a wordcloud mask.",
   func=generate_wordcloud_mask
 )

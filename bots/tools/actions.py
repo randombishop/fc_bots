@@ -34,7 +34,7 @@ ACTION_CONFIG = {
   'Summary': {
     'parse': ['ParseSummaryParams'],
     'fetch': ['GetCastsForParams'],
-    'prepare': ['PrepareSummary', 'GenerateWordCloudMask', 'GenerateWordCloud'],
+    'prepare': ['PrepareSummary', 'GenerateWordCloud'],
     'compose': ['ComposeSummary']
   },
   'FavoriteUsers': {
@@ -62,7 +62,7 @@ ACTION_CONFIG = {
   'WordCloud': {
     'parse': ['ParseWordCloudParams'],
     'fetch': ['GetCastsForParams'],
-    'prepare': ['PrepareWordCloud', 'GenerateWordCloudMask', 'GenerateWordCloud'],
+    'prepare': ['PrepareWordCloud', 'GenerateWordCloud'],
     'compose': ['ComposeWordCloud']
   },
   'Psycho': {
