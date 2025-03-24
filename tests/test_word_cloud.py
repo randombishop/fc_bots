@@ -7,7 +7,7 @@ from bots.utils.tests import run_bot
 class TestWordCloud(unittest.TestCase):
 
   def assert_expected_output(self, state):
-    self.assertEqual(state.selected_action, 'WordCloud')
+    self.assertEqual(state.action, 'WordCloud')
     self.assertEqual(len(state.casts), 1)
     self.assertEqual(len(state.casts[0]['embeds']), 1)
 

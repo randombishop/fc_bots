@@ -7,7 +7,7 @@ from bots.utils.tests import run_bot
 class TestMostActiveUsers(unittest.TestCase):
 
   def assert_expected_output(self, state):
-    self.assertEqual(state.selected_action, 'MostActiveUsers')
+    self.assertEqual(state.action, 'MostActiveUsers')
     self.assertEqual(len(state.casts), 1)
     self.assertEqual(len(state.casts[0]['mentions']), 3)
     self.assertTrue(state.reply)

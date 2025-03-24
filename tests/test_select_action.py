@@ -8,10 +8,10 @@ class TestSelectAction(unittest.TestCase):
   
   def test1(self):
     state = run_bot(selected_channel='nature')
-    self.assertIsNotNone(state.selected_action)
+    self.assertIsNotNone(state.action)
     
   def test2(self):
     state = run_bot(selected_channel='None')
-    self.assertIsNotNone(state.selected_action)
+    self.assertIsNotNone(state.action)
     
   

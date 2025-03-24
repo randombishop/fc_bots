@@ -7,7 +7,7 @@ from bots.utils.tests import run_bot
 class TestChat(unittest.TestCase):
 
   def assert_expected_output(self, state, expected_continue):
-    action = state.selected_action
+    action = state.action
     if expected_continue:
       self.assertTrue(action == 'Chat')
       self.assertEqual(len(state.casts), 1)

@@ -6,7 +6,7 @@ from bots.utils.tests import run_bot
 class TestRoast(unittest.TestCase):
 
   def assert_expected_output(self, state):
-    self.assertEqual(state.selected_action, 'Roast')
+    self.assertEqual(state.action, 'Roast')
     self.assertEqual(len(state.casts), 1)
     self.assertTrue(state.reply)
     

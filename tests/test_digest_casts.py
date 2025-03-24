@@ -7,7 +7,7 @@ from bots.utils.tests import run_bot
 class TestDigestCasts(unittest.TestCase):
   
   def assert_expected_output(self, state):
-    self.assertEqual(state.selected_action, 'Summary')
+    self.assertEqual(state.action, 'Summary')
     self.assertGreaterEqual(len(state.casts), 1)
     self.assertTrue(state.reply)
       

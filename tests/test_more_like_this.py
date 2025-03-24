@@ -7,7 +7,7 @@ from bots.utils.tests import run_bot
 class TestMoreLikeThis(unittest.TestCase):
   
   def assert_expected_output(self, state):
-    self.assertEqual(state.selected_action, 'MoreLikeThis')
+    self.assertEqual(state.action, 'MoreLikeThis')
     self.assertGreater(len(state.casts), 0)
     self.assertTrue(state.reply)
     top_result = state.casts[0]

@@ -7,7 +7,7 @@ from bots.utils.tests import run_bot
 class TestWhoIs(unittest.TestCase):
   
   def assert_expected_output(self, state):
-    self.assertEqual(state.selected_action, 'WhoIs')
+    self.assertEqual(state.action, 'WhoIs')
     self.assertEqual(len(state.casts), 1)
     
   def test1(self):

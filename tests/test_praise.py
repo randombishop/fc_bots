@@ -7,7 +7,7 @@ from bots.utils.tests import run_bot
 class TestPraise(unittest.TestCase):
 
   def assert_expected_output(self, state):
-    self.assertEqual(state.selected_action, 'Praise')
+    self.assertEqual(state.action, 'Praise')
     self.assertEqual(len(state.casts), 3)
     self.assertTrue(state.reply)
     

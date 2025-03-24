@@ -7,7 +7,7 @@ from bots.utils.tests import run_bot
 class TestFavoriteUsers(unittest.TestCase):
 
   def assert_expected_output(self, state):
-    self.assertEqual(state.selected_action, 'FavoriteUsers')
+    self.assertEqual(state.action, 'FavoriteUsers')
     self.assertEqual(len(state.casts), 1)
     self.assertEqual(len(state.casts[0]['mentions']), 3)
     self.assertEqual(len(state.casts[0]['embeds']), 1)

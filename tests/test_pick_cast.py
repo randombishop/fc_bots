@@ -7,7 +7,7 @@ from bots.utils.tests import run_bot
 class TestPickCast(unittest.TestCase):
 
   def assert_expected_output(self, state):
-    self.assertEqual(state.selected_action, 'Pick')
+    self.assertEqual(state.action, 'Pick')
     self.assertEqual(len(state.casts), 1)
     self.assertEqual(len(state.casts[0]['embeds']), 1)
     self.assertTrue(state.reply)
