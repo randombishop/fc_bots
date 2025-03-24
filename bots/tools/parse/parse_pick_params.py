@@ -2,6 +2,7 @@ from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.utils.llms import get_max_capactity
 from bots.utils.read_params import read_category, read_channel, read_user, read_keyword, read_string
+from bots.data.channels import get_channel_by_url
 
 
 parse_instructions_template = """
@@ -53,7 +54,8 @@ def parse_pick_params(input):
   parse_prompt = state.format_conversation()
   parse_instructions = state.format(parse_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)
-  state.channel = read_channel(params)
+  state.channel_url = read_channel(params)
+  state.channel = get_channel_by_url(state.channel_url)
   state.keyword = read_keyword(params)
   state.category = read_category(params)
   state.search = read_string(params, key='search', default=None, max_length=500)
@@ -61,6 +63,7 @@ def parse_pick_params(input):
   state.criteria = read_string(params, key='criteria', default='most interesting')
   state.max_rows = get_max_capactity()
   return {
+    'channel_url': state.channel_url,
     'channel': state.channel,
     'keyword': state.keyword,
     'category': state.category,

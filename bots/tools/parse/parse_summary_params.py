@@ -1,6 +1,7 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user
+from bots.data.channels import get_channel_by_url
 
 
 parse_instructions_template = """
@@ -50,6 +51,7 @@ def parse_summary_params(input):
   parse_instructions = state.format(parse_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)
   state.channel_url = read_channel(params)
+  state.channel = get_channel_by_url(state.channel_url)
   state.keyword = read_keyword(params)
   state.category = read_category(params)
   state.search = read_string(params, key='search', default=None, max_length=500)
@@ -59,6 +61,7 @@ def parse_summary_params(input):
   state.max_rows = 50
   return {
     'channel_url': state.channel_url,
+    'channel': state.channel,
     'keyword': state.keyword,
     'category': state.category,
     'search': state.search,
