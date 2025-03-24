@@ -31,7 +31,6 @@ setup(
       "psycopg2-binary==2.9.9",
       "SQLAlchemy==2.0.36",
       "langchain==0.3.20",
-      "langchain-community==0.3.20",
       "langchain-google-vertexai==2.0.15",
       "langchain-openai==0.3.9"
     ]
