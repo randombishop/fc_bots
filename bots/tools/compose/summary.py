@@ -15,7 +15,7 @@ def compose_summary(input):
       'text': link['comment'], 
       'embeds': [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}],
       'embeds_description': link['text'],
-      'embeds_warpcast': f"https://warpcast.com/{data['user_name']}/{data['hash'][:10]}"
+      'embeds_warpcast': f"https://warpcast.com/{link['user_name']}/{link['hash'][:10]}"
     })
   state.casts = casts
   return {'casts': casts}
