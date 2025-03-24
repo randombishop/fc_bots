@@ -68,11 +68,13 @@ ACTION_CONFIG = {
   'Psycho': {
     'parse': ['ParsePsychoParams'],
     'fetch': ['GetCastsForFid'],
+    'prepare': ['PreparePsycho'],
     'compose': ['ComposePsycho']
   },
   'Roast': {
     'parse': ['ParseRoastParams'],
     'fetch': ['GetCastsForFid'],
+    'prepare': ['PrepareRoast'],
     'compose': ['ComposeRoast']
   },
   'Perplexity': {
@@ -95,7 +97,7 @@ ACTION_CONFIG = {
   'Praise': {
     'parse': ['ParsePraiseParams'],
     'fetch': ['GetUserProfile', 'GetUserRepliesAndReactions'],
-    'prepare': ['DescribePfp', 'DescribeUserCasts', 'DescribeUserRepliesAndReactions', 'GenerateAvatar'],
+    'prepare': ['DescribePfp', 'DescribeUserCasts', 'DescribeUserRepliesAndReactions', 'GenerateAvatar', 'PreparePraise'],
     'compose': ['ComposePraise'],
     'memorize': ['SaveUserProfile']
   }

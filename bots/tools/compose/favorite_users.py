@@ -1,8 +1,4 @@
-import uuid
-import os
 from langchain.agents import Tool
-from bots.utils.images import table_image
-from bots.utils.gcs import upload_to_gcs
 
 
 def compose_favorite_users(input):

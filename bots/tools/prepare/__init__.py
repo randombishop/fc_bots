@@ -7,6 +7,9 @@ from bots.tools.prepare.generate_wordcloud_mask import GenerateWordCloudMask
 from bots.tools.prepare.generate_wordcloud import GenerateWordCloud
 from bots.tools.prepare.prepare_favorite_users_table import PrepareFavoriteUsersTable
 from bots.tools.prepare.prepare_most_active_users_chart import PrepareMostActiveUsersChart
+from bots.tools.prepare.prepare_praise import PreparePraise
+from bots.tools.prepare.prepare_psycho import PreparePsycho
+from bots.tools.prepare.prepare_roast import PrepareRoast
 from bots.tools.prepare.prepare_summary import PrepareSummary
 from bots.tools.prepare.prepare_word_cloud import PrepareWordCloud
 
@@ -21,6 +24,9 @@ PREPARE_TOOLS = [
   GenerateWordCloud,
   PrepareFavoriteUsersTable,
   PrepareMostActiveUsersChart,
+  PreparePraise,
+  PreparePsycho,
+  PrepareRoast,
   PrepareSummary,
   PrepareWordCloud
 ]

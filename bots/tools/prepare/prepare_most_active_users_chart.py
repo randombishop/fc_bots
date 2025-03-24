@@ -3,7 +3,6 @@ import os
 from langchain.agents import Tool
 from bots.utils.images import user_activity_chart
 from bots.utils.gcs import upload_to_gcs
-from bots.data.channels import get_channel_by_url
 
 
 def prepare_most_active_users_chart(input):

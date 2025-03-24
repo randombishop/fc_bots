@@ -139,6 +139,9 @@ class State:
     self.yahoo_news = None
     self.favorite_users_table = None
     self.most_active_users_chart = None
+    self.user_praise = None
+    self.user_psycho = None
+    self.user_roast = None
     # f. Combine
     self.casts = None
     # g. Check
