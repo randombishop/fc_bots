@@ -55,7 +55,8 @@ def compose_pick(input):
   cast = {
     'text': data['comment'],
     'embeds': [{'fid': data['fid'], 'user_name': data['user_name'], 'hash': data['hash']}],
-    'embeds_description': data['text']
+    'embeds_description': data['text'],
+    'embeds_warpcast': f"https://warpcast.com/{data['user_name']}/{data['hash'][:10]}"
   }
   casts = [cast]
   state.casts = casts

@@ -108,6 +108,7 @@ def compose_praise(input):
           if l is not None:
             c['embeds'] = [{'fid': l['fid'], 'user_name': l['user_name'], 'hash': l['hash']}]
             c['embeds_description'] = l['text']
+            c['embeds_warpcast'] = f"https://warpcast.com/{l['user_name']}/{l['hash'][:10]}"
       casts.append(c)
   add_cast('tweet2')
   add_cast('tweet3')

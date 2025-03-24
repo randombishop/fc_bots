@@ -13,6 +13,7 @@ def compose_more_like_this(input):
       'text': '', 
       'embeds': [{'fid': similar['fid'], 'user_name': similar['user_name'], 'hash': similar['hash']}],
       'embeds_description': similar['text'],
+      'embeds_warpcast': f"https://warpcast.com/{similar['user_name']}/{similar['hash'][:10]}",
       'q_distance': similar['q_distance'],
       'dim_distance': similar['dim_distance']
     })
