@@ -3,6 +3,7 @@ from bots.data.users import get_username, get_fid
 from bots.data.channels import get_channel_url
 from bots.utils.format_cast import insert_mentions, shorten_text
 from bots.data.app import get_bot_character
+from bots.utils.llms import get_max_capactity
 
 
 DEFAULT_TEMPLATE = """
@@ -97,7 +98,7 @@ class State:
     self.text = None
     self.question = None
     self.criteria = None
-    self.max_rows = None
+    self.max_rows = get_max_capactity()
     # d. Fetch and Prepare
     self.trending = ''
     self.user_casts = None
