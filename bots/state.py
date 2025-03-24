@@ -137,6 +137,8 @@ class State:
     self.df_most_active_users = None
     self.df_casts_for_fid = None
     self.yahoo_news = None
+    self.favorite_users_table = None
+    self.most_active_users_chart = None
     # f. Combine
     self.casts = None
     # g. Check

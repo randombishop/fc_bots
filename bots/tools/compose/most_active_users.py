@@ -9,18 +9,11 @@ from bots.data.channels import get_channel_by_url
 def compose_most_active_users(input):
   state = input.state
   channel_url = state.channel_url
-  if channel_url is None:
-    raise Exception("Missing channel")
   channel_id = get_channel_by_url(channel_url)
-  if channel_id is None:
-    raise Exception("Channel not registered")
+  chart = state.most_active_users_chart
   df = state.df_most_active_users
-  if df is None or len(df) == 0:
-    raise Exception("Missing most active users dataframe")
-  filename = str(uuid.uuid4())+'.png'
-  user_activity_chart(df, filename)
-  upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
-  os.remove(filename)
+  if df is None or len(df) == 0 or chart is None:
+    raise Exception("Missing most active users data")
   num_mentions = min(len(df), 3)
   mentions = [int(df.iloc[i]['fid']) for i in range(num_mentions)]
   mentions_ats = ['@'+df.iloc[i]['User'] for i in range(num_mentions)]
@@ -48,7 +41,7 @@ def compose_most_active_users(input):
     'mentions': mentions, 
     'mentions_pos': mentions_positions,
     'mentions_ats': mentions_ats,
-    'embeds': [f"https://fc.datascience.art/bot/main_files/{filename}"],
+    'embeds': [chart],
     'embeds_description': "Chart of top active users in the channel"
   }
   casts =  [cast]

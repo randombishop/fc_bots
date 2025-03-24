@@ -40,6 +40,7 @@ ACTION_CONFIG = {
   'FavoriteUsers': {
     'parse': ['ParseFavoriteUsersParams'],
     'fetch': ['GetFavoriteUsers'],
+    'prepare': ['PrepareFavoriteUsersTable'],
     'compose': ['ComposeFavoriteUsers']
   },
   'MoreLikeThis': {
@@ -50,6 +51,7 @@ ACTION_CONFIG = {
   'MostActiveUsers': {
     'parse': ['ParseMostActiveUsersParams'],
     'fetch': ['GetMostActiveUsers'],
+    'prepare': ['PrepareMostActiveUsersChart'],
     'compose': ['ComposeMostActiveUsers']
   },
   'Pick': {
