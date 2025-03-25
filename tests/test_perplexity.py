@@ -14,10 +14,10 @@ class TestPerplexity(unittest.TestCase):
     
   def test1(self):
     request = "Ask perplexity how many stars are there in our galaxy?"
-    state = run_bot(request)
+    state = run_bot(test_id='TestPerplexity:1', request=request)
     self.assert_expected_output(state)
     
   def test2(self):
     request = "Ask perplexity what is the answer to life, the universe and everything?"
-    state = run_bot(request)
+    state = run_bot(test_id='TestPerplexity:2', request=request)
     self.assert_expected_output(state)
