@@ -8,7 +8,7 @@ class TestChat(unittest.TestCase):
 
   def test1(self):
     request = "Not interested."
-    state = run_bot(test_id='TestChat:test1', request=request)
+    state = run_bot(test_id='TestChat:1', request=request)
     self.assertTrue(state.action is None or state.action == 'Chat')
     self.assertFalse(state.should_continue) 
     self.assertIsNone(state.casts)
@@ -16,7 +16,7 @@ class TestChat(unittest.TestCase):
 
   def test2(self):
     request = "Chat with me: Who are you?"
-    state = run_bot(test_id='TestChat:test2', request=request)
+    state = run_bot(test_id='TestChat:2', request=request)
     self.assertTrue(state.action == 'Chat')
     self.assertEqual(len(state.casts), 1)
     self.assertTrue(state.reply)
@@ -25,7 +25,7 @@ class TestChat(unittest.TestCase):
   def test3(self):
     request = "Chat with me: Do you think DeepSeek will surpass OpenAI?"
     fid_origin=253232
-    state = run_bot(test_id='TestChat:test3', request=request, fid_origin=fid_origin)
+    state = run_bot(test_id='TestChat:3', request=request, fid_origin=fid_origin)
     self.assertTrue(state.action == 'Chat')
     self.assertEqual(len(state.casts), 1)
     self.assertEqual(state.category, 'c_tech_science')
@@ -35,7 +35,7 @@ class TestChat(unittest.TestCase):
     request = "Thank you so much for sharing 😺❤️❤️❤️"
     fid_origin=388401
     parent_hash='0x7506e607e722d543b61306d1357814ad61caa132'
-    state = run_bot(test_id='TestChat:test4', request=request, fid_origin=fid_origin, parent_hash=parent_hash)
+    state = run_bot(test_id='TestChat:4', request=request, fid_origin=fid_origin, parent_hash=parent_hash)
     self.assertTrue(state.action is None or state.action == 'Chat')
     self.assertIsNone(state.casts)
     self.assertFalse(state.reply) 
