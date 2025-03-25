@@ -116,10 +116,8 @@ class State:
     self.user_avatar_prompt = None
     self.user_avatar = None
     self.about_keyword = None
-    self.topic = None
-    self.about_topic = None
-    self.context = None
-    self.about_context = None
+    self.about_category = None
+    self.about_search = None
     self.posts_map = {}
     self.casts_in_channel = None
     self.bot_casts = None

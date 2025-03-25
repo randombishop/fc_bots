@@ -2,6 +2,7 @@ from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.utils.check_links import check_link_data
 
+
 chat_instructions_template = """
 You are @{{name}}, a social media bot.
 Your goal is to reply to a user conversation with a creative tweet with a reference to one of the provided posts.
@@ -37,22 +38,22 @@ If you can't find any post that can be used that way, respond with a tweet only 
 
 
 chat_prompt_template = """
-##Posts about {{topic}}
-{{about_topic}}
+# Posts in category {{category}} #
+{{about_category}}
 
-##Posts about {{keyword}}
+# Posts about {{keyword}} #
 {{about_keyword}}
 
-##Posts about {{context}}
-{{about_context}}
+# Posts about {{search}} #
+{{about_search}}
 
-##Posts from @{{user_origin}}
+# Posts from @{{user_origin}} #
 {{about_user}}
 
-#Conversation (this is the current conversation you are having with the user)
+# Conversation (this is the current conversation you are having with the user) #
 {{conversation}}
 
-#Last message (this is the message you are responding to)
+# Last message (this is the message you are responding to) #
 {{request}}
 """
 

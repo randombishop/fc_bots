@@ -1,3 +1,4 @@
+from bots.tools.parse.parse_context_params import ParseContextParams
 from bots.tools.parse.parse_favorite_users_params import ParseFavoriteUsersParams
 from bots.tools.parse.parse_more_like_this_params import ParseMoreLikeThisParams
 from bots.tools.parse.parse_most_active_users_params import ParseMostActiveUsersParams
@@ -13,6 +14,7 @@ from bots.tools.parse.parse_word_cloud_params import ParseWordCloudParams
 
 
 PARSE_TOOLS = [
+  ParseContextParams,
   ParseFavoriteUsersParams,
   ParseMoreLikeThisParams,
   ParseMostActiveUsersParams,

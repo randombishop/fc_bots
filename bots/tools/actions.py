@@ -29,6 +29,8 @@ ACTION_TEMPLATES = {
 
 ACTION_CONFIG = {
   'Chat': {
+    'parse': ['ParseContextParams'],
+    'fetch': ['GetCastsForContext'],
     'compose': ['ComposeChat']
   },
   'Summary': {
