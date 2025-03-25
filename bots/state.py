@@ -6,49 +6,6 @@ from bots.data.app import get_bot_character
 from bots.utils.llms import get_max_capactity
 
 
-DEFAULT_TEMPLATE = """
-#NAME
-{{name}}
-
-#ACTIONS
-{{actions}}
-
-#REQUEST
-{{request}}
-
-#PARAMS
-fid_origin={{fid_origin}}, parent_hash={{parent_hash}}, attachment_hash={{attachment_hash}}, root_parent_url={{root_parent_url}}
-
-#BIO
-{{bio}}
-
-#LORE
-{{lore}}
-
-#STYLE
-{{style}}
-
-#TRENDING POSTS
-{{trending}}
-
-#RECENT POSTS
-{{bot_casts}}
-
-#CHANNEL
-{{channel}}
-
-#CONVERSATION
-{{conversation}}
-
-#TIME
-{{time}}
-
-#ACTION
-{{action}}
-"""
-
-
-
 CONVERSATION_AND_REQUEST_TEMPLATE = """
 #CONVERSATION
 {{conversation}}
@@ -76,6 +33,7 @@ class State:
     self.attachment_hash = input['attachment_hash'] if 'attachment_hash' in input else None
     self.root_parent_url = input['root_parent_url'] if 'root_parent_url' in input else None
     self.current_phase = 'initialize'
+    self.instructions = input['instructions'] if 'instructions' in input else None
     # a. Wake up
     self.bio = None
     self.channel_list = None
@@ -87,6 +45,7 @@ class State:
     self.should_continue = True
     self.actions = None
     self.action = input['action'] if 'action' in input else None
+    self.action_reasoning = None
     # c. Parse parameters
     self.user = input['user'] if 'user' in input else None
     self.user_fid = get_fid(self.user) if self.user is not None else None
@@ -99,6 +58,7 @@ class State:
     self.question = None
     self.criteria = None
     self.max_rows = get_max_capactity()
+    self.params_reasoning = None
     # d. Fetch and Prepare
     self.trending = ''
     self.user_casts = None
@@ -200,7 +160,7 @@ class State:
       ans += '\n'
     return ans
   
-  def format(self, template=DEFAULT_TEMPLATE):
+  def format(self, template):
     result = template
     placeholders = re.findall(r'\{\{(\w+)\}\}', template)
     for placeholder in placeholders:
@@ -214,13 +174,14 @@ class State:
   def debug(self):
     try:
       s = ('-'*128) + '\n'
-      # Request
+      # Conversation
       if self.conversation is not None and len(self.conversation)>0:
         s += self.conversation + '\n'
+      # Instructions
+      if self.instructions is not None and len(self.instructions)>0:
+        s += self.instructions + '\n'
       # Selected action
-      if self.action is None:
-        s += '## No action was selected ##\n'
-      else:  
+      if self.action is not None:
         s += f"## {self.action} ##\n"
       # Casts
       if self.casts is not None and len(self.casts)>0: 

@@ -1,6 +1,6 @@
-from bots.tools.assistant_phases.assistant_wakeup import AssistantWakeup
+from bots.tools.assistant_phases.assistant_start import AssistantStart
 
 
 ASSISTANT_PHASES = [
-  AssistantWakeup
+  AssistantStart
 ]

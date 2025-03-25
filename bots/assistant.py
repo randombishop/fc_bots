@@ -33,7 +33,7 @@ class Assistant(BaseSingleActionAgent):
   def initialize(self, input):
     self._state = State(input)
     self._todo = [
-      'AssistantWakeup'
+      'AssistantStart'
     ]
     
   def plan(self, intermediate_steps, callbacks, **kwargs):
@@ -54,10 +54,11 @@ class Assistant(BaseSingleActionAgent):
 
 
 
-def invoke_assistant(run_name, bot_id, instructions):
+def invoke_assistant(run_name, bot_id, instructions=None, channel=None):
   input = {
       'bot_id': bot_id,
-      'instructions': instructions
+      'instructions': instructions,
+      'channel': channel
   }
   assistant = Assistant()
   executor = AgentExecutor(agent=assistant, tools=assistant._tools, max_iterations=25)
