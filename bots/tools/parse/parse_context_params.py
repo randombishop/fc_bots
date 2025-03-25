@@ -16,7 +16,7 @@ You are @{{name}}, a social media bot.
 {{style}}
 
 #CURRENT CHANNEL
-{{channel}}
+{{root_parent_url}}
 
 #TASK
 Before responding to the user, you can access data from the social media platform to come up with a better response and reference relevant posts.

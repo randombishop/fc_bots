@@ -24,29 +24,6 @@ class Assistant(BaseSingleActionAgent):
   def input_keys(self):
     return ["input"]
   
-  def initialize_state(self, input):
-    id = input['bot_id']
-    character = get_bot_character(id)
-    request = input['request'] if 'request' in input else None
-    fid_origin = input['fid_origin'] if 'fid_origin' in input else None
-    parent_hash = input['parent_hash'] if 'parent_hash' in input else None
-    attachment_hash = input['attachment_hash'] if 'attachment_hash' in input else None
-    root_parent_url = input['root_parent_url'] if 'root_parent_url' in input else None
-    user = input['user'] if 'user' in input else None
-    self._state = State(id=id, 
-                        name=character['name'], 
-                        character=character, 
-                        request=request, 
-                        fid_origin=fid_origin, 
-                        parent_hash=parent_hash, 
-                        attachment_hash=attachment_hash, 
-                        root_parent_url=root_parent_url, 
-                        user=user)
-    self.todo('get_bio')
-    self.todo('get_lore')
-    self.todo('get_style')
-    self.todo('get_time')
-    
   def get_tool_input(self):
     input = ToolInput(
       state=self._state, 
@@ -55,18 +32,14 @@ class Assistant(BaseSingleActionAgent):
     )
     return {"input":input}
   
-  def todo(self, tool, done_steps=[]):
-    if tool in TOOL_DEPENDENCIES:
-      for dependency in TOOL_DEPENDENCIES[tool]:
-        self.todo(dependency, done_steps)
-    if tool not in self._todo and tool not in done_steps:
-      self._todo.append(tool)
-  
+  def initialize(self, input):
+    self._state = State(input)
+    self._todo = []
+    
   def plan(self, intermediate_steps, callbacks, **kwargs):
-    done_steps = [x[0].tool for x in intermediate_steps]
     if self._state is None:
       input = json.loads(kwargs['input'])
-      self.initialize_state(input)
+      self.initialize(input)
     if len(self._todo) > 0: 
       tool = self._todo.pop(0)
       return AgentAction(
@@ -75,9 +48,6 @@ class Assistant(BaseSingleActionAgent):
         log=tool)
     else:
       return AgentFinish(return_values={"output": self._state}, log='done')
-    
-  async def aplan(self, intermediate_steps, **kwargs):
-    return self.plan(intermediate_steps, **kwargs)
 
 
 

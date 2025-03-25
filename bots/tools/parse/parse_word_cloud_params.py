@@ -18,7 +18,7 @@ You can use the conversation to guess the parameters, but focus on the request.
 Your goal is to extract the parameters from the request.
 
 #CURRENT CHANNEL
-{{channel}}
+{{root_parent_url}}
 
 RESPONSE FORMAT:
 {
@@ -51,7 +51,7 @@ def parse_word_cloud_params(input):
   parse_prompt = state.format_conversation()
   parse_instructions = state.format(parse_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)
-  state.channel_url = read_channel(params)
+  state.channel_url = read_channel(params, current_channel=state.root_parent_url, default_to_current=False)
   state.channel = get_channel_by_url(state.channel_url)
   state.keyword = read_keyword(params)
   state.category = read_category(params)
