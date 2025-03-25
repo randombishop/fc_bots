@@ -3,11 +3,9 @@ from langchain.agents import BaseSingleActionAgent
 from langchain.schema import AgentAction, AgentFinish
 from langchain.agents import AgentExecutor
 from bots.utils.llms2 import get_llm, get_llm_img
-from bots.data.app import get_bot_character
 from bots.state import State
 from bots.tool_input import ToolInput
 from bots.tools import TOOL_LIST
-
 
 
 class Assistant(BaseSingleActionAgent):
@@ -18,7 +16,7 @@ class Assistant(BaseSingleActionAgent):
     self._llm = get_llm()
     self._llm_img = get_llm_img()
     self._state = None
-    self._todo = []
+    self._todo = None
     
   @property
   def input_keys(self):
@@ -34,7 +32,9 @@ class Assistant(BaseSingleActionAgent):
   
   def initialize(self, input):
     self._state = State(input)
-    self._todo = []
+    self._todo = [
+      'AssistantWakeup'
+    ]
     
   def plan(self, intermediate_steps, callbacks, **kwargs):
     if self._state is None:
@@ -48,6 +48,9 @@ class Assistant(BaseSingleActionAgent):
         log=tool)
     else:
       return AgentFinish(return_values={"output": self._state}, log='done')
+    
+  async def aplan(self, intermediate_steps, **kwargs):
+    return self.plan(intermediate_steps, **kwargs)
 
 
 
