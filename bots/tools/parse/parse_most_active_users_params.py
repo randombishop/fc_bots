@@ -1,6 +1,7 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_channel
+from bots.data.channels import get_channel_by_url
 
 
 parse_instructions_template = """
@@ -36,8 +37,10 @@ def parse_most_active_users(input):
   parse_instructions = state.format(parse_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)
   state.channel_url = read_channel(params, current_channel=state.root_parent_url, default_to_current=True)
+  state.channel = get_channel_by_url(state.channel_url)
   return {
-    'channel_url': state.channel_url
+    'channel_url': state.channel_url,
+    'channel': state.channel
   }
 
 

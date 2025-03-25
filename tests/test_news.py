@@ -14,6 +14,6 @@ class TestNews(unittest.TestCase):
   
   def test1(self):
     request = "Search the news for Data Science"
-    state = run_bot(request)
+    state = run_bot(test_id='TestNews:1', request=request)
     self.assert_expected_output(state)
     
