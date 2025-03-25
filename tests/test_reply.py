@@ -1,23 +1,22 @@
 from dotenv import load_dotenv
 load_dotenv()
 import unittest
-from bots.bot_state import BotState
-from bots.think.reply import Reply
+from bots.utils.tests import make_tool_input
+from bots.tools.check.reply import Reply
+
 
 class TestReply(unittest.TestCase):
   
   def test1(self):
-    state = BotState()
-    state.conversation = "Hey what's up?"
-    state.casts = [{'text': "Just another day chunking data in Megacity, how about you?"}]
-    reply = Reply(state)
-    reply.think()
-    self.assertTrue(state.reply)
+    input = make_tool_input()
+    input.state.conversation = "Hey what's up?"
+    input.state.casts = [{'text': "Just another day chunking data in Megacity, how about you?"}]
+    Reply.invoke({'input': input})
+    self.assertTrue(input.state.reply)
     
   def test2(self):
-    state = BotState()
-    state.conversation = "Can you answer 1+1=2?"
-    state.casts = [{'text': "The population of the world is 7.9 billion."}]
-    reply = Reply(state)
-    reply.think()
-    self.assertFalse(state.reply)
+    input = make_tool_input()
+    input.state.conversation = "Can you answer 1+1=2?"
+    input.state.casts = [{'text': "The population of the world is 7.9 billion."}]
+    Reply.invoke({'input': input})
+    self.assertFalse(input.state.reply)

@@ -15,7 +15,10 @@ def get_channels_map():
 
 
 def get_channel_by_url(url):
-  return _channels_by_url[url] if url in _channels_by_url else None
+  if url is None:
+    return None
+  else:
+    return _channels_by_url[url] if url in _channels_by_url else None
 
 
 def get_channel_url(channel):
@@ -25,5 +28,7 @@ def get_channel_url(channel):
     return _channels_by_id[channel]
   elif channel in _channels_by_name:
     return _channels_by_name[channel]
+  elif channel.startswith('http://') or channel.startswith('https://'):
+    return channel
   else:
     return None

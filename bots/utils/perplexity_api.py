@@ -1,5 +1,6 @@
 import requests
 import os
+from langsmith import traceable
 
 
 URL = "https://api.perplexity.ai/chat/completions"
@@ -7,6 +8,8 @@ TOKEN = os.getenv("PERPLEXITY_API_KEY")
 MODEL = "sonar"
 SYSTEM_PROMPT = "Answer with one short tweet. Do not use hashtags. Generate an original and engaging tweet. Keep it short and to the point."
 
+
+@traceable(run_type="llm", name="Perplexity")
 def call_perplexity(question):
   payload = {
     "model": MODEL,

@@ -1,134 +1,84 @@
-from bots.bot_state import BotState
-from bots.wakeup.wakeup_steps import WAKEUP_STEPS
-from bots.prepare.prepare_steps import PREPARE_STEPS
-from bots.action.action_steps import ACTION_STEPS
-from bots.plan.select_channel import SelectChannel
-from bots.plan.select_action import SelectAction
-from bots.think.like import Like
-from bots.think.reply import Reply
-from bots.think.shorten import Shorten
-from bots.data.app import get_bot_character
-from bots.memory.user_profile import UserProfile
+import json
+from langchain.agents import BaseSingleActionAgent
+from langchain.schema import AgentAction, AgentFinish
+from langchain.agents import AgentExecutor
+from bots.utils.llms2 import get_llm, get_llm_img
+from bots.state import State
+from bots.tool_input import ToolInput
+from bots.tools import TOOL_LIST
 
 
-class Bot:
-  
-  def __init__(self, id, character):
-    self.id = id
-    self.character = character
-    self.state = BotState()
+class Bot(BaseSingleActionAgent):
+            
+  def __init__(self):
+    super().__init__()
+    self._tools = TOOL_LIST
+    self._llm = get_llm()
+    self._llm_img = get_llm_img()
+    self._state = None
+    self._todo = None
     
-  def initialize(self, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None, user=None):
-    self.state = BotState(
-      id=self.id,
-      name=self.character['name'], 
-      request=request, 
-      fid_origin=fid_origin, 
-      parent_hash=parent_hash, 
-      attachment_hash=attachment_hash, 
-      root_parent_url=root_parent_url,
-      selected_channel=selected_channel,
-      selected_action=selected_action,
-      user=user
+  @property
+  def input_keys(self):
+    return ["input"]
+    
+  def get_tool_input(self):
+    input = ToolInput(
+      state=self._state, 
+      llm=self._llm, 
+      llm_img=self._llm_img
     )
-
-  def wakeup(self):
-    wakeup_steps = self.character['wakeup_steps']
-    for key in wakeup_steps:
-      wakeup_step = WAKEUP_STEPS[key]()
-      wakeup_value = wakeup_step.get(self.character, self.state)
-      self.state.set(key, wakeup_value)
-
-  def plan(self):
-    if self.state.selected_channel is None:
-      select_channel_step = SelectChannel(self.state)
-      select_channel_step.plan()
-    if self.state.selected_action is None:
-      select_action_step = SelectAction(self.state)
-      select_action_step.plan()
+    return {"input":input}
   
-  def prepare(self):
-    if self.state.selected_action is None:
-      return
-    Action = ACTION_STEPS[self.state.selected_action]
-    action = Action(self.state)
-    prepare_steps = action.get_prepare_steps()
-    for step in prepare_steps:
-      Prepare = PREPARE_STEPS[step]
-      prepare_step = Prepare(self.state)
-      prepare_step.prepare()
-  
-  def execute(self):
-    if self.state.selected_action is None:
-      return
-    Action = ACTION_STEPS[self.state.selected_action]
-    action = Action(self.state)
-    if self.state.request is None:
-      action.auto_prompt()
+  def initialize(self, input):
+    self._state = State(input)
+    self._todo = [
+      'BotWakeup',
+      'BotPlan',
+      'BotParse',
+      'BotFetch',
+      'BotPrepare',
+      'BotCompose',
+      'BotCheck',
+      'BotMemorize'
+    ]
+      
+  def plan(self, intermediate_steps, callbacks, **kwargs):
+    if self._state is None:
+      input = json.loads(kwargs['input'])
+      self.initialize(input)
+    if len(self._todo) > 0: 
+      tool = self._todo.pop(0)
+      return AgentAction(
+        tool=tool,
+        tool_input=self.get_tool_input(),
+        log=tool)
     else:
-      action.parse()
-    action.execute()
-    self.state.cost += action.get_cost()
+      return AgentFinish(return_values={"output": self._state}, log='done')
     
-  def think(self):
-    # Decide if we should like the post
-    if self.state.request is not None:  
-      like_step = Like(self.state)
-      like_step.think()
-    # Shorten the casts if needed
-    if self.state.casts is not None and len(self.state.casts) > 0:
-      shorten_step = Shorten(self.state)
-      shorten_step.think()
-    # Decide if we should reply
-    if self.state.casts is not None and len(self.state.casts) > 0 and self.state.request is not None:
-      reply_step = Reply(self.state)
-      reply_step.think()
-  
-  def record_memories(self):
-    if self.state.selected_action in ['WhoIs', 'Praise']:
-      user_profile = UserProfile(self.state)
-      user_profile.record()
-    
-  def respond(self, request=None, 
-              fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, 
-              selected_channel=None, selected_action=None, user=None):
-    self.initialize(request=request, 
-                    fid_origin=fid_origin, 
-                    parent_hash=parent_hash, 
-                    attachment_hash=attachment_hash, 
-                    root_parent_url=root_parent_url,
-                    selected_channel=selected_channel, 
-                    selected_action=selected_action, 
-                    user=user)
-    self.wakeup()
-    self.plan()
-    self.prepare()
-    self.execute()
-    self.think()
-    self.record_memories()
-    
-  
+  async def aplan(self, intermediate_steps, **kwargs):
+    return self.plan(intermediate_steps, **kwargs)
 
-def generate_bot_response(bot_id, 
-                          request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, 
-                          selected_channel=None, selected_action=None, user=None,
-                          debug=False):
-  character = get_bot_character(bot_id)
-  if character is None:
-    raise Exception(f"Bot {bot_id} not found")
-  bot = Bot(bot_id, character)
-  try:
-    bot.respond(request=request, 
-      fid_origin=fid_origin, 
-      parent_hash=parent_hash, 
-      attachment_hash=attachment_hash, 
-      root_parent_url=root_parent_url,
-      selected_channel=selected_channel,
-      selected_action=selected_action,
-      user=user)
-    if debug:
-      bot.state.debug()
-    return bot.state
-  except Exception as e:
-    bot.state.debug()
-    raise e
+
+
+
+def invoke_bot(run_name, bot_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, channel=None, action=None, user=None):
+  input = {
+      'bot_id': bot_id,
+      'request': request,
+      'fid_origin': fid_origin,
+      'parent_hash': parent_hash,
+      'attachment_hash': attachment_hash,
+      'root_parent_url': root_parent_url,
+      'channel': channel,
+      'action': action,
+      'user': user
+  }
+  bot = Bot()
+  executor = AgentExecutor(agent=bot, tools=bot._tools, max_iterations=25)
+  result = executor.invoke(input=json.dumps(input), config={"run_name": run_name})
+  if 'output' not in result:
+    raise Exception(f"Bot {bot_id} returned no output")
+  if 'error' in result:
+    raise Exception(f"Bot {bot_id} returned an error: {result['error']}")
+  return result['output']

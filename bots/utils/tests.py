@@ -1,36 +1,38 @@
 import os
-from bots.bot import Bot, generate_bot_response
-from bots.bot_state import BotState
-from bots.data.app import get_bot_character
-
+from bots.bot import invoke_bot
+from bots.assistant import invoke_assistant
+from bots.state import State
+from bots.tool_input import ToolInput
+from bots.utils.llms2 import get_llm, get_llm_img
 
 bot_id = int(os.getenv('TEST_BOT'))
 
-def make_state():
-  state = BotState(id=bot_id)
+def make_tool_input():
+  state = State({'bot_id': bot_id})
+  tool_input = ToolInput(state, get_llm(), get_llm_img())
+  return tool_input
+
+def run_bot(test_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, channel=None, action=None, user=None):
+  state = invoke_bot(
+    run_name=test_id, 
+    bot_id=bot_id, 
+    request=request, 
+    fid_origin=fid_origin, 
+    parent_hash=parent_hash, 
+    attachment_hash=attachment_hash, 
+    root_parent_url=root_parent_url, 
+    channel=channel, 
+    action=action,
+    user=user
+  )
+  state.debug()
   return state
 
-def make_character():
-  character = get_bot_character(bot_id)
-  return character
-
-def make_bot():
-  bot_character = make_character()
-  bot = Bot(bot_id, bot_character)
-  return bot
-
-def make_character_and_state(request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None):  
-  character = make_character()
-  state = BotState(id=bot_id)
-  state.request = request
-  state.fid_origin = fid_origin
-  state.parent_hash = parent_hash
-  state.attachment_hash = attachment_hash
-  state.root_parent_url = root_parent_url
-  return character, state
-
-def run_bot(request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, selected_channel=None, selected_action=None):
-  return generate_bot_response(bot_id, request, fid_origin=fid_origin, parent_hash=parent_hash, attachment_hash=attachment_hash, 
-                  root_parent_url=root_parent_url, 
-                  selected_channel=selected_channel, selected_action=selected_action,
-                  debug=True)
+def run_assistant(test_id, instructions):
+  state = invoke_assistant(
+    run_name=test_id, 
+    bot_id=bot_id, 
+    instructions=instructions
+  )
+  state.debug()
+  return state

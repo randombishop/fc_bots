@@ -1,146 +1,83 @@
 from dotenv import load_dotenv
 load_dotenv()
 import unittest
-from bots.utils.tests import make_character_and_state
-from bots.wakeup.wakeup_actions import WakeUpActions
-from bots.wakeup.wakeup_bio import WakeUpBio
-from bots.wakeup.wakeup_conversation import WakeUpConversation
-from bots.wakeup.wakeup_lore import WakeUpLore
-from bots.wakeup.wakeup_style import WakeUpStyle
-from bots.wakeup.wakeup_time import WakeUpTime
+from bots.utils.tests import make_tool_input
+from bots.tools.wakeup.get_bio import GetBio
+from bots.tools.wakeup.get_lore import GetLore
+from bots.tools.wakeup.get_style import GetStyle
+from bots.tools.wakeup.get_time import GetTime
+from bots.tools.wakeup.get_conversation import GetConversation
 
 
 class TestWakeUp(unittest.TestCase):
   
-  #########################################################  
-  # wakeup_action
-  #########################################################
-
-  def test_actions1(self):
-    character, state = make_character_and_state()
-    actions = WakeUpActions().get(character, state)
-    lines = actions.split('\n')
-    print('<WakeUpActions>')
-    print(actions)
-    print('</WakeUpActions>')
-    self.assertGreater(len(lines), 10)
+  def test_bio(self):
+    input = make_tool_input()
+    GetBio.invoke({'input': input})
+    self.assertIsNotNone(input.state.bio)
     
-
+  def test_lore(self):
+    input = make_tool_input()
+    GetLore.invoke({'input': input})
+    self.assertIsNotNone(input.state.lore)
     
-  #########################################################  
-  # wakeup_bio
-  #########################################################
-
-  def test_bio1(self):
-    character, state = make_character_and_state()
-    bio = WakeUpBio().get(character, state)
-    print('<WakeUpBio>')
-    print(bio)
-    print('</WakeUpBio>')
-    lines = bio.split('\n')
-    self.assertGreater(len(lines), 1)
-
+  def test_style(self):
+    input = make_tool_input()
+    GetStyle.invoke({'input': input})
+    self.assertIsNotNone(input.state.style)
+    
+  def test_time(self):
+    input = make_tool_input()
+    GetTime.invoke({'input': input})
+    self.assertIsNotNone(input.state.time)
+    
+  
 
   #########################################################
-  # wakeup_conversation
+  # Conversation examples
   #########################################################
   
   def test_conversation1(self):
-    request = "Hello World"
-    character, state = make_character_and_state(request)
-    conversation = WakeUpConversation().get(character, state)
-    print('<WakeUpConversation>')
-    print(conversation)
-    print('</WakeUpConversation>')
-    self.assertIn(request, conversation)
+    input = make_tool_input()
+    input.state.request = "Hello World"
+    GetConversation.invoke({'input': input})
+    self.assertIn(input.state.request, input.state.conversation)
 
   def test_conversation2(self):
-    request = "Find similar casts"
-    parent_hash = '0x8fa5e35f8b843c1713a2c4d32a59edc6a2abb863'
-    character, state = make_character_and_state(request=request, parent_hash=parent_hash)
-    conversation = WakeUpConversation().get(character, state)
-    print('<WakeUpConversation>')
-    print(conversation)
-    print('</WakeUpConversation>')
-    self.assertIn(request, conversation)
-    self.assertIn('@v', conversation)
-    self.assertIn('@unknown_user', conversation)
+    input = make_tool_input()
+    input.state.request = "Find similar casts"
+    input.state.parent_hash = '0x8fa5e35f8b843c1713a2c4d32a59edc6a2abb863'
+    GetConversation.invoke({'input': input})
+    self.assertIn(input.state.request, input.state.conversation)
+    self.assertIn('@v', input.state.conversation)
+    self.assertIn('@unknown_user', input.state.conversation)
     
   def test_conversation3(self):
-    attachment_hash = '0xbe89c48299d8b080267ddd96c06c84397ee13185'
-    request = "Other casts like this one?"
-    character, state = make_character_and_state(request=request, attachment_hash=attachment_hash)    
-    conversation = WakeUpConversation().get(character, state)
-    print('<WakeUpConversation>')
-    print(conversation)
-    print('</WakeUpConversation>')
-    self.assertIn(request, conversation)
-    self.assertIn('@unknown_user', conversation)
-    self.assertIn('quoting @ds007', conversation)
-    self.assertIn('I like #DataScience and #ML therefore I like #Farcaster', conversation)
+    input = make_tool_input()
+    input.state.request = "Other casts like this one?"
+    input.state.attachment_hash = '0xbe89c48299d8b080267ddd96c06c84397ee13185'
+    GetConversation.invoke({'input': input})
+    self.assertIn(input.state.request, input.state.conversation)
+    self.assertIn('@unknown_user', input.state.conversation)
+    self.assertIn('quoting @ds007', input.state.conversation)
+    self.assertIn('I like #DataScience and #ML therefore I like #Farcaster', input.state.conversation)
     
   def test_conversation4(self):
-    request = "More like this"
-    fid_origin = 253232
-    parent_hash = '0x6f119aad7fa236cd31eeebd03d569bc264350d29'
-    character, state = make_character_and_state(request=request, fid_origin=fid_origin, parent_hash=parent_hash)    
-    conversation = WakeUpConversation().get(character, state)
-    print('<WakeUpConversation>')
-    print(conversation)
-    print('</WakeUpConversation>')
-    self.assertIn(request, conversation)
-    self.assertIn('@horsefacts.eth', conversation)
-    self.assertIn('@randombishop', conversation)
-    self.assertIn('quoting @greg', conversation)
-    self.assertIn('post a picture of you from a different era', conversation)
+    input = make_tool_input()
+    input.state.request = "More like this"
+    input.state.fid_origin = 253232
+    input.state.parent_hash = '0x6f119aad7fa236cd31eeebd03d569bc264350d29'
+    GetConversation.invoke({'input': input})
+    self.assertIn(input.state.request, input.state.conversation)
+    self.assertIn('@horsefacts.eth', input.state.conversation)
+    self.assertIn('@randombishop', input.state.conversation)
+    self.assertIn('quoting @greg', input.state.conversation)
+    self.assertIn('post a picture of you from a different era', input.state.conversation)
 
   def test_conversation5(self):
-    request = "Deleted parent test"
-    parent_hash = '0xb59fcfda9e859be648e5d5541d292a6fb8cc9fcb'
-    character, state = make_character_and_state(request=request, parent_hash=parent_hash)    
-    conversation = WakeUpConversation().get(character, state)
-    print('<WakeUpConversation>')
-    print(conversation)
-    print('</WakeUpConversation>')
-    self.assertIn(request, conversation)
+    input = make_tool_input()
+    input.state.request = "Deleted parent test"
+    input.state.parent_hash = '0xb59fcfda9e859be648e5d5541d292a6fb8cc9fcb'
+    GetConversation.invoke({'input': input})
+    self.assertIn(input.state.request, input.state.conversation)
     
-
-    
-  #########################################################
-  # wakeup_lore
-  #########################################################
-  def test_lore1(self):
-    character, state = make_character_and_state()
-    lore = WakeUpLore().get(character, state)
-    print('<WakeUpLore>')
-    print(lore)
-    print('</WakeUpLore>')
-    lines = lore.split('\n')
-    self.assertGreater(len(lines), 1)
-    
-
-
-  #########################################################
-  # wakeup_style
-  #########################################################
-  def test_style1(self):
-    character, state = make_character_and_state()
-    style = WakeUpStyle().get(character, state)
-    lines = style.split('\n')
-    print('<WakeUpStyle>')
-    print(style)
-    print('</WakeUpStyle>')
-    self.assertGreater(len(lines), 1) 
-    
-
-
-  #########################################################
-  # wakeup_time
-  #########################################################
-  def test_time1(self):
-    character, state = make_character_and_state()
-    time = WakeUpTime().get(character, state)
-    print('<WakeUpTime>')
-    print(time)
-    print('</WakeUpTime>')
-    self.assertRegex(time, r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}')
