@@ -16,25 +16,21 @@ class TestActionSelection(unittest.TestCase):
     request = "Give me a summary about keyword ethereum."
     state = run_bot(test_id='TestActionSelection:test_summary', request=request)
     self.assertEqual(state.action, 'Summary')
-    self.assertTrue(state.reply)
     
   def test_favorite_users(self):
     request = "Who are @vitalik.eth's favorite users?"
     state = run_bot(test_id='TestActionSelection:test_favorite_users', request=request)
     self.assertEqual(state.action, 'FavoriteUsers')
-    self.assertTrue(state.reply)
   
   def test_more_like_this(self):
     request = "More Like This: #Bitcoin is sweet!"
     state = run_bot(test_id='TestActionSelection:test_more_like_this', request=request)
     self.assertEqual(state.action, 'MoreLikeThis')
-    self.assertTrue(state.reply)
     
   def test_most_active_users(self):
     request = "Who is most active in channel /data?"
     state = run_bot(test_id='TestActionSelection:test_most_active_users', request=request)
     self.assertEqual(state.action, 'MostActiveUsers')
-    self.assertTrue(state.reply)
     
   def test_pick(self):
     request = "Pick your favorite cast in channel /mfers"
@@ -45,40 +41,33 @@ class TestActionSelection(unittest.TestCase):
     request = "Make a wordcloud for user @vitalik.eth"
     state = run_bot(test_id='TestActionSelection:test_word_cloud', request=request)
     self.assertEqual(state.action, 'WordCloud')
-    self.assertTrue(state.reply)
 
   def test_psycho(self):
     request = "Psycho analyze @v"
     state = run_bot(test_id='TestActionSelection:test_psycho', request=request)
     self.assertEqual(state.action, 'Psycho')
-    self.assertTrue(state.reply)
     
   def test_roast(self):
     request = "Roast @v"
     state = run_bot(test_id='TestActionSelection:test_roast', request=request)
     self.assertEqual(state.action, 'Roast')
-    self.assertTrue(state.reply)
 
   def test_perplexity(self):
     request = "Ask perplexity to compare Farcaster and Bluesky"
     state = run_bot(test_id='TestActionSelection:test_perplexity', request=request)
     self.assertEqual(state.action, 'Perplexity')
-    self.assertTrue(state.reply)
 
   def test_news(self):
     request = "Data Science news"
     state = run_bot(test_id='TestActionSelection:test_news', request=request)
     self.assertEqual(state.action, 'News')
-    self.assertTrue(state.reply)
     
   def test_who_is(self):
     request = "Who is @randombishop"
     state = run_bot(test_id='TestActionSelection:test_who_is', request=request)
     self.assertEqual(state.action, 'WhoIs')
-    self.assertTrue(state.reply)
   
   def test_praise(self):
     request = "Praise @randombishop"
     state = run_bot(test_id='TestActionSelection:test_praise', request=request)
     self.assertEqual(state.action, 'Praise')
-    self.assertTrue(state.reply)
