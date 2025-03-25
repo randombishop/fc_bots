@@ -13,20 +13,20 @@ class TestPraise(unittest.TestCase):
     
   def test1(self):
     request = "Praise @randombishop"
-    state = run_bot(request)
+    state = run_bot(test_id='TestPraise:1', request=request)
     self.assert_expected_output(state)
-    self.assertEqual(state.action_params['fid'], 253232)
-    self.assertEqual(state.action_params['user_name'], 'randombishop')
+    self.assertEqual(state.user_fid, 253232)
+    self.assertEqual(state.user, 'randombishop')
     
   def test2(self):
     request = "Praise me"
     fid_origin = 2
-    state = run_bot(request, fid_origin=fid_origin)
+    state = run_bot(test_id='TestPraise:2', request=request, fid_origin=fid_origin)
     self.assert_expected_output(state)
-    self.assertEqual(state.action_params['fid'], fid_origin)
-    self.assertEqual(state.action_params['user_name'], 'v')
+    self.assertEqual(state.user_fid, fid_origin)
+    self.assertEqual(state.user, 'v')
     
   def test3(self):
     request = "Praise a random user"
-    state = run_bot(request)
+    state = run_bot(test_id='TestPraise:3', request=request)
     self.assert_expected_output(state)

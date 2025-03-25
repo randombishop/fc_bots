@@ -13,22 +13,22 @@ class TestPsycho(unittest.TestCase):
     
   def test1(self):
     request = "Psycho analyze @randombishop"
-    state = run_bot(request)
+    state = run_bot(test_id='TestPsycho:1', request=request)
     self.assert_expected_output(state)
-    self.assertEqual(state.action_params['fid'], 253232)
-    self.assertEqual(state.action_params['user_name'], 'randombishop')
+    self.assertEqual(state.user_fid, 253232)
+    self.assertEqual(state.user, 'randombishop')
     
   def test2(self):
     request = "psycho analyze me"
     fid_origin = 253232
-    state = run_bot(request, fid_origin=fid_origin)
+    state = run_bot(test_id='TestPsycho:2', request=request, fid_origin=fid_origin)
     self.assert_expected_output(state)
-    self.assertEqual(state.action_params['fid'], fid_origin)
-    self.assertEqual(state.action_params['user_name'], 'randombishop')
+    self.assertEqual(state.user_fid, fid_origin)
+    self.assertEqual(state.user, 'randombishop')
     
   def test3(self):
     request = "Psycho analyze @aethernet"
-    state = run_bot(request)
+    state = run_bot(test_id='TestPsycho:3', request=request)
     self.assert_expected_output(state)
-    self.assertEqual(state.action_params['fid'], 862185)
-    self.assertEqual(state.action_params['user_name'], 'aethernet')
+    self.assertEqual(state.user_fid, 862185)
+    self.assertEqual(state.user, 'aethernet')
