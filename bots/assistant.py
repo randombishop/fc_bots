@@ -33,7 +33,12 @@ class Assistant(BaseSingleActionAgent):
   def initialize(self, input):
     self._state = State(input)
     self._todo = [
-      'AssistantStart'
+      'AssistantStart',
+      'AssistantPlan',
+      'BotParse',
+      'BotFetch',
+      'BotPrepare',
+      'BotCompose'
     ]
     
   def plan(self, intermediate_steps, callbacks, **kwargs):

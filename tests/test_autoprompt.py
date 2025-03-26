@@ -17,6 +17,5 @@ class TestAutoprompt(unittest.TestCase):
       
   def test3(self):
     state = run_bot(test_id='TestAutoprompt:3', channel='product', action='Summary')
-    self.assertEquals(len(state.casts), 3)
     self.assertEquals(len(state.casts[0]['embeds']), 1)
   

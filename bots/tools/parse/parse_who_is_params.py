@@ -6,13 +6,13 @@ from bots.data.users import get_fid
 
 
 parse_user_instructions_template = """
-#INSTRUCTIONS:
+#TASK:
 You are @{{name}}, a bot programmed to analyze a user profile and generate insights, plus a new avatar.
-Based on the provided conversation, which user profile should we analyze?
-Your goal is not to continue the conversation, you must only extract the user parameter from the conversation so that we can call an API.
+Based on the provided context and instructions, which user profile should we analyze?
+You must only extract the user parameter so that we can call an API.
 Users typically start with @, but not always.
-If the request is about self, this or that user, or uses a pronoun, study the conversation carefully to figure out the intended user.
-If the request is targeted to a random user, set user to "*"
+If the request is about self, this or that user, or uses a pronoun, study the context and instructions carefully to figure out the intended user.
+If the request should be targeted to a random user, set user to "*"
 
 #RESPONSE FORMAT:
 {
@@ -32,7 +32,7 @@ def parse_who_is_params(input):
     return {'log': 'User already set'}
   state = input.state
   llm = input.llm
-  parse_prompt = state.format_conversation()
+  parse_prompt = state.format_prompt()
   parse_instructions = state.format(parse_user_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_user_schema)
   fid, user_name = read_user(params, state.fid_origin, default_to_origin=False)

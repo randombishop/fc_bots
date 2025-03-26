@@ -5,10 +5,10 @@ from bots.data.channels import get_channel_by_url
 
 
 parse_instructions_template = """
-#INSTRUCTIONS:
+#TASK:
 You are @{{name}}, a bot programmed to list the most active users in a social media channel.
-Based on the provided conversation, which channel should we look at? 
-Your goal is not to continue the conversation, you must only extract the channel parameter.
+Based on the provided context and instructions, which channel should we look at? 
+You must only extract the channel parameter.
 Channels typically start with / but not always.
 
 #CURRENT CHANNEL: 
@@ -33,7 +33,7 @@ def parse_most_active_users(input):
     return {'log': 'Channel already set'}
   state = input.state
   llm = input.llm
-  parse_prompt = state.format_conversation()
+  parse_prompt = state.format_prompt()
   parse_instructions = state.format(parse_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)
   state.channel_url = read_channel(params, current_channel=state.root_parent_url, default_to_current=True)

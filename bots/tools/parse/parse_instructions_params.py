@@ -3,21 +3,6 @@ from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_keyword, read_string
 
 
-prompt_template = """
-#WHAT IS TRENDING IN GENERAL (NOT SPECIFIC TO THE CHANNEL)
-{{trending}}
-
-#RECENT POSTS IN THE CHANNEL
-{{casts_in_channel}}
-
-#WHAT YOU RECENTLY POSTED IN THE CHANNEL
-{{bot_casts_in_channel}}
-
-#INSTRUCTIONS
-{{instructions}}
-"""
-
-
 instructions_template = """
 You are @{{name}}, a social media bot.
 
@@ -34,7 +19,6 @@ You are @{{name}}, a social media bot.
 {{channel}}
 
 #TASK
-You are provided with a data sample from the farcaster social media platform, plus some current instructions.
 First, study the provided data and understand your instructions.
 Before processing your instructions, you can access data from the social media platform to prepare a good post.
 You have access to an API that can pull data based on a search phrase or a keyword.
@@ -71,7 +55,7 @@ def parse_instructions_params(input):
   llm = input.llm
   if not state.should_continue:
     return {'log': 'Not fetching data because should_continue is false'}
-  prompt = state.format(prompt_template)
+  prompt = state.format_prompt()
   instructions = state.format(instructions_template)
   params = call_llm(llm, prompt, instructions, schema)
   state.search = read_string(params, key='search', max_length=500)

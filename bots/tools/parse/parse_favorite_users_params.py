@@ -5,14 +5,14 @@ from bots.utils.read_params import read_user
 
 
 parse_user_instructions_template = """
-INSTRUCTIONS:
+#TASK:
 You are @{{name}}, a bot programmed to find the favorite accounts of a user.
-Based on the provided conversation and request, who should we pull the favorite accounts for?
-Your goal is not to continue the conversation, you must only extract the user parameter from the request so that we can call an API.
+Based on the provided instructions, who should we pull the favorite accounts for?
+Your goal is not to continue the conversation, you must only extract the user parameter so that we can call an API.
 Users typically start with @, but not always.
 If the request is about self, this or that user, or uses a pronoun, study the conversation carefully to figure out the intended user.
 
-RESPONSE FORMAT:
+#RESPONSE FORMAT:
 {
   "user": ...
 }
@@ -29,7 +29,7 @@ def parse_favorite_users(input):
     return {'log': 'User already set'}
   state = input.state
   llm = input.llm
-  parse_prompt = state.format_conversation()
+  parse_prompt = state.format_prompt()
   parse_instructions = state.format(parse_user_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_user_schema)
   fid, user_name = read_user(params, state.fid_origin, default_to_origin=True)

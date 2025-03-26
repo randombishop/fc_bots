@@ -14,7 +14,9 @@ def get_actions(input):
       random.shuffle(actions)
     ans = ''
     for action in actions:
-      ans += f'{action}: {ACTION_DESCRIPTIONS[action]}\n'
+      include = action != 'Chat' or state.is_responding()
+      if include:
+        ans += f'{action}: {ACTION_DESCRIPTIONS[action]}\n'
     state.actions = ans
   return {'actions': state.actions}
 

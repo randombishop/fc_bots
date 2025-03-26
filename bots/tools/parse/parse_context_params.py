@@ -22,13 +22,13 @@ You are @{{name}}, a social media bot.
 {{time}}
 
 #TASK
-Before responding to the user, you can access data from the social media platform to come up with a better response and reference relevant posts.
+Before responding to the user, you can access data from the social media platform to come up with a good response and reference relevant posts.
 You have access to an API that can pull data based on these parameters: category, keyword, search.
 * category: Can be one of pre-defined categories 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
 * keyword: Can be any single keyword, minimum 4 characters, abbreviations are not allowed.
 * search: Can be any search phrase to search for posts.
-Your goal is not to continue the conversation, you must only come up with interesting parameters to call the API.
-Your goal is to propose parameters to gain access to more data before responding.
+You must only come up with interesting parameters to call the API.
+Your goal is to propose parameters to gain access to more data.
 
 #RESPONSE FORMAT
 {
@@ -53,7 +53,7 @@ def parse_context_params(input):
   llm = input.llm
   if not state.should_continue:
     return {'log': 'Not fetching data because should_continue is false'}
-  prompt = state.format_conversation()
+  prompt = state.format_prompt()
   instructions = state.format(instructions_template)
   params = call_llm(llm, prompt, instructions, schema)
   state.keyword = read_keyword(params)

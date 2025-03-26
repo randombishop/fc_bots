@@ -6,15 +6,6 @@ from bots.data.app import get_bot_character
 from bots.utils.llms import get_max_capactity
 
 
-CONVERSATION_AND_REQUEST_TEMPLATE = """
-#CONVERSATION
-{{conversation}}
-
-#REQUEST
-{{request}}
-"""
-
-
 class State:
   
   def __init__(self, input):
@@ -168,9 +159,32 @@ class State:
       result = result.replace('{{' + placeholder + '}}', value)
     return result
   
-  def format_conversation(self):
-    return self.format(CONVERSATION_AND_REQUEST_TEMPLATE)
+  def format_prompt(self):
+    if self.is_responding():
+      return self.format_conversation()
+    else:
+      return self.format_instructions()
   
+  def format_conversation(self):
+    ans = ''
+    if self.conversation is not None and len(self.conversation)>0:
+      ans += f"#CONVERSATION\n{self.conversation}\n"
+    if self.request is not None and len(self.request)>0:
+      ans += f"#INSTRUCTIONS\n{self.request}\n"
+    return ans
+
+  def format_instructions(self):
+    ans = ''
+    if self.trending is not None and len(self.trending)>0:
+      ans += f"#WHAT IS TRENDING IN GENERAL (NOT SPECIFIC TO THE CHANNEL)\n{self.trending}\n"
+    if self.casts_in_channel is not None and len(self.casts_in_channel)>0:
+      ans += f"#RECENT POSTS IN THE CHANNEL\n{self.casts_in_channel}\n"
+    if self.bot_casts_in_channel is not None and len(self.bot_casts_in_channel)>0:
+      ans += f"#WHAT YOU RECENTLY POSTED IN THE CHANNEL\n{self.bot_casts_in_channel}\n"
+    if self.instructions is not None and len(self.instructions)>0:
+      ans += f"#INSTRUCTIONS\n{self.instructions}\n"
+    return ans
+
   def debug(self):
     try:
       s = ('-'*128) + '\n'

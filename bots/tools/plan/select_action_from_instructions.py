@@ -2,15 +2,6 @@ from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 
 select_action_prompt = """
-#WHAT IS TRENDING IN GENERAL (NOT SPECIFIC TO THE CHANNEL)
-{{trending}}
-
-#RECENT POSTS IN THE CHANNEL
-{{casts_in_channel}}
-
-#WHAT YOU RECENTLY POSTED IN THE CHANNEL
-{{bot_casts_in_channel}}
-
 #YOUR INSTRUCTIONS
 {{instructions}}
 """
@@ -49,8 +40,8 @@ select_action_schema = {
 def select_action_from_instructions(input):
   state = input.state
   llm = input.llm
-  if state.conversation is None or len(state.conversation) == 0:
-    raise Exception('No conversation provided')
+  if state.instructions is None or len(state.instructions) == 0:
+    raise Exception('No instructions provided')
   instructions = state.format(select_action_task)
   prompt = state.format(select_action_prompt)
   result = call_llm(llm, prompt, instructions, select_action_schema)
