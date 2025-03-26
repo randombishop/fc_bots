@@ -123,27 +123,10 @@ class State:
       if 'mentions_ats' in c and 'mentions_pos' in c:
         text = insert_mentions(text, c['mentions_ats'], c['mentions_pos'])
       ans += f"> {text}"
-      if 'embeds_description' in c and c['embeds_description'] is not None:
-        description = c['embeds_description']
-        description = shorten_text(description)
-        ans += f" (embedded link: {description})"
-      ans += '\n'
-    return ans
-  
-  def format_casts2(self):
-    casts = self.casts
-    if casts is None or len(casts)==0:
-      return ''
-    ans = ''
-    for c in casts:
-      text = c['text']
-      if 'mentions_ats' in c and 'mentions_pos' in c:
-        text = insert_mentions(text, c['mentions_ats'], c['mentions_pos'])
-      ans += f"{text}"
       if 'embeds' in c and c['embeds'] is not None and len(c['embeds'])>0:
+        embed = c['embeds'][0]
         description = c['embeds_description'] if 'embeds_description' in c else None
         description = shorten_text(description)
-        embed = c['embeds'][0]
         if 'user_name' in embed and 'hash' in embed:
           ans += f" [{description}](https://warpcast.com/{embed['user_name']}/{embed['hash'][:10]})"
         else:
@@ -185,6 +168,20 @@ class State:
       ans += f"#INSTRUCTIONS\n{self.instructions}\n"
     return ans
 
+  def format_all_available_data(self):
+    ans = ''
+    if self.trending is not None and len(self.trending)>0:
+      ans += f"#WHAT IS TRENDING IN GENERAL (NOT SPECIFIC TO THE CHANNEL)\n{self.trending}\n"
+    if self.casts_in_channel is not None and len(self.casts_in_channel)>0:
+      ans += f"#RECENT POSTS IN THE CHANNEL\n{self.casts_in_channel}\n"
+    if self.bot_casts_in_channel is not None and len(self.bot_casts_in_channel)>0:
+      ans += f"#WHAT YOU RECENTLY POSTED IN THE CHANNEL\n{self.bot_casts_in_channel}\n"
+    if self.casts is not None and len(self.casts)>0:
+      ans += f"#CANDIDATEPOSTS GENERATED SO FAR USING ACTION {self.action}\n{self.format_casts()}\n"
+    if self.instructions is not None and len(self.instructions)>0:
+      ans += f"#INSTRUCTIONS\n{self.instructions}\n"
+    return ans
+  
   def debug(self):
     try:
       s = ('-'*128) + '\n'
@@ -200,7 +197,7 @@ class State:
       # Casts
       if self.casts is not None and len(self.casts)>0: 
         s += ">> casts >>\n"
-        s += self.format_casts2()
+        s += self.format_casts()
       # End
       s += ('-'*128) + '\n'
       print(s)

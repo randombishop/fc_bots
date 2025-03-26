@@ -38,7 +38,8 @@ class Assistant(BaseSingleActionAgent):
       'BotParse',
       'BotFetch',
       'BotPrepare',
-      'BotCompose'
+      'BotCompose',
+      'ComposeCasts'
     ]
     
   def plan(self, intermediate_steps, callbacks, **kwargs):
