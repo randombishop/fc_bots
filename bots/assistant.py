@@ -2,7 +2,7 @@ import json
 from langchain.agents import BaseSingleActionAgent
 from langchain.schema import AgentAction, AgentFinish
 from langchain.agents import AgentExecutor
-from bots.utils.llms2 import get_llm, get_llm_img
+from bots.utils.llms2 import get_llm, get_llm_img, call_llm
 from bots.state import State
 from bots.tool_input import ToolInput
 from bots.tools import TOOL_LIST
@@ -16,7 +16,12 @@ class Assistant(BaseSingleActionAgent):
     self._llm = get_llm()
     self._llm_img = get_llm_img()
     self._state = None
-    self._todo = None
+    self._wakeup = [
+      'GetBio',
+      'GetLore',
+      'GetStyle',
+      'GetTime'
+    ]
     
   @property
   def input_keys(self):
@@ -32,26 +37,23 @@ class Assistant(BaseSingleActionAgent):
   
   def initialize(self, input):
     self._state = State(input)
-    self._todo = [
-      'AssistantStart',
-      'AssistantPlan',
-      'BotParse',
-      'BotFetch',
-      'BotPrepare',
-      'BotCompose',
-      'ComposeCasts'
-    ]
     
   def plan(self, intermediate_steps, callbacks, **kwargs):
     if self._state is None:
       input = json.loads(kwargs['input'])
       self.initialize(input)
-    if len(self._todo) > 0: 
-      tool = self._todo.pop(0)
+    self._state.tools_log = intermediate_steps
+    if len(self._wakeup) > 0: 
+      tool = self._wakeup.pop(0)
       return AgentAction(
         tool=tool,
         tool_input=self.get_tool_input(),
-        log=tool)
+        log='Wakeup sequence')
+    elif not self._state.tools_done:
+      return AgentAction(
+        tool='SelectTool',
+        tool_input=self.get_tool_input(),
+        log='Plan next step')
     else:
       return AgentFinish(return_values={"output": self._state}, log='done')
     

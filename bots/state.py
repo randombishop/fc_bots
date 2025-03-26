@@ -36,7 +36,8 @@ class State:
     self.should_continue = True
     self.actions = None
     self.action = input['action'] if 'action' in input else None
-    self.action_reasoning = None
+    self.tools_log = None
+    self.tools_done = False
     # c. Parse parameters
     self.user = input['user'] if 'user' in input else None
     self.user_fid = get_fid(self.user) if self.user is not None else None
@@ -180,6 +181,30 @@ class State:
       ans += f"#CANDIDATEPOSTS GENERATED SO FAR USING ACTION {self.action}\n{self.format_casts()}\n"
     if self.instructions is not None and len(self.instructions)>0:
       ans += f"#INSTRUCTIONS\n{self.instructions}\n"
+    return ans
+  
+  def format_tools_log(self):
+    ans = '#TOOL EXECUTION LOG\n\n'
+    for x in self.tools_log:
+      step = x[0]
+      observation = x[1]
+      ans += f"##{step.tool}\n"
+      ans += f"{observation}\n\n"
+    ans += '\n\n'
+    ans += '#CURRENT PARAMETERS\n'
+    ans += f"user: {self.user}\n"
+    ans += f"user_fid: {self.user_fid}\n"
+    ans += f"channel: {self.channel}\n"
+    ans += f"channel_url: {self.channel_url}\n"
+    ans += f"keyword: {self.keyword}\n"
+    ans += f"category: {self.category}\n"
+    ans += f"search: {self.search}\n"
+    ans += f"text: {self.text}\n"
+    ans += f"question: {self.question}\n"
+    ans += f"criteria: {self.criteria}\n"
+    ans += '\n\n'
+    ans += '#INSTRUCTIONS\n\n'
+    ans += self.instructions
     return ans
   
   def debug(self):
