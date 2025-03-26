@@ -10,11 +10,15 @@ def get_casts_for_fid(input):
     raise Exception(f"Missing fid/user_name")
   state.df_casts_for_fid = get_casts_for_fid_data(fid)
   return {
-    'df_casts_for_fid': len(state.df_casts_for_fid) if state.df_casts_for_fid is not None else 0
+    'df_casts_for_fid': state.df_casts_for_fid
   }
 
 GetCastsForFid = Tool(
   name="GetCastsForFid",
-  description="Fetch casts for a user",
+  description="Get posts by a user.",
+  metadata={
+    'inputs': 'Will fail if fid and user_name are not set',
+    'outputs': 'Makes dataframe df_casts_for_fid'
+  },
   func=get_casts_for_fid
 )

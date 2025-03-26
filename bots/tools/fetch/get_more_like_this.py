@@ -10,12 +10,16 @@ def get_more_like_this(input):
   df = get_more_like_this_data(state.text, exclude_hash=exclude_hash, limit=10)
   state.df_more_like_this = df
   return {
-    'df_more_like_this': len(state.df_more_like_this)
+    'df_more_like_this': state.df_more_like_this
   }
 
 
 GetMoreLikeThis = Tool(
   name="GetMoreLikeThis",
   description="Find similar posts",
+  metadata={
+    'inputs': 'Requires text parameter, will fail if not set',
+    'outputs': 'Dataframe df_more_like_this'
+  },
   func=get_more_like_this
 )

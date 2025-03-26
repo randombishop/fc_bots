@@ -27,7 +27,8 @@ parse_tools?
 
 fetch_tools?
 
-## For processing your data
+## To prepare additional data before posting (such as charts, images, summaries, wordclouds, etc.)
+## Make sure you call as many of these as possible to enrich the quality of your posts.
 
 prepare_tools?
 
@@ -49,8 +50,21 @@ select_tool_schema = {
   }
 }
 
+tool_names = [x.name for x in PARSE_TOOLS + FETCH_TOOLS + PREPARE_TOOLS]
+
+
 def format_tools(list):
-  return '\n'.join([f"##{x.name}\nDescription: {x.description}\n" for x in list])
+  ans = ''
+  for x in list:
+    ans += f"##{x.name}\n"
+    ans += f"Description: {x.description}\n"
+    if x.metadata is not None:
+      if 'inputs' in x.metadata:
+        ans += f"Inputs: {x.metadata['inputs']}\n"
+      if 'outputs' in x.metadata:
+        ans += f"Outputs: {x.metadata['outputs']}\n"
+    ans += '\n'
+  return ans
 
 
 def select_tool(input):
@@ -64,11 +78,17 @@ def select_tool(input):
   instructions = instructions.replace('fetch_tools?', format_tools(FETCH_TOOLS))
   instructions = instructions.replace('prepare_tools?', format_tools(PREPARE_TOOLS))
   result = call_llm(llm, prompt, instructions, select_tool_schema)
-  state.tools_done = True
+  next_tool = result['tool']
+  tools_done = result['ready']
+  if next_tool not in tool_names:
+    next_tool = None
+    tools_done = True
+  state.next_tool = next_tool
+  state.tools_done = tools_done
   return {
-    'tool': result['tool'], 
-    'ready': result['ready'],
-    'reasoning': result['reasoning']
+    'next_tool': state.next_tool, 
+    'tools_done': state.tools_done,
+    'log': result['reasoning']
   }
   
 

@@ -48,7 +48,7 @@ chat_prompt_template = """
 {{about_search}}
 
 # Posts from @{{user_origin}} #
-{{about_user}}
+{{about_user_origin}}
 
 # Conversation (this is the current conversation you are having with the user) #
 {{conversation}}

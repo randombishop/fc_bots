@@ -27,7 +27,10 @@ def get_channel_list(input):
 
 GetChannelList = Tool(
   name="GetChannelList",
-  func=get_channel_list,
-  description="Get the list of channels for the bot"
+  description="Get the list of all channels where the bot operates.",
+  metadata={
+    'outputs': 'channel_list'
+  },
+  func=get_channel_list
 )
   

@@ -28,7 +28,11 @@ def get_casts_in_channel(input):
 
 GetCastsInChannel = Tool(
   name="GetCastsInChannel",
-  description="Get the casts in a channel",
+  description="Get the casts in a channel.",
+  metadata={
+    'inputs': 'Will fail if channel parameter is not set.',
+    'outputs': 'casts_in_channel'
+  },
   func=get_casts_in_channel
 )
   

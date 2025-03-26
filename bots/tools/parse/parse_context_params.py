@@ -71,5 +71,5 @@ def parse_context_params(input):
 ParseContextParams = Tool(
   name="ParseContextParams",
   func=parse_context_params,
-  description="Parse parameters to build up context"
+  description="Set parameters (one or more) from current context: keyword, category, search, max_rows."
 )

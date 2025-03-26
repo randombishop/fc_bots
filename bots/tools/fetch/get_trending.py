@@ -28,6 +28,9 @@ def get_trending(input):
 
 GetTrending = Tool(
   name="GetTrending",
-  func=get_trending,
-  description="Get the globally trending posts"
+  description="Get the globally trending posts",
+  metadata={
+    'outputs': 'trending'
+  },
+  func=get_trending
 )

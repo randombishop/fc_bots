@@ -42,6 +42,6 @@ def parse_psycho_params(input):
 
 ParsePsychoParams = Tool(
   name="ParsePsychoParams",
-  description="Parse the psycho action parameters",
+  description="Set the parameters user and user_fid to run the psycho analysis tools.",
   func=parse_psycho_params
 )

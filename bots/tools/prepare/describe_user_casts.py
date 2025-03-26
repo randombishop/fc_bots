@@ -13,7 +13,7 @@ prompt_template = """
 {{user_bio}}
 
 # USER POSTS
-{{about_user}}
+{{about_user_origin}}
 """
 
 
@@ -90,5 +90,9 @@ def describe_user_casts(input):
 DescribeUserCasts = Tool(
   name="DescribeUserCasts",
   description="Describe the user's casts",
+  metadata={
+    'inputs': 'Requires user_casts to be fetched first using get_profile tool.',
+    'outputs': 'user_casts_description'
+  },
   func=describe_user_casts
 )

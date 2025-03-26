@@ -23,5 +23,9 @@ def prepare_most_active_users_chart(input):
 PrepareMostActiveUsersChart = Tool(
   name="PrepareMostActiveUsersChart",
   description="Prepare the most active users chart",
+  metadata={
+    'inputs': 'Requires dataframe df_most_active_users to be fetched first.',
+    'outputs': 'Sets an URL in most_active_users_chart.'
+  },
   func=prepare_most_active_users_chart
 )

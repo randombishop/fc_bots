@@ -22,7 +22,10 @@ def get_bot_casts_no_channel(input):
 
 GetBotCastsNoChannel = Tool(
   name="GetBotCastsNoChannel",
-  description="Get the casts of the bot in main feed",
+  description="Get the casts of the bot in main feed.",
+  metadata={
+    'outputs': 'bot_casts_no_channel'
+  },
   func=get_bot_casts_no_channel
 )
 

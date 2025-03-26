@@ -14,11 +14,10 @@ def get_user_profile(input):
   user_info = get_user_info_by_name(user_name)
   df = get_top_casts(user_name=user_name, max_rows=50)
   posts = df.to_dict('records') if len(df) > 0 else []
-  formatted_posts = concat_casts(posts)
-  state.user_casts = posts
+  state.user_casts = concat_casts(posts)
+  state.user_casts_data = posts
   for x in posts:
     state.posts_map[x['id']] = x
-  state.about_user = formatted_posts
   state.user_display_name = user_info['display_name']
   state.user_bio = user_info['bio']['text'] 
   state.user_followers = user_info['num_followers']
@@ -27,7 +26,6 @@ def get_user_profile(input):
     state.user_pfp_url = user_info['pfp']['url']
   return {
     'user_casts': state.user_casts,
-    'about_user': state.about_user,
     'user_display_name': state.user_display_name,
     'user_bio': state.user_bio,
     'user_followers': state.user_followers,
@@ -39,5 +37,9 @@ def get_user_profile(input):
 GetUserProfile = Tool(
   name="GetUserProfile",
   description="Fetch user profile data",
+  metadata={
+    'inputs': 'Requires user parameter',
+    'outputs': 'user_casts, user_display_name, user_bio, user_followers, user_following, user_pfp_url'
+  },
   func=get_user_profile
 )

@@ -37,7 +37,11 @@ class State:
     self.actions = None
     self.action = input['action'] if 'action' in input else None
     self.tools_log = None
+    self.next_tool = None
     self.tools_done = False
+    self.composed = False
+    self.checked = False
+    self.memorized = False
     # c. Parse parameters
     self.user = input['user'] if 'user' in input else None
     self.user_fid = get_fid(self.user) if self.user is not None else None
@@ -50,11 +54,10 @@ class State:
     self.question = None
     self.criteria = None
     self.max_rows = get_max_capactity()
-    self.params_reasoning = None
     # d. Fetch and Prepare
     self.trending = ''
     self.user_casts = None
-    self.about_user = None
+    self.about_user_origin = None
     self.user_display_name = None
     self.user_bio = None
     self.user_followers = None
@@ -205,6 +208,19 @@ class State:
     ans += '\n\n'
     ans += '#INSTRUCTIONS\n\n'
     ans += self.instructions
+    return ans
+  
+  def format_observations(self):
+    ans = ''
+    for x in self.tools_log:
+      step = x[0]
+      observation = x[1]
+      if step.tool != 'SelectTool':  
+        ans += f"#Outputs using tool {step.tool}:\n"
+        for k,v in observation.items():
+          ans += f"##{k}:\n"
+          ans += f"{v}\n\n"
+        ans += '\n\n'
     return ans
   
   def debug(self):

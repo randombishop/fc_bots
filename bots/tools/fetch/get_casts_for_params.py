@@ -23,6 +23,10 @@ def get_casts_for_params(input):
 
 GetCastsForParams = Tool(
   name="GetCastsForParams",
-  description="Fetch casts based on current parameters",
+  description="Get posts using parameters search, channel, keyword, category, user_name and max_rows. Combines all parameters in one single call.",
+  metadata={
+    'inputs': 'Requires at least one of the parameters to be set',
+    'outputs': 'casts_for_params'
+  },
   func=get_casts_for_params
 )

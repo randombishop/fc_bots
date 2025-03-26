@@ -75,6 +75,6 @@ def parse_pick_params(input):
 
 ParsePickParams = Tool(
   name="ParsePickParams",
-  description="Parse the pick_cast action parameters",
+  description="Set the parameters (one or more) channel_url, channel, keyword, category, search, user, user_fid, criteria and max_rows to be able to pick a cast.",
   func=parse_pick_params
 )

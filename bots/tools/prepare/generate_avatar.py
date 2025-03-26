@@ -20,7 +20,7 @@ prompt_template = """
 {{user_pfp_description}}
 
 # USER POSTS
-{{about_user}}
+{{user_casts}}
 """
 
 instructions_template = """
@@ -103,5 +103,9 @@ def generate_avatar(input):
 GenerateAvatar = Tool(
   name="GenerateAvatar",
   description="Create an avatar for a user",
+  metadata={
+    'inputs': 'Requires tools GetUserProfile, GetUserRepliesAndReactions, DescribePfp, DescribeUserCasts and DescribeUserRepliesAndReactions to be run first.',
+    'outputs': 'user_avatar_prompt, user_avatar'
+  },
   func=generate_avatar
 )

@@ -24,5 +24,9 @@ def prepare_word_cloud(input):
 PrepareWordCloud = Tool(
   name="PrepareWordCloud",
   description="Prepare the word cloud data",
+  metadata={
+    'inputs': 'Requires casts_for_params to be fetched first using get_casts_for_params tool.',
+    'outputs': 'wordcloud_text, wordcloud_counts'
+  },
   func=prepare_word_cloud
 )

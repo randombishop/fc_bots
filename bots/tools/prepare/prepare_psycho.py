@@ -56,5 +56,9 @@ def prepare_psycho(input):
 PreparePsycho = Tool(
   name="PreparePsycho",
   description="Generate a funny psycho analysis for a user",
+  metadata={
+    'inputs': 'Requires df_casts_for_fid to be fetched first using GetCastsForFid tool.',
+    'outputs': 'user_psycho'
+  },
   func=prepare_psycho
 )

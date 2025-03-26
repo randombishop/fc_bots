@@ -42,6 +42,6 @@ def parse_perplexity_params(input):
     
 ParsePerplexityParams = Tool(
   name="ParsePerplexityParams",
-  description="Parse the perplexity action parameters",
+  description="Set the parameter question to run the perplexity tools.",
   func=parse_perplexity_params
 )

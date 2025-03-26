@@ -72,5 +72,5 @@ def parse_summary_params(input):
 ParseSummaryParams = Tool(
   name="ParseSummaryParams",
   func=parse_summary_params,
-  description="Parse the summary parameters from the conversation"
+  description="Set the parameters (one or more)channel_url, channel, keyword, category, search, user, user_fid and max_rows to run the summary tools."
 )

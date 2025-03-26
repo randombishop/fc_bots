@@ -42,6 +42,6 @@ def parse_roast_params(input):
 
 ParseRoastParams = Tool(
   name="ParseRoastParams",
-  description="Parse the roast action parameters",
+  description="Set the parameters user and user_fid to run the roast tools.",
   func=parse_roast_params
 )

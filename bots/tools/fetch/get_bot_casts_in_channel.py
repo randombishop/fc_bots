@@ -17,11 +17,18 @@ def get_bot_casts_in_channel(input):
     row += '}\n'
     text += row
   state.bot_casts_in_channel = text
+  return {
+    'bot_casts_in_channel': text
+  }
 
 
 GetBotCastsInChannel = Tool(
   name="GetBotCastsInChannel",
-  description="Get the casts of the bot in a channel",
+  description="Get the casts of the bot in a channel.",
+  metadata={
+    'inputs': 'Will fail if channel is not set',
+    'outputs': 'bot_casts_in_channel'
+  },
   func=get_bot_casts_in_channel
 )
 

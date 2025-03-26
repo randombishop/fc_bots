@@ -49,7 +49,7 @@ def parse_who_is_params(input):
 
 ParseWhoIsParams = Tool(
   name="ParseWhoIsParams",
-  description="Parse the WhoIs action parameters",
+  description="Set the parameters user and user_fid to run the who-is tools.",
   func=parse_who_is_params
 )
 

@@ -60,18 +60,17 @@ def parse_instructions_params(input):
   params = call_llm(llm, prompt, instructions, schema)
   state.search = read_string(params, key='search', max_length=500)
   state.keyword = read_keyword(params)
-  state.params_reasoning = read_string(params, key='reasoning')
   state.max_rows = 25
   return {
     'search': state.search,
     'keyword': state.keyword,
-    'params_reasoning': state.params_reasoning,
-    'max_rows': state.max_rows
+    'max_rows': state.max_rows,
+    'log': read_string(params, key='reasoning')
   }
 
 
 ParseInstructionsParams = Tool(
   name="ParseInstructionsParams",
   func=parse_instructions_params,
-  description="Parse search phrases to pull more data"
+  description="Set parameters search, keyword and max_rows to pull more data."
 )

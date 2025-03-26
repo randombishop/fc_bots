@@ -46,6 +46,6 @@ def parse_most_active_users(input):
 
 ParseMostActiveUsersParams = Tool(
   name="ParseMostActiveUsersParams",
-  description="Parse the most active users action parameters",
+  description="Set the parameters channel_url and channel to run the most active users tools.",
   func=parse_most_active_users
 )

@@ -43,6 +43,6 @@ def parse_more_like_this_params(input):
 
 ParseMoreLikeThisParams = Tool(
   name="ParseMoreLikeThisParams",
-  description="Parse the more like this action parameters",
+  description="Set parameter text to run the more-like-this tools.",
   func=parse_more_like_this_params
 )

@@ -51,5 +51,9 @@ def prepare_roast(input):
 PrepareRoast = Tool(
   name="PrepareRoast",
   description="Generate a roast for the user",
+  metadata={
+    'inputs': 'Requires df_casts_for_fid to be fetched first using GetCastsForFid tool.',
+    'outputs': 'user_psycho'
+  },
   func=prepare_roast
 )

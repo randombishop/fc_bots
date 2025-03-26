@@ -48,12 +48,26 @@ class Assistant(BaseSingleActionAgent):
       return AgentAction(
         tool=tool,
         tool_input=self.get_tool_input(),
-        log='Wakeup sequence')
+        log='')
     elif not self._state.tools_done:
+      next_tool = self._state.next_tool
+      if next_tool is not None:
+        self._state.next_tool = None
+        return AgentAction(
+          tool=next_tool,
+          tool_input=self.get_tool_input(),
+          log='')
+      else:
+        return AgentAction(
+          tool='SelectTool',
+          tool_input=self.get_tool_input(),
+          log=''
+        )
+    elif not self._state.composed:
       return AgentAction(
-        tool='SelectTool',
+        tool='ComposeCasts',
         tool_input=self.get_tool_input(),
-        log='Plan next step')
+        log='')
     else:
       return AgentFinish(return_values={"output": self._state}, log='done')
     

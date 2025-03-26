@@ -71,6 +71,6 @@ def parse_word_cloud_params(input):
   
 ParseWordCloudParams = Tool(
   name="ParseWordCloudParams",
-  description="Parse the word cloud parameters",
+  description="Set the parameters channel_url, channel, keyword, category, search, user, user_fid and max_rows to run the word cloud tools.",
   func=parse_word_cloud_params
 )

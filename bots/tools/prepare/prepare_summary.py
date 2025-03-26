@@ -129,5 +129,9 @@ def prepare_summary(input):
 PrepareSummary = Tool(
   name="PrepareSummary",
   description="Prepare the summary of the posts and select some interesting ones",
+  metadata={
+    'inputs': 'Requires casts_for_params to be fetched first using GetCastsForParams tool.',
+    'outputs': 'digest_casts_data, wordcloud_text, wordcloud_counts'
+  },
   func=prepare_summary
 )

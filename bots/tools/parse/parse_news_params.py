@@ -41,6 +41,6 @@ def parse_news_params(input):
   
 ParseNewsParams = Tool(
   name="ParseNewsParams",
-  description="Parse the news action parameters",
+  description="Sets the parameter search to run the news tool.",
   func=parse_news_params
 )

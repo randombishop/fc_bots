@@ -57,5 +57,9 @@ def call_perplexity(input):
 CallPerplexity = Tool(
   name="CallPerplexity",
   description="Call perplexity API with a question",
+  metadata={
+    'inputs': 'Requires question parameter. Will fail if not set.',
+    'outputs': 'perplexity_answer, perplexity_link'
+  },
   func=call_perplexity
 )

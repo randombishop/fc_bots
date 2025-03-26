@@ -48,6 +48,6 @@ def parse_praise_params(input):
 
 ParsePraiseParams = Tool(
   name="ParsePraiseParams",
-  description="Parse the praise action parameters",
+  description="Set the parameters user and user_fid to run the praise tools.",
   func=parse_praise_params
 )

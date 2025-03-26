@@ -11,12 +11,16 @@ def get_favorite_users(input):
   df = get_favorite_users_data(fid)
   state.df_favorite_users = df
   return {
-    'df_favorite_users': len(state.df_favorite_users) if state.df_favorite_users is not None else 0
+    'df_favorite_users': state.df_favorite_users
   }
 
 
 GetFavoriteUsers = Tool(
   name="GetFavoriteUsers",
-  description="Fetch the favorite accounts of a user",
+  description="Get the favorite accounts of a user.",
+  metadata={
+    'inputs': 'Will fail if fid or user_name are not set',
+    'outputs': 'Dataframe df_favorite_users'
+  },
   func=get_favorite_users
 )

@@ -20,6 +20,9 @@ def get_bot_casts(input):
 
 GetBotCasts = Tool(
   name="GetBotCasts",
-  func=get_bot_casts,
-  description="Get the bot's recent casts"
+  description="Get the bot's recent casts.",
+  metadata={
+    'outputs': 'bot_casts'
+  },
+  func=get_bot_casts
 )

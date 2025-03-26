@@ -67,5 +67,9 @@ def describe_pfp(input):
 DescribePfp = Tool(
   name="DescribePfp",
   description="Prepare the description of a profile picture",
+  metadata={
+    'inputs': 'Requires GetUserProfile tool to be run first.',
+    'outputs': 'user_pfp_description'
+  },
   func=describe_pfp
 )

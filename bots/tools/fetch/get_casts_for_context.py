@@ -9,12 +9,12 @@ def get_casts_for_context(input):
     return {'log': 'Not fetching data because should_continue is false'}
   posts = []
   if state.user_origin is not None:
-    posts_about_user = get_top_casts(user_name=state.user_origin, max_rows=state.max_rows)
-    if posts_about_user is not None and len(posts_about_user) > 0:
-      posts_about_user = posts_about_user.to_dict('records')
-      posts_about_user.sort(key=lambda x: x['timestamp'])
-      state.about_user = concat_casts(posts_about_user)
-      posts += posts_about_user
+    posts_about_user_origin = get_top_casts(user_name=state.user_origin, max_rows=state.max_rows)
+    if posts_about_user_origin is not None and len(posts_about_user) > 0:
+      posts_about_user_origin = posts_about_user_origin.to_dict('records')
+      posts_about_user_origin.sort(key=lambda x: x['timestamp'])
+      state.about_user_origin = concat_casts(posts_about_user_origin)
+      posts += posts_about_user_origin
   if state.keyword is not None:
     posts_about_keyword = get_top_casts(keyword=state.keyword, max_rows=state.max_rows)
     if posts_about_keyword is not None and len(posts_about_keyword) > 0:
@@ -40,7 +40,7 @@ def get_casts_for_context(input):
     state.posts_map[p['id']] = p
   return {
     'user_origin': state.user_origin,
-    'about_user': state.about_user, 
+    'about_user_origin': state.about_user_origin, 
     'keyword': state.keyword,
     'about_keyword': state.about_keyword, 
     'category': state.category,
@@ -52,6 +52,10 @@ def get_casts_for_context(input):
 
 GetCastsForContext = Tool(
   name="GetCastsForContext",
-  func=get_casts_for_context,
-  description="Get casts from the current user or related to the conversation in general to build up context"
+  description="Get posts using parameters keyword, category and search using 3 separate calls. Doesn't combine the parameters in one call.",
+  metadata={
+    'inputs': 'Will silently skip if parameters are not set',
+    'outputs': 'about_user_origin, about_keyword, about_category, about_keyword, about_search'
+  },
+  func=get_casts_for_context
 )

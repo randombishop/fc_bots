@@ -43,6 +43,6 @@ def parse_favorite_users(input):
 
 ParseFavoriteUsersParams = Tool(
   name="ParseFavoriteUsersParams",
-  description="Parse the favorite users action parameters",
+  description="Set parameters user and user_fid to run the favorite users tools.",
   func=parse_favorite_users
 )

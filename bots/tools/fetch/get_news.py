@@ -24,5 +24,9 @@ def get_news(input):
 GetNews = Tool(
   name="GetNews",
   description="Get a news story",
+  metadata={
+    'inputs': 'Requires search parameter. Will fail if not set.',
+    'outputs': 'yahoo_news'
+  },
   func=get_news
 )

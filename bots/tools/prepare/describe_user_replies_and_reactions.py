@@ -82,6 +82,10 @@ def describe_user_replies_and_reactions(input):
 
 DescribeUserRepliesAndReactions = Tool(
   name="DescribeUserRepliesAndReactions",
-  description="Describe the replies and reactions of a user",
+  description="Describe the replies and reactions of a user in short.",
+  metadata={
+    'inputs': 'Requires user_replies_and_reactions to be fetched first using get_profile tool.',
+    'outputs': 'user_replies_and_reactions_description, user_replies_and_reactions_keywords'
+  },
   func=describe_user_replies_and_reactions
 )

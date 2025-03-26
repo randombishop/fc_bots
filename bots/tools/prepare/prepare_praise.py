@@ -16,7 +16,7 @@ prompt_template = """
 {{user_pfp_description}}
 
 # USER POSTS
-{{about_user}}
+{{user_casts}}
 """
 
 
@@ -92,5 +92,9 @@ def prepare_praise(input):
 PreparePraise = Tool(
   name="PreparePraise",
   description="Generate a user praise",
+  metadata={
+    'inputs': 'Requires tools GetUserProfile to be run first.',
+    'outputs': 'user_praise'
+  },
   func=prepare_praise
 )

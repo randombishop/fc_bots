@@ -60,9 +60,10 @@ schema = {
 def compose_casts(input):
   state = input.state
   llm = input.llm
-  prompt = state.format_all_available_data()
+  prompt = state.format_observations()
   instructions = state.format(instructions_template)
   result = call_llm(llm, prompt, instructions, schema)
+  state.composed = True
   return result
   
 

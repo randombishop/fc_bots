@@ -37,5 +37,9 @@ def get_user_replies_and_reactions(input):
 GetUserRepliesAndReactions = Tool(
   name="GetUserRepliesAndReactions",
   description="Get the replies and reactions of a user",
+  metadata={
+    'inputs': 'Requires user and user_fid parameters. Will fail if not set.',
+    'outputs': 'user_replies_and_reactions'
+  },
   func=get_user_replies_and_reactions
 )
