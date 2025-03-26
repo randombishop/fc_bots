@@ -35,10 +35,7 @@ class Bot(BaseSingleActionAgent):
     self._todo = [
       'BotWakeup',
       'BotPlan',
-      'BotParse',
-      'BotFetch',
-      'BotPrepare',
-      'BotCompose',
+      'BotAction',
       'BotCheck',
       'BotMemorize'
     ]

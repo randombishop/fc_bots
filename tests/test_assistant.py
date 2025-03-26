@@ -4,9 +4,25 @@ import unittest
 from bots.utils.tests import run_assistant
 
 
+prompt1 = """
+Post about the most active users in a channel in a way that fits the channel spirit.
+Tag the top 3 and show them some appreciation for their contributions.
+Embed the activity chart url.
+"""
+
+prompt2 = """
+Pick a random user and post a thread to praise them.
+Embed their generated avatar in the first post and links to their best posts on the next ones.
+"""
+
+
+
 class TestAssistant(unittest.TestCase):
   
   def test1(self):
     channel = 'mfers'
-    instructions = "Post something about the most active users in a channel."
-    state = run_assistant(test_id='TestAssistant:1', instructions=instructions, channel=channel)
+    state = run_assistant(test_id='TestAssistant:1', instructions=prompt1, channel=channel)
+    
+  def test2(self):
+    channel = 'mfers'
+    state = run_assistant(test_id='TestAssistant:2', instructions=prompt2, channel=channel)

@@ -1,10 +1,27 @@
 from langchain.agents import Tool
-from bots.tools.bot_phases.bot_phase import run_phase
 from bots.tools.memorize import MEMORIZE_TOOLS
 
 
+TOOL_MAP = {t.name: t for t in MEMORIZE_TOOLS}
+
+
+ACTION_CONFIG = {
+  'WhoIs': ['SaveUserProfile'],
+  'Praise': ['SaveUserProfile']
+}
+
+
 def bot_memorize(input):
-  return run_phase(input, 'memorize', MEMORIZE_TOOLS)
+  action = input.state.action
+  if action is None or action not in ACTION_CONFIG:
+    return {'log': 'Memorize tools are not configured for this action'}
+  tool_names = ACTION_CONFIG[action]
+  tools = [TOOL_MAP[t] for t in tool_names]
+  for t in tools:
+    t.invoke({'input': input})
+  return {
+    'memorize_tools': tools
+  }
 
 
 BotMemorize = Tool(

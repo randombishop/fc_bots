@@ -1,9 +1,26 @@
 import random
 from langchain.agents import Tool
-from bots.tools.actions import ACTION_DESCRIPTIONS
+
+
+ACTION_DESCRIPTIONS = {
+  'Chat': 'Default action if no other intent is applicable.',
+  'Summary': 'Make a summary about posts.',
+  'FavoriteUsers': 'Find the favorite accounts of a user.',
+  'MoreLikeThis': 'Find posts using "More Like This" algorithm.',
+  'MostActiveUsers': 'List the most active users in a channel.',
+  'News': 'Check the news.',
+  'Perplexity': 'Ask a question to Perplexity AI.',
+  'Pick': 'Pick a post given some criteria.',
+  'Psycho': 'Generate a psychoanalysis for a user.',
+  'Praise': 'Generate a praise for a user.',
+  'Roast': 'Generate a roast for a user.',
+  'WhoIs': 'Analyze a user profile and generate a new avatar for them. (Who is @user? Make an avater for @user, Analyze user profile @user, etc.)',
+  'WordCloud': 'Make a word cloud.'
+}
 
 
 RANDOMIZE = True
+
 
 def get_actions(input):    
   state = input.state

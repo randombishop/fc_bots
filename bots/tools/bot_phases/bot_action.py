@@ -1,30 +1,12 @@
-ACTION_DESCRIPTIONS = {
-  'Chat': 'Default action if no other intent is applicable.',
-  'Summary': 'Make a summary about posts.',
-  'FavoriteUsers': 'Find the favorite accounts of a user.',
-  'MoreLikeThis': 'Find posts using "More Like This" algorithm.',
-  'MostActiveUsers': 'List the most active users in a channel.',
-  'News': 'Check the news.',
-  'Perplexity': 'Ask a question to Perplexity AI.',
-  'Pick': 'Pick a post given some criteria.',
-  'Psycho': 'Generate a psychoanalysis for a user.',
-  'Praise': 'Generate a praise for a user.',
-  'Roast': 'Generate a roast for a user.',
-  'WhoIs': 'Analyze a user profile and generate a new avatar for them. (Who is @user? Make an avater for @user, Analyze user profile @user, etc.)',
-  'WordCloud': 'Make a word cloud.'
-}
+from langchain.agents import Tool
+from bots.tools.parse import PARSE_TOOLS
+from bots.tools.fetch import FETCH_TOOLS
+from bots.tools.prepare import PREPARE_TOOLS
+from bots.tools.compose import COMPOSE_TOOLS
 
 
-ACTION_TEMPLATES = {
-  'Summary': "Summarize category {[arts, business, crypto, culture, money, nature, politics, sports, tech_science]} / Summarize channel /{channel} / Summarize posts about {search phrase} / Summarize posts by {user} / Summarize posts with keyword {keyword}",
-  'MostActiveUsers': 'Most active users in /{channel}',
-  'News': 'Check the news for {search phrase}',
-  'Perplexity': 'Ask Perplexity ""{question}"',
-  'Pick': 'Pick the {adjective} post in category {[arts, business, crypto, culture, money, nature, politics, sports, tech_science}] / Pick the {adjective} post in channel /{channel} / Pick the {adjective} post about {search phrase} / Pick the {adjective} post by {username} / Pick the {adjective} post with keyword {keyword}',
-  'Psycho': 'Psycho analyze {user}',
-  'Praise': 'Praise {user}',
-  'Roast': 'Roast {user}',
-}
+TOOL_LIST = PARSE_TOOLS + FETCH_TOOLS + PREPARE_TOOLS + COMPOSE_TOOLS
+TOOL_MAP = {t.name: t for t in TOOL_LIST}
 
 
 ACTION_CONFIG = {
@@ -93,16 +75,33 @@ ACTION_CONFIG = {
     'parse': ['ParseWhoIsParams'],
     'fetch': ['GetUserProfile', 'GetUserRepliesAndReactions'],
     'prepare': ['DescribePfp', 'DescribeUserCasts', 'DescribeUserRepliesAndReactions', 'GenerateAvatar'],
-    'compose': ['ComposeWhoIs'],
-    'memorize': ['SaveUserProfile']
+    'compose': ['ComposeWhoIs']
   },
   'Praise': {
     'parse': ['ParsePraiseParams'],
     'fetch': ['GetUserProfile', 'GetUserRepliesAndReactions'],
     'prepare': ['DescribePfp', 'DescribeUserCasts', 'DescribeUserRepliesAndReactions', 'GenerateAvatar', 'PreparePraise'],
-    'compose': ['ComposePraise'],
-    'memorize': ['SaveUserProfile']
+    'compose': ['ComposePraise']
   }
 }
 
 
+def bot_action(input):
+  action = input.state.action
+  if action is None or action not in ACTION_CONFIG:
+    return {'log': 'No configured action'}
+  action_config = ACTION_CONFIG[action]
+  sequence = []
+  for phase in action_config:
+    sequence += action_config[phase]
+  for tool_name in sequence:
+    tool = TOOL_MAP[tool_name]
+    tool.invoke({'input': input})
+  return {'sequence': sequence}
+
+
+BotAction = Tool(
+  name="BotAction",
+  description="Bot action phase",
+  func=bot_action
+)
