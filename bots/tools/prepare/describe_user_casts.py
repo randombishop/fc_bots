@@ -13,7 +13,7 @@ prompt_template = """
 {{user_bio}}
 
 # USER POSTS
-{{about_user_origin}}
+{{casts_user}}
 """
 
 
@@ -63,12 +63,10 @@ schema = {
 }
 
 
-def describe_user_casts(input):
+def prepare(input):
   state = input.state
   llm = input.llm
-  if state.user_casts_description is not None:
-    return {'log': 'Casts description already set.'}
-  posts = state.user_casts
+  posts = state.get('casts_user')
   if len(posts) == 0:
     return {'log': 'No posts to analyze.'}
   prompt = state.format(prompt_template)
@@ -81,9 +79,8 @@ def describe_user_casts(input):
     user_casts_description += result['sentence2'] + '\n'
   if 'sentence3' in result:
     user_casts_description += result['sentence3']
-  state.user_casts_description = user_casts_description
   return {
-    'user_casts_description': state.user_casts_description
+    'user_casts_description': user_casts_description
   }
   
 
@@ -91,8 +88,8 @@ DescribeUserCasts = Tool(
   name="DescribeUserCasts",
   description="Describe the user's casts",
   metadata={
-    'inputs': 'Requires user_casts to be fetched first using get_profile tool.',
-    'outputs': 'user_casts_description'
+    'inputs': ['casts_user'],
+    'outputs': ['user_casts_description']
   },
-  func=describe_user_casts
+  func=prepare
 )

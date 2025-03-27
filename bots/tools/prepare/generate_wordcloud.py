@@ -8,12 +8,12 @@ from bots.utils.gcs import upload_to_gcs
 from bots.tools.prepare.generate_wordcloud_mask import GenerateWordCloudMask
 
 
-def generate_wordcloud(input):
+def prepare(input):
   GenerateWordCloudMask.invoke({'input': input})
   state = input.state
-  mask = numpy.array(state.wordcloud_mask)
+  mask = numpy.array(state.get('wordcloud_mask'))
   colormap = ImageColorGenerator(mask)
-  words = state.wordcloud_counts
+  words = state.get('wordcloud_counts')
   filename1 = str(uuid.uuid4())+'.words.png'
   wordcloud = WordCloud(mask=mask,
                         background_color=None,  
@@ -31,13 +31,17 @@ def generate_wordcloud(input):
   upload_to_gcs(local_file=filename2, target_folder='png', target_file=filename2)
   os.remove(filename1)
   os.remove(filename2)
-  state.wordcloud_url = f"https://fc.datascience.art/bot/main_files/{filename2}"
+  wordcloud_url = f"https://fc.datascience.art/bot/main_files/{filename2}"
   return {
-    'wordcloud_url': state.wordcloud_url
+    'wordcloud_url': wordcloud_url
   }
 
 GenerateWordCloud = Tool(
   name="GenerateWordCloud",
   description="Generate the wordcloud image",
-  func=generate_wordcloud
+  metadata={
+    'inputs': ['wordcloud_text', 'wordcloud_counts'],
+    'outputs': ['wordcloud_url']
+  },
+  func=prepare
 )

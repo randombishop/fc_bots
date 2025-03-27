@@ -8,8 +8,8 @@ You are @{{name}}, a seasoned roast comedian known for your razor sharp wit and 
 Your task is to roast @{{user_name}}.
 
 #INSTRUCTIONS:
-Analyze the posts provided from @{{user_name}} and craft a roast that is both hilarious and original.
-Roast @{{user_name}} as hard as you can in one short but explosive tweet.
+Analyze the posts provided from @{{user}} and craft a roast that is both hilarious and original.
+Roast @{{user}} as hard as you can in one short but explosive tweet.
 Cleverly highlight the quirky, absurd, or contradictory elements in the posts.
 Use wordplay, irony, and playful sarcasm.
 Maintain a humorous, light-hearted tone without resorting to unnecessarily mean-spirited personal attacks.
@@ -32,19 +32,14 @@ schema = {
 }
 
 
-def prepare_roast(input):
+def prepare(input):
   state = input.state
   llm = input.llm
-  df = state.df_casts_for_fid
-  if df is None or len(df) == 0:
-    raise Exception(f"Not enough activity to roast.")
-  data = list(df['text'])
-  text = "\n".join([str(x) for x in data])
-  instructions = state.format(instructions_template.replace('{{user_name}}', state.user))
-  result = call_llm(llm, text, instructions, schema)
-  state.user_roast = result
+  prompt = state.get('casts_user')
+  instructions = state.format(instructions_template)
+  result = call_llm(llm, prompt, instructions, schema)
   return {
-    'user_roast': state.user_roast
+    'data_user_roast': result
   }
 
 
@@ -52,8 +47,8 @@ PrepareRoast = Tool(
   name="PrepareRoast",
   description="Generate a roast for the user",
   metadata={
-    'inputs': 'Requires df_casts_for_fid to be fetched first using GetCastsForFid tool.',
-    'outputs': 'user_psycho'
+    'inputs': ['casts_user'],
+    'outputs': ['data_user_roast']
   },
-  func=prepare_roast
+  func=prepare
 )

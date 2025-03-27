@@ -5,11 +5,11 @@ from bots.utils.llms2 import call_llm
 instructions_template = """
 #TASK
 You are @{{name}}, an eccentric, witty psychoanalyst with a flair for humor and satire.
-Your task is to generate a parody psycho analysis of @{{user_name}}.
+Your task is to generate a parody psycho analysis of @{{user}}.
 
 #INSTRUCTIONS:
-The posts provided are from @{{user_name}}.
-Based on the posts, provide a hilariously original psychoanalysis of @{{user_name}}'s personality in 3 sentences.
+The posts provided are from @{{user}}.
+Based on the posts, provide a hilariously original psychoanalysis of @{{user}}'s personality in 3 sentences.
 Do not use real pathology names, instead, create your own funny medical names with novel issues.
 You can mix your psycho analysis with roasting.
 Examine the recurring themes and word choices and explain their subconscious motivations in a playful, tongue-in-cheek manner. 
@@ -37,19 +37,14 @@ schema = {
   }
 }
 
-def prepare_psycho(input):
+def prepare(input):
   state = input.state
   llm = input.llm
-  df = state.df_casts_for_fid
-  if df is None or len(df) == 0:
-    raise Exception(f"Not enough activity to buid a psychodegen analysis.")
-  data = list(df['text'])
-  text = "\n".join([str(x) for x in data])
-  instructions = state.format(instructions_template.replace('{{user_name}}', state.user))
-  result = call_llm(llm, text, instructions, schema)
-  state.user_psycho = result
+  prompt = state.get('casts_user')
+  instructions = state.format(instructions_template)
+  result = call_llm(llm, prompt, instructions, schema)
   return {
-    'user_psycho': state.user_psycho
+    'data_user_psycho': result
   }
 
 
@@ -57,8 +52,8 @@ PreparePsycho = Tool(
   name="PreparePsycho",
   description="Generate a funny psycho analysis for a user",
   metadata={
-    'inputs': 'Requires df_casts_for_fid to be fetched first using GetCastsForFid tool.',
-    'outputs': 'user_psycho'
+    'inputs': ['casts_user'],
+    'outputs': ['data_user_psycho']
   },
-  func=prepare_psycho
+  func=prepare
 )

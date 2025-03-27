@@ -74,7 +74,7 @@ schema = {
 }
 
 
-def generate_avatar(input):
+def prepare(input):
   state = input.state
   llm = input.llm
   llm_img = input.llm_img
@@ -83,9 +83,8 @@ def generate_avatar(input):
     return {'log': 'Not enough data to generate a prompt for avatar'}
   instructions = state.format(instructions_template)
   result = call_llm(llm, prompt, instructions, schema)
-  prompt_image = result['avatar_prompt'] if 'avatar_prompt' in result else None
-  state.user_avatar_prompt = prompt_image
-  image_url = generate_image(llm_img, llm, prompt_image)
+  user_avatar_prompt = result['avatar_prompt'] if 'avatar_prompt' in result else None
+  image_url = generate_image(llm_img, llm, user_avatar_prompt)
   filename = str(uuid.uuid4())+'.png'
   response = requests.get(image_url)
   response.raise_for_status()
@@ -93,10 +92,10 @@ def generate_avatar(input):
     f.write(response.content)
   upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
   os.remove(filename)
-  state.user_avatar = f"https://fc.datascience.art/bot/main_files/{filename}"
+  user_avatar = f"https://fc.datascience.art/bot/main_files/{filename}"
   return {
-    'user_avatar_prompt': state.user_avatar_prompt,
-    'user_avatar': state.user_avatar
+    'user_avatar_prompt': user_avatar_prompt,
+    'user_avatar': user_avatar
   }
   
 
@@ -104,8 +103,8 @@ GenerateAvatar = Tool(
   name="GenerateAvatar",
   description="Create an avatar for a user",
   metadata={
-    'inputs': 'Requires tools GetUserProfile, GetUserRepliesAndReactions, DescribePfp, DescribeUserCasts and DescribeUserRepliesAndReactions to be run first.',
-    'outputs': 'user_avatar_prompt, user_avatar'
+    'inputs': ['user', 'user_display_name', 'user_bio', 'user_pfp_description', 'user_casts'],
+    'outputs': ['user_avatar_prompt', 'user_avatar']
   },
-  func=generate_avatar
+  func=prepare
 )

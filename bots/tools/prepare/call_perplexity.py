@@ -1,6 +1,6 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
-from bots.utils.perplexity_api import call_perplexity as call_perplexity_api
+from bots.utils.perplexity_api import call_perplexity
 
 
 select_link_instructions = """
@@ -28,13 +28,13 @@ select_link_schema = {
 }
 
 
-def call_perplexity(input):
+def prepare(input):
   state = input.state
   llm = input.llm
-  question = state.question
-  if question is None or len(question) < 5:
+  question = state.get('question')
+  if len(question) < 5:
     raise Exception("This tool requires a question to forward to Perplexity.")
-  data = call_perplexity_api(question)
+  data = call_perplexity(question)
   answer = None
   try:
     answer = data['choices'][0]['message']['content']
@@ -46,11 +46,9 @@ def call_perplexity(input):
     links_selection = call_llm(llm,links, select_link_instructions, select_link_schema)
     if 'url' in links_selection and links_selection['url'] is not None and len(links_selection['url']) > 10:
       link = links_selection['url']
-  state.perplexity_answer = answer
-  state.perplexity_link = link
   return {
-    'perplexity_answer': state.perplexity_answer,
-    'perplexity_link': state.perplexity_link
+    'perplexity_answer': answer,
+    'perplexity_link': link
   }
 
 
@@ -58,8 +56,8 @@ CallPerplexity = Tool(
   name="CallPerplexity",
   description="Call perplexity API with a question",
   metadata={
-    'inputs': 'Requires question parameter. Will fail if not set.',
-    'outputs': 'perplexity_answer, perplexity_link'
+    'inputs': ['question'],
+    'outputs': ['perplexity_answer', 'perplexity_link']
   },
-  func=call_perplexity
+  func=prepare
 )

@@ -15,11 +15,11 @@ Avoid gradients or fine details, your design should be recognizable from a dista
 """
 
 
-def generate_wordcloud_mask(input):
+def prepare(input):
   state = input.state
   llm = input.llm
   llm_img = input.llm_img
-  text = state.wordcloud_text
+  text = state.get('wordcloud_text')
   if text is None or len(text)==0:
     raise Exception("No text to generate mask")
   # Generate a new image
@@ -52,30 +52,25 @@ def generate_wordcloud_mask(input):
         g = min(240, int((g + push) * 240 // (240 + push)))
         b = min(240, int((b + push) * 240 // (240 + push)))
         mask_pixels[x, y] = (r, g, b)
-  #file2 = str(key)+'.mask.png'
-  #mask.save(file2)
   # Create darkened background image
   img_dark = ImageOps.invert(img)
   enhancer = ImageEnhance.Brightness(img_dark)
   img_dark = enhancer.enhance(0.15)
   img_dark = img_dark.convert("RGBA")
-  #file3 = str(key)+'.dark.png'
-  #img_dark.save(file3)
   os.remove(file1)
-  #os.remove(file2)
-  state.wordcloud_mask = mask
-  state.wordcloud_background = img_dark
-  state.wordcloud_width = width
-  state.wordcloud_height = height
   return {
-    'wordcloud_mask': state.wordcloud_mask,
-    'wordcloud_background': state.wordcloud_background,
-    'wordcloud_width': state.wordcloud_width,
-    'wordcloud_height': state.wordcloud_height
+    'wordcloud_mask': mask,
+    'wordcloud_background': img_dark,
+    'wordcloud_width': width,
+    'wordcloud_height': height
   }
 
 GenerateWordCloudMask = Tool(
   name="GenerateWordCloudMask",
   description="Generate a wordcloud mask.",
-  func=generate_wordcloud_mask
+  metadata={
+    'inputs': ['wordcloud_text'],
+    'outputs': ['wordcloud_mask', 'wordcloud_background', 'wordcloud_width', 'wordcloud_height']
+  },
+  func=prepare
 )

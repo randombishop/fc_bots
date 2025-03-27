@@ -16,7 +16,7 @@ prompt_template = """
 {{user_pfp_description}}
 
 # USER POSTS
-{{user_casts}}
+{{casts_user}}
 """
 
 
@@ -71,21 +71,16 @@ schema = {
 }
 
 
-def prepare_praise(input):
+def prepare(input):
   state = input.state
   llm = input.llm
-  fid = state.user_fid
-  user_name = state.user
-  if fid is None or user_name is None:
-    raise Exception(f"Missing fid/user_name.")
   prompt = state.format(prompt_template)
   instructions = state.format(instructions_template)
   result = call_llm(llm, prompt, instructions, schema)
   if 'tweet1' not in result:
     raise Exception('Could not generate a praise')    
-  state.user_praise = result
   return {
-    'user_praise': state.user_praise
+    'data_user_praise': result
   }
 
 
@@ -93,8 +88,8 @@ PreparePraise = Tool(
   name="PreparePraise",
   description="Generate a user praise",
   metadata={
-    'inputs': 'Requires tools GetUserProfile to be run first.',
-    'outputs': 'user_praise'
+    'inputs': ['user', 'user_display_name', 'user_bio', 'user_pfp_description', 'casts_user'],
+    'outputs': ['data_user_praise']
   },
-  func=prepare_praise
+  func=prepare
 )

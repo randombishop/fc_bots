@@ -5,11 +5,9 @@ from bots.utils.images import table_image
 from bots.utils.gcs import upload_to_gcs
 
 
-def prepare_favorite_users_table(input):
+def prepare(input):
   state = input.state
-  df = state.df_favorite_users
-  if df is None:
-    raise Exception(f"Favorite users data not found")
+  df = state.get('data_favorite_users')
   if len(df) < 3:
     raise Exception(f"Not enough data ({len(df)})")
   df.rename(inplace=True, columns={
@@ -22,14 +20,18 @@ def prepare_favorite_users_table(input):
   table_image(df[['User', 'Recasts', 'Likes', 'Replies']], filename)
   upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
   os.remove(filename)
-  state.favorite_users_table = f"https://fc.datascience.art/bot/main_files/{filename}"
+  favorite_users_table = f"https://fc.datascience.art/bot/main_files/{filename}"
   return {
-    'favorite_users_table': state.favorite_users_table
+    'favorite_users_table': favorite_users_table
   }
 
 
 PrepareFavoriteUsersTable = Tool(
   name="PrepareFavoriteUsersTable",
   description="Prepare the favorite users table",
-  func=prepare_favorite_users_table
+  metadata={
+    'inputs': ['data_favorite_users'],
+    'outputs': ['favorite_users_table']
+  },
+  func=prepare
 )
