@@ -3,7 +3,7 @@ from langchain.agents import Tool
 from bots.data.bot_history import get_bot_channels
 
 
-def get_channel_list(input):
+def fetch(input):
   state = input.state
   channels = get_bot_channels(state.id)
   channels = [dict(c) for c in channels]
@@ -21,16 +21,15 @@ def get_channel_list(input):
   channels['avg_engagement'] = channels['avg_replies'] + channels['avg_likes']*2 + channels['avg_recasts']*3
   channels.sort_values(by='avg_engagement', ascending=False, inplace=True)
   channels.reset_index(drop=True, inplace=True)
-  state.channel_list = channels
-  return {'channel_list': channels}
+  return {'data_channel_list': channels}
 
 
 GetChannelList = Tool(
   name="GetChannelList",
   description="Get the list of all channels where the bot operates.",
   metadata={
-    'outputs': 'channel_list'
+    'outputs': ['data_channel_list']
   },
-  func=get_channel_list
+  func=fetch
 )
   

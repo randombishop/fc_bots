@@ -3,9 +3,10 @@ from bots.data import bot_history
 from bots.utils.format_cast import shorten_text, format_when
 
 
-def get_bot_casts(input):
+def fetch(input):
   state = input.state
-  casts = bot_history.get_bot_casts(state.id)
+  id = state.get('id')
+  casts = bot_history.get_bot_casts(id)
   text = ''
   for c in casts:
     row = '{\n'
@@ -15,14 +16,15 @@ def get_bot_casts(input):
     row += f"  when: {format_when(c['casted_at'])}\n"
     row += '}\n'
     text += row
-  state.bot_casts = text
   return {'bot_casts': text}
+
 
 GetBotCasts = Tool(
   name="GetBotCasts",
   description="Get the bot's recent casts.",
   metadata={
-    'outputs': 'bot_casts'
+    'inputs': ['id'],
+    'outputs': ['bot_casts']
   },
-  func=get_bot_casts
+  func=fetch
 )

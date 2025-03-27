@@ -3,8 +3,7 @@ from bots.data.casts import get_trending_casts
 from bots.utils.format_cast import format_when, shorten_text
 
 
-def get_trending(input):
-  state = input.state
+def fetch(input):
   casts = get_trending_casts(50)
   text = ''
   for s in casts:
@@ -22,7 +21,6 @@ def get_trending(input):
       row += f" (quoting @{embed_username}: {embed_text})"
     row += '\n'
     text += row
-  state.trending = text
   return {'trending': text}
 
 
@@ -30,7 +28,7 @@ GetTrending = Tool(
   name="GetTrending",
   description="Get the globally trending posts",
   metadata={
-    'outputs': 'trending'
+    'outputs': ['trending']
   },
-  func=get_trending
+  func=fetch
 )

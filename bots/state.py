@@ -11,6 +11,7 @@ class State:
     self.composed = False
     self.checked = False
     self.memorized = False
+    self.posts_map = {}
   
   def get(self, key):
     for step in reversed(self.tools_log):
@@ -19,6 +20,10 @@ class State:
         return tool_result[key]
     return None
   
+  def add_posts(self, posts):
+    for x in posts:
+      self.posts_map[x['id']] = x
+      
   def format_placeholder(self, key):
     if not hasattr(self, key):
       raise ValueError(f"Invalid key: {key}")

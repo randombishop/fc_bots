@@ -3,11 +3,11 @@ from bots.data.bot_history import get_bot_casts
 from bots.utils.format_cast import shorten_text, format_when
 
 
-def get_bot_casts_in_channel(input):
+def fetch(input):
   state = input.state
-  if state.channel is None:
-    raise Exception('GetBotCastsInChannel requires a channel')
-  casts = get_bot_casts(state.id, action_channel=state.channel)
+  id = state.get('id')
+  channel = state.get('channel')
+  casts = get_bot_casts(id, action_channel=channel)
   text = ''
   for c in casts:
     row = '{\n'
@@ -16,7 +16,6 @@ def get_bot_casts_in_channel(input):
     row += f"  when: {format_when(c['casted_at'])}\n"
     row += '}\n'
     text += row
-  state.bot_casts_in_channel = text
   return {
     'bot_casts_in_channel': text
   }
@@ -26,9 +25,9 @@ GetBotCastsInChannel = Tool(
   name="GetBotCastsInChannel",
   description="Get the casts of the bot in a channel.",
   metadata={
-    'inputs': 'Will fail if channel is not set',
-    'outputs': 'bot_casts_in_channel'
+    'inputs': ['id', 'channel'],
+    'outputs': ['bot_casts_in_channel']
   },
-  func=get_bot_casts_in_channel
+  func=fetch
 )
 

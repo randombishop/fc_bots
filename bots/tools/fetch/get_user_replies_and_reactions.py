@@ -3,14 +3,10 @@ from bots.data.casts import get_user_replies_and_reactions as get_user_replies_a
 from bots.utils.format_cast import format_when, shorten_text
 
 
-def get_user_replies_and_reactions(input):
+def fetch(input):
   state = input.state
-  if state.user_replies_and_reactions is not None:
-    return {'log': 'User replies and reactions already set.'}
-  fid = state.user_fid
-  user_name = state.user
-  if fid is None or user_name is None:
-    raise Exception(f"Missing fid or user_name in context.")
+  fid = state.get('user_fid')
+  user_name = state.get('user')
   df = get_user_replies_and_reactions_data(fid=fid, max_rows=50)
   rows = df.to_dict('records') if len(df) > 0 else []
   formatted = ''
@@ -28,9 +24,8 @@ def get_user_replies_and_reactions(input):
       text += f"@{shorten_text(r['to_text'])}\n"
       text += '#\n'
       formatted += text
-  state.user_replies_and_reactions = formatted
   return {
-    'user_replies_and_reactions': state.user_replies_and_reactions,
+    'user_replies_and_reactions': formatted
   }
 
 
@@ -38,8 +33,8 @@ GetUserRepliesAndReactions = Tool(
   name="GetUserRepliesAndReactions",
   description="Get the replies and reactions of a user",
   metadata={
-    'inputs': 'Requires user and user_fid parameters. Will fail if not set.',
-    'outputs': 'user_replies_and_reactions'
+    'inputs': ['user_fid', 'user'],
+    'outputs': ['user_replies_and_reactions']
   },
-  func=get_user_replies_and_reactions
+  func=fetch
 )
