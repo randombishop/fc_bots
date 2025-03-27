@@ -22,23 +22,24 @@ parse_schema = {
   }
 }
 
+
 def parse(input):
-  if input.state.params['text'] is not None:
-    return {'log': 'Text already set'}
   state = input.state
   llm = input.llm
   parse_prompt = state.format_all()
   parse_instructions = state.format(parse_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)
   text = params['text']
-  state.params['text'] = text
   return {
-    'text': state.params['text']
+    'text': text
   }
   
 
 ParseMoreLikeThisText = Tool(
   name="ParseMoreLikeThisText",
   description="Set parameter text to run the MoreLikeThis tools.",
+  metadata={
+    'outputs': ['text']
+  },
   func=parse
 )

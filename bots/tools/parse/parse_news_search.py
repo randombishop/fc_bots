@@ -32,14 +32,17 @@ def parse(input):
   parse_prompt = state.format_all()
   parse_instructions = state.format(parse_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)
-  state.params['search'] = read_string(params, key='search', default=None, max_length=256)
+  search = read_string(params, key='search', default=None, max_length=256)
   return {
-    'search': state.params['search']
+    'search': search
   }
   
   
 ParseNewsSearch = Tool(
   name="ParseNewsSearch",
   description="Set the parameter search to run the News tool.",
+  metadata={
+    'outputs': ['search']
+  },
   func=parse
 )

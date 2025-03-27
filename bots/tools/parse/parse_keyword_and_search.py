@@ -54,5 +54,8 @@ def parse(input):
 ParseKeywordAndSearch = Tool(
   name="ParseKeywordAndSearch",
   description="Set parameters search and keyword to pull more data.",
+  metadata={
+    'outputs': ['search', 'keyword']
+  },
   func=parse
 )

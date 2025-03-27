@@ -1,32 +1,20 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
-from bots.utils.read_params import read_channel, read_user, read_string, read_category, read_keyword
-from bots.data.channels import get_channel_by_url
+from bots.utils.read_params import read_category
 
 
 parse_instructions_template = """
 TASK:
-You are @{{name}}, a bot programmed to make a wordcloud based on posts (=casts) in a social media platform.
-You have access to an API that can generate the wordcloud based on these parameters: category, channel, keyword, search, user.
-* category: Can be one of pre-defined categories 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
-* channel: Channels always start with '/', for example '/data', if there is no '/' then it's not a channel.
-* keyword: Any single keyword, if something can't be mapped to a category and doesn't look like a channel, you can use it as a keyword, but only if it's a single word.
-* search: If the wordcloud is not about a category, channel, keyword or user; then formulate a search phrase to search for posts.
-* user: User names typically start with `@`, if the intent is to make the wordcloud for a specific user, you can use the user parameter.
-Your goal is not to continue the conversation, you must only extract the parameters to call the API.
-You can use the conversation to guess the parameters, but focus on the request.
-Your goal is to extract the parameters from the request.
+First, study the provided data and understand your instructions.
+Before processing your instructions, you can access data from the social media platform to prepare a good post.
+You have access to an API that can pull data based on one of these categories:
+'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
+You must only extract the category parameter to call the API.
 
-CURRENT CHANNEL:
-{{root_parent_url}}
 
 RESPONSE FORMAT:
 {
-  "category": "...",
-  "channel": "...",
-  "keyword": "...",
-  "search": "...",
-  "user": "..."
+  "category": "..."
 }
 """
 
@@ -38,35 +26,22 @@ parse_schema = {
 }
 
 
-
 def parse(input):
-  if not input.state.is_responding():
-    return {'log': 'Skipping parse_summary_params'}
   state = input.state
   llm = input.llm
-  parse_prompt = state.format_prompt()
+  parse_prompt = state.format_all()
   parse_instructions = state.format(parse_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)
-  state.channel_url = read_channel(params, current_channel=state.root_parent_url, default_to_current=False)
-  state.channel = get_channel_by_url(state.channel_url)
-  state.keyword = read_keyword(params)
-  state.category = read_category(params)
-  state.search = read_string(params, key='search', default=None, max_length=500)
-  state.user_fid, state.user = read_user(params, fid_origin=state.fid_origin, default_to_origin=False)
-  state.max_rows = 250
+  category = read_category(params)
   return {
-    'channel_url': state.channel_url,
-    'channel': state.channel,
-    'keyword': state.keyword,
-    'category': state.category,
-    'search': state.search,
-    'user': state.user,
-    'user_fid': state.user_fid,
-    'max_rows': state.max_rows
+    'category': category
   }
   
 ParseCategory = Tool(
   name="ParseCategory",
-  description="Set the parameters channel_url, channel, keyword, category, search, user, user_fid and max_rows to pull data.",
+  description="Set the parameter category to pull more data.",
+  metadata={
+    'outputs': ['category']
+  },
   func=parse
 )

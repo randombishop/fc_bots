@@ -36,16 +36,19 @@ def parse(input):
   parse_prompt = state.format_all()
   parse_instructions = state.format(parse_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)
-  state.params['channel_url'] = read_channel(params, current_channel=state.root_parent_url, default_to_current=True)
-  state.params['channel'] = get_channel_by_url(state.params['channel_url'])
+  channel_url = read_channel(params, current_channel=state.get('root_parent_url'), default_to_current=True)
+  channel = get_channel_by_url(channel_url)
   return {
-    'channel_url': state.params['channel_url'],
-    'channel': state.params['channel']
+    'channel_url': channel_url,
+    'channel': channel
   }
 
 
 ParseMostActiveUsersChannel = Tool(
   name="ParseMostActiveUsersChannel",
   description="Set the parameters channel_url and channel to run the MostActiveUsers tools.",
+  metadata={
+    'outputs': ['channel_url', 'channel']
+  },
   func=parse
 )

@@ -1,8 +1,6 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_user
-from bots.data.bot_history import get_random_user_to_praise
-from bots.data.users import get_fid
 
 
 parse_user_instructions_template = """
@@ -27,27 +25,23 @@ parse_user_schema = {
 
 
 def parse(input):
-  if input.state.user is not None:
-    return {'log': 'User already set'}
   state = input.state
   llm = input.llm
   parse_prompt = state.format_prompt()
   parse_instructions = state.format(parse_user_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_user_schema)
   fid, user_name = read_user(params, state.fid_origin, default_to_origin=False)
-  if user_name == '*' or user_name == '' or user_name is None:
-    user_name = get_random_user_to_praise(state.id)
-    fid = get_fid(user_name)
-  state.user_fid = fid
-  state.user = user_name
   return {
-    'user_fid': state.user_fid,
-    'user': state.user
+    'user_fid': fid,
+    'user': user_name
   }
   
 
 ParseUser = Tool(
   name="ParseUser",
   description="Set the parameters user and user_fid to run the praise tools.",
+  metadata={
+    'outputs': ['user_fid', 'user']
+  },
   func=parse
 )
