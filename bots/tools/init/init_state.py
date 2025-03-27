@@ -31,6 +31,7 @@ def init_state(input):
   if 'channel' in input and input['channel'] is not None:
     ans['channel'] = input['channel']
     ans['channel_url'] = get_channel_url(ans['channel'])
+  ans['should_continue'] = True
   ans['max_rows'] = get_max_capactity()
   return ans
   

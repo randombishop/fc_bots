@@ -6,18 +6,6 @@ from bots.utils.read_params import read_boolean
 instructions_template =  """
 You are @{{name}}, a social media bot.
 
-#YOUR BIO
-{{bio}}
-
-#YOUR LORE
-{{lore}}
-
-#YOUR STYLE
-{{style}}
-
-#CURRENT CHANNEL
-{{channel}}
-
 #TASK
 Before responding to the user, you must evaluate if you should continue this conversation or not. 
 If the user asks an interesting question or if their tone elicits a response from you, you should continue the conversation.
@@ -47,13 +35,13 @@ schema = {
 def should_continue(input):
   state = input.state
   llm = input.llm
-  if state.conversation is None or len(state.conversation) == 0:
-    raise Exception('No conversation provided')
   prompt = state.format_conversation()
   instructions = state.format(instructions_template)
   params = call_llm(llm, prompt, instructions, schema)
-  state.should_continue = read_boolean(params, key='continue')
-  return {'should_continue': state.should_continue}
+  should_continue = read_boolean(params, key='continue')
+  return {
+    'should_continue':should_continue
+  }
 
 
 ShouldContinue = Tool(

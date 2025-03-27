@@ -69,8 +69,12 @@ class State:
             ans += f"###{k}\n"
             ans += f"{v}\n\n"
     ans += '\n\n'
-    ans += '#INSTRUCTIONS\n\n'
-    ans += self.get('request')
+    conversation = self.get('conversation')
+    if conversation is not None and len(conversation)>0:
+      ans += f"#CONVERSATION\n{conversation}\n"
+    request = self.get('request')
+    if request is not None and len(request)>0:
+      ans += f"#INSTRUCTIONS\n{request}\n"
     return ans
     
   def format_tools_log(self):

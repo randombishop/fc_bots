@@ -5,12 +5,12 @@ from bots.utils.read_params import read_user
 
 parse_user_instructions_template = """
 #TASK:
-You are @{{name}}, a bot programmed to praise a user.
-Based on the provided conversation, who should we praise?
-You must only extract the user parameter so that we can call an API.
+You are @{{name}}, a bot programmed to analyze user data and perform actions such as analyzing, praising, roasting, etc.
+Based on the provided conversation, who should your tools target?
+You must only extract the user parameter so that you can set the user parameter.
 Users typically start with @, but not always.
-If the request is about self, this or that user, or uses a pronoun, study the context and instructions carefully to figure out the intended user.
-If you decide to praise a random user, set user to "*"
+If the request is about self or uses a pronoun, study the context and instructions carefully to figure out the intended user.
+If you decide to target a random user, set user to "*"
 
 #RESPONSE FORMAT:
 {
@@ -39,7 +39,7 @@ def parse(input):
 
 ParseUser = Tool(
   name="ParseUser",
-  description="Set the parameters user and user_fid to run the praise tools.",
+  description="Set the parameters user and user_fid to run the user related tools.",
   metadata={
     'outputs': ['user_fid', 'user']
   },
