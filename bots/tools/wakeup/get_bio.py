@@ -5,15 +5,15 @@ SAMPLE_SIZE = 5
 
 def get_bio(input):    
   state = input.state
-  if state.character is not None and state.character['bio'] is not None and len(state.character['bio']) > 0:
-    bio = state.character['bio']
+  character = state.get('character')
+  bio = None
+  if character is not None and character['bio'] is not None and len(character['bio']) > 0:
+    bio = character['bio']
     if len(bio)>SAMPLE_SIZE:
       bio = random.sample(bio, SAMPLE_SIZE)
     random.shuffle(bio)
-    state.bio = '\n'.join(bio)      
-  else:
-    state.bio = ''
-  return {'bio': state.bio}
+    bio = '\n'.join(bio)      
+  return {'bio': bio}
   
 GetBio = Tool(
   name="GetBio",

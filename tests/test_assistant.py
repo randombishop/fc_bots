@@ -21,8 +21,8 @@ class TestAssistant(unittest.TestCase):
   
   def test1(self):
     channel = 'mfers'
-    state = run_assistant(test_id='TestAssistant:1', instructions=prompt1, channel=channel)
+    state = run_assistant(test_id='TestAssistant:1', request=prompt1, channel=channel)
     
   def test2(self):
     channel = 'mfers'
-    state = run_assistant(test_id='TestAssistant:2', instructions=prompt2, channel=channel)
+    state = run_assistant(test_id='TestAssistant:2', request=prompt2, channel=channel)

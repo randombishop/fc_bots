@@ -1,110 +1,23 @@
 import re
-from bots.data.users import get_username, get_fid
-from bots.data.channels import get_channel_url
 from bots.utils.format_cast import insert_mentions, shorten_text
-from bots.data.app import get_bot_character
-from bots.utils.llms import get_max_capactity
 
 
 class State:
   
-  def __init__(self, input):
-    id = input['bot_id']
-    character = get_bot_character(id)
-    if character is None:
-      raise Exception(f"Bot {id} not found")
-    # Initialization
-    self.id =id
-    self.name = character['name']
-    self.character = character
-    self.request = input['request'] if 'request' in input else None
-    self.fid_origin = int(input['fid_origin']) if 'fid_origin' in input and input['fid_origin'] is not None else None
-    self.user_origin = get_username(self.fid_origin) if self.fid_origin is not None else None
-    self.parent_hash = input['parent_hash'] if 'parent_hash' in input else None
-    self.attachment_hash = input['attachment_hash'] if 'attachment_hash' in input else None
-    self.root_parent_url = input['root_parent_url'] if 'root_parent_url' in input else None
-    self.current_phase = 'initialize'
-    self.instructions = input['instructions'] if 'instructions' in input else None
-    # a. Wake up
-    self.bio = None
-    self.channel_list = None
-    self.conversation = None
-    self.lore = None
-    self.style = None
-    self.time = None
-    # b. Plan
-    self.should_continue = True
-    self.actions = None
-    self.action = input['action'] if 'action' in input else None
-    self.tools_log = None
+  def __init__(self):
+    self.tools_log = []
     self.next_tool = None
-    self.tools_done = False
+    self.tools_done =  False
     self.composed = False
     self.checked = False
     self.memorized = False
-    # c. Parse parameters
-    self.user = input['user'] if 'user' in input else None
-    self.user_fid = get_fid(self.user) if self.user is not None else None
-    self.channel = input['channel'] if 'channel' in input else None
-    self.channel_url = get_channel_url(self.channel) if self.channel is not None else None
-    self.keyword = None
-    self.category = None
-    self.search = None
-    self.text = None
-    self.question = None
-    self.criteria = None
-    self.max_rows = get_max_capactity()
-    # d. Fetch and Prepare
-    self.trending = ''
-    self.user_casts = None
-    self.about_user_origin = None
-    self.user_display_name = None
-    self.user_bio = None
-    self.user_followers = None
-    self.user_following = None
-    self.user_pfp_url = None
-    self.user_casts_description = None
-    self.user_replies_and_reactions = None
-    self.user_replies_and_reactions_description = None
-    self.user_replies_and_reactions_keywords = None
-    self.user_pfp_description = None
-    self.user_avatar_prompt = None
-    self.user_avatar = None
-    self.about_keyword = None
-    self.about_category = None
-    self.about_search = None
-    self.posts_map = {}
-    self.casts_in_channel = None
-    self.bot_casts = None
-    self.bot_casts_in_channel = None
-    self.bot_casts_no_channel = None
-    self.wordcloud_text = None
-    self.wordcloud_counts = None
-    self.wordcloud_mask = None
-    self.wordcloud_background = None
-    self.wordcloud_width = None
-    self.wordcloud_height = None
-    self.wordcloud_url = None
-    self.casts_for_params = None
-    self.df_favorite_users = None
-    self.df_more_like_this = None
-    self.df_most_active_users = None
-    self.df_casts_for_fid = None
-    self.yahoo_news = None
-    self.favorite_users_table = None
-    self.most_active_users_chart = None
-    self.user_praise = None
-    self.user_psycho = None
-    self.user_roast = None
-    # f. Combine
-    self.casts = None
-    # g. Check
-    self.like = False
-    self.reply = False
-    self.do_not_reply_reason = None
-       
-  def is_responding(self):
-    return self.request is not None and len(self.request)>0
+  
+  def get(self, key):
+    for step in reversed(self.tools_log):
+      tool_result = step[1]
+      if key in tool_result:
+        return tool_result[key]
+    return None
   
   def format_placeholder(self, key):
     if not hasattr(self, key):
@@ -146,6 +59,9 @@ class State:
       result = result.replace('{{' + placeholder + '}}', value)
     return result
   
+  def format_all(self):
+    return ''
+  
   def format_prompt(self):
     if self.is_responding():
       return self.format_conversation()
@@ -173,6 +89,24 @@ class State:
     return ans
 
   def format_all_available_data(self):
+    tmp = """
+    You are @{{name}}, a social media bot.
+
+    #YOUR BIO
+    {{bio}}
+
+    #YOUR LORE
+    {{lore}}
+
+    #YOUR STYLE
+    {{style}}
+
+    #CURRENT CHANNEL
+    {{root_parent_url}}
+
+    #CURRENT TIME
+    {{time}}
+    """
     ans = ''
     if self.trending is not None and len(self.trending)>0:
       ans += f"#WHAT IS TRENDING IN GENERAL (NOT SPECIFIC TO THE CHANNEL)\n{self.trending}\n"
@@ -181,7 +115,7 @@ class State:
     if self.bot_casts_in_channel is not None and len(self.bot_casts_in_channel)>0:
       ans += f"#WHAT YOU RECENTLY POSTED IN THE CHANNEL\n{self.bot_casts_in_channel}\n"
     if self.casts is not None and len(self.casts)>0:
-      ans += f"#CANDIDATEPOSTS GENERATED SO FAR USING ACTION {self.action}\n{self.format_casts()}\n"
+      ans += f"#CANDIDATE POSTS GENERATED SO FAR USING ACTION {self.action}\n{self.format_casts()}\n"
     if self.instructions is not None and len(self.instructions)>0:
       ans += f"#INSTRUCTIONS\n{self.instructions}\n"
     return ans

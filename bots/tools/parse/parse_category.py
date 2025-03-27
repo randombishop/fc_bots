@@ -1,24 +1,26 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
-from bots.utils.read_params import read_channel, read_keyword, read_category, read_string, read_user
+from bots.utils.read_params import read_channel, read_user, read_string, read_category, read_keyword
 from bots.data.channels import get_channel_by_url
 
 
 parse_instructions_template = """
-#TASK:
-You are @{{name}}, a bot programmed to make summaries of posts (=casts) in a social media platform.
-You have access to an API that can generate the summary based on these parameters: category, channel, keyword, search, user.
+TASK:
+You are @{{name}}, a bot programmed to make a wordcloud based on posts (=casts) in a social media platform.
+You have access to an API that can generate the wordcloud based on these parameters: category, channel, keyword, search, user.
 * category: Can be one of pre-defined categories 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
 * channel: Channels always start with '/', for example '/data', if there is no '/' then it's not a channel.
 * keyword: Any single keyword, if something can't be mapped to a category and doesn't look like a channel, you can use it as a keyword, but only if it's a single word.
-* search: If the summary is not about a category, channel, keyword or user; then formulate a search phrase to search for posts and summarize them.
-* user: User names typically start with `@`, if the intent is to summarize posts by a specific user, you can use the user parameter.
-You must only extract the parameters to call the API.
+* search: If the wordcloud is not about a category, channel, keyword or user; then formulate a search phrase to search for posts.
+* user: User names typically start with `@`, if the intent is to make the wordcloud for a specific user, you can use the user parameter.
+Your goal is not to continue the conversation, you must only extract the parameters to call the API.
+You can use the conversation to guess the parameters, but focus on the request.
+Your goal is to extract the parameters from the request.
 
-#CURRENT CHANNEL:
+CURRENT CHANNEL:
 {{root_parent_url}}
 
-#RESPONSE FORMAT:
+RESPONSE FORMAT:
 {
   "category": "...",
   "channel": "...",
@@ -31,16 +33,13 @@ You must only extract the parameters to call the API.
 parse_schema = {
   "type":"OBJECT",
   "properties":{
-    "category":{"type":"STRING"},
-    "channel":{"type":"STRING"},
-    "keyword":{"type":"STRING"},
-    "search":{"type":"STRING"},
-    "user":{"type":"STRING"}
+    "category":{"type":"STRING"}
   }
 }
 
 
-def parse_summary_params(input):
+
+def parse(input):
   if not input.state.is_responding():
     return {'log': 'Skipping parse_summary_params'}
   state = input.state
@@ -53,24 +52,21 @@ def parse_summary_params(input):
   state.keyword = read_keyword(params)
   state.category = read_category(params)
   state.search = read_string(params, key='search', default=None, max_length=500)
-  fid, user_name = read_user(params, fid_origin=state.fid_origin, default_to_origin=False)
-  state.user = user_name
-  state.user_fid = fid
-  state.max_rows = 50
+  state.user_fid, state.user = read_user(params, fid_origin=state.fid_origin, default_to_origin=False)
+  state.max_rows = 250
   return {
     'channel_url': state.channel_url,
     'channel': state.channel,
     'keyword': state.keyword,
     'category': state.category,
     'search': state.search,
-    'user': user_name,
+    'user': state.user,
     'user_fid': state.user_fid,
     'max_rows': state.max_rows
   }
-
-
-ParseSummaryParams = Tool(
-  name="ParseSummaryParams",
-  func=parse_summary_params,
-  description="Set the parameters (one or more)channel_url, channel, keyword, category, search, user, user_fid and max_rows to run the summary tools."
+  
+ParseCategory = Tool(
+  name="ParseCategory",
+  description="Set the parameters channel_url, channel, keyword, category, search, user, user_fid and max_rows to pull data.",
+  func=parse
 )

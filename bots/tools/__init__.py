@@ -1,3 +1,4 @@
+from bots.tools.init import INIT_TOOLS
 from bots.tools.wakeup import WAKEUP_TOOLS
 from bots.tools.plan import PLAN_TOOLS
 from bots.tools.parse import PARSE_TOOLS
@@ -10,6 +11,7 @@ from bots.tools.bot_phases import BOT_PHASES
 
 
 TOOL_MAP = {
+  'init': INIT_TOOLS,
   'wakeup': WAKEUP_TOOLS,
   'plan': PLAN_TOOLS,
   'parse': PARSE_TOOLS,

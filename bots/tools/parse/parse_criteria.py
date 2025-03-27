@@ -7,7 +7,7 @@ from bots.data.channels import get_channel_by_url
 
 parse_instructions_template = """
 #TASK:
-You are @{{name}}, a bot programmed to select the best posts (=casts) in a social media platform.
+Your goal is to select the best posts (=casts) in a social media platform.
 You have access to an API that can pick the best post based on these parameters: 
 category, channel, keyword, more_like_this, user, search, criteria.
 * category: Can be one of pre-defined categories 'arts', 'business', 'crypto', 'culture', 'money', 'nature', 'politics', 'sports', 'tech_science'.
@@ -16,7 +16,7 @@ category, channel, keyword, more_like_this, user, search, criteria.
 * search: If the scope is not about a category, channel, keyword or user; then formulate a search phrase to search for posts and pick one.
 * user: User names typically start with `@`, if the intent is to pick one post by a specific user, you can use the user parameter.
 * criteria: Which criteria should be used to pick the best post? Can be any free text like 'beautiful', 'funniest', 'best', 'most informative'. Defaults to 'most interesting'.
-Your goal is not to respond to the request at this point, you must only extract the parameters to call the API.
+You must only extract the parameters to call the API.
 
 #CURRENT CHANNEL
 {{channel}}
@@ -44,37 +44,35 @@ parse_schema = {
   }
 }
 
-def parse_pick_params(input):
-  if not input.state.is_responding():
-    return {'log': 'Skipping parse_summary_params'}
+def parse(input):
   state = input.state
   llm = input.llm
-  parse_prompt = state.format_prompt()
+  parse_prompt = state.format_all()
   parse_instructions = state.format(parse_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)
-  state.channel_url = read_channel(params)
-  state.channel = get_channel_by_url(state.channel_url)
-  state.keyword = read_keyword(params)
-  state.category = read_category(params)
-  state.search = read_string(params, key='search', default=None, max_length=500)
-  state.user_fid, state.user = read_user(params, fid_origin=state.fid_origin, default_to_origin=False)
-  state.criteria = read_string(params, key='criteria', default='most interesting')
-  state.max_rows = get_max_capactity()
+  state.params['channel_url'] = read_channel(params)
+  state.params['channel'] = get_channel_by_url(state.params['channel_url'])
+  state.params['keyword'] = read_keyword(params)
+  state.params['category'] = read_category(params)
+  state.params['search'] = read_string(params, key='search', default=None, max_length=500)
+  state.params['user_fid'], state.params['user'] = read_user(params, fid_origin=state.fid_origin, default_to_origin=False)
+  state.params['criteria'] = read_string(params, key='criteria', default='most interesting')
+  state.params['max_rows'] = get_max_capactity()
   return {
-    'channel_url': state.channel_url,
-    'channel': state.channel,
-    'keyword': state.keyword,
-    'category': state.category,
-    'search': state.search,
-    'user': state.user,
-    'user_fid': state.user_fid,
-    'criteria': state.criteria,
-    'max_rows': state.max_rows
+    'channel_url': state.params['channel_url'],
+    'channel': state.params['channel'],
+    'keyword': state.params['keyword'],
+    'category': state.params['category'],
+    'search': state.params['search'],
+    'user': state.params['user'],
+    'user_fid': state.params['user_fid'],
+    'criteria': state.params['criteria'],
+    'max_rows': state.params['max_rows']
   }
   
 
-ParsePickParams = Tool(
-  name="ParsePickParams",
+ParseCriteria = Tool(
+  name="ParseCriteria",
   description="Set the parameters (one or more) channel_url, channel, keyword, category, search, user, user_fid, criteria and max_rows to be able to pick a cast.",
-  func=parse_pick_params
+  func=parse
 )

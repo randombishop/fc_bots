@@ -28,11 +28,11 @@ def run_bot(test_id, request=None, fid_origin=None, parent_hash=None, attachment
   state.debug()
   return state
 
-def run_assistant(test_id, instructions, channel=None):
+def run_assistant(test_id, request=None, channel=None):
   state = invoke_assistant(
     run_name=test_id, 
     bot_id=bot_id, 
-    instructions=instructions,
+    request=request,
     channel=channel
   )
   state.debug()

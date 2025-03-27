@@ -9,21 +9,24 @@ max_depth = 28
 def get_conversation(input):
   state = input.state
   context = []
-  username_origin = get_username(state.fid_origin) if state.fid_origin is not None else 'unknown_user'
-  if state.request is not None or state.attachment_hash is not None:
+  fid_origin = state.get('fid_origin')
+  username_origin = get_username(fid_origin) if fid_origin is not None else 'unknown_user'
+  request = state.get('request')
+  attachment_hash = state.get('attachment_hash')
+  if request is not None or attachment_hash is not None:
     main_cast = {
-      'text': state.request if state.request is not None else '', 
-      'fid': state.fid_origin, 
+      'text': request if request is not None else '', 
+      'fid': fid_origin, 
       'username': username_origin, 
       'when': 'now'
     }
-    if state.attachment_hash is not None:
-      attachment_cast = get_cast(state.attachment_hash)
+    if attachment_hash is not None:
+      attachment_cast = get_cast(attachment_hash)
       if attachment_cast is not None:
         main_cast['quote'] = {'text': attachment_cast['text'], 'fid': attachment_cast['fid'], 'username': attachment_cast['username']}
     context.append(main_cast)
   current_depth = 0
-  parent_hash = state.parent_hash
+  parent_hash = state.get('parent_hash')
   while parent_hash is not None and current_depth < max_depth:
     previous_cast = get_cast(parent_hash)
     if previous_cast is not None:
@@ -43,8 +46,7 @@ def get_conversation(input):
       text += f"  {item['quote']['text']} \n"
       text += "  ]\n"
     text += '#'
-  state.conversation = text
-  return {'conversation': state.conversation}
+  return {'conversation': text}
 
 
 GetConversation = Tool(

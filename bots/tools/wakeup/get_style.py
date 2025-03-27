@@ -4,18 +4,16 @@ from langchain.agents import Tool
 
 def get_style(input):
   state = input.state
-  if state.character is not None and state.character['style'] is not None and len(state.character['style']) > 0:
-    style = state.character['style']
+  character = state.get('character')
+  style = None
+  if character is not None and character['style'] is not None and len(character['style']) > 0:
+    style = character['style']
     random.shuffle(style)
     state.style = '\n'.join(style)      
-  else:
-    state.style = ''
-  return {'style': state.style}
+  return {'style': style}
 
 GetStyle = Tool(
   name="GetStyle",
   func=get_style,
   description="Get the style of the bot."
 )
-  
-  

@@ -3,9 +3,8 @@ from langchain.agents import Tool
 
 
 def get_time(input):
-  state = input.state
-  state.time = f"{datetime.now().strftime('%Y-%m-%d %H:%M')}"
-  return {'time': state.time}
+  time = f"{datetime.now().strftime('%Y-%m-%d %H:%M')}"
+  return {'time': time}
 
 GetTime = Tool(
   name="GetTime",

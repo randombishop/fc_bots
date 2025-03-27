@@ -4,20 +4,6 @@ from bots.utils.read_params import read_keyword, read_string
 
 
 instructions_template = """
-You are @{{name}}, a social media bot.
-
-#YOUR BIO
-{{bio}}
-
-#YOUR LORE
-{{lore}}
-
-#YOUR STYLE
-{{style}}
-
-#CURRENT CHANNEL
-{{channel}}
-
 #TASK
 First, study the provided data and understand your instructions.
 Before processing your instructions, you can access data from the social media platform to prepare a good post.
@@ -50,27 +36,23 @@ schema = {
 }
 
 
-def parse_instructions_params(input):
+def parse(input):
   state = input.state
   llm = input.llm
-  if not state.should_continue:
-    return {'log': 'Not fetching data because should_continue is false'}
-  prompt = state.format_prompt()
+  prompt = state.format_all()
   instructions = state.format(instructions_template)
   params = call_llm(llm, prompt, instructions, schema)
-  state.search = read_string(params, key='search', max_length=500)
-  state.keyword = read_keyword(params)
-  state.max_rows = 25
+  state.params['search'] = read_string(params, key='search', max_length=500)
+  state.params['keyword'] = read_keyword(params)
   return {
-    'search': state.search,
-    'keyword': state.keyword,
-    'max_rows': state.max_rows,
+    'search': state.params['search'],
+    'keyword': state.params['keyword'],
     'log': read_string(params, key='reasoning')
   }
 
 
-ParseInstructionsParams = Tool(
-  name="ParseInstructionsParams",
-  func=parse_instructions_params,
-  description="Set parameters search, keyword and max_rows to pull more data."
+ParseKeywordAndSearch = Tool(
+  name="ParseKeywordAndSearch",
+  description="Set parameters search and keyword to pull more data.",
+  func=parse
 )
