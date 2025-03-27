@@ -24,9 +24,18 @@ class State:
   def add_posts(self, posts):
     for x in posts:
       self.posts_map[x['id']] = x
-          
+  
+  def get_available_data(self):
+    ans = {}
+    for x in self.tools_log:
+      observation = x[1]
+      for k,v in observation.items():
+        if v is not None:
+          ans[k] = v
+    return ans
+  
   def format_casts(self):
-    casts = self.casts
+    casts = self.get('casts')
     if casts is None or len(casts)==0:
       return ''
     ans = ''
@@ -70,12 +79,13 @@ class State:
     ans = '#TOOL OUTPUTS\n\n'
     for x in self.tools_log:
       step = x[0]
-      observation = x[1]
-      ans += f"##{step.tool}\n"
-      for k,v in observation.items():
-        if v is not None and isinstance(v, str):
-          ans += f"###{k}\n"
-          ans += f"{v}\n\n"
+      if step.tool != 'SelectTool':
+        observation = x[1]
+        ans += f"##{step.tool}\n"
+        for k,v in observation.items():
+          if v is not None and isinstance(v, str):
+            ans += f"###{k}\n"
+            ans += f"{v}\n\n"
     ans += '\n\n'
     ans += '#INSTRUCTIONS\n\n'
     ans += self.get('request')
@@ -92,6 +102,7 @@ class State:
           if len(v) > 512:
             v = v[:512] + '...'
           ans += f"{k}: {v}\n"
+      ans += '\n\n'
     ans += '\n\n'
     ans += '#INSTRUCTIONS\n\n'
     ans += self.get('request')

@@ -2,6 +2,7 @@ from langchain.agents import Tool
 from bots.data.casts import get_casts_for_fid
 from bots.utils.format_cast import concat_casts
 
+
 def fetch(input):
   state = input.state
   user_name = state.get('user')
@@ -16,6 +17,7 @@ def fetch(input):
     'casts_user': casts_user,
     'data_casts_user': data_casts_user
   }
+
 
 GetCastsUser = Tool(
   name="GetCastsUser",
