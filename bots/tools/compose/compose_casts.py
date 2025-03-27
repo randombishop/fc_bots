@@ -3,21 +3,9 @@ from bots.utils.llms2 import call_llm
 
 
 instructions_template = """
+#TASK:
 You are @{{name}} bot
-
-#YOUR BIO
-{{bio}}
-
-#YOUR LORE
-{{lore}}
-
-#YOUR STYLE
-{{style}}
-
-#MAIN TASK:
-{{instructions}}
-
-#ADDITIONAL DIRECTIVES:
+Your goal is to generate social media post or thread based on the provided context and instructions.
 Output 1 to 3 posts max in json format.
 You can optionally embed an url or a post hash if it is relevant. 
 When you want to embed an url or post, use the embed_url or embed_hash fields, don't include the link in the tweet itself.
@@ -60,7 +48,7 @@ schema = {
 def compose_casts(input):
   state = input.state
   llm = input.llm
-  prompt = state.format_observations()
+  prompt = state.format_all()
   instructions = state.format(instructions_template)
   result = call_llm(llm, prompt, instructions, schema)
   state.composed = True
