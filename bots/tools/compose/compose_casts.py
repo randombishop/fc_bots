@@ -1,6 +1,7 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.utils.check_links import check_link_data
+from bots.utils.format_cast import format_casts
 
 
 instructions_template = """
@@ -73,7 +74,11 @@ def compose_casts(input):
     c = extract_cast(result, i, state.posts_map)
     if c is not None:
       casts.append(c)
-  return {'casts': casts}
+  formatted = format_casts(casts)
+  return {
+    'casts': formatted,
+    'data_casts': casts
+  }
   
 
 ComposeCasts = Tool(

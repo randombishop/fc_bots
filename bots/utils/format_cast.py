@@ -67,3 +67,22 @@ def shorten_text(text):
     text = text[:256]+'...'
   return text
 
+def format_casts(casts):
+  if casts is None or len(casts)==0:
+    return ''
+  ans = ''
+  for c in casts:
+    text = c['text']
+    if 'mentions_ats' in c and 'mentions_pos' in c:
+      text = insert_mentions(text, c['mentions_ats'], c['mentions_pos'])
+    ans += f"> {text}"
+    if 'embeds' in c and c['embeds'] is not None and len(c['embeds'])>0:
+      embed = c['embeds'][0]
+      description = c['embeds_description'] if 'embeds_description' in c else None
+      description = shorten_text(description)
+      if 'user_name' in embed and 'hash' in embed:
+        ans += f" [{description}](https://warpcast.com/{embed['user_name']}/{embed['hash'][:10]})"
+      else:
+        ans += f" [{description}]({embed})"
+    ans += '\n'
+  return ans

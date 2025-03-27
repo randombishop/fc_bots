@@ -1,5 +1,5 @@
 import re
-from bots.utils.format_cast import insert_mentions, shorten_text
+from bots.utils.format_cast import insert_mentions, shorten_text, format_casts
 
 
 class State:
@@ -34,27 +34,6 @@ class State:
           ans[k] = v
     return ans
   
-  def format_casts(self):
-    casts = self.get('casts')
-    if casts is None or len(casts)==0:
-      return ''
-    ans = ''
-    for c in casts:
-      text = c['text']
-      if 'mentions_ats' in c and 'mentions_pos' in c:
-        text = insert_mentions(text, c['mentions_ats'], c['mentions_pos'])
-      ans += f"> {text}"
-      if 'embeds' in c and c['embeds'] is not None and len(c['embeds'])>0:
-        embed = c['embeds'][0]
-        description = c['embeds_description'] if 'embeds_description' in c else None
-        description = shorten_text(description)
-        if 'user_name' in embed and 'hash' in embed:
-          ans += f" [{description}](https://warpcast.com/{embed['user_name']}/{embed['hash'][:10]})"
-        else:
-          ans += f" [{description}]({embed})"
-      ans += '\n'
-    return ans
-  
   def format(self, template):
     result = template
     placeholders = re.findall(r'\{\{(\w+)\}\}', template)
@@ -76,7 +55,10 @@ class State:
     return ans
 
   def format_all(self):
-    ans = '#TOOL OUTPUTS\n\n'
+    name = self.get('name')
+    ans = f'You are @{name} bot, a social media bot.\n'
+    ans += 'Here is your log of the internal tools you executed, followed by your instructions.\n\n'
+    ans += '#TOOL OUTPUTS\n\n'
     for x in self.tools_log:
       step = x[0]
       if step.tool != 'SelectTool':
@@ -115,7 +97,9 @@ class State:
     try:
       s = '-'*100+'\n'
       s += ' > '.join(self.get_tools_sequence())+' >>> \n'
-      s += self.format_casts()
+      casts = self.get('casts')
+      if casts is not None and len(casts)>0:
+        s += casts
       s += '-'*100+'\n'
       print(s)
     except Exception as e:

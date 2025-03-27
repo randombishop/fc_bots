@@ -45,7 +45,7 @@ def check(input):
   instructions = state.format(instructions_template)
   result = call_llm(llm, prompt, instructions, schema)
   do_not_post = read_boolean(result, key='do_not_post')
-  reason = read_string(result, key='reason', default='')
+  reason = read_string(result, key='reason')
   valid = (not do_not_post)
   return {
     'valid': valid,
