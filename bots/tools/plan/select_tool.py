@@ -56,22 +56,16 @@ tool_names = [x.name for x in PARSE_TOOLS + FETCH_TOOLS + PREPARE_TOOLS]
 def format_tools(list):
   ans = ''
   for x in list:
-    ans += f"##{x.name}\n"
-    ans += f"Description: {x.description}\n"
-    if x.metadata is not None:
-      if 'inputs' in x.metadata:
-        ans += f"Inputs: {x.metadata['inputs']}\n"
-      if 'outputs' in x.metadata:
-        ans += f"Outputs: {x.metadata['outputs']}\n"
-    ans += '\n'
+    ans += f"{x.name}: {x.description}\n"
   return ans
 
 
 def select_tool(input):
   state = input.state
   llm = input.llm
-  if state.instructions is None or len(state.instructions) == 0:
-    raise Exception('No instructions provided')
+  request = state.get('request')
+  if request is None or len(request) == 0:
+    raise Exception('No request provided')
   prompt = state.format_tools_log()
   instructions = state.format(select_tool_task)
   instructions = instructions.replace('parse_tools?', format_tools(PARSE_TOOLS))
@@ -85,10 +79,11 @@ def select_tool(input):
     tools_done = True
   state.next_tool = next_tool
   state.tools_done = tools_done
+  reasoning = result['reasoning'] if 'reasoning' in result else ''
   return {
     'next_tool': state.next_tool, 
     'tools_done': state.tools_done,
-    'log': result['reasoning']
+    'next_tool_reasoning': reasoning
   }
   
 

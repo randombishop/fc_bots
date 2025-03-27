@@ -5,7 +5,7 @@ SAMPLE_SIZE = 5
 
 def get_lore(input):
   state = input.state
-  character = state.get('character')
+  character = state.character
   lore = None
   if character is not None and character['lore'] is not None and len(character['lore']) > 0:
     lore = character['lore']

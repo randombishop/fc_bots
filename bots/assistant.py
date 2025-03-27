@@ -39,6 +39,7 @@ class Assistant(BaseSingleActionAgent):
     if self._state is None:
       self._state = State()
       input = json.loads(kwargs['input'])
+      input['state'] = self._state
       return AgentAction(
         tool='InitState',
         tool_input={'input': input},
@@ -50,8 +51,6 @@ class Assistant(BaseSingleActionAgent):
         tool=tool,
         tool_input=self.get_tool_input(),
         log='Wakeup Step')
-    elif True:
-      return AgentFinish(return_values={"output": self._state}, log='done')
     elif not self._state.tools_done:
       next_tool = self._state.next_tool
       if next_tool is not None:

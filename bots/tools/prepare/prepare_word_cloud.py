@@ -2,10 +2,10 @@ from langchain.agents import Tool
 from bots.utils.word_counts import get_word_counts
 
 
-def prepare_word_cloud(input):
+def prepare(input):
   state = input.state
   top_n = 50
-  posts = state.casts_for_params
+  posts = state.get('casts')
   if posts is None or len(posts) == 0:
     raise Exception(f"Not enough activity to buid a word cloud.")
   posts = [x['text'] for x in posts]
@@ -25,8 +25,8 @@ PrepareWordCloud = Tool(
   name="PrepareWordCloud",
   description="Prepare the word cloud data",
   metadata={
-    'inputs': 'Requires casts_for_params to be fetched first using get_casts_for_params tool.',
-    'outputs': 'wordcloud_text, wordcloud_counts'
+    'inputs': ['casts'],
+    'outputs': ['wordcloud_text', 'wordcloud_counts']
   },
-  func=prepare_word_cloud
+  func=prepare
 )

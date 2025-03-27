@@ -4,7 +4,7 @@ from langchain.agents import Tool
 
 def get_style(input):
   state = input.state
-  character = state.get('character')
+  character = state.character
   style = None
   if character is not None and character['style'] is not None and len(character['style']) > 0:
     style = character['style']

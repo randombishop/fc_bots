@@ -29,8 +29,6 @@ parse_schema = {
 
 
 def parse(input):
-  if input.state.params['channel_url'] is not None:
-    return {'log': 'Channel already set'}
   state = input.state
   llm = input.llm
   parse_prompt = state.format_all()

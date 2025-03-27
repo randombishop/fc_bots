@@ -76,10 +76,10 @@ main_schema = {
 }
 
 
-def prepare_summary(input):
+def prepare(input):
   state = input.state
   llm = input.llm
-  posts = state.casts_for_params
+  posts = state.get('casts')
   if posts is None:
     raise Exception("No posts to summarize")
   if len(posts) < 5:
@@ -130,8 +130,8 @@ PrepareSummary = Tool(
   name="PrepareSummary",
   description="Prepare the summary of the posts and select some interesting ones",
   metadata={
-    'inputs': 'Requires casts_for_params to be fetched first using GetCastsForParams tool.',
-    'outputs': 'digest_casts_data, wordcloud_text, wordcloud_counts'
+    'inputs': ['casts'],
+    'outputs': ['digest_casts_data', 'wordcloud_text', 'wordcloud_counts']
   },
-  func=prepare_summary
+  func=prepare
 )

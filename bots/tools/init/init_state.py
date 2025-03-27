@@ -10,39 +10,31 @@ def init_state(input):
   character = get_bot_character(id)
   if character is None:
     raise Exception(f"Bot {id} not found")
-  request = input['request'] if 'request' in input else None
-  fid_origin = int(input['fid_origin']) if 'fid_origin' in input and input['fid_origin'] is not None else None
-  user_origin = get_username(fid_origin) if fid_origin is not None else None
-  parent_hash = input['parent_hash'] if 'parent_hash' in input else None
-  attachment_hash = input['attachment_hash'] if 'attachment_hash' in input else None
-  root_parent_url = input['root_parent_url'] if 'root_parent_url' in input else None
-  user = input['user'] if 'user' in input else None
-  user_fid = get_fid(user) if user is not None else None
-  channel = input['channel'] if 'channel' in input else None
-  channel_url = get_channel_url(channel) if channel is not None else None
-  return {
-    'id': id,
-    'name': character['name'],
-    'character': character,
-    'request': request,
-    'fid_origin': fid_origin,
-    'user_origin': user_origin,
-    'parent_hash': parent_hash,
-    'attachment_hash': attachment_hash,
-    'root_parent_url': root_parent_url,
-    'user': user,
-    'user_fid': user_fid,
-    'channel': channel,
-    'channel_url': channel_url,
-    'keyword': None,
-    'category': None,
-    'search': None,
-    'text': None,
-    'question': None,
-    'criteria': None,
-    'max_rows': get_max_capactity()
-  }
+  input['state'].character = character
+  ans = {}
+  ans['id'] = id
+  ans['name'] = character['name']
+  if 'request' in input and input['request'] is not None:
+    ans['request'] = input['request']
+  if 'fid_origin' in input and input['fid_origin'] is not None:
+    ans['fid_origin'] = int(input['fid_origin'])
+    ans['user_origin'] = get_username(ans['fid_origin'])
+  if 'parent_hash' in input and input['parent_hash'] is not None:
+    ans['parent_hash'] = input['parent_hash']
+  if 'attachment_hash' in input and input['attachment_hash'] is not None:
+    ans['attachment_hash'] = input['attachment_hash']
+  if 'root_parent_url' in input and input['root_parent_url'] is not None:
+    ans['root_parent_url'] = input['root_parent_url']
+  if 'user' in input and input['user'] is not None:
+    ans['user'] = input['user']
+    ans['user_fid'] = get_fid(ans['user'])
+  if 'channel' in input and input['channel'] is not None:
+    ans['channel'] = input['channel']
+    ans['channel_url'] = get_channel_url(ans['channel'])
+  ans['max_rows'] = get_max_capactity()
+  return ans
   
+
 InitState = Tool(
   name="InitState",
   func=init_state,
