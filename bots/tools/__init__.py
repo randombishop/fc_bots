@@ -8,6 +8,7 @@ from bots.tools.compose import COMPOSE_TOOLS
 from bots.tools.check import CHECK_TOOLS
 from bots.tools.memorize import MEMORIZE_TOOLS
 from bots.tools.bot_phases import BOT_PHASES
+from bots.tools.assistant_phases import ASSISTANT_PHASES  
 
 
 TOOL_MAP = {
@@ -21,6 +22,7 @@ TOOL_MAP = {
   'check': CHECK_TOOLS,
   'memorize': MEMORIZE_TOOLS,
   'bot_phases': BOT_PHASES,
+  'assistant_phases': ASSISTANT_PHASES
 }
 
 

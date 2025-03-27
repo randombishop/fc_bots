@@ -72,9 +72,7 @@ def shorten_text(state, llm, text):
 def shorten(input):
   state = input.state
   llm = input.llm
-  casts = state.casts
-  if casts is None:
-    raise Exception('No casts to shorten')
+  casts = state.get('casts')
   log = []
   for c in casts:
     original = c['text']
@@ -86,12 +84,16 @@ def shorten(input):
   if len(log) == 0:
     log = 'No change'
   return {
-    'log': log
+    'shorten': log
   }
 
 
 Shorten = Tool(
   name="Shorten",
   description="Shorten the posts into casts no longer than 250 characters",
+  metadata={
+    'inputs': ['casts'],
+    'outputs': ['shorten']
+  },
   func=shorten
 )

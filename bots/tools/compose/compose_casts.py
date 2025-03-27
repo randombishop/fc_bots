@@ -1,5 +1,6 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
+from bots.utils.check_links import check_link_data
 
 
 instructions_template = """
@@ -45,14 +46,34 @@ schema = {
 }
 
 
+def extract_cast(result, index, posts_map):
+  if f'tweet{index}' not in result:
+    return None
+  c = {'text': result[f'tweet{index}']}
+  if f'embed_url{index}' in result:
+    c['embeds'] = [result[f'embed_url{index}']]
+    c['embeds_description'] = 'link'
+  elif f'embed_hash{index}' in result:
+    link = check_link_data({'id': result[f'embed_hash{index}']}, posts_map)
+    if link is not None:
+      c['embeds'] = [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}],
+      c['embeds_description'] = link['text']
+      c['embeds_warpcast'] = f"https://warpcast.com/{link['user_name']}/{link['hash'][:10]}"
+  return c
+
+
 def compose_casts(input):
   state = input.state
   llm = input.llm
   prompt = state.format_all()
   instructions = state.format(instructions_template)
   result = call_llm(llm, prompt, instructions, schema)
-  state.composed = True
-  return result
+  casts = []
+  for i in range(1, 4):
+    c = extract_cast(result, i, state.posts_map)
+    if c is not None:
+      casts.append(c)
+  return {'casts': casts}
   
 
 ComposeCasts = Tool(

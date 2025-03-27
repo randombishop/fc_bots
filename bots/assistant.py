@@ -66,8 +66,15 @@ class Assistant(BaseSingleActionAgent):
           log=''
         )
     elif not self._state.composed:
+      self._state.composed = True
       return AgentAction(
         tool='ComposeCasts',
+        tool_input=self.get_tool_input(),
+        log='')
+    elif not self._state.checked and self._state.get('casts') is not None and len(self._state.get('casts')) > 0:
+      self._state.checked = True
+      return AgentAction(
+        tool='AssistantCheck',
         tool_input=self.get_tool_input(),
         log='')
     else:

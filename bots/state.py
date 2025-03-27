@@ -108,8 +108,15 @@ class State:
     ans += self.get('request')
     return ans
   
+  def get_tools_sequence(self):
+    return [x[0].tool for x in self.tools_log]
+    
   def debug(self):
     try:
-      pass
+      s = '-'*100+'\n'
+      s += ' > '.join(self.get_tools_sequence())+' >>> \n'
+      s += self.format_casts()
+      s += '-'*100+'\n'
+      print(s)
     except Exception as e:
       print('Exception in state.debug():', e)
