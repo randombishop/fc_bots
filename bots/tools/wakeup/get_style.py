@@ -8,7 +8,6 @@ def get_style(input):
   style = None
   if character is not None and character['style'] is not None and len(character['style']) > 0:
     style = character['style']
-    random.shuffle(style)
     style = '\n'.join(style)      
   return {'style': style}
 
