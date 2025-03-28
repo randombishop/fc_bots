@@ -42,12 +42,13 @@ def parse(input):
   prompt = state.format_all()
   instructions = state.format(instructions_template)
   params = call_llm(llm, prompt, instructions, schema)
-  state.params['search'] = read_string(params, key='search', max_length=500)
-  state.params['keyword'] = read_keyword(params)
+  search = read_string(params, key='search', max_length=500)
+  keyword = read_keyword(params)
+  reasoning = read_string(params, key='reasoning')
   return {
-    'search': state.params['search'],
-    'keyword': state.params['keyword'],
-    'log': read_string(params, key='reasoning')
+    'search': search,
+    'keyword': keyword,
+    'parse_keyword_and_search_log': reasoning
   }
 
 
