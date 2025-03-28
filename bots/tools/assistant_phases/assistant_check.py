@@ -4,9 +4,12 @@ from bots.tools.check.validate import Validate
 
 
 def check(input):
+  ans = {}
   shorten = Shorten.invoke({'input': input})
+  ans.update(shorten)
   valid = Validate.invoke({'input': input})
-  return {'shorten': shorten, 'valid': valid}
+  ans.update(valid)
+  return ans
     
 
 AssistantCheck = Tool(

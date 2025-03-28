@@ -1,12 +1,21 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
-from bots.utils.check_links import check_link_data
-from bots.utils.format_cast import format_casts
+from bots.utils.format_cast import format_casts, extract_cast
 
 
 instructions_template = """
-#TASK:
 You are @{{name}} bot
+
+#YOUR BIO:
+{{bio}}
+
+#YOUR LORE:
+{{lore}}
+
+#YOUR STYLE:
+{{style}}
+
+#TASK:
 Your goal is to generate social media post or thread based on the provided context and instructions.
 Output 1 to 3 posts max in json format.
 You can optionally embed an url or a post hash if it is relevant. 
@@ -47,23 +56,7 @@ schema = {
 }
 
 
-def extract_cast(result, index, posts_map):
-  if f'tweet{index}' not in result:
-    return None
-  c = {'text': result[f'tweet{index}']}
-  if f'embed_url{index}' in result:
-    c['embeds'] = [result[f'embed_url{index}']]
-    c['embeds_description'] = 'link'
-  elif f'embed_hash{index}' in result:
-    link = check_link_data({'id': result[f'embed_hash{index}']}, posts_map)
-    if link is not None:
-      c['embeds'] = [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}],
-      c['embeds_description'] = link['text']
-      c['embeds_warpcast'] = f"https://warpcast.com/{link['user_name']}/{link['hash'][:10]}"
-  return c
-
-
-def compose_casts(input):
+def compose(input):
   state = input.state
   llm = input.llm
   prompt = state.format_all()
@@ -71,7 +64,7 @@ def compose_casts(input):
   result = call_llm(llm, prompt, instructions, schema)
   casts = []
   for i in range(1, 4):
-    c = extract_cast(result, i, state.posts_map)
+    c = extract_cast(result, state.posts_map, i)
     if c is not None:
       casts.append(c)
   formatted = format_casts(casts)
@@ -81,8 +74,8 @@ def compose_casts(input):
   }
   
 
-ComposeCasts = Tool(
-  name="ComposeCasts",
-  description="Compose casts to be posted",
-  func=compose_casts
+ComposeMulti = Tool(
+  name="ComposeMulti",
+  description="Compose one or multiple casts to be posted by the bot.",
+  func=compose
 )

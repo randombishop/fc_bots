@@ -72,13 +72,13 @@ class Bot(BaseSingleActionAgent):
     elif not self._state.composed:
       self._state.composed = True
       return AgentAction(
-        tool='ComposeCasts',
+        tool='ComposeOne',
         tool_input=self.get_tool_input(),
         log='Compose')
     elif not self._state.checked and self._state.get('casts') is not None and len(self._state.get('casts')) > 0:
       self._state.checked = True
       return AgentAction(
-        tool='AssistantCheck',
+        tool='BotCheck',
         tool_input=self.get_tool_input(),
         log='Check')
     else:

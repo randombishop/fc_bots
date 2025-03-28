@@ -45,14 +45,12 @@ schema = {
 def like(input):
   state = input.state
   llm = input.llm
-  if not state.is_responding():
-    raise Exception('No conversation provided')
   prompt = state.format(prompt_template)
   instructions = state.format(instructions_template)
   result = call_llm(llm, prompt, instructions, schema)
-  state.like = read_boolean(result, key='like')
+  like = read_boolean(result, key='like')
   return {
-    'like': state.like
+    'like': like
   }
 
 

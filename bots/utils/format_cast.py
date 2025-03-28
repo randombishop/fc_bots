@@ -1,4 +1,6 @@
 from datetime import datetime
+from bots.utils.check_links import check_link_data
+from bots.data.users import get_fid
 
 
 def concat_casts(posts):
@@ -11,7 +13,6 @@ def concat_casts(posts):
     ans += "\n</"+post['id']+">\n"
   ans += "\n"
   return ans
-
 
 def format_when(timestamp):
   if isinstance(timestamp, str):
@@ -36,7 +37,6 @@ def format_when(timestamp):
     return f"{minutes} minutes ago"
   return "seconds ago"
 
-
 def insert_mentions(original: str, mentions: list[str], mention_positions: list[int]) -> str:
   if len(mentions) != len(mention_positions):
     raise ValueError("Mentions and positions arrays must have the same length")
@@ -56,6 +56,30 @@ def insert_mentions(original: str, mentions: list[str], mention_positions: list[
   for i in range(len(mentions)):
     result += mentions[i] + result_parts[i + 1]
   return result
+
+def extract_mentions(text):
+  if text is None:
+    return '', [], []    
+  mentions = []
+  positions = []
+  result_text = ''
+  i = 0
+  while i < len(text):
+    if text[i] == '@':
+      mention_start = i
+      i += 1
+      while i < len(text) and (text[i].isalnum() or text[i] == '_' or text[i] == '.'):
+        i += 1
+      mention = text[mention_start:i]
+      if len(mention) > 1: 
+        mentions.append(mention)
+        positions.append(len(result_text.encode('utf-8')))
+      else:
+        result_text += '@'
+    else:
+      result_text += text[i]
+      i += 1
+  return result_text, mentions, positions
 
 def shorten_text(text):
   if text is None:
@@ -86,3 +110,27 @@ def format_casts(casts):
         ans += f" [{description}]({embed})"
     ans += '\n'
   return ans
+
+def extract_cast(result, posts_map, index=''):
+  if f'tweet{index}' not in result:
+    return None
+  c = {'text': result[f'tweet{index}']}
+  if f'embed_url{index}' in result and result[f'embed_url{index}'] is not None:
+    c['embeds'] = [result[f'embed_url{index}']]
+    c['embeds_description'] = 'link'
+  elif f'embed_hash{index}' in result and result[f'embed_hash{index}'] is not None:
+    link = check_link_data({'id': result[f'embed_hash{index}']}, posts_map)
+    if link is not None:
+      c['embeds'] = [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}],
+      c['embeds_description'] = link['text']
+      c['embeds_warpcast'] = f"https://warpcast.com/{link['user_name']}/{link['hash'][:10]}"
+  raw_text, mentions_ats, mentions_positions = extract_mentions(c['text'])
+  if len(mentions_ats) > 0:
+    mentions = [get_fid(x[1:]) for x in mentions_ats]
+    mentions = [int(x) for x in mentions if x is not None]
+    if len(mentions) == len(mentions_ats):
+      c['text'] = raw_text
+      c['mentions'] = mentions
+      c['mentions_ats'] = mentions_ats
+      c['mentions_pos'] = mentions_positions
+  return c

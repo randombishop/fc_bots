@@ -9,7 +9,7 @@ def get_style(input):
   if character is not None and character['style'] is not None and len(character['style']) > 0:
     style = character['style']
     random.shuffle(style)
-    state.style = '\n'.join(style)      
+    style = '\n'.join(style)      
   return {'style': style}
 
 GetStyle = Tool(

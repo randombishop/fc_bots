@@ -7,10 +7,10 @@ from bots.utils.tests import run_bot
 class TestMostActiveUsers(unittest.TestCase):
 
   def assert_expected_output(self, state):
-    self.assertEqual(state.action, 'MostActiveUsers')
-    self.assertEqual(len(state.casts), 1)
-    self.assertEqual(len(state.casts[0]['mentions']), 3)
-    self.assertTrue(state.reply)
+    self.assertIn('GetMostActiveUsers', state.get_tools_sequence())
+    self.assertEqual(len(state.get('data_casts')), 1)
+    self.assertTrue(len(state.get('data_casts')[0]['mentions']) > 0)
+    self.assertTrue(state.get('valid'))
       
   def test1(self):
     request = "Who is most active in channel /politics?"

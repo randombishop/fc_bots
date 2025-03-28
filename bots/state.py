@@ -1,6 +1,9 @@
 import re
-from bots.utils.format_cast import insert_mentions, shorten_text, format_casts
+from bots.data.channels import get_channel_by_url
 
+
+def include_in_log(v):
+  return (isinstance(v, str) and len(v) > 0) or isinstance(v,int) or isinstance(v,float) or isinstance(v,bool)
 
 class State:
   
@@ -21,6 +24,14 @@ class State:
         return tool_result[key]
     return None
   
+  def get_current_channel(self):
+    channel = self.get('channel')
+    if channel is None:
+      channel = self.get('root_parent_url')
+      if channel is not None:
+        channel = get_channel_by_url(channel)
+    return channel
+
   def add_posts(self, posts):
     for x in posts:
       self.posts_map[x['id']] = x
@@ -65,7 +76,7 @@ class State:
         observation = x[1]
         ans += f"##{step.tool}\n"
         for k,v in observation.items():
-          if v is not None and isinstance(v, str):
+          if v is not None and include_in_log(v):
             ans += f"###{k}\n"
             ans += f"{v}\n\n"
     ans += '\n\n'
@@ -84,8 +95,8 @@ class State:
       observation = x[1]
       ans += f"##{step.tool}\n"
       for k,v in observation.items():
-        if v is not None and isinstance(v, str):
-          if len(v) > 512:
+        if v is not None and include_in_log(v):
+          if isinstance(v, str) and len(v) > 512:
             v = v[:512] + '...'
           ans += f"{k}: {v}\n"
       ans += '\n\n'

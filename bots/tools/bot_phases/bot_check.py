@@ -6,15 +6,15 @@ from bots.tools.check.like import Like
 
 def bot_check(input):
   state = input.state
-  if state.casts is not None and len(state.casts) > 0:
-    Shorten.invoke({'input': input})
-    Validate.invoke({'input': input})
-  if state.is_responding():
-    Like.invoke({'input': input})
-  return {
-    'reply': state.reply,
-    'like': state.like
-  }
+  ans = {}
+  shorten = Shorten.invoke({'input': input})
+  ans.update(shorten)
+  valid = Validate.invoke({'input': input})
+  ans.update(valid)
+  if state.get('request') is not None:
+    like = Like.invoke({'input': input})
+    ans.update(like)
+  return ans
 
 
 BotCheck = Tool(

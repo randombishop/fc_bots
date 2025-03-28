@@ -89,7 +89,9 @@ def get_available_tools(available_data):
     num_tools += len(fetch)
   prepare = filterTools(PREPARE_TOOLS, available_data)
   if len(prepare) > 0:
-    ans += f"## To prepare additional data before posting (such as charts, images, summaries, wordclouds, etc.)\n{format_tools(prepare)}\n"
+    ans += f"## To prepare additional data before posting (such as charts, images, summaries, wordclouds, etc.)\n"
+    ans += f"You are encouraged to try these when possible to enrich your context and improve your response:\n"
+    ans += f"{format_tools(prepare)}\n"
     num_tools += len(prepare)
   return ans, num_tools
 
