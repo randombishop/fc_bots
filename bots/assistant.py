@@ -98,4 +98,7 @@ def invoke_assistant(run_name, bot_id, request=None, channel=None):
     raise Exception(f"Assistant {bot_id} returned no output")
   if 'error' in result:
     raise Exception(f"Assistant {bot_id} returned an error: {result['error']}")
-  return result['output']
+  output = result['output']
+  if not isinstance(output, State):
+    raise Exception(f"Assistant {bot_id} returned an unexpected output: {output}")
+  return output

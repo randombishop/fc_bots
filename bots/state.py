@@ -92,14 +92,15 @@ class State:
     ans = '#TOOL EXECUTION LOG\n\n'
     for x in self.tools_log:
       step = x[0]
-      observation = x[1]
-      ans += f"##{step.tool}\n"
-      for k,v in observation.items():
-        if v is not None and include_in_log(v):
-          if isinstance(v, str) and len(v) > 512:
-            v = v[:512] + '...'
-          ans += f"{k}: {v}\n"
-      ans += '\n\n'
+      if step.tool != 'SelectTool':
+        observation = x[1]
+        ans += f"##{step.tool}\n"
+        for k,v in observation.items():
+          if v is not None and include_in_log(v):
+            if isinstance(v, str) and len(v) > 512:
+              v = v[:512] + '...'
+            ans += f"{k}: {v}\n"
+        ans += '\n\n'
     ans += '\n\n'
     ans += '#INSTRUCTIONS\n\n'
     ans += self.get('request')

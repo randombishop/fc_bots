@@ -10,7 +10,6 @@ select_tool_task = """
 You are @{{name}}, a social media bot with access to a set of tools.
 Given the provided context and instructions, which tool should you run next?
 You must only decide which tool to execute next.
-The tools use parameters from the current context so make sure their parameters are set before calling them.
 If you are done running tools and don't need to run a new one, respond with {"tool": null, "ready": true}
 If you can't figure out how to respond and none of tools would help further, respond with {"tool": null, "ready": false}
 If running a tool will be helpful to improve the quality of your response, respond with {"tool": "...", "ready": false}
@@ -25,6 +24,11 @@ available_tools?
   "ready": true|false,
   "reasoning": "..."
 }
+
+#IMPORTANT
+These are the only available tools to select from. do not create or re-use a tool if it's not in this list.
+YOU MUST ONLY PICK ONE FROM THIS LIST (or null if you don't need to run any more tools)
+tool_list?
 """
 
 select_tool_schema = {
@@ -36,7 +40,7 @@ select_tool_schema = {
   }
 }
 
-tool_names = [x.name for x in PARSE_TOOLS + FETCH_TOOLS + PREPARE_TOOLS]
+tool_map = {x.name: x for x in PARSE_TOOLS + FETCH_TOOLS + PREPARE_TOOLS}
 
 def check_inputs(available_data, inputs, require_inputs):
   if require_inputs not in ['all', 'any']:
@@ -77,30 +81,32 @@ def format_tools(list):
   return ans
 
 def get_available_tools(available_data):
-  ans = ''
-  num_tools = 0
+  text = ''
+  tool_list = []
   parse = filterTools(PARSE_TOOLS, available_data)
   if len(parse) > 0:
-    ans += f"## For setting parameters\n{format_tools(parse)}\n"
-    num_tools += len(parse)
+    text += f"## For setting parameters\n{format_tools(parse)}\n"
+    tool_list.extend([x.name for x in parse])
   fetch = filterTools(FETCH_TOOLS, available_data)
   if len(fetch) > 0:
-    ans += f"## For fetching your data\n{format_tools(fetch)}\n"
-    num_tools += len(fetch)
+    text += f"## For fetching your data\n{format_tools(fetch)}\n"
+    tool_list.extend([x.name for x in fetch])
   prepare = filterTools(PREPARE_TOOLS, available_data)
   if len(prepare) > 0:
-    ans += f"## To prepare additional data before posting (such as charts, images, summaries, wordclouds, etc.)\n"
-    ans += f"You are encouraged to try these when possible to enrich your context and improve your response:\n"
-    ans += f"{format_tools(prepare)}\n"
-    num_tools += len(prepare)
-  return ans, num_tools
+    text += f"## To prepare additional data before posting (such as charts, images, summaries, wordclouds, etc.)\n"
+    text += f"You are encouraged to try these as much as possible to enrich your context and improve your response:\n"
+    text += f"{format_tools(prepare)}\n"
+    tool_list.extend([x.name for x in prepare])
+  return text, tool_list
 
 def select_tool(input):
   state = input.state
   llm = input.llm
   available_data = state.get_available_data()
-  available_tools, num_tools = get_available_tools(available_data)
-  if num_tools == 0:
+  available_tools, tool_list = get_available_tools(available_data)
+  if len(tool_list) == 0:
+    state.next_tool = None
+    state.tools_done = True
     return {
       'next_tool': None,
       'tools_done': True,
@@ -112,10 +118,17 @@ def select_tool(input):
   prompt = state.format_tools_log()
   instructions = state.format(select_tool_task)
   instructions = instructions.replace('available_tools?', available_tools)
+  instructions = instructions.replace('tool_list?', ', '.join(tool_list))
   result = call_llm(llm, prompt, instructions, select_tool_schema)
   next_tool = result['tool']
   tools_done = result['ready']
-  if next_tool not in tool_names:
+  log = None
+  if next_tool not in tool_map:
+    log = f"LLM returned an invalid tool name: {next_tool}"
+    next_tool = None
+    tools_done = True
+  elif not is_tool_available(tool_map[next_tool], available_data):
+    log = f"LLM returned an unavailable tool: {next_tool}"
     next_tool = None
     tools_done = True
   state.next_tool = next_tool
@@ -124,7 +137,8 @@ def select_tool(input):
   return {
     'next_tool': state.next_tool, 
     'tools_done': state.tools_done,
-    'next_tool_reasoning': reasoning
+    'next_tool_reasoning': reasoning,
+    'next_tool_log': log
   }
   
 

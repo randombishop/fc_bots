@@ -103,7 +103,7 @@ def invoke_bot(run_name, bot_id, request=None, fid_origin=None, parent_hash=None
       'user': user
   }
   bot = Bot()
-  executor = AgentExecutor(agent=bot, tools=bot._tools, max_iterations=25)
+  executor = AgentExecutor(agent=bot, tools=bot._tools, max_iterations=15)
   result = executor.invoke(input=json.dumps(input), config={"run_name": run_name})
   if 'output' not in result:
     raise Exception(f"Bot {bot_id} returned no output")

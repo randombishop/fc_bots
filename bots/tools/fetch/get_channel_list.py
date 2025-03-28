@@ -26,7 +26,7 @@ def fetch(input):
 
 GetChannelList = Tool(
   name="GetChannelList",
-  description="Get the list of all channels where the bot operates.",
+  description="Get the list of all channels where you (the bot) operates.",
   metadata={
     'outputs': ['data_channel_list']
   },

@@ -78,9 +78,15 @@ def prepare(input):
   instructions = state.format(instructions_template)
   result = call_llm(llm, prompt, instructions, schema)
   if 'tweet1' not in result:
-    raise Exception('Could not generate a praise')    
+    raise Exception('Could not generate a praise')  
+  formatted = result['tweet1']['text']
+  if 'tweet2' in result and 'text' in result['tweet2']:
+    formatted += f"\n{result['tweet2']['text']}"
+  if 'tweet3' in result and 'text' in result['tweet3']:
+    formatted += f"\n{result['tweet3']['text']}"
   return {
-    'data_user_praise': result
+    'data_user_praise': result,
+    'user_praise': formatted
   }
 
 
@@ -89,7 +95,7 @@ PreparePraise = Tool(
   description="Generate a user praise",
   metadata={
     'inputs': ['user', 'user_display_name', 'user_bio', 'user_pfp_description', 'casts_user'],
-    'outputs': ['data_user_praise']
+    'outputs': ['user_praise','data_user_praise']
   },
   func=prepare
 )

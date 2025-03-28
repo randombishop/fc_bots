@@ -5,7 +5,7 @@ from bots.utils.llms2 import call_llm
 instructions_template = """
 #TASK
 You are @{{name}}, a seasoned roast comedian known for your razor sharp wit and creative humor.
-Your task is to roast @{{user_name}}.
+Your task is to roast @{{user}}.
 
 #INSTRUCTIONS:
 Analyze the posts provided from @{{user}} and craft a roast that is both hilarious and original.
@@ -27,7 +27,7 @@ Output one single tweet in json format.
 schema = {
   "type":"OBJECT",
   "properties":{
-    "sentence1":{"type":"STRING"}
+    "tweet":{"type":"STRING"}
   }
 }
 
@@ -38,8 +38,11 @@ def prepare(input):
   prompt = state.get('casts_user')
   instructions = state.format(instructions_template)
   result = call_llm(llm, prompt, instructions, schema)
+  if 'tweet' not in result:
+    raise Exception(f"Roast tool returned invalid result")
+  text = result['tweet']
   return {
-    'data_user_roast': result
+    'user_roast': text
   }
 
 
@@ -48,7 +51,7 @@ PrepareRoast = Tool(
   description="Generate a roast for the user",
   metadata={
     'inputs': ['casts_user'],
-    'outputs': ['data_user_roast']
+    'outputs': ['user_roast']
   },
   func=prepare
 )

@@ -1,13 +1,13 @@
 from langchain.agents import Tool
-from bots.data.casts import get_casts_for_fid
+from bots.data.casts import get_top_casts
 from bots.utils.format_cast import concat_casts
 
 
 def fetch(input):
   state = input.state
   user_name = state.get('user')
-  fid = state.get('user_fid')
-  df = get_casts_for_fid(fid)
+  max_rows = state.get('max_rows')
+  df = get_top_casts(user_name=user_name, max_rows=max_rows)
   posts = df.to_dict('records')
   posts.sort(key=lambda x: x['timestamp'])
   casts_user = f'Posts by @{user_name}:\n' + concat_casts(posts)

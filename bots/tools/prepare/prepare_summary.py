@@ -7,7 +7,7 @@ from bots.utils.word_counts import get_word_counts
 
 instructions_template = """
 #TASK 
-Your task is to generate a global summary of the provided social media posts.
+Your task is to generate a summary of the provided social media posts.
 Write a short summary tweet.
 Include 3 links to reference relevant post ids and comment them.
 Output the result in json format.
@@ -83,7 +83,7 @@ def prepare(input):
   for link in links:
     summary += f"\n{link['comment']}"
   return {
-    'data_summary': state.digest_casts_data, 
+    'data_summary': data, 
     'summary': summary
   }
 

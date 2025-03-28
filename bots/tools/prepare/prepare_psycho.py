@@ -43,8 +43,14 @@ def prepare(input):
   prompt = state.get('casts_user')
   instructions = state.format(instructions_template)
   result = call_llm(llm, prompt, instructions, schema)
+  formatted = result['sentence1']
+  if 'sentence2' in result:
+    formatted += f"\n{result['sentence2']}"
+  if 'sentence3' in result:
+    formatted += f"\n{result['sentence3']}"
   return {
-    'data_user_psycho': result
+    'data_user_psycho': result,
+    'user_psycho': formatted
   }
 
 
@@ -53,7 +59,7 @@ PreparePsycho = Tool(
   description="Generate a funny psycho analysis for a user",
   metadata={
     'inputs': ['casts_user'],
-    'outputs': ['data_user_psycho']
+    'outputs': ['user_psycho', 'data_user_psycho']
   },
   func=prepare
 )
