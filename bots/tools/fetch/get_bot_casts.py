@@ -21,7 +21,7 @@ def fetch(input):
 
 GetBotCasts = Tool(
   name="GetBotCasts",
-  description="Get the bot's recent casts.",
+  description="Get recent casts posted by yourself (the bot).",
   metadata={
     'inputs': ['id'],
     'outputs': ['bot_casts']

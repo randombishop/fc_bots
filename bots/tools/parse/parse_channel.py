@@ -8,7 +8,6 @@ parse_user_instructions_template = """
 #TASK:
 Based on the provided context and instructions, which channel should we look at? 
 You must only extract the channel to be able to use your next tools.
-You must only extract the channel parameter.
 Channels typically start with / but not always.
 
 current_channel?

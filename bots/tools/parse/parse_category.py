@@ -39,7 +39,7 @@ def parse(input):
   
 ParseCategory = Tool(
   name="ParseCategory",
-  description="Set the parameter category to pull more data.",
+  description="Set the parameter category to run the category related tools.",
   metadata={
     'outputs': ['category']
   },

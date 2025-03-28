@@ -40,7 +40,7 @@ def parse(input):
   
 ParseNewsSearch = Tool(
   name="ParseNewsSearch",
-  description="Set the parameter search to run the News tool.",
+  description="Set the parameter search to use for pulling news.",
   metadata={
     'outputs': ['search']
   },

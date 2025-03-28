@@ -27,9 +27,15 @@ parse_user_schema = {
 def parse(input):
   state = input.state
   llm = input.llm
-  parse_prompt = state.format_prompt()
+  parse_prompt = state.format_all()
   parse_instructions = state.format(parse_user_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_user_schema)
+  if params['user'] == '*':
+    return {
+      'user_fid': None,
+      'user': '*',
+      'parse_user_log': 'Random user selected'
+    }
   fid, user_name = read_user(params, state.fid_origin, default_to_origin=False)
   return {
     'user_fid': fid,
@@ -39,7 +45,7 @@ def parse(input):
 
 ParseUser = Tool(
   name="ParseUser",
-  description="Set the parameters user and user_fid to run the user related tools.",
+  description="Set the parameters user and user_fid to run any user related tools.",
   metadata={
     'outputs': ['user_fid', 'user']
   },

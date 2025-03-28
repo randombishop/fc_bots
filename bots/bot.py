@@ -62,25 +62,25 @@ class Bot(BaseSingleActionAgent):
         return AgentAction(
           tool=next_tool,
           tool_input=self.get_tool_input(),
-          log='Tool')
+          log='')
       else:
         return AgentAction(
           tool='SelectTool',
           tool_input=self.get_tool_input(),
-          log='Select'
+          log=''
         )
     elif not self._state.composed:
       self._state.composed = True
       return AgentAction(
         tool='ComposeOne',
         tool_input=self.get_tool_input(),
-        log='Compose')
+        log='')
     elif not self._state.checked and self._state.get('casts') is not None and len(self._state.get('casts')) > 0:
       self._state.checked = True
       return AgentAction(
         tool='BotCheck',
         tool_input=self.get_tool_input(),
-        log='Check')
+        log='')
     else:
       return AgentFinish(return_values={"output": self._state}, log='Done')
     

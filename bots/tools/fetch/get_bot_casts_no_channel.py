@@ -22,7 +22,7 @@ def fetch(input):
 
 GetBotCastsNoChannel = Tool(
   name="GetBotCastsNoChannel",
-  description="Get the casts of the bot in main feed.",
+  description="Get the casts posted by yourself (the bot) in the main feed.",
   metadata={
     'inputs': ['id'],
     'outputs': ['bot_casts_no_channel']
