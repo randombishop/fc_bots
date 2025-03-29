@@ -3,12 +3,13 @@ from bots.tools.wakeup.get_conversation import GetConversation
 from bots.tools.wakeup.get_lore import GetLore
 from bots.tools.wakeup.get_style import GetStyle
 from bots.tools.wakeup.get_time import GetTime
-
+from bots.tools.wakeup.should_continue import ShouldContinue
 
 WAKEUP_TOOLS = [
   GetBio,
   GetConversation,
   GetLore,
   GetStyle,
-  GetTime
+  GetTime,
+  ShouldContinue
 ]

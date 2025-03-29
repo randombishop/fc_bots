@@ -16,12 +16,6 @@ class Assistant(BaseSingleActionAgent):
     self._llm = get_llm()
     self._llm_img = get_llm_img()
     self._state = None
-    self._wakeup = [
-      'GetBio',
-      'GetLore',
-      'GetStyle',
-      'GetTime'
-    ]
     
   @property
   def input_keys(self):
@@ -45,16 +39,15 @@ class Assistant(BaseSingleActionAgent):
         tool_input={'input': input},
         log='Initialization')
     self._state.tools_log = intermediate_steps
-    if len(self._wakeup) > 0: 
-      tool = self._wakeup.pop(0)
+    if not self._state.wokeup:
       return AgentAction(
-        tool=tool,
+        tool='AssistantWakeup',
         tool_input=self.get_tool_input(),
         log='Wakeup Step')
-    elif not self._state.tools_done:
-      next_tool = self._state.next_tool
-      if next_tool is not None:
-        self._state.next_tool = None
+    elif not self._state.prepared:
+      next_tools = self._state.get('next_tools')
+      if next_tools is not None and len(next_tools) > 0:
+        next_tool = next_tools.pop(0)
         return AgentAction(
           tool=next_tool,
           tool_input=self.get_tool_input(),
@@ -66,13 +59,11 @@ class Assistant(BaseSingleActionAgent):
           log=''
         )
     elif not self._state.composed:
-      self._state.composed = True
       return AgentAction(
         tool='ComposeMulti',
         tool_input=self.get_tool_input(),
         log='')
-    elif not self._state.checked and self._state.get('casts') is not None and len(self._state.get('casts')) > 0:
-      self._state.checked = True
+    elif (not self._state.checked) and (self._state.get('casts') is not None) and (len(self._state.get('casts')) > 0):
       return AgentAction(
         tool='AssistantCheck',
         tool_input=self.get_tool_input(),

@@ -9,6 +9,8 @@ def check(input):
   ans.update(shorten)
   valid = Validate.invoke({'input': input})
   ans.update(valid)
+  state = input.state
+  state.checked = True
   return ans
     
 

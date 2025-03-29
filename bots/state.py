@@ -10,8 +10,8 @@ class State:
   def __init__(self):
     self.character = None
     self.tools_log = []
-    self.next_tool = None
-    self.tools_done =  False
+    self.wokeup = False
+    self.prepared = False
     self.composed = False
     self.checked = False
     self.memorized = False
@@ -72,7 +72,7 @@ class State:
     ans += '#TOOL OUTPUTS\n\n'
     for x in self.tools_log:
       step = x[0]
-      if step.tool != 'SelectTool':
+      if step.tool not in ['InitState', 'AssistantWakeup', 'BotWakeup', 'SelectTool']:
         observation = x[1]
         ans += f"##{step.tool}\n"
         for k,v in observation.items():
@@ -88,24 +88,6 @@ class State:
       ans += f"#INSTRUCTIONS\n{request}\n"
     return ans
     
-  def format_tools_log(self):
-    ans = '#TOOL EXECUTION LOG\n\n'
-    for x in self.tools_log:
-      step = x[0]
-      if step.tool != 'SelectTool':
-        observation = x[1]
-        ans += f"##{step.tool}\n"
-        for k,v in observation.items():
-          if v is not None and include_in_log(v):
-            if isinstance(v, str) and len(v) > 512:
-              v = v[:512] + '...'
-            ans += f"{k}: {v}\n"
-        ans += '\n\n'
-    ans += '\n\n'
-    ans += '#INSTRUCTIONS\n\n'
-    ans += self.get('request')
-    return ans
-  
   def get_tools_sequence(self):
     return [x[0].tool for x in self.tools_log]
     

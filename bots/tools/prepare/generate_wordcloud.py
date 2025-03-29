@@ -9,9 +9,9 @@ from bots.tools.prepare.generate_wordcloud_mask import GenerateWordCloudMask
 
 
 def prepare(input):
-  GenerateWordCloudMask.invoke({'input': input})
+  mask_result = GenerateWordCloudMask.invoke({'input': input})
   state = input.state
-  mask = numpy.array(state.get('wordcloud_mask'))
+  mask = numpy.array(mask_result['mask'])
   colormap = ImageColorGenerator(mask)
   words = state.get('wordcloud_counts')
   filename1 = str(uuid.uuid4())+'.words.png'
