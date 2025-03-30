@@ -74,9 +74,9 @@ class State:
     ans += '#TOOL OUTPUTS\n\n'
     for x in self.tools_log:
       step = x[0]
-      if step.tool not in ['InitState', 'AssistantWakeup', 'BotWakeup', 'SelectTool']:
+      if step.tool not in ['InitState', 'WakeupAssistant', 'WakeupBot']:
         observation = x[1]
-        ans += f"##{step.tool}\n"
+        ans += f"##{step.tool}\n\n"
         for k,v in observation.items():
           if v is not None and include_in_log(v):
             ans += f"###{k}\n"

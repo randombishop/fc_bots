@@ -49,6 +49,11 @@ class Assistant(BaseSingleActionAgent):
         tool='Parse',
         tool_input=self.get_tool_input(),
         log='')
+    elif not self._state.fetched:
+      return AgentAction(
+        tool='Fetch',
+        tool_input=self.get_tool_input(),
+        log='')
     elif not self._state.composed:
       return AgentAction(
         tool='ComposeMulti',
