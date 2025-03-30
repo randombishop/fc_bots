@@ -1,6 +1,7 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.tools.fetch import FETCH_TOOLS
+from bots.tools.plan.tool_sequence import compile_sequence
 
 
 select_tool_task = """
@@ -47,11 +48,15 @@ def fetch(input):
   instructions = instructions.replace('available_tools?', format_tools())
   result = call_llm(llm, prompt, instructions, select_tool_schema)
   tools_llm = result['tools'] if 'tools' in result else None
-  tools = validate_sequence(tools_llm, available_data)
+  tools = compile_sequence(tools_llm, available_data)
   ans = {
     'fetch_tools_llm': tools_llm,
     'fetch_tools': tools
   }
+  for t in tools:
+    tool = tool_map[t]
+    result = tool.invoke({'input': input})
+    ans.update(result)
   state.fetched = True
   return ans
   
