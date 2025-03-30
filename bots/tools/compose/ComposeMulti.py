@@ -68,8 +68,8 @@ def compose(input):
     if c is not None:
       casts.append(c)
   formatted = format_casts(casts)
-  state.composed = True
   return {
+    'composed': True,
     'casts': formatted,
     'data_casts': casts
   }

@@ -20,7 +20,7 @@ prompt_template = """
 {{user_pfp_description}}
 
 # USER POSTS
-{{user_casts}}
+{{casts_user}}
 """
 
 instructions_template = """
@@ -103,7 +103,7 @@ CreateAvatar = Tool(
   name="CreateAvatar",
   description="Create an avatar for a user",
   metadata={
-    'inputs': ['user', 'user_display_name', 'user_bio', 'user_pfp_description', 'user_casts'],
+    'inputs': ['user', 'user_display_name', 'user_bio', 'user_pfp_description', 'casts_user'],
     'outputs': ['user_avatar_prompt', 'user_avatar']
   },
   func=prepare

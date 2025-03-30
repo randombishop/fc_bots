@@ -4,13 +4,11 @@ from bots.tools.check.validate import Validate
 
 
 def check(input):
-  ans = {}
+  ans = {'checked': True}
   shorten = Shorten.invoke({'input': input})
   ans.update(shorten)
   valid = Validate.invoke({'input': input})
   ans.update(valid)
-  state = input.state
-  state.checked = True
   return ans
     
 

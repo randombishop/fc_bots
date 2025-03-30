@@ -48,8 +48,8 @@ def compose(input):
   c = extract_cast(result, state.posts_map)
   casts = [c] if c is not None else []
   formatted = format_casts(casts)
-  state.composed = True
   return {
+    'composed': True,
     'casts': formatted,
     'data_casts': casts
   }

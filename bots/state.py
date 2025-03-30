@@ -10,13 +10,6 @@ class State:
   def __init__(self):
     self.character = None
     self.tools_log = []
-    self.wokeup = False
-    self.parsed = False
-    self.fetched = False
-    self.prepared = False
-    self.composed = False
-    self.checked = False
-    self.memorized = False
     self.posts_map = {}
   
   def get(self, key):

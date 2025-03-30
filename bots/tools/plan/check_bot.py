@@ -6,7 +6,7 @@ from bots.tools.check.like import Like
 
 def bot_check(input):
   state = input.state
-  ans = {}
+  ans = {'checked': True}
   shorten = Shorten.invoke({'input': input})
   ans.update(shorten)
   valid = Validate.invoke({'input': input})

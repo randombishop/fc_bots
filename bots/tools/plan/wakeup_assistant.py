@@ -5,7 +5,7 @@ from bots.tools.wakeup.get_style import GetStyle
 from bots.tools.wakeup.get_time import GetTime
 
 def wakeup(input):
-  ans = {}
+  ans = {'wokeup': True}
   bio = GetBio.invoke({'input': input})
   ans.update(bio)
   lore = GetLore.invoke({'input': input})
@@ -14,8 +14,6 @@ def wakeup(input):
   ans.update(style)
   time = GetTime.invoke({'input': input})
   ans.update(time)
-  state = input.state
-  state.wokeup = True
   return ans
     
 

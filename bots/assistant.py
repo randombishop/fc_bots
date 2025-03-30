@@ -39,27 +39,37 @@ class Assistant(BaseSingleActionAgent):
         tool_input={'input': input},
         log='')
     self._state.tools_log = intermediate_steps
-    if not self._state.wokeup:
+    if not self._state.get('wokeup'):
       return AgentAction(
         tool='WakeupAssistant',
         tool_input=self.get_tool_input(),
         log='')
-    elif not self._state.parsed:
+    elif self._state.get('todo') is not None and len(self._state.get('todo')) > 0:
+      return AgentAction(
+        tool=self._state.get('todo').pop(0),
+        tool_input=self.get_tool_input(),
+        log='')
+    elif not self._state.get('parse_tools'):
       return AgentAction(
         tool='Parse',
         tool_input=self.get_tool_input(),
         log='')
-    elif not self._state.fetched:
+    elif not self._state.get('fetch_tools'):
       return AgentAction(
         tool='Fetch',
         tool_input=self.get_tool_input(),
         log='')
-    elif not self._state.composed:
+    elif not self._state.get('prepare_tools'):
+      return AgentAction(
+        tool='Prepare',
+        tool_input=self.get_tool_input(),
+        log='')
+    elif not self._state.get('composed'):
       return AgentAction(
         tool='ComposeMulti',
         tool_input=self.get_tool_input(),
         log='')
-    elif (not self._state.checked) and (self._state.get('casts') is not None) and (len(self._state.get('casts')) > 0):
+    elif (not self._state.get('checked')) and (self._state.get('casts') is not None) and (len(self._state.get('casts')) > 0):
       return AgentAction(
         tool='CheckAssistant',
         tool_input=self.get_tool_input(),
