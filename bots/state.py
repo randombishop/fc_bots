@@ -11,6 +11,8 @@ class State:
     self.character = None
     self.tools_log = []
     self.wokeup = False
+    self.parsed = False
+    self.fetched = False
     self.prepared = False
     self.composed = False
     self.checked = False

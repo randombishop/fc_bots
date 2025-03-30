@@ -26,9 +26,9 @@ def prepare(input):
   }
 
 
-PrepareFavoriteUsersTable = Tool(
-  name="PrepareFavoriteUsersTable",
-  description="Prepare the favorite users table",
+RenderFavoriteUsersTable = Tool(
+  name="RenderFavoriteUsersTable",
+  description="Prepare the favorite users table as an image",
   metadata={
     'inputs': ['data_favorite_users'],
     'outputs': ['favorite_users_table']

@@ -37,27 +37,18 @@ class Assistant(BaseSingleActionAgent):
       return AgentAction(
         tool='InitState',
         tool_input={'input': input},
-        log='Initialization')
+        log='')
     self._state.tools_log = intermediate_steps
     if not self._state.wokeup:
       return AgentAction(
-        tool='AssistantWakeup',
+        tool='WakeupAssistant',
         tool_input=self.get_tool_input(),
-        log='Wakeup Step')
-    elif not self._state.prepared:
-      next_tools = self._state.get('next_tools')
-      if next_tools is not None and len(next_tools) > 0:
-        next_tool = next_tools.pop(0)
-        return AgentAction(
-          tool=next_tool,
-          tool_input=self.get_tool_input(),
-          log='')
-      else:
-        return AgentAction(
-          tool='SelectTool',
-          tool_input=self.get_tool_input(),
-          log=''
-        )
+        log='')
+    elif not self._state.parsed:
+      return AgentAction(
+        tool='Parse',
+        tool_input=self.get_tool_input(),
+        log='')
     elif not self._state.composed:
       return AgentAction(
         tool='ComposeMulti',
@@ -65,7 +56,7 @@ class Assistant(BaseSingleActionAgent):
         log='')
     elif (not self._state.checked) and (self._state.get('casts') is not None) and (len(self._state.get('casts')) > 0):
       return AgentAction(
-        tool='AssistantCheck',
+        tool='CheckAssistant',
         tool_input=self.get_tool_input(),
         log='')
     else:
@@ -83,7 +74,7 @@ def invoke_assistant(run_name, bot_id, request=None, channel=None):
       'channel': channel
   }
   assistant = Assistant()
-  executor = AgentExecutor(agent=assistant, tools=assistant._tools, max_iterations=25)
+  executor = AgentExecutor(agent=assistant, tools=assistant._tools, max_iterations=10)
   result = executor.invoke(input=json.dumps(input), config={"run_name": run_name})
   if 'output' not in result:
     raise Exception(f"Assistant {bot_id} returned no output")

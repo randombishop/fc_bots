@@ -31,9 +31,9 @@ def prepare(input):
     'wordcloud_counts': word_counts
   }
 
-PrepareWordCloud = Tool(
-  name="PrepareWordCloud",
-  description="Prepare the word cloud data",
+MakeWordCloudData = Tool(
+  name="MakeWordCloudData",
+  description="Make the word cloud text and counts",
   metadata={
     'inputs': ['data_casts_category', 'data_casts_channel', 'data_casts_keyword', 'data_casts_search', 'data_casts_user', 'data_casts_text'],
     'require_inputs': 'any',

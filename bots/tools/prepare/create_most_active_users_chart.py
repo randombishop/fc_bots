@@ -20,9 +20,9 @@ def prepare(input):
   }
 
 
-PrepareMostActiveUsersChart = Tool(
-  name="PrepareMostActiveUsersChart",
-  description="Prepare the most active users chart",
+CreateMostActiveUsersChart = Tool(
+  name="CreateMostActiveUsersChart",
+  description="Create the most active users chart",
   metadata={
     'inputs': ['data_most_active_users'],
     'outputs': ['most_active_users_chart']

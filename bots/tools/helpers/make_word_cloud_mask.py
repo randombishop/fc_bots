@@ -65,9 +65,9 @@ def prepare(input):
     'wordcloud_height': height
   }
 
-GenerateWordCloudMask = Tool(
-  name="GenerateWordCloudMask",
-  description="Generate a wordcloud mask.",
+MakeWordCloudMask = Tool(
+  name="MakeWordCloudMask",
+  description="Make a wordcloud mask to be used as a wordcloud background",
   metadata={
     'inputs': ['wordcloud_text'],
     'outputs': ['wordcloud_mask', 'wordcloud_background', 'wordcloud_width', 'wordcloud_height']

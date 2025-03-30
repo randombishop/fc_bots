@@ -22,7 +22,7 @@ def parse(input):
 
 SelectRandomUser = Tool(
   name="SelectRandomUser",
-  description="Select a random user to use user related tools.",
+  description="Select a random user and set user_fid and user to run any user related tools.",
   metadata={
     'outputs': ['user_fid', 'user']
   },

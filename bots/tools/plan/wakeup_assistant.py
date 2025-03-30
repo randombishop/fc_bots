@@ -19,8 +19,8 @@ def wakeup(input):
   return ans
     
 
-AssistantWakeup = Tool(
-  name="AssistantWakeup",
+WakeupAssistant = Tool(
+  name="WakeupAssistant",
   description="Assistant wakeup phase",
   metadata={
     'outputs': ['bio', 'lore', 'style', 'time']

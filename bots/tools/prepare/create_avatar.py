@@ -99,8 +99,8 @@ def prepare(input):
   }
   
 
-GenerateAvatar = Tool(
-  name="GenerateAvatar",
+CreateAvatar = Tool(
+  name="CreateAvatar",
   description="Create an avatar for a user",
   metadata={
     'inputs': ['user', 'user_display_name', 'user_bio', 'user_pfp_description', 'user_casts'],

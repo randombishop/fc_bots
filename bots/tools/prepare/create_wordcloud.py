@@ -5,13 +5,11 @@ from wordcloud import WordCloud, ImageColorGenerator
 from PIL import Image
 import numpy
 from bots.utils.gcs import upload_to_gcs
-from bots.tools.prepare.generate_wordcloud_mask import GenerateWordCloudMask
 
 
 def prepare(input):
-  mask_result = GenerateWordCloudMask.invoke({'input': input})
   state = input.state
-  mask = numpy.array(mask_result['mask'])
+  mask = numpy.array(state.get('wordcloud_mask'))
   colormap = ImageColorGenerator(mask)
   words = state.get('wordcloud_counts')
   filename1 = str(uuid.uuid4())+'.words.png'
@@ -36,11 +34,11 @@ def prepare(input):
     'wordcloud_url': wordcloud_url
   }
 
-GenerateWordCloud = Tool(
-  name="GenerateWordCloud",
+CreateWordCloud = Tool(
+  name="CreateWordCloud",
   description="Generate the wordcloud image",
   metadata={
-    'inputs': ['wordcloud_text', 'wordcloud_counts'],
+    'inputs': ['wordcloud_mask', 'wordcloud_text', 'wordcloud_counts'],
     'outputs': ['wordcloud_url']
   },
   func=prepare
