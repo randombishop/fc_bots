@@ -61,13 +61,25 @@ class State:
     return ans
 
   def format_all(self):
+    skip_tools = ['InitState', 
+      'GetBio', 
+      'GetLore', 
+      'GetStyle', 
+      'GetTime', 
+      'GetConversation', 
+      'ShouldContinue',
+      'Parse',
+      'Fetch',
+      'Prepare',
+      'Check'
+      ]
     name = self.get('name')
     ans = f'You are @{name} bot, a social media bot.\n'
     ans += 'Here is your log of the internal tools you executed, followed by your instructions.\n\n'
     ans += '#TOOL OUTPUTS\n\n'
     for x in self.tools_log:
       step = x[0]
-      if step.tool not in ['InitState', 'WakeupAssistant', 'WakeupBot']:
+      if step.tool not in skip_tools:
         observation = x[1]
         ans += f"##{step.tool}\n\n"
         for k,v in observation.items():

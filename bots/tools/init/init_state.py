@@ -49,7 +49,7 @@ def init_state(input):
     ans['blueprint'] = input['blueprint']
   ans['should_continue'] = True
   ans['max_rows'] = get_max_capactity()
-  ans['todo'] = initialize_tools(ans['agent_class'])
+  ans['todo'] = initialize_tools(mode)
   return ans
   
 

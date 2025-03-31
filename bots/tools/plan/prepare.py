@@ -41,11 +41,12 @@ def prepare(input):
   instructions = instructions.replace('available_tools?', format_tools())
   result = call_llm(llm, prompt, instructions, select_tool_schema)
   tools_llm = result['tools'] if 'tools' in result else None
-  tools = compile_sequence(tools_llm, available_data)
+  tools, log = compile_sequence(tools_llm, available_data)
   ans = {
     'prepared': True,
     'prepare_tools_llm': tools_llm,
     'prepare_tools_sequence': ','.join(tools),
+    'prepare_log': log,
     'todo': tools
   }
   return ans

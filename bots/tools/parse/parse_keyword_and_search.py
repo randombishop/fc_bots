@@ -15,14 +15,12 @@ Make the keyword generic so that it generates many matches, pull broader context
 Do not use abbreviation for the keyword, it has to be at least 4 characters long.
 The keyword should be a single word, not a phrase.
 The keyword should be very different from the search phrase and open an original perspective on the instructions.
-Please also explain why you picked your search phrase and keyword.
 Output your response in the following json format.
 
 #RESPONSE FORMAT
 {
   "keyword": "...",
-  "search": "...",
-  "reasoning": "..."
+  "search": "..."
 }
 """
 
@@ -30,8 +28,7 @@ schema = {
   "type":"OBJECT",
   "properties":{
     "keyword":{"type":"STRING"},
-    "search":{"type":"STRING"},
-    "reasoning":{"type":"STRING"}
+    "search":{"type":"STRING"}
   }
 }
 
@@ -47,8 +44,7 @@ def parse(input):
   reasoning = read_string(params, key='reasoning')
   return {
     'search': search,
-    'keyword': keyword,
-    'parse_keyword_and_search_log': reasoning
+    'keyword': keyword
   }
 
 
