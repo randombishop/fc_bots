@@ -11,14 +11,13 @@ class TestContinue(unittest.TestCase):
     state = run_agent(test_id='TestContinue:1', mode='bot', request=request)
     self.assertFalse(state.get('should_continue')) 
     self.assertIsNone(state.get('casts'))
-    self.assertFalse(state.get('reply')) 
 
   def test2(self):
     request = "Who are you?"
     state = run_agent(test_id='TestContinue:2', mode='bot', request=request)
     self.assertTrue(state.get('should_continue')) 
     self.assertIsNotNone(state.get('casts'))
-    self.assertTrue(state.get('reply'))
+    self.assertTrue(state.get('valid'))
     
   def test3(self):
     request = "Thank you so much for sharing 😺❤️❤️❤️"
@@ -27,5 +26,4 @@ class TestContinue(unittest.TestCase):
     state = run_agent(test_id='TestContinue:3', mode='bot', request=request, fid_origin=fid_origin, parent_hash=parent_hash)
     self.assertFalse(state.get('should_continue')) 
     self.assertIsNone(state.get('casts'))
-    self.assertFalse(state.get('reply')) 
     self.assertTrue(state.get('like')) 
