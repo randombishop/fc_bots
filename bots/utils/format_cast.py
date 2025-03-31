@@ -114,6 +114,8 @@ def format_casts(casts):
 def extract_cast(result, posts_map, index=''):
   if f'tweet{index}' not in result:
     return None
+  if result[f'tweet{index}'] is None or len(result[f'tweet{index}']) == 0:
+    return None
   c = {'text': result[f'tweet{index}']}
   if f'embed_url{index}' in result and result[f'embed_url{index}'] is not None:
     c['embeds'] = [result[f'embed_url{index}']]

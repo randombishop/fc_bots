@@ -7,8 +7,11 @@ from bots.utils.llms2 import get_llm, get_llm_img
 
 bot_id = int(os.getenv('TEST_BOT'))
 
-def make_tool_input():
-  state = State({'bot_id': bot_id})
+def make_tool_input(params):
+  mock = {'id': bot_id}
+  mock.update(params)
+  state = State()
+  state.tools_log = [('Mock', mock)]
   tool_input = ToolInput(state, get_llm(), get_llm_img())
   return tool_input
 
