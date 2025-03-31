@@ -57,8 +57,8 @@ def choose_provider(tool_name, provider_names, llm, state, log):
   tool = tool_map[tool_name]
   providers = [tool_map[x] for x in provider_names]
   provider = pick_provider(tool, providers, llm, state)
-  if provider is None:
-    raise Exception(f"Could not select a provider for {tool_name} / {provider_names}")
+  if provider is None or provider not in provider_names:
+    raise Exception(f"Could not select a provider for {tool_name}.  Available providers: {provider_names}. Selected provider: {provider}")
   log.append(f'Selected provider: {provider}')
   return provider
 
