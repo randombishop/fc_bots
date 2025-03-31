@@ -57,5 +57,8 @@ def like(input):
 Like = Tool(
   name="Like",
   description="Decide if you like a post",
+  metadata={
+    'outputs': ['like']
+  },
   func=like
 )

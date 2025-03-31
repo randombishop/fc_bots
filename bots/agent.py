@@ -30,7 +30,9 @@ class Agent(BaseSingleActionAgent):
     return {"input":input}
   
   def next_phase(self):
-    if self._state.get('parsed') is None:
+    if not self._state.get('should_continue'):
+      return AgentFinish(return_values={"output": self._state}, log='done')
+    elif self._state.get('parsed') is None:
       return AgentAction(
         tool='Parse',
         tool_input=self.get_tool_input(),

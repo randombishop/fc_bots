@@ -40,7 +40,7 @@ def should_continue(input):
   params = call_llm(llm, prompt, instructions, schema)
   should_continue = read_boolean(params, key='continue')
   return {
-    'should_continue':should_continue
+    'should_continue': should_continue
   }
 
 

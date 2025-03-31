@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 import unittest
-from bots.utils.tests import run_bot
+from bots.utils.tests import run_
 
 
 class TestAutoprompt(unittest.TestCase):

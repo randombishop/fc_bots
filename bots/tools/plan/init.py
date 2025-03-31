@@ -9,13 +9,13 @@ def initialize_tools(mode):
   if mode == 'assistant':
     return ['GetBio', 'GetLore', 'GetStyle', 'GetTime']
   elif mode == 'bot':
-    return ['GetBio', 'GetLore', 'GetStyle', 'GetTime', 'GetConversation']
+    return ['GetBio', 'GetLore', 'GetStyle', 'GetTime', 'GetConversation', 'Like', 'ShouldContinue']
   elif mode == 'blueprint':
     return ['GetBio', 'GetLore', 'GetStyle', 'GetTime']
   else:
     raise Exception(f"Agent mode {mode} not found")
 
-def init_state(input):    
+def init(input):    
   id = input['bot_id']
   character = get_bot_character(id)
   mode = input['mode']
@@ -55,6 +55,6 @@ def init_state(input):
 
 InitState = Tool(
   name="InitState",
-  func=init_state,
+  func=init,
   description="Initialize the state of the bot."
 )
