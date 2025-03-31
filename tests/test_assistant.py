@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 import unittest
-from bots.utils.tests import run_assistant
+from bots.utils.tests import run_agent
 
 
 prompt1 = """
@@ -21,8 +21,8 @@ class TestAssistant(unittest.TestCase):
   
   def test1(self):
     channel = 'mfers'
-    state = run_assistant(test_id='TestAssistant:1', request=prompt1, channel=channel)
+    state = run_agent(agent_class='assistant', test_id='TestAssistant:1', request=prompt1, channel=channel)
     
   def test2(self):
     channel = 'mfers'
-    state = run_assistant(test_id='TestAssistant:2', request=prompt2, channel=channel)
+    state = run_agent(agent_class='assistant', test_id='TestAssistant:2', request=prompt2, channel=channel)

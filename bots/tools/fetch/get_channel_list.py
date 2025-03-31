@@ -5,7 +5,7 @@ from bots.data.bot_history import get_bot_channels
 
 def fetch(input):
   state = input.state
-  channels = get_bot_channels(state.id)
+  channels = get_bot_channels(state.get('id'))
   channels = [dict(c) for c in channels]
   for c in channels:
     if c['channel'] == '':

@@ -1,15 +1,16 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.tools.parse import PARSE_TOOLS
-from bots.tools.plan.tool_sequence import compile_sequence, get_tool
+from bots.tools.plan.tool_sequence import compile_sequence, format_tool
 
 
 select_tool_task = """
 #TASK
 You are @{{name}}, a social media bot with access to a set of tools.
-Given the provided context and instructions, which parsers should we start by running?
-You must only decide which tools to execute, so that we have parameters ready for next tools that will pull and prepare your data.
-Do not pick multiple tools that set the same output.
+Given the provided context and instructions, which parsers should we run first?
+You will run other tools later to fetch and prepare your response.
+For now, focus only on the parameters that you will need and select the best parsers to set them.
+You can select one or multiple parsers if needed.
 
 #AVAILABLE TOOLS
 available_tools?
@@ -21,7 +22,6 @@ available_tools?
 
 """
 
-
 select_tool_schema = {
   "type":"OBJECT",
   "properties":{
@@ -29,12 +29,7 @@ select_tool_schema = {
   }
 }
 
-
 tool_map = {x.name: x for x in PARSE_TOOLS}
-
-
-def format_tool(tool):
-  return f"{tool.name}: {tool.description} -> [{', '.join(tool.metadata['outputs'])}]"
 
 def format_tools():
   return "\n".join([format_tool(tool) for tool in PARSE_TOOLS])

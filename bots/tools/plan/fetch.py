@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.tools.fetch import FETCH_TOOLS
-from bots.tools.plan.tool_sequence import compile_sequence, get_tool
+from bots.tools.plan.tool_sequence import compile_sequence, format_tool
 
 
 select_tool_task = """
@@ -21,7 +21,6 @@ available_tools?
 
 """
 
-
 select_tool_schema = {
   "type":"OBJECT",
   "properties":{
@@ -29,12 +28,7 @@ select_tool_schema = {
   }
 }
 
-
 tool_map = {x.name: x for x in FETCH_TOOLS}
-
-
-def format_tool(tool):
-  return f"{tool.name}: {tool.description} -> [{', '.join(tool.metadata['outputs'])}]"
 
 def format_tools():
   return "\n".join([format_tool(tool) for tool in FETCH_TOOLS])
@@ -56,7 +50,7 @@ def fetch(input):
   }
   return ans
   
-  
+
 Fetch = Tool(
   name="Fetch",
   func=fetch,

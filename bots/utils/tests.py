@@ -1,9 +1,10 @@
 import os
-from bots.bot import invoke_bot
-from bots.assistant import invoke_assistant
+from bots.agent import invoke_agent
 from bots.state import State
 from bots.tool_input import ToolInput
 from bots.utils.llms2 import get_llm, get_llm_img
+from bots.assistant import Assistant
+from bots.bot import Bot
 
 bot_id = int(os.getenv('TEST_BOT'))
 
@@ -12,8 +13,14 @@ def make_tool_input():
   tool_input = ToolInput(state, get_llm(), get_llm_img())
   return tool_input
 
-def run_bot(test_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, channel=None, action=None, user=None):
-  state = invoke_bot(
+def run_agent(agent_class, test_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, channel=None, user=None, blueprint=None):
+  agent_classes = {
+    'assistant': Assistant,
+    'bot': Bot
+  }
+  agent_class = agent_classes[agent_class]
+  state = invoke_agent(
+    agent_class=agent_class,
     run_name=test_id, 
     bot_id=bot_id, 
     request=request, 
@@ -22,18 +29,9 @@ def run_bot(test_id, request=None, fid_origin=None, parent_hash=None, attachment
     attachment_hash=attachment_hash, 
     root_parent_url=root_parent_url, 
     channel=channel, 
-    action=action,
-    user=user
+    user=user,
+    blueprint=blueprint
   )
   state.debug()
   return state
 
-def run_assistant(test_id, request=None, channel=None):
-  state = invoke_assistant(
-    run_name=test_id, 
-    bot_id=bot_id, 
-    request=request,
-    channel=channel
-  )
-  state.debug()
-  return state

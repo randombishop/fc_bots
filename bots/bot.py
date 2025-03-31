@@ -88,25 +88,3 @@ class Bot(BaseSingleActionAgent):
     return self.plan(intermediate_steps, **kwargs)
 
 
-
-
-def invoke_bot(run_name, bot_id, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, channel=None, action=None, user=None):
-  input = {
-      'bot_id': bot_id,
-      'request': request,
-      'fid_origin': fid_origin,
-      'parent_hash': parent_hash,
-      'attachment_hash': attachment_hash,
-      'root_parent_url': root_parent_url,
-      'channel': channel,
-      'action': action,
-      'user': user
-  }
-  bot = Bot()
-  executor = AgentExecutor(agent=bot, tools=bot._tools, max_iterations=15)
-  result = executor.invoke(input=json.dumps(input), config={"run_name": run_name})
-  if 'output' not in result:
-    raise Exception(f"Bot {bot_id} returned no output")
-  if 'error' in result:
-    raise Exception(f"Bot {bot_id} returned an error: {result['error']}")
-  return result['output']

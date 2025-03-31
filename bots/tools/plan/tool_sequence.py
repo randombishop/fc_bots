@@ -69,18 +69,20 @@ def compile_tool(tool_name, tool_chain, available_data):
     for missing_input in missing_inputs:
       if missing_input not in providers_map:
         raise Exception(f"No provider found for {missing_input}")
-    providers = providers_map[missing_input]
-    if len(providers) == 1:
-      compile_tool(providers[0], tool_chain, available_data)
-    else:
-      provider = choose_provider(providers)
-      compile_tool(provider, tool_chain, available_data)
+      providers = providers_map[missing_input]
+      print(f'{missing_input} <-- {providers}')
+      if len(providers) == 1:
+        compile_tool(providers[0], tool_chain, available_data)
+      else:
+        provider = choose_provider(providers)
+        compile_tool(provider, tool_chain, available_data)
   elif require == 'any':
     candidates = []
     for missing_input in missing_inputs:
       if missing_input in providers_map:
         candidates.extend(providers_map[missing_input])
     candidates = list(set(candidates))
+    print(f'{missing_inputs} <-- {candidates}')
     if len(candidates) == 0:
       raise Exception(f"No provider found to satisfy any[{','.join(missing_inputs)}]")
     elif len(candidates) == 1:
@@ -108,3 +110,6 @@ def compile_sequence(tool_names, available_data):
 
 def get_tool(tool_name):
   return tool_map[tool_name]
+
+def format_tool(tool):
+  return f"##{tool.name}\n{tool.description}\n"
