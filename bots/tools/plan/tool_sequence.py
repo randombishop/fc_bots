@@ -2,6 +2,8 @@ from bots.tools.parse import PARSE_TOOLS
 from bots.tools.fetch import FETCH_TOOLS
 from bots.tools.prepare import PREPARE_TOOLS
 from bots.tools.helpers import HELPERS_TOOLS
+from bots.tools.plan.pick_provider import pick_provider
+
 
 tool_list = PARSE_TOOLS + FETCH_TOOLS + PREPARE_TOOLS + HELPERS_TOOLS
 
@@ -50,10 +52,17 @@ def add_tool_to_chain(tool_name, tool_chain, available_data):
     available_data[output] = True
   tool_chain.append(tool_name)
 
-def choose_provider(providers):
-  raise Exception(f'choose_provider not implemented yet. providers={",".join(providers)}')
+def choose_provider(tool_name, provider_names, llm, state, log):
+  log.append(f'Choosing provider for {tool_name}: {provider_names}')
+  tool = tool_map[tool_name]
+  providers = [tool_map[x] for x in provider_names]
+  provider = pick_provider(tool, providers, llm, state)
+  if provider is None:
+    raise Exception(f"Could not select a provider for {tool_name} / {provider_names}")
+  log.append(f'Selected provider: {provider}')
+  return provider
 
-def compile_tool(tool_name, tool_chain, available_data, log):
+def compile_tool(tool_name, tool_chain, available_data, llm, state, log):
   log.append(f'Compiling tool: {tool_name}')
   if are_all_outputs_already_set(tool_name, available_data):
     log.append(f'Skipping {tool_name} because all outputs are already set')
@@ -72,10 +81,10 @@ def compile_tool(tool_name, tool_chain, available_data, log):
       providers = providers_map[missing_input]
       log.append(f'{missing_input} <-- {providers}')
       if len(providers) == 1:
-        compile_tool(providers[0], tool_chain, available_data, log)
+        compile_tool(providers[0], tool_chain, available_data, llm, state, log)
       else:
-        provider = choose_provider(providers)
-        compile_tool(provider, tool_chain, available_data, log)
+        provider = choose_provider(tool_name, providers, llm, state, log)
+        compile_tool(provider, tool_chain, available_data, llm, state, log)
   elif require == 'any':
     candidates = []
     for missing_input in missing_inputs:
@@ -86,16 +95,17 @@ def compile_tool(tool_name, tool_chain, available_data, log):
     if len(candidates) == 0:
       raise Exception(f"No provider found to satisfy any[{','.join(missing_inputs)}]")
     elif len(candidates) == 1:
-      compile_tool(candidates[0], tool_chain, available_data, log)
+      compile_tool(candidates[0], tool_chain, available_data, llm, state, log)
     else:
-      provider = choose_provider(candidates)
-      compile_tool(provider, tool_chain, available_data, log)
+      provider = choose_provider(tool_name, candidates, llm, state, log)
+      compile_tool(provider, tool_chain, available_data, llm, state, log)
   log.append(f'Adding {tool_name} to tool_chain after compiling its dependencies')
   add_tool_to_chain(tool_name, tool_chain, available_data)
   log.append(f'Tool chain: {tool_chain}')
 
-def compile_sequence(tool_names, available_data):
+def compile_sequence(state, tool_names, llm):
   log = []
+  available_data = state.get_available_data()
   log.append(f'Compiling sequence: {tool_names}')
   tool_names = tool_names.split(',') if tool_names is not None else []
   tool_names = [x.strip() for x in tool_names]
@@ -105,7 +115,7 @@ def compile_sequence(tool_names, available_data):
   log.append(f'Simulated data: {simulated_data}')
   tool_chain = []
   for t in tool_names:
-    compile_tool(t, tool_chain, simulated_data, log)
+    compile_tool(t, tool_chain, simulated_data, llm, state, log)
   log.append(f'Tool chain fully compiled: {tool_chain}')
   return tool_chain, log
 

@@ -36,13 +36,12 @@ def format_tools():
 def fetch(input):
   state = input.state
   llm = input.llm
-  available_data = state.get_available_data()
   prompt = state.format_all()
   instructions = state.format(select_tool_task)
   instructions = instructions.replace('available_tools?', format_tools())
   result = call_llm(llm, prompt, instructions, select_tool_schema)
   tools_llm = result['tools'] if 'tools' in result else None
-  tools, log = compile_sequence(tools_llm, available_data)
+  tools, log = compile_sequence(state, tools_llm, llm)
   ans = {
     'fetched': True,
     'fetch_tools_llm': tools_llm,

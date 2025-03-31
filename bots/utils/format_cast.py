@@ -112,16 +112,19 @@ def format_casts(casts):
   return ans
 
 def extract_cast(result, posts_map, index=''):
-  if f'tweet{index}' not in result:
+  text = result[f'tweet{index}'] if f'tweet{index}' in result else None
+  if text is None:
+    text = ''
+  embed_url = result[f'embed_url{index}'] if f'embed_url{index}' in result else result['embed_url']
+  embed_hash = result[f'embed_hash{index}'] if f'embed_hash{index}' in result else result['embed_hash']
+  if len(text)==0 and embed_url is None and embed_hash is None:
     return None
-  if result[f'tweet{index}'] is None or len(result[f'tweet{index}']) == 0:
-    return None
-  c = {'text': result[f'tweet{index}']}
-  if f'embed_url{index}' in result and result[f'embed_url{index}'] is not None:
-    c['embeds'] = [result[f'embed_url{index}']]
+  c = {'text': text}
+  if embed_url is not None:
+    c['embeds'] = [embed_url]
     c['embeds_description'] = 'link'
-  elif f'embed_hash{index}' in result and result[f'embed_hash{index}'] is not None:
-    link = check_link_data({'id': result[f'embed_hash{index}']}, posts_map)
+  elif embed_hash is not None:
+    link = check_link_data({'id': embed_hash}, posts_map)
     if link is not None:
       c['embeds'] = [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}],
       c['embeds_description'] = link['text']

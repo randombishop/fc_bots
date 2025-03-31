@@ -23,7 +23,7 @@ def prepare(input):
   wordcloud = Image.open(filename1).convert("RGBA")
   # Combine wordcloud with background
   filename2 = str(uuid.uuid4())+'.png'
-  background = state.wordcloud_background
+  background = state.get('wordcloud_background')
   background.paste(wordcloud, (0, 0), wordcloud)
   background.save(filename2)
   upload_to_gcs(local_file=filename2, target_folder='png', target_file=filename2)
@@ -38,7 +38,7 @@ CreateWordCloud = Tool(
   name="CreateWordCloud",
   description="Generate the wordcloud image",
   metadata={
-    'inputs': ['wordcloud_mask', 'wordcloud_text', 'wordcloud_counts'],
+    'inputs': ['wordcloud_mask', 'wordcloud_background','wordcloud_text', 'wordcloud_counts'],
     'outputs': ['wordcloud_url']
   },
   func=prepare
