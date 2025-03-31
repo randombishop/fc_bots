@@ -49,7 +49,7 @@ class Agent(BaseSingleActionAgent):
         log='')
     elif self._state.get('composed') is None:
       return AgentAction(
-        tool='ComposeMulti',
+        tool='Compose',
         tool_input=self.get_tool_input(),
         log='')
     elif (not self._state.get('checked')) and (self._state.get('casts') is not None) and (len(self._state.get('casts')) > 0):

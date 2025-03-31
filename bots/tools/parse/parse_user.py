@@ -36,7 +36,7 @@ def parse(input):
       'user': '*',
       'parse_user_log': 'Random user selected'
     }
-  fid, user_name = read_user(params, state.fid_origin, default_to_origin=False)
+  fid, user_name = read_user(params, fid_origin=state.get('fid_origin'), default_to_origin=False)
   return {
     'user_fid': fid,
     'user': user_name

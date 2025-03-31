@@ -15,8 +15,11 @@ You are @{{name}} bot
 #YOUR STYLE:
 {{style}}
 
+#GOAL
+{{request}}
+
 #TASK:
-Your goal is to generate social media post or thread based on the provided context and instructions.
+Your task is to generate social media post or thread based on the provided context and instructions.
 Output 1 to 3 posts max in json format.
 You can optionally embed an url or a post hash if it is relevant. 
 When you want to embed an url or post, use the embed_url or embed_hash fields, don't include the link in the tweet itself.
@@ -75,8 +78,8 @@ def compose(input):
   }
   
 
-ComposeMulti = Tool(
-  name="ComposeMulti",
-  description="Compose one or multiple casts to be posted by the bot.",
+ComposeAssistantResponse = Tool(
+  name="ComposeAssistantResponse",
+  description="Compose one or multiple casts to be posted by the assistant.",
   func=compose
 )
