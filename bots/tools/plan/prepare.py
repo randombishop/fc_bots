@@ -43,9 +43,10 @@ def prepare(input):
   tools_llm = result['tools'] if 'tools' in result else None
   tools = compile_sequence(tools_llm, available_data)
   ans = {
+    'prepared': True,
     'prepare_tools_llm': tools_llm,
-    'prepare_tools': tools,
-    'todo': tools.copy()
+    'prepare_tools_sequence': ','.join(tools),
+    'todo': tools
   }
   return ans
   

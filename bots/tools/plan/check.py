@@ -4,21 +4,21 @@ from bots.tools.check.validate import Validate
 from bots.tools.check.like import Like
 
 
-def bot_check(input):
+def check(input):
   state = input.state
   ans = {'checked': True}
   shorten = Shorten.invoke({'input': input})
   ans.update(shorten)
   valid = Validate.invoke({'input': input})
   ans.update(valid)
-  if state.get('request') is not None:
+  if state.get('mode') == 'bot':
     like = Like.invoke({'input': input})
     ans.update(like)
   return ans
+    
 
-
-CheckBot = Tool(
-  name="CheckBot",
-  description="Bot check phase",
-  func=bot_check
+Check = Tool(
+  name="Check",
+  description="Check outputs phase",
+  func=check
 )

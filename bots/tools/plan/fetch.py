@@ -44,9 +44,10 @@ def fetch(input):
   tools_llm = result['tools'] if 'tools' in result else None
   tools = compile_sequence(tools_llm, available_data)
   ans = {
+    'fetched': True,
     'fetch_tools_llm': tools_llm,
-    'fetch_tools': tools,
-    'todo': tools.copy()
+    'fetch_tools_sequence': ','.join(tools),
+    'todo': tools
   }
   return ans
   

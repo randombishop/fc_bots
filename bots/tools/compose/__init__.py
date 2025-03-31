@@ -1,5 +1,5 @@
-from bots.tools.compose.ComposeOne import ComposeOne
-from bots.tools.compose.ComposeMulti import ComposeMulti
+from bots.tools.compose.compose_one import ComposeOne
+from bots.tools.compose.compose_multi import ComposeMulti
 
 
 COMPOSE_TOOLS = [

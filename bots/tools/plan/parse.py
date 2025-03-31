@@ -45,9 +45,10 @@ def parse(input):
   tools_llm = result['tools'] if 'tools' in result else None
   tools = compile_sequence(tools_llm, available_data)
   ans = {
+    'parsed': True,
     'parse_tools_llm': tools_llm,
-    'parse_tools': tools,
-    'todo': tools.copy()
+    'parse_tools_sequence': ','.join(tools),
+    'todo': tools
   }
   return ans
   

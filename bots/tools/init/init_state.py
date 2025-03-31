@@ -5,15 +5,29 @@ from bots.data.users import get_username, get_fid
 from bots.data.channels import get_channel_url
 
 
+def initialize_tools(mode):
+  if mode == 'assistant':
+    return ['GetBio', 'GetLore', 'GetStyle', 'GetTime']
+  elif mode == 'bot':
+    return ['GetBio', 'GetLore', 'GetStyle', 'GetTime', 'GetConversation']
+  elif mode == 'blueprint':
+    return ['GetBio', 'GetLore', 'GetStyle', 'GetTime']
+  else:
+    raise Exception(f"Agent mode {mode} not found")
+
 def init_state(input):    
   id = input['bot_id']
   character = get_bot_character(id)
+  mode = input['mode']
+  if mode not in ['assistant', 'bot', 'blueprint']:
+    raise Exception(f"Invalid mode `{mode}`. should be assistant, bot or blueprint")
   if character is None:
     raise Exception(f"Bot {id} not found")
   input['state'].character = character
   ans = {}
   ans['id'] = id
   ans['name'] = character['name']
+  ans['mode'] = mode
   if 'request' in input and input['request'] is not None:
     ans['request'] = input['request']
   if 'fid_origin' in input and input['fid_origin'] is not None:
@@ -31,8 +45,11 @@ def init_state(input):
   if 'channel' in input and input['channel'] is not None:
     ans['channel'] = input['channel']
     ans['channel_url'] = get_channel_url(ans['channel'])
+  if 'blueprint' in input and input['blueprint'] is not None:
+    ans['blueprint'] = input['blueprint']
   ans['should_continue'] = True
   ans['max_rows'] = get_max_capactity()
+  ans['todo'] = initialize_tools(ans['agent_class'])
   return ans
   
 
