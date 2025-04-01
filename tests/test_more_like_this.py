@@ -7,6 +7,7 @@ from bots.utils.tests import run_agent
 class TestMoreLikeThis(unittest.TestCase):
   
   def assert_expected_output(self, state):
+    self.assertEqual(state.get('intent'), 'MoreLikeThis')
     self.assertIn('ParseMoreLikeThisText', state.get_tools_sequence())
     self.assertIn('GetMoreLikeThis', state.get_tools_sequence())
     casts = state.get('data_casts_text')

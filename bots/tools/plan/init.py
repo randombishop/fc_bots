@@ -9,7 +9,7 @@ def initialize_tools(mode):
   if mode == 'assistant':
     return ['GetBio', 'GetLore', 'GetStyle', 'GetTime']
   elif mode == 'bot':
-    return ['GetBio', 'GetLore', 'GetStyle', 'GetTime', 'GetConversation', 'Like', 'Intent', 'ShouldContinue']
+    return ['GetBio', 'GetLore', 'GetStyle', 'GetTime', 'GetConversation', 'Like', 'BotIntent', 'ShouldContinue']
   elif mode == 'blueprint':
     return ['GetBio', 'GetLore', 'GetStyle', 'GetTime']
   else:

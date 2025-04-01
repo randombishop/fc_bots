@@ -49,8 +49,8 @@ def select_intent(input):
   } 
   
 
-Intent = Tool(
-  name="Intent",
+BotIntent = Tool(
+  name="BotIntent",
   description="Select current intent",
   metadata={
     'outputs': ['intent', 'intended_action_plan', 'intended_response_plan']

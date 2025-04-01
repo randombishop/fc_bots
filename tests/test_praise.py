@@ -7,6 +7,7 @@ from bots.utils.tests import run_agent
 class TestPraise(unittest.TestCase):
 
   def assert_expected_output(self, state):
+    self.assertEqual(state.get('intent'), 'Praise')
     self.assertTrue(state.get('valid'))
     
   def test1(self):

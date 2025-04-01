@@ -7,6 +7,7 @@ from bots.utils.tests import run_agent
 class TestMostActiveUsers(unittest.TestCase):
 
   def assert_expected_output(self, state):
+    self.assertEqual(state.get('intent'), 'MostActiveUsers')
     self.assertIn('GetMostActiveUsers', state.get_tools_sequence())
     self.assertIsNotNone(state.get('data_casts'))
     self.assertTrue(state.get('valid'))

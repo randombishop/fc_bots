@@ -7,6 +7,7 @@ from bots.utils.tests import run_agent
 class TestPickCast(unittest.TestCase):
 
   def assert_expected_output(self, state):
+    self.assertEqual(state.get('intent'), 'Pick')
     self.assertIsNotNone(state.get('data_casts')[0]['embeds'])
     
   def test1(self):

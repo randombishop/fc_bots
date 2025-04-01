@@ -113,7 +113,11 @@ Post your summary intro and embed the wordcloud in the first tweet.
 Then continue your summary in tweet2 and tweet3 and include links to the most interesting posts in embed_hash2 and embed_hash3.
 """,
 
-'WordCloud': """Include the wordcloud URL with the first tweet (embed_url1)"""
+'WhoIs': """Analyze the user posts carefully and post a short description in one single tweet.
+Embed the user's avatar in embed_url1""",
+
+'WordCloud': """Write a word play using the most common words (wordcloud_text) and the theme from the provided posts.
+Post it as a single short tweet and embed the wordcloud URL in embed_url1"""
 
 }
 

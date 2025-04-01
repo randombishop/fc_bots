@@ -7,6 +7,7 @@ from bots.utils.tests import run_agent
 class TestFavoriteUsers(unittest.TestCase):
 
   def assert_expected_output(self, state):
+    self.assertEqual(state.get('intent'), 'FavoriteUsers')
     self.assertIn('GetFavoriteUsers', state.get_tools_sequence())
     self.assertIn('RenderFavoriteUsersTable', state.get_tools_sequence())
     self.assertTrue(state.get('valid'))

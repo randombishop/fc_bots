@@ -7,6 +7,7 @@ from bots.utils.tests import run_agent
 class TestPerplexity(unittest.TestCase):
 
   def assert_expected_output(self, state):
+    self.assertEqual(state.get('intent'), 'Perplexity')
     self.assertIn('ParsePerplexityQuestion', state.get_tools_sequence())
     self.assertIn('CallPerplexity', state.get_tools_sequence())
     self.assertIsNotNone(state.get('perplexity_answer'))

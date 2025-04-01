@@ -7,6 +7,7 @@ from bots.utils.tests import run_agent
 class TestNews(unittest.TestCase):
   
   def assert_expected_output(self, state):
+    self.assertEqual(state.get('intent'), 'News')
     self.assertIn('ParseNewsSearch', state.get_tools_sequence())
     self.assertIn('GetNews', state.get_tools_sequence())
     self.assertIsNotNone(state.get('data_casts'))
