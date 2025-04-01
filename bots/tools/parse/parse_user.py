@@ -42,10 +42,13 @@ def parse(input):
     'user': user_name
   }
   
+desc= """"Set the parameters user and user_fid to run any user related tools. 
+If it's a user related task like profile analysis, praise, roast, psycho analysis, etc, use ParseUser to set their id. 
+Look out for particular user mention or a pronoun, if the instructions intent is directed to a person, select ParseUser to identify them."""
 
 ParseUser = Tool(
   name="ParseUser",
-  description="Set the parameters user and user_fid to run any user related tools.",
+  description=desc,
   metadata={
     'outputs': ['user_fid', 'user']
   },

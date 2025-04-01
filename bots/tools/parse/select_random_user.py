@@ -19,10 +19,12 @@ def parse(input):
     'user': user_name
   }
   
+desc = """Select a random user and set user_fid and user to run any user related tools.
+If the instructions specifically require selecting a random user, use SelectRandomUser."""
 
 SelectRandomUser = Tool(
   name="SelectRandomUser",
-  description="Select a random user and set user_fid and user to run any user related tools.",
+  description=desc,
   metadata={
     'outputs': ['user_fid', 'user']
   },

@@ -36,10 +36,12 @@ def parse(input):
     'question': question
   }
   
-    
+desc = """Set the parameter question to run the Perplexity tool.
+Use ParsePerplexityQuestion when you need to ask a question to Perplexity."""
+
 ParsePerplexityQuestion = Tool(
   name="ParsePerplexityQuestion",
-  description="Set the parameter question to run the Perplexity tool.",
+  description=desc,
   metadata={
     'outputs': ['question']
   },

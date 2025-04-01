@@ -34,10 +34,12 @@ def parse(input):
     'text': text
   }
   
+desc = """Set parameter text to run the MoreLikeThis tools.
+Use ParseMoreLikeThisText when you need to find similar posts."""
 
 ParseMoreLikeThisText = Tool(
   name="ParseMoreLikeThisText",
-  description="Set parameter text to run the MoreLikeThis tools.",
+  description=desc,
   metadata={
     'outputs': ['text']
   },

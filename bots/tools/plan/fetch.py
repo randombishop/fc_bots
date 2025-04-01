@@ -12,7 +12,7 @@ You have access to a set of tools to fetch data before responding to your instru
 Given the provided context and instructions, which tools should you run next?
 You must only decide which tools will help you pull relevant data.
 Do not pick multiple tools that fetch the same outputs.
-Only select tools if they are clearly relevant to the instructions and will be helpful.
+Focus on the instructions intent and the parameters you already parsed to figure out which tools will provide useful context.
 
 #AVAILABLE TOOLS
 available_tools?
@@ -39,7 +39,7 @@ def format_tools():
 def fetch(input):
   state = input.state
   llm = input.llm
-  prompt = state.format_all()
+  prompt = state.format_all(succint=True)
   instructions = state.format(select_tool_task)
   instructions = instructions.replace('available_tools?', format_tools())
   result = call_llm(llm, prompt, instructions, select_tool_schema)

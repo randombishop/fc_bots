@@ -63,7 +63,7 @@ def prepare(input):
 
 DescribePfp = Tool(
   name="DescribePfp",
-  description="Description a user's profile picture",
+  description="Describe a user's profile picture",
   metadata={
     'inputs': ['user_pfp_url'],
     'outputs': ['user_pfp_description']

@@ -60,7 +60,7 @@ class State:
       ans += f"#INSTRUCTIONS\n{request}\n"
     return ans
 
-  def format_all(self):
+  def format_all(self, succint=False):
     skip_tools = ['InitState', 
       'GetBio', 
       'GetLore', 
@@ -86,6 +86,9 @@ class State:
         for k,v in observation.items():
           if v is not None and include_in_log(v):
             ans += f"###{k}\n"
+            v = str(v)
+            if succint and len(v) > 256:
+              v = v[:256] + '...'
             ans += f"{v}\n\n"
     ans += '\n\n'
     conversation = self.get('conversation')
@@ -95,7 +98,7 @@ class State:
     if request is not None and len(request)>0:
       ans += f"#INSTRUCTIONS\n{request}\n"
     return ans
-    
+      
   def get_tools_sequence(self):
     return [x[0].tool for x in self.tools_log]
     

@@ -35,10 +35,11 @@ def parse(input):
     'search': search
   }
   
-  
+desc = """Set the parameter search. Use ParseNewsSearch when you need to do a yahoo news search."""
+
 ParseNewsSearch = Tool(
   name="ParseNewsSearch",
-  description="Set the parameter search to use for pulling news.",
+  description=desc,
   metadata={
     'outputs': ['search']
   },

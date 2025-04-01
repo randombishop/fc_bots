@@ -47,10 +47,12 @@ def parse(input):
     'keyword': keyword
   }
 
+desc = """Set parameters search and keyword to pull relevant posts.
+Use ParseKeywordAndSearch when you require searching for posts."""
 
 ParseKeywordAndSearch = Tool(
   name="ParseKeywordAndSearch",
-  description="Set parameters search and keyword to pull more data.",
+  description=desc,
   metadata={
     'outputs': ['search', 'keyword']
   },

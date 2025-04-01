@@ -40,9 +40,14 @@ def parse(input):
   }
   
 
+
+desc = """Set the parameters channel_url and channel to run the channel related tools.
+Use ParseChannel whenever you find an explicit mention to a channel, or "this channel" in the instructions.
+Channels typically start with / but not always."""
+
 ParseChannel= Tool(
   name="ParseChannel",
-  description="Set the parameters channel_url and channel to run the channel related tools.",
+  description=desc,
   metadata={
     'outputs': ['channel_url', 'channel']
   },

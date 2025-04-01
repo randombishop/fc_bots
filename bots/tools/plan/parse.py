@@ -37,7 +37,7 @@ def format_tools():
 def parse(input):
   state = input.state
   llm = input.llm
-  prompt = state.format_conversation()
+  prompt = state.format_all(succint=True)
   instructions = state.format(select_tool_task)
   instructions = instructions.replace('available_tools?', format_tools())
   result = call_llm(llm, prompt, instructions, select_tool_schema)

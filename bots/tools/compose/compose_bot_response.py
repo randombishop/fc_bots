@@ -1,7 +1,6 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.utils.format_cast import format_casts, extract_cast
-from bots.tools.compose.compose_rules import COMPOSE_DIRECTIVES
 
 
 instructions_template = """
@@ -19,13 +18,19 @@ You are @{{name}} bot
 #GOAL
 {{request}}
 
+#RESPONSE PLAN:
+{{intended_response_plan}}
+
 #TASK:
 Your task is to respond to a user on a social media platform based on the provided context and instructions.
 Output 1 response tweet or a thread of tweets up to 3 posts max in json format.
 Prefer a response in 1 single tweet if possible, but you can use 2 or 3 tweets if really needed.
-
-#ADDITIONAL DIRECTIVES:
-directives?
+For your information, in the farcaster social media platform, posts are called casts.
+You can optionally embed an url or a post hash if it is relevant. 
+When you want to embed an url or post, use the embed_url or embed_hash fields, don't include the link or post id in the tweet field itself.
+Output the result in json format.
+Make sure you don't use " inside json strings. 
+Avoid invalid json.
 
 #RESPONSE FORMAT:
 {
@@ -62,7 +67,8 @@ def compose(input):
   state = input.state
   llm = input.llm
   prompt = state.format_all()
-  instructions = state.format(instructions_template).replace('directives?', COMPOSE_DIRECTIVES)
+  instructions = state.format(instructions_template)
+  intent = state.get('intent')
   result = call_llm(llm, prompt, instructions, schema)
   casts = []
   for i in range(1, 4):

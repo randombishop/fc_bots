@@ -37,9 +37,12 @@ def parse(input):
     'category': category
   }
   
+desc = """Set the parameter category to run any category related tools.
+Use ParseCategory whenever you find an explicit mention to a category in the instructions."""
+
 ParseCategory = Tool(
   name="ParseCategory",
-  description="Set the parameter category to run the category related tools.",
+  description=desc,
   metadata={
     'outputs': ['category']
   },

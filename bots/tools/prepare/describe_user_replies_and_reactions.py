@@ -77,7 +77,7 @@ def prepare(input):
 
 DescribeUserRepliesAndReactions = Tool(
   name="DescribeUserRepliesAndReactions",
-  description="Describe the replies and reactions of a user in short.",
+  description="Describe the replies and reactions of a user.",
   metadata={
     'inputs': ['user', 'user_display_name', 'user_bio', 'user_replies_and_reactions'],
     'outputs': ['user_replies_and_reactions_description', 'user_replies_and_reactions_keywords']
