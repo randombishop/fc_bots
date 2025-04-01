@@ -91,7 +91,8 @@ class State:
             ans += f"###{k}\n"
             v = str(v)
             if succint and len(v) > 256:
-              v = v[:256] + '...'
+              v = v[:256] + '...\n'
+              v += f'(text length: {len(v)}. Data truncated to focus on current task.)'
             ans += f"{v}\n\n"
     ans += '\n\n'
     channel = self.get_current_channel()
