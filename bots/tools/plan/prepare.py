@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.tools.prepare import PREPARE_TOOLS
-from bots.tools.plan.tool_sequence import filter_tools, compile_sequence, format_tool
+from bots.tools.plan.tool_sequence import clean_tools, compile_sequence, format_tool
 
 
 select_tool_task = """
@@ -44,7 +44,7 @@ def prepare(input):
   instructions = instructions.replace('available_tools?', format_tools())
   result = call_llm(llm, prompt, instructions, select_tool_schema)
   tools = result['tools'] if 'tools' in result else None
-  tools = filter_tools(tools, tool_map)
+  tools = clean_tools(tools, tool_map)
   tools, log = compile_sequence(state, tools, llm)
   ans = {
     'prepared': True,

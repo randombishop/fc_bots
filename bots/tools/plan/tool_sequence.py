@@ -103,7 +103,7 @@ def compile_tool(tool_name, tool_chain, available_data, llm, state, log):
   add_tool_to_chain(tool_name, tool_chain, available_data)
   log.append(f'Tool chain: {tool_chain}')
 
-def filter_tools(tool_names, valid_names):
+def clean_tools(tool_names, valid_names):
   tool_names = tool_names.split(',') if tool_names is not None else []
   tool_names = [x.strip() for x in tool_names]
   tool_names = [x for x in tool_names if x in valid_names]
@@ -126,3 +126,12 @@ def get_tool(tool_name):
 
 def format_tool(tool):
   return f"##{tool.name}\n{tool.description}\n"
+
+def filter_suggested_tools(tool_names, available_data):
+  ans = []
+  for t in tool_names:
+    inputs_ready = are_all_inputs_already_set(t, available_data)
+    outputs_already_set = are_all_outputs_already_set(t, available_data)
+    if inputs_ready and not outputs_already_set:
+      ans.append(t)
+  return ans

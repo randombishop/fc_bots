@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.tools.fetch import FETCH_TOOLS
-from bots.tools.plan.tool_sequence import filter_tools, compile_sequence, format_tool
+from bots.tools.plan.tool_sequence import clean_tools, compile_sequence, format_tool
 
 
 select_tool_task = """
@@ -13,6 +13,7 @@ Given the provided context and instructions, which tools should you run next?
 You must only decide which tools will help you pull relevant data.
 Do not pick multiple tools that fetch the same outputs.
 Focus on the instructions intent and the parameters you already parsed to figure out which tools will provide useful context.
+If none of the proposed tools would be useful for your next steps, you can skip this step and return an empty list.
 
 #AVAILABLE TOOLS
 available_tools?
@@ -44,7 +45,7 @@ def fetch(input):
   instructions = instructions.replace('available_tools?', format_tools())
   result = call_llm(llm, prompt, instructions, select_tool_schema)
   tools= result['tools'] if 'tools' in result else None
-  tools = filter_tools(tools, tool_map)
+  tools = clean_tools(tools, tool_map)
   tools, log = compile_sequence(state, tools, llm)
   ans = {
     'fetched': True,

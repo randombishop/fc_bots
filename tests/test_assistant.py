@@ -15,7 +15,16 @@ Pick a random user and post a thread to praise them.
 Embed their generated avatar in the first post and links to their best posts on the next ones.
 """
 
-
+prompt3 = """
+Use recent channel activity to generate a relevant question that will be interesting to the channel audience.
+Your question should be simple, short, original, interesting and creative.
+Your question should be genuine: what would you like to know if you were a member of this channel?
+Do not generate multiple questions or complex questions.
+Generate only one single, simple and short question.
+Once your question is ready, forward it to Perplexity AI.
+Once you have the answer from perplexity and selected a good URL, post something original, interesting and relevant to the channel.
+Make sure your post will be engaging for the channel audience, and double check that the url you embed is not off-topic.
+"""
 
 class TestAssistant(unittest.TestCase):
   
@@ -32,3 +41,8 @@ class TestAssistant(unittest.TestCase):
     self.assertIn('GetUserProfile', state.get_tools_sequence())
     self.assertIn('GetCastsUser', state.get_tools_sequence())
     self.assertIn('CreateAvatar', state.get_tools_sequence())
+    
+  def test3(self):
+    channel = 'mfers'
+    state = run_agent(test_id='TestAssistant:3', mode='assistant', request=prompt3, channel=channel)
+    

@@ -1,7 +1,7 @@
 import random
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
-from bots.tools.plan.intents import get_intents, get_intents_descriptions, get_action_plan, get_response_plan
+from bots.tools.intent.intents import get_intents, get_intents_descriptions, get_action_plan, get_response_plan
 
 
 instructions_template = """
@@ -39,7 +39,7 @@ def select_intent(input):
   result = call_llm(llm, prompt, instructions, schema)
   intent = result['intent'] if 'intent' in result else None
   if intent not in get_intents():
-    intent = None
+    intent = ''
   action_plan = get_action_plan(intent)
   response_plan = get_response_plan(intent)
   return {

@@ -32,6 +32,16 @@ class Agent(BaseSingleActionAgent):
   def next_phase(self):
     if not self._state.get('should_continue'):
       return AgentFinish(return_values={"output": self._state}, log='done')
+    elif self._state.get('preloaded') is None:
+      return AgentAction(
+        tool='Preload',
+        tool_input=self.get_tool_input(),
+        log='')
+    elif self._state.get('intent') is None and self._state.get('mode') in ['assistant', 'bot']:
+      return AgentAction(
+        tool='Intent',
+        tool_input=self.get_tool_input(),
+        log='')
     elif self._state.get('parsed') is None:
       return AgentAction(
         tool='Parse',
@@ -61,6 +71,8 @@ class Agent(BaseSingleActionAgent):
       return AgentFinish(return_values={"output": self._state}, log='done')
   
   def next_action(self):
+    if not self._state.get('should_continue'):
+      return AgentFinish(return_values={"output": self._state}, log='done')
     if self._state.get('todo') is not None and len(self._state.get('todo')) > 0:
       return AgentAction(
         tool=self._state.get('todo').pop(0),

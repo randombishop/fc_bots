@@ -51,9 +51,12 @@ class State:
     return result
   
   def format_conversation(self):
+    channel = self.get_current_channel()
     conversation = self.get('conversation')
     request = self.get('request')
     ans = ''
+    if channel is not None:
+      ans += f"#CHANNEL\n{channel}\n\n"
     if conversation is not None and len(conversation)>0:
       ans += f"#CONVERSATION\n{conversation}\n"
     if request is not None and len(request)>0:

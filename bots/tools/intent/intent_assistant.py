@@ -5,7 +5,7 @@ from bots.tools.parse import PARSE_TOOLS
 from bots.tools.fetch import FETCH_TOOLS
 from bots.tools.prepare import PREPARE_TOOLS
 from bots.tools.plan.tool_sequence import format_tool
-from bots.tools.plan.intents import get_intent_examples, DEFAULT_ACTION_PLAN, DEFAULT_RESPONSE_PLAN
+from bots.tools.intent.intents import get_intent_examples, DEFAULT_ACTION_PLAN, DEFAULT_RESPONSE_PLAN
 
 instructions_template = """
 #TASK
