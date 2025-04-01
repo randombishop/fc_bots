@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.tools.parse import PARSE_TOOLS
-from bots.tools.plan.tool_sequence import compile_sequence, format_tool
+from bots.tools.plan.tool_sequence import filter_tools, compile_sequence, format_tool
 
 
 select_tool_task = """
@@ -41,12 +41,12 @@ def parse(input):
   instructions = state.format(select_tool_task)
   instructions = instructions.replace('available_tools?', format_tools())
   result = call_llm(llm, prompt, instructions, select_tool_schema)
-  tools_llm = result['tools'] if 'tools' in result else None
-  tools, log = compile_sequence(state, tools_llm, llm)
+  tools = result['tools'] if 'tools' in result else None
+  tools = filter_tools(tools, tool_map)
+  tools, log = compile_sequence(state, tools, llm)
   ans = {
     'parsed': True,
-    'parse_tools_llm': tools_llm,
-    'parse_tools_sequence': ','.join(tools),
+    'parse_tools': ','.join(tools),
     'parse_log': log,
     'todo': tools,
   }

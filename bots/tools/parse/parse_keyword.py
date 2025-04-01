@@ -38,7 +38,9 @@ def parse(input):
   }
 
 desc = """Set parameter keyword to pull relevant posts.
-Use ParseKeyword when you require searching for posts with a single keyword."""
+Use ParseKeyword when the instructions require searching for posts with a single keyword. 
+If the instructions indicate one particular keyword, use this tool (ParseKeyword), 
+but if you need to search for a phrase with multiple words, use the other tool ParseSearchPhrase instead."""
 
 ParseKeyword = Tool(
   name="ParseKeyword",

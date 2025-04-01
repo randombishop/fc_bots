@@ -38,7 +38,10 @@ def parse(input):
   }
 
 desc = """Set the search parameter to pull relevant posts.
-Use ParseSearchPhrase when you need to search for posts using semantic search."""
+Use ParseSearchPhrase when you need to search for posts using semantic search.
+If you need to search for a phrase with multiple words, use this tool (ParseSearchPhrase)
+But if the instructions indicate one particular keyword, use the other tool ParseKeyword instead. 
+"""
 
 ParseSearchPhrase = Tool(
   name="ParseSearchPhrase",

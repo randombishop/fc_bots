@@ -18,9 +18,14 @@ def fetch(input):
   }
 
 
+desc = """Get posts using keyword parameter.
+Use GetCastsKeyword when the instructions require searching for posts with a single keyword.
+If the instructions indicate one particular keyword, use this tool (GetCastsKeyword), 
+but if you need to search for a phrase with multiple words, use the other tool GetCastsSearchPhrase instead."""
+
 GetCastsKeyword = Tool(
   name="GetCastsKeyword",
-  description="Get posts using keyword parameter.",
+  description=desc,
   metadata={
     'inputs': ['keyword', 'max_rows'],
     'outputs': ['casts_keyword', 'data_casts_keyword']

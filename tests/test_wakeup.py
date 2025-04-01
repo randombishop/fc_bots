@@ -81,3 +81,10 @@ class TestWakeUp(unittest.TestCase):
     result = GetConversation.invoke({'input': input})
     self.assertIn(request, result['conversation'])
     
+  def test_conversation6(self):
+    parent_hash = '0xb59fcfda9e859be648e5d5541d292a6fb8cc9fcb'
+    request = "Parent is deleted but this should not fail"
+    input = make_tool_input({'request': request, 'parent_hash': parent_hash})
+    result = GetConversation.invoke({'input': input})
+    self.assertIn(request, result['conversation'])
+    

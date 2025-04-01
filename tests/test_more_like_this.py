@@ -34,9 +34,5 @@ class TestMoreLikeThis(unittest.TestCase):
     state = run_agent(test_id='TestMoreLikeThis:3', mode='bot', request=request, attachment_hash=attachment_hash)
     self.assert_expected_output(state)
     
-  def test4(self):
-    # test with a deleted parent
-    parent_hash = '0xb59fcfda9e859be648e5d5541d292a6fb8cc9fcb'
-    request = "More like this"
-    run_agent(test_id='TestMoreLikeThis:4', mode='bot', request=request, parent_hash=parent_hash)
+  
     

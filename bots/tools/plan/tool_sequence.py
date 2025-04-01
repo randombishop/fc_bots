@@ -103,14 +103,16 @@ def compile_tool(tool_name, tool_chain, available_data, llm, state, log):
   add_tool_to_chain(tool_name, tool_chain, available_data)
   log.append(f'Tool chain: {tool_chain}')
 
+def filter_tools(tool_names, valid_names):
+  tool_names = tool_names.split(',') if tool_names is not None else []
+  tool_names = [x.strip() for x in tool_names]
+  tool_names = [x for x in tool_names if x in valid_names]
+  return tool_names
+
 def compile_sequence(state, tool_names, llm):
   log = []
   available_data = state.get_available_data()
   log.append(f'Compiling sequence: {tool_names}')
-  tool_names = tool_names.split(',') if tool_names is not None else []
-  tool_names = [x.strip() for x in tool_names]
-  tool_names = [x for x in tool_names if x in tool_map]
-  log.append(f'Tool names clean list: {tool_names}')
   simulated_data = {x:True for x in available_data.keys()}
   log.append(f'Simulated data: {simulated_data}')
   tool_chain = []

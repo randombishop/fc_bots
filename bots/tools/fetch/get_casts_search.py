@@ -17,10 +17,14 @@ def fetch(input):
     'data_casts_search': posts
   }
 
+desc = """Get posts using search parameter.
+Use GetCastsSearch when the instructions require searching for posts using semantic search.
+If you need to search for a phrase with multiple words, use this tool (GetCastsSearch)
+If the instructions indicate one particular keyword, use the other tool GetCastsKeyword instead."""
 
 GetCastsSearch = Tool(
   name="GetCastsSearch",
-  description="Search for posts using search parameter.",
+  description=desc,
   metadata={
     'inputs': ['search', 'max_rows'],
     'outputs': ['casts_search', 'data_casts_search']
