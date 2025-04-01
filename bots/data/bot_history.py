@@ -148,7 +148,7 @@ def get_users_recently_praised(bot_id):
     return [str(row['u']) for row in rows]
         
 
-def get_random_user_to_praise(bot_id):
+def get_random_user(bot_id):
   with get_session() as session:
     sql = text("""
     WITH candidates as (
@@ -167,7 +167,7 @@ def get_random_user_to_praise(bot_id):
       return None
     
 
-def get_random_user_to_praise_in_channel(bot_id, channel_url):
+def get_random_user_in_channel(bot_id, channel_url):
   df_top_users = get_top_daily_casters(channel_url, limit=20)
   df_top_users = df_top_users[df_top_users['fid'] != bot_id]
   top_users = df_top_users['User'].tolist()

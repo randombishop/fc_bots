@@ -32,12 +32,10 @@ schema = {
 }
 
 
-def describe_pfp(input):
+def prepare(input):
   state = input.state
-  if state.user_pfp_description is not None:
-    return {'log': 'PFP description already set.'}
-  url = state.user_pfp_url
-  if url is None or len(url) == 0:
+  url = state.get('user_pfp_url')
+  if len(url) == 0:
     return {'log': 'No profile picture available.'}
   image_data = None
   mime_type = None
@@ -58,14 +56,17 @@ def describe_pfp(input):
   if 'image_description' not in result:
     return {'log': 'Could not generate an image description.'}
   description = result['image_description']
-  state.user_pfp_description = description
   return {
-    'user_pfp_description': state.user_pfp_description
+    'user_pfp_description': description
   }
 
 
 DescribePfp = Tool(
   name="DescribePfp",
-  description="Prepare the description of a profile picture",
-  func=describe_pfp
+  description="Describe a user's profile picture",
+  metadata={
+    'inputs': ['user_pfp_url'],
+    'outputs': ['user_pfp_description']
+  },
+  func=prepare
 )

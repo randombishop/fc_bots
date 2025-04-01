@@ -1,11 +1,11 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 import re
-
+from bots.utils.format_cast import format_casts
 
 prompt_template = """
-#CONVERSATION
-{{conversation}}
+#REQUEST
+{{request}}
 
 #POST
 {{post}}
@@ -17,7 +17,7 @@ Output json in this format: {"tweet": "short version of the post"})
 
 
 instructions_template = """
-You are @{{name}} bot, a social media bot.
+#TASK
 Your task is to shorten the provided post into a tweet no longer than 250 characters.
 
 #YOUR STYLE
@@ -72,9 +72,7 @@ def shorten_text(state, llm, text):
 def shorten(input):
   state = input.state
   llm = input.llm
-  casts = state.casts
-  if casts is None:
-    raise Exception('No casts to shorten')
+  casts = state.get('data_casts')
   log = []
   for c in casts:
     original = c['text']
@@ -84,14 +82,21 @@ def shorten(input):
     if original != c['text']:
       log.append(f'{original}\n>>>\n{c["text"]}')
   if len(log) == 0:
-    log = 'No change'
-  return {
-    'log': log
-  }
+    return {'shorten': 'No change'}
+  else:
+    formatted = format_casts(casts)
+    return {
+      'casts': formatted,
+      'data_casts': casts,
+      'log': log
+    }
 
 
 Shorten = Tool(
   name="Shorten",
   description="Shorten the posts into casts no longer than 250 characters",
+  metadata={
+    'inputs': ['data_casts']
+  },
   func=shorten
 )

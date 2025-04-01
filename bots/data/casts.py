@@ -8,11 +8,6 @@ from bots.data.pg import get_session
 from sqlalchemy import text
 
 
-def get_casts_for_fid(fid):
-  query_id = 4248613
-  params = [QueryParameter.number_type(name="fid", value=fid)]
-  return run_query(query_id, params)
-
 def get_top_casts(channel=None, keyword=None, category=None, user_name=None, max_rows=10):
   query_id = 4252915
   params = [

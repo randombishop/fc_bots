@@ -3,9 +3,10 @@ from bots.data.bot_history import get_bot_casts
 from bots.utils.format_cast import shorten_text, format_when
 
 
-def get_bot_casts_no_channel(input):
+def fetch(input):
   state = input.state
-  casts = get_bot_casts(state.id, no_channel=True)
+  id = state.get('id')
+  casts = get_bot_casts(id, no_channel=True)
   text = ''
   for c in casts:
     row = '{\n'
@@ -14,15 +15,18 @@ def get_bot_casts_no_channel(input):
     row += f"  when: {format_when(c['casted_at'])}\n"
     row += '}\n'
     text += row
-  state.bot_casts_no_channel = text
   return {
-    'bot_casts_no_channel': state.bot_casts_no_channel
+    'bot_casts_no_channel': text
   }
 
 
 GetBotCastsNoChannel = Tool(
   name="GetBotCastsNoChannel",
-  description="Get the casts of the bot in main feed",
-  func=get_bot_casts_no_channel
+  description="Get the casts posted by yourself (the bot) in the main feed.",
+  metadata={
+    'inputs': ['id'],
+    'outputs': ['bot_casts_no_channel']
+  },
+  func=fetch
 )
 

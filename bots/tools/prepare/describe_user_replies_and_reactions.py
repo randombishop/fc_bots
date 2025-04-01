@@ -1,7 +1,6 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
-from bots.data.casts import get_user_replies_and_reactions
-from bots.utils.format_cast import format_when, shorten_text
+
 
 
 prompt_template = """
@@ -59,12 +58,10 @@ schema = {
 }
 
 
-def describe_user_replies_and_reactions(input):
+def prepare(input):
   state = input.state
   llm = input.llm
-  if state.user_replies_and_reactions_description is not None:
-    return {'log': 'User replies and reactions description already set.'}
-  formatted = state.user_replies_and_reactions
+  formatted = state.get('user_replies_and_reactions')
   if formatted is None or formatted == '':
     return {'log': 'No replies and reactions to analyze.'}
   prompt = state.format(prompt_template)
@@ -72,16 +69,18 @@ def describe_user_replies_and_reactions(input):
   result = call_llm(llm, prompt, instructions, schema)
   description = result['description'] if 'description' in result else ''
   keywords = result['keywords'] if 'keywords' in result else ''
-  state.user_replies_and_reactions_description = description
-  state.user_replies_and_reactions_keywords = keywords
   return {
-    'user_replies_and_reactions_description': state.user_replies_and_reactions_description,
-    'user_replies_and_reactions_keywords': state.user_replies_and_reactions_keywords
+    'user_replies_and_reactions_description': description,
+    'user_replies_and_reactions_keywords': keywords
   }
 
 
 DescribeUserRepliesAndReactions = Tool(
   name="DescribeUserRepliesAndReactions",
-  description="Describe the replies and reactions of a user",
-  func=describe_user_replies_and_reactions
+  description="Describe the replies and reactions of a user.",
+  metadata={
+    'inputs': ['user', 'user_display_name', 'user_bio', 'user_replies_and_reactions'],
+    'outputs': ['user_replies_and_reactions_description', 'user_replies_and_reactions_keywords']
+  },
+  func=prepare
 )

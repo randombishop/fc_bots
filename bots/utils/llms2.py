@@ -20,8 +20,8 @@ def get_llm_img():
 
 def call_llm(llm, prompt, instructions, schema):
   messages = [
-    SystemMessage(instructions),
-    HumanMessage(prompt)
+    SystemMessage(instructions.encode('utf-8', errors='replace').decode('utf-8')),
+    HumanMessage(prompt.encode('utf-8', errors='replace').decode('utf-8'))
   ]
   result = llm.invoke(messages)
   text = result.content
