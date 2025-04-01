@@ -115,8 +115,8 @@ def extract_cast(result, posts_map, index=''):
   text = result[f'tweet{index}'] if f'tweet{index}' in result else None
   if text is None:
     text = ''
-  embed_url = result[f'embed_url{index}'] if f'embed_url{index}' in result else result['embed_url']
-  embed_hash = result[f'embed_hash{index}'] if f'embed_hash{index}' in result else result['embed_hash']
+  embed_url = result[f'embed_url{index}'] if f'embed_url{index}' in result else None
+  embed_hash = result[f'embed_hash{index}'] if f'embed_hash{index}' in result else None
   if len(text)==0 and embed_url is None and embed_hash is None:
     return None
   c = {'text': text}

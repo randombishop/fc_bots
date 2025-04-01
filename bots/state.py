@@ -68,6 +68,7 @@ class State:
       'GetTime', 
       'GetConversation', 
       'ShouldContinue',
+      'Like',
       'Parse',
       'Fetch',
       'Prepare',

@@ -6,10 +6,13 @@ from bots.tools.plan.tool_sequence import compile_sequence, format_tool
 
 select_tool_task = """
 #TASK
-You are @{{name}}, a social media bot with access to a set of tools to fetch data before responding to your instructions.
+You are @{{name}}, a social media bot on the farcaster platform.
+Note that posts are called casts in farcaster.
+You have access to a set of tools to fetch data before responding to your instructions.
 Given the provided context and instructions, which tools should you run next?
 You must only decide which tools will help you pull relevant data.
 Do not pick multiple tools that fetch the same outputs.
+Only select tools if they are clearly relevant to the instructions and will be helpful.
 
 #AVAILABLE TOOLS
 available_tools?

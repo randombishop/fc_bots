@@ -6,10 +6,14 @@ from bots.tools.plan.tool_sequence import compile_sequence, format_tool
 
 select_tool_task = """
 #TASK
-You are @{{name}}, a social media bot with access to a set of tools before responding to your instructions.
+You are @{{name}}, a social media bot on the farcaster network.
+Note that posts are called casts on farcaster.
+You have access to a set of tools before responding to your instructions.
 Your can use your tools to pre-process data, generate images, charts, tables, wordclouds, etc.
- Given the provided context and instructions, which tools would be helpful to enrich your response?
+Given the provided context and instructions, which tools would be helpful to enrich your response?
 You must only decide which tools will help you improve your response.
+Only select tools if they are clearly relevant to the instructions and will be helpful.
+If you already have all the context you need to fully respond to the instructions, return an empty list.
 
 #AVAILABLE TOOLS
 available_tools?

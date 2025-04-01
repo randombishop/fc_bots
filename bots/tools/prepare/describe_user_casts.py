@@ -88,8 +88,8 @@ DescribeUserCasts = Tool(
   name="DescribeUserCasts",
   description="Describe the user's casts",
   metadata={
-    'inputs': ['casts_user'],
-    'outputs': ['user', 'user_display_name', 'user_bio', 'user_casts_description']
+    'inputs': ['user', 'user_display_name', 'user_bio','casts_user'],
+    'outputs': ['user_casts_description']
   },
   func=prepare
 )
