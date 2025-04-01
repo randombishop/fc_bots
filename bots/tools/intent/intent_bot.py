@@ -35,7 +35,7 @@ def select_intent(input):
   state = input.state
   llm = input.llm
   instructions = state.format(instructions_template).replace('available_intents?', get_intents_descriptions())
-  prompt = state.format_conversation()
+  prompt = state.format_all(succint=True)
   result = call_llm(llm, prompt, instructions, schema)
   intent = result['intent'] if 'intent' in result else None
   if intent not in get_intents():

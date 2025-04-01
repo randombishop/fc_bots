@@ -50,7 +50,7 @@ def select_intent(input):
   tools = PARSE_TOOLS+FETCH_TOOLS+PREPARE_TOOLS
   tools = "\n".join([format_tool(tool) for tool in tools])
   instructions = instructions.replace('available_tools?', tools)
-  prompt = state.format_all()
+  prompt = state.format_all(succint=True)
   result = call_llm(llm, prompt, instructions, schema)
   intent = result['intent'] if 'intent' in result else ''
   action_plan = result['intended_action_plan'] if 'intended_action_plan' in result else DEFAULT_ACTION_PLAN
