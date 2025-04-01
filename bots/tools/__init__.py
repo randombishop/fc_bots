@@ -3,7 +3,6 @@ from bots.tools.plan import PLAN_TOOLS
 from bots.tools.parse import PARSE_TOOLS
 from bots.tools.fetch import FETCH_TOOLS
 from bots.tools.prepare import PREPARE_TOOLS
-from bots.tools.compose import COMPOSE_TOOLS
 from bots.tools.check import CHECK_TOOLS
 from bots.tools.memorize import MEMORIZE_TOOLS
 from bots.tools.helpers import HELPERS_TOOLS
@@ -15,7 +14,6 @@ TOOL_MAP = {
   'parse': PARSE_TOOLS,
   'fetch': FETCH_TOOLS,
   'prepare': PREPARE_TOOLS,
-  'compose': COMPOSE_TOOLS,
   'check': CHECK_TOOLS,
   'memorize': MEMORIZE_TOOLS,
   'helpers': HELPERS_TOOLS

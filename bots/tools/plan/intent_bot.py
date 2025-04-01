@@ -5,7 +5,7 @@ from bots.tools.plan.intents import get_intents, get_intents_descriptions, get_a
 
 
 instructions_template = """
-#INSTRUCTIONS
+#TASK
 You are @{{name}}, a social media bot programmed to perform a specific set of actions.
 Given the provided context and instructions, which intent most likely applies?
 Your goal is not to continue the conversation directly, you must only select one of the following intents.
@@ -49,8 +49,8 @@ def select_intent(input):
   } 
   
 
-BotIntent = Tool(
-  name="BotIntent",
+IntentBot = Tool(
+  name="IntentBot",
   description="Select current intent",
   metadata={
     'outputs': ['intent', 'intended_action_plan', 'intended_response_plan']

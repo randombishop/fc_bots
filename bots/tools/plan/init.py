@@ -7,9 +7,9 @@ from bots.data.channels import get_channel_url
 
 def initialize_tools(mode):
   if mode == 'assistant':
-    return ['GetBio', 'GetLore', 'GetStyle', 'GetTime']
+    return ['GetBio', 'GetLore', 'GetStyle', 'GetTime', 'IntentAssistant']
   elif mode == 'bot':
-    return ['GetBio', 'GetLore', 'GetStyle', 'GetTime', 'GetConversation', 'Like', 'BotIntent', 'ShouldContinue']
+    return ['GetBio', 'GetLore', 'GetStyle', 'GetTime', 'GetConversation', 'Like', 'IntentBot', 'ShouldContinue']
   elif mode == 'blueprint':
     return ['GetBio', 'GetLore', 'GetStyle', 'GetTime']
   else:

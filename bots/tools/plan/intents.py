@@ -7,8 +7,8 @@ INTENTS_DESCRIPTIONS = {
 'News': 'Check the news.',
 'Perplexity': 'Ask a question to Perplexity AI.',
 'Pick': 'Pick a post given some criteria.',
-'Psycho': 'Generate a psychoanalysis for a user.',
 'Praise': 'Generate a praise for a user.',
+'Psycho': 'Generate a psychoanalysis for a user.',
 'Roast': 'Generate a roast for a user.',
 'Summary': 'Make a summary about posts.',
 'WhoIs': 'Analyze a user profile and generate a new avatar for them.',
@@ -16,9 +16,11 @@ INTENTS_DESCRIPTIONS = {
 }
 
 ACTION_PLANS = {
-'FavoriteUsers': """Parse the target user id > Get favorite users data, get the user replies and reactions 
+  
+'FavoriteUsers': """Parse the target user id 
+> Get favorite users data, get the user replies and reactions 
 > Render favorite users table 
-> Post about what they like, tag their favorite users, and embed the table as an image.""",
+> Post about what they like, tag their favorite users, and embed the table as an image""",
 
 'MoreLikeThis': """Parse the more-like-this text 
 > Fetch similar posts
@@ -43,15 +45,15 @@ ACTION_PLANS = {
 > Fetch the relevant posts
 > Pick one and comment it""",
 
-'Psycho': """Parse the target user id
-> Fetch the user profile and the user's posts
-> Describe the user's PFP
-> Write a funny psychoanalysis.""",
-
 'Praise': """Parse the target user id
 > Fetch the user profile and the user's posts
 > Generate an avatar for the user
 > Post a praise with the avatar""",
+
+'Psycho': """Parse the target user id
+> Fetch the user profile and the user's posts
+> Describe the user's PFP
+> Write a funny psychoanalysis.""",
 
 'Roast': """Parse the target user id
 > Fetch the user profile and the user's posts
@@ -79,8 +81,17 @@ ACTION_PLANS = {
 
 RESPONSE_PLANS = {
   
+'FavoriteUsers': """Post one tweet about who the user likes and why.
+Embed the table url in embed_url1""",
+  
 'MoreLikeThis': """Use the first tweet for a freestyle intro (with or without an embed, a wordcloud or anything else) 
 then fill embed_hash2 and embed_hash3 with similar posts ids.""",
+
+'MostActiveUsers': """Post one tweet about the most active users in the channel and embed the chart image in embed_url1""",
+
+'News': """Post one tweet about the news and embed the link in embed_url1""",
+
+'Perplexity': """Rephrase the answer from perplexity in your words in one engaging tweetand embed the link in embed_url1""",
 
 'Pick': """Pick a post and comment it.
 Make sure you fill embed_hash1 to embed the post that you picked.""",  
@@ -124,7 +135,7 @@ Post it as a single short tweet and embed the wordcloud URL in embed_url1"""
 DEFAULT_ACTION_PLAN = """
 Parse one parameter
 > Fetch relevant data
-> Optinally prepare some additional media
+> Optionally prepare some additional media
 > Compose a response
 """
 
@@ -145,6 +156,16 @@ def get_intents_descriptions():
   for key in keys:
     ans += f'{key}: {INTENTS_DESCRIPTIONS[key]}\n'
   return ans
+
+def get_intent_examples():
+  examples = ''
+  for key in get_intents():
+    examples += f'Example: {INTENTS_DESCRIPTIONS[key]}\n'
+    examples += f'> intent:\n{key}\n'
+    examples += f'> action_plan:\n{ACTION_PLANS[key]}\n'
+    examples += f'> response _plan:\n{RESPONSE_PLANS[key]}\n'
+    examples += '\n'
+  return examples
 
 def get_action_plan(intent):
   return ACTION_PLANS[intent] if intent is not None and intent in ACTION_PLANS else DEFAULT_ACTION_PLAN

@@ -91,6 +91,9 @@ class State:
               v = v[:256] + '...'
             ans += f"{v}\n\n"
     ans += '\n\n'
+    channel = self.get_current_channel()
+    if channel is not None:
+      ans += f"#CHANNEL\n{channel}\n\n"
     conversation = self.get('conversation')
     if conversation is not None and len(conversation)>0:
       ans += f"#CONVERSATION\n{conversation}\n"
