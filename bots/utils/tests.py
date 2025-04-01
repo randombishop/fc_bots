@@ -3,14 +3,15 @@ from bots.agent import invoke_agent
 from bots.state import State
 from bots.tool_input import ToolInput
 from bots.utils.llms2 import get_llm, get_llm_img
-
+from bots.data.app import get_bot_character
 
 bot_id = int(os.getenv('TEST_BOT'))
 
-def make_tool_input(params):
+def make_tool_input(params={}):
   mock = {'id': bot_id}
   mock.update(params)
   state = State()
+  state.character = get_bot_character(bot_id)
   state.tools_log = [('Mock', mock)]
   tool_input = ToolInput(state, get_llm(), get_llm_img())
   return tool_input
