@@ -2,7 +2,7 @@ from bots.tools.parse import PARSE_TOOLS
 from bots.tools.fetch import FETCH_TOOLS
 from bots.tools.prepare import PREPARE_TOOLS
 from bots.tools.helpers import HELPERS_TOOLS
-from bots.tools.plan.pick_provider import pick_provider
+from bots.tools.helpers.pick_provider import pick_provider
 
 
 tool_list = PARSE_TOOLS + FETCH_TOOLS + PREPARE_TOOLS + HELPERS_TOOLS

@@ -4,7 +4,7 @@ from bots.utils.llms2 import call_llm
 from bots.tools.parse import PARSE_TOOLS
 from bots.tools.fetch import FETCH_TOOLS
 from bots.tools.prepare import PREPARE_TOOLS
-from bots.tools.plan.tool_sequence import format_tool
+from bots.tools.helpers.tool_sequence import format_tool
 from bots.tools.intent.intents import get_intent_examples, DEFAULT_ACTION_PLAN, DEFAULT_RESPONSE_PLAN
 
 instructions_template = """

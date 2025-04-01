@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.tools.fetch import FETCH_TOOLS
-from bots.tools.plan.tool_sequence import filter_suggested_tools, clean_tools, format_tool
+from bots.tools.helpers.tool_sequence import filter_suggested_tools, clean_tools, format_tool
 
 
 select_tool_task = """
