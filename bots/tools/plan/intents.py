@@ -108,7 +108,10 @@ Be respectful, and do not use sexual, religious or political references.""",
 
 'Summary': """Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
 Focus on posts that are genuine, interesting, funny, or informative.
-Don't reference websites and don't include any urls in your summary.""",
+Don't reference websites and don't include any urls in your summary.
+Post your summary intro and embed the wordcloud in the first tweet.
+Then continue your summary in tweet2 and tweet3 and include links to the most interesting posts in embed_hash2 and embed_hash3.
+""",
 
 'WordCloud': """Include the wordcloud URL with the first tweet (embed_url1)"""
 
