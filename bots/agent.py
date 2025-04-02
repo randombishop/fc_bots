@@ -114,8 +114,8 @@ def invoke_agent(run_name, mode, bot_id,
       'attachment_hash': attachment_hash,
       'root_parent_url': root_parent_url,
       'channel': channel,
-      'blueprint': blueprint,
-      'user': user
+      'user': user,
+      'blueprint': blueprint
   }
   assistant = Agent()
   executor = AgentExecutor(agent=assistant, tools=assistant._tools, max_iterations=25)

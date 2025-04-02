@@ -3,15 +3,14 @@ BLUEPRINTS = {
     'GetBio', 
     'GetLore', 
     'GetStyle', 
-    'GetTime'
-    'ParseUser', 
+    'GetTime', 
     'GetUserProfile', 
     'GetCastsUser', 
     'GetUserRepliesAndReactions', 
     'DescribePfp', 
     'DescribeUserCasts', 
     'DescribeUserRepliesAndReactions', 
-    'GenerateAvatar', 
+    'CreateAvatar',
     'SaveUserProfile'
   ]
 }

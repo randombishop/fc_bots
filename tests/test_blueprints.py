@@ -7,5 +7,11 @@ from bots.utils.tests import run_agent
 class TestBlueprints(unittest.TestCase):
       
   def test1(self):
-    pass
+    state = run_agent(
+      test_id='TestBlueprints:test1',
+      mode='blueprint',
+      blueprint='WhoIs',
+      user='randombishop'
+    )
+    
   
