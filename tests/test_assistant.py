@@ -26,6 +26,24 @@ Once you have the answer from perplexity and selected a good URL, post something
 Make sure your post will be engaging for the channel audience, and double check that the url you embed is not off-topic.
 """
 
+prompt4 = """
+First, study the channel activity carefully and summarize it.
+Then generate an original, creative and engaging post.
+It can be a question, an affirmation, a joke or a haiku.
+If something is at the intersection of the channel activity and your character (bio and lore), it will be a great post idea.
+Make sure your post is inline with the recent channel activity BUT DO NOT COPY OTHER POSTS.
+Avoid repeating things you already posted.
+"""
+
+prompt5 = """
+Your goal is to be a polarity detector in the channel.
+Use recent channel activity to generate a search phrase that will be interesting to the channel audience and can yield opposed opinions.
+Once your search phrase is ready, use it to search for casts.
+Once you have your posts, classify them into 2 opposed camps by any criteria you want, then make a thread about it.
+In the first post, describe the opposition that you discovered, maybe in the form of a question, and embed a wordcloud in embed_url1.
+Then in the second and third posts, describe each side, and embed an example post to illustrate the categories in embed_hash2 and embed_hash3.
+"""
+
 class TestAssistant(unittest.TestCase):
   
   def test1(self):
@@ -45,4 +63,18 @@ class TestAssistant(unittest.TestCase):
   def test3(self):
     channel = 'mfers'
     state = run_agent(test_id='TestAssistant:3', mode='assistant', request=prompt3, channel=channel)
+    self.assertIn('GetCastsChannel', state.get_tools_sequence())
+    self.assertIn('CallPerplexity', state.get_tools_sequence())
+    
+  def test4(self):
+    channel = 'mfers'
+    state = run_agent(test_id='TestAssistant:4', mode='assistant', request=prompt4, channel=channel)
+    self.assertIn('GetCastsChannel', state.get_tools_sequence())
+    
+  def test5(self):
+    channel = 'mfers'
+    state = run_agent(test_id='TestAssistant:5', mode='assistant', request=prompt5, channel=channel)
+    self.assertIn('GetCastsSearch', state.get_tools_sequence())
+    
+    
     
