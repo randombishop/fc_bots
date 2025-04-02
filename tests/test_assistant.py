@@ -2,13 +2,8 @@ from dotenv import load_dotenv
 load_dotenv()
 import unittest
 from bots.utils.tests import run_agent
+from bots.data.assistants import get_bot_prompt
 
-
-prompt1 = """
-Post about the most active users in a channel in a way that fits the channel spirit.
-Tag the top 3 and show them some appreciation for their contributions.
-Embed the activity chart url.
-"""
 
 prompt2 = """
 Pick a random user and post a thread to praise them.
@@ -44,37 +39,62 @@ In the first post, describe the opposition that you discovered, maybe in the for
 Then in the second and third posts, describe each side, and embed an example post to illustrate the categories in embed_hash2 and embed_hash3.
 """
 
+prompt6 = """
+Your goal is to post an interesting news story about classic cars in channel /retroparc.
+Create a search phrase that will be interesting to the channel audience and can yield news about classic cars.
+Use the search phrase to check out the news then compose an engaging cast about it.
+Include a link to the story in embed_url1.
+"""
+
+
 class TestAssistant(unittest.TestCase):
   
   def test1(self):
+    prompt = get_bot_prompt(1)
+    request = prompt['prompt']
     channel = 'mfers'
-    state = run_agent(test_id='TestAssistant:1', mode='assistant', request=prompt1, channel=channel)
+    state = run_agent(test_id='TestAssistant:1', mode='assistant', request=request, channel=channel)
     self.assertIn('GetMostActiveUsers', state.get_tools_sequence())
     self.assertIn('CreateMostActiveUsersChart', state.get_tools_sequence())
     
   def test2(self):
+    prompt = get_bot_prompt(2)
+    request = prompt['prompt']
     channel = 'mfers'
-    state = run_agent(test_id='TestAssistant:2', mode='assistant', request=prompt2, channel=channel)
+    state = run_agent(test_id='TestAssistant:2', mode='assistant', request=request, channel=channel)
     self.assertIn('SelectRandomUser', state.get_tools_sequence())
     self.assertIn('GetUserProfile', state.get_tools_sequence())
     self.assertIn('GetCastsUser', state.get_tools_sequence())
     self.assertIn('CreateAvatar', state.get_tools_sequence())
     
   def test3(self):
+    prompt = get_bot_prompt(3)
+    request = prompt['prompt']
     channel = 'mfers'
-    state = run_agent(test_id='TestAssistant:3', mode='assistant', request=prompt3, channel=channel)
+    state = run_agent(test_id='TestAssistant:3', mode='assistant', request=request, channel=channel)
     self.assertIn('GetCastsChannel', state.get_tools_sequence())
     self.assertIn('CallPerplexity', state.get_tools_sequence())
     
   def test4(self):
+    prompt = get_bot_prompt(4)
+    request = prompt['prompt']
     channel = 'mfers'
-    state = run_agent(test_id='TestAssistant:4', mode='assistant', request=prompt4, channel=channel)
+    state = run_agent(test_id='TestAssistant:4', mode='assistant', request=request, channel=channel)
     self.assertIn('GetCastsChannel', state.get_tools_sequence())
     
   def test5(self):
+    prompt = get_bot_prompt(5)
+    request = prompt['prompt']
     channel = 'mfers'
-    state = run_agent(test_id='TestAssistant:5', mode='assistant', request=prompt5, channel=channel)
+    state = run_agent(test_id='TestAssistant:5', mode='assistant', request=request, channel=channel)
     self.assertIn('GetCastsSearch', state.get_tools_sequence())
+    
+  def test6(self):
+    prompt = get_bot_prompt(6)
+    request = prompt['prompt']
+    channel = prompt['channel']
+    state = run_agent(test_id='TestAssistant:6', mode='assistant', request=request, channel=channel)
+    self.assertIn('GetNews', state.get_tools_sequence())
     
     
     
