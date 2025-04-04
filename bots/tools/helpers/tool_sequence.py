@@ -3,6 +3,7 @@ from bots.tools.fetch import FETCH_TOOLS
 from bots.tools.prepare import PREPARE_TOOLS
 from bots.tools.helpers import HELPERS_TOOLS
 from bots.tools.helpers.pick_provider import pick_provider
+from bots.tools.helpers.tool_io import missing_inputs, all_outputs_already_set
 
 
 tool_list = PARSE_TOOLS + FETCH_TOOLS + PREPARE_TOOLS + HELPERS_TOOLS
@@ -18,29 +19,11 @@ for t in tool_list:
 
 def get_missing_inputs(tool_name, available_data, inputs):
   tool = tool_map[tool_name]
-  metadata = tool.metadata
-  if metadata is None:
-    return [], None
-  inputs = metadata['inputs'] if 'inputs' in metadata else []
-  require = metadata['require_inputs'] if 'require_inputs' in metadata else 'all'
-  if require not in ['all', 'any']:
-    raise Exception('require_inputs must be "all" or "any"')
-  if len(inputs) == 0:
-    return [], None
-  elif require == 'all':
-    if all(x in available_data for x in inputs):
-      return [], None
-    else:
-      return [x for x in inputs if x not in available_data], 'all'
-  elif require == 'any':
-    if any(x in available_data for x in inputs):
-      return [], None
-    else:
-      return inputs, 'any'
+  return missing_inputs(tool, available_data, inputs)
   
 def are_all_outputs_already_set(tool_name, available_data):
   tool = tool_map[tool_name]
-  return all(x in available_data for x in tool.metadata['outputs'])
+  return all_outputs_already_set(tool, available_data)
 
 def are_all_inputs_already_set(tool_name, available_data):
   missing_inputs, _ = get_missing_inputs(tool_name, available_data, [])

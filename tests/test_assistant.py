@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import unittest
 from bots.utils.tests import run_agent
-from bots.data.assistants import get_bot_prompt
+from bots.data.app import get_bot_prompt
 
 
 class TestAssistant(unittest.TestCase):

@@ -6,6 +6,10 @@ from bots.utils.llms2 import get_llm, get_llm_img
 from bots.state import State
 from bots.tool_input import ToolInput
 from bots.tools import TOOL_LIST
+from bots.tools.helpers.tool_io import missing_inputs, all_outputs_already_set
+
+
+TOOL_MAP = {x.name: x for x in TOOL_LIST}
 
 
 class Agent(BaseSingleActionAgent):
@@ -70,14 +74,21 @@ class Agent(BaseSingleActionAgent):
     else:
       return AgentFinish(return_values={"output": self._state}, log='done')
   
-  def next_action(self):
+  def next_action(self, intermediate_steps, callbacks, **kwargs):
     if not self._state.get('should_continue'):
       return AgentFinish(return_values={"output": self._state}, log='done')
     if self._state.get('todo') is not None and len(self._state.get('todo')) > 0:
-      return AgentAction(
-        tool=self._state.get('todo').pop(0),
-        tool_input=self.get_tool_input(),
-        log='')
+      tool_name = self._state.get('todo').pop(0)
+      tool = TOOL_MAP[tool_name]
+      available_data = self._state.get_available_data()
+      inputs, _ = missing_inputs(tool, available_data, [])
+      if len(inputs) > 0:
+        return self.plan(intermediate_steps, callbacks, **kwargs)
+      else:
+        return AgentAction(
+          tool=tool_name,
+          tool_input=self.get_tool_input(),
+          log='')
     elif self._state.get('mode') in ['bot', 'assistant']:
       return self.next_phase()
     else:
@@ -93,7 +104,7 @@ class Agent(BaseSingleActionAgent):
         tool_input={'input': input},
         log='')
     self._state.tools_log = intermediate_steps
-    return self.next_action()
+    return self.next_action(intermediate_steps, callbacks, **kwargs)
     
   async def aplan(self, intermediate_steps, **kwargs):
     return self.plan(intermediate_steps, **kwargs)
