@@ -64,7 +64,8 @@ class State:
     return ans
 
   def format_all(self, succint=False):
-    skip_tools = ['InitState', 
+    skip_tools = [
+      'InitState', 
       'GetBio', 
       'GetLore', 
       'GetStyle', 
@@ -72,6 +73,7 @@ class State:
       'GetConversation', 
       'ShouldContinue',
       'Like',
+      'Preload',
       'Parse',
       'Fetch',
       'Prepare',

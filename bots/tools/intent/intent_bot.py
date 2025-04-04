@@ -13,6 +13,7 @@ Pick one goal from the available options if it's explicitly asked for in the req
 Do not pick the roast or psycho unless the user clearly asks for it, if not sure, avoid roast and psycho.
 Focus on the intent of the last request, you can use the conversation for context but you are trying to decide the main intent here.
 If no option is applicable, respond with {"intent": null}
+Do not respond to the user, your task is only to figure out the intent.
 
 #AVAILABLE OPTIONS:
 available_intents?

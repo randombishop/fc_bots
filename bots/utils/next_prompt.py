@@ -64,7 +64,9 @@ def get_channel_ranking(bot_id, df_channels):
   result = call_llm(llm, prompt, instructions, schema)
   current_trends_summary = result['current_trends_summary']
   reasoning = result['reasoning']
-  channel_ranking = result['channel_ranking'].split(',')
+  channel_ranking = result['channel_ranking']
+  if isinstance(channel_ranking, str):
+    channel_ranking = channel_ranking.split(',')
   channel_ranking = [c.strip() for c in channel_ranking]
   channel_ranking = [c for c in channel_ranking if c in channels]
   df_channel_ranking = pandas.DataFrame([{'channel':channel_ranking[i], 'relevance_ranking':i+1} for i in range(len(channel_ranking))])

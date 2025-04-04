@@ -14,6 +14,7 @@ Given the provided context and instructions, your task is to come up with a plan
 Your goal is to understand the intent of your instructions, prepare your action plan, and think about what you want to post.  
 You are provided with a series of examples of plans for reference, but you don't have to follow them exactly.
 You are also provided with a list of available tools so that you know your possibilities.
+Do not respond to the user, your task is only to plan the next tools to run.
 Output 3 fields in json format: 
 - intent: one word title for your plan
 - intended_action_plan: the steps you plan to take

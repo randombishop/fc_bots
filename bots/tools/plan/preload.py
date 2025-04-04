@@ -12,6 +12,7 @@ Before planning your actions and response, you have a access to a first series o
 You can run them if you would like to gain access to preliminary data such as globally trending posts, your previous posts, channel activity, etc.
 Avoid calling tools if you don't see a clear benefit as they can slow your response time unnecessarily.
 If none of the proposed tools would be useful for your next steps, you can skip this step and return an empty list.
+Do not respond to the user, your task is only to select the next tools to run.
 
 #AVAILABLE TOOLS
 available_tools?

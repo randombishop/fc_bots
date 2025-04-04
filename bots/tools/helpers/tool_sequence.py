@@ -87,7 +87,12 @@ def compile_tool(tool_name, tool_chain, available_data, llm, state, log):
   log.append(f'Tool chain: {tool_chain}')
 
 def clean_tools(tool_names, valid_names):
-  tool_names = tool_names.split(',') if tool_names is not None else []
+  if isinstance(tool_names, str):
+    tool_names = tool_names.split(',') if tool_names is not None else []
+  elif isinstance(tool_names, list):
+    tool_names = tool_names
+  else:
+    raise Exception(f"Invalid tool_names: {tool_names}")
   tool_names = [x.strip() for x in tool_names]
   tool_names = [x for x in tool_names if x in valid_names]
   return tool_names

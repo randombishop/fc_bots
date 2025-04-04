@@ -14,6 +14,7 @@ Given the provided context and instructions, which tools would be helpful to enr
 You must only decide which tools will help you improve your response.
 Only select tools if they are clearly relevant to the instructions and will be helpful.
 If you already have all the context you need to fully respond to the instructions, return an empty list.
+Do not respond to the user, your task is only to select the next tools to run.
 
 #AVAILABLE TOOLS
 available_tools?

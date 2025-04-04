@@ -14,6 +14,7 @@ You must only decide which tools will help you pull relevant data.
 Do not pick multiple tools that fetch the same outputs.
 Focus on the instructions intent and the parameters you already parsed to figure out which tools will provide useful context.
 If none of the proposed tools would be useful for your next steps, you can skip this step and return an empty list.
+Do not respond to the user, your task is only to select the next tools to run.
 
 #AVAILABLE TOOLS
 available_tools?

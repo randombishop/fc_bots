@@ -69,6 +69,8 @@ def prepare(input):
   result = call_llm(llm, prompt, instructions, schema)
   description = result['description'] if 'description' in result else ''
   keywords = result['keywords'] if 'keywords' in result else ''
+  if isinstance(keywords, list):
+    keywords = ','.join(keywords)
   return {
     'user_replies_and_reactions_description': description,
     'user_replies_and_reactions_keywords': keywords
