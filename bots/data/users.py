@@ -79,7 +79,7 @@ def get_user_profile(fid):
   
 def get_user_profiles():
   with get_session() as session:
-    stmt = user_profile_table.select().with_only_columns([user_profile_table.c.fid, user_profile_table.c.user_name])
+    stmt = user_profile_table.select(user_profile_table.c.fid, user_profile_table.c.user_name)
     result = session.execute(stmt).mappings().fetchall()
     return result
   
