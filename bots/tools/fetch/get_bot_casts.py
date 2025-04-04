@@ -1,27 +1,20 @@
 from langchain.agents import Tool
 from bots.data import bot_history
-from bots.utils.format_cast import shorten_text, format_when
+from bots.utils.format_cast import format_bot_casts
 
 
 def fetch(input):
   state = input.state
   id = state.get('id')
+  name = state.get('name')
   casts = bot_history.get_bot_casts(id)
-  text = ''
-  for c in casts:
-    row = '{\n'
-    row += f"  prompt: {c['action_prompt']}\n"
-    row += f"  post: {shorten_text(c['casted_text'])}\n"
-    row += f"  channel: {c['action_channel']}\n"
-    row += f"  when: {format_when(c['casted_at'])}\n"
-    row += '}\n'
-    text += row
+  text = format_bot_casts(casts, name)
   return {'bot_casts': text}
 
 
 GetBotCasts = Tool(
   name="GetBotCasts",
-  description="Get recent casts posted by yourself (the bot).",
+  description="Get all recent casts posted by yourself (the bot).",
   metadata={
     'inputs': ['id'],
     'outputs': ['bot_casts']

@@ -77,6 +77,12 @@ def get_user_profile(fid):
     result = session.execute(stmt).mappings().fetchone()
     return result
   
+def get_user_profiles():
+  with get_session() as session:
+    stmt = user_profile_table.select(['fid', 'username'])
+    result = session.execute(stmt).mappings().fetchall()
+    return result
+  
 def get_user_profile_embed(fid, part):
   with get_session() as session:
     stmt = user_profile_embed_table.select().where(user_profile_embed_table.c.fid == fid).where(user_profile_embed_table.c.part == part)
