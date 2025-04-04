@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.tools.parse import PARSE_TOOLS
-from bots.tools.plan.tool_sequence import clean_tools, compile_sequence, format_tool
+from bots.tools.helpers.tool_sequence import clean_tools, compile_sequence, format_tool
 
 
 select_tool_task = """
@@ -11,6 +11,7 @@ Given the provided context and instructions, which parsers should we run first?
 You will run other tools later to fetch and prepare your response.
 For now, focus only on the parameters that you will need and select the best parsers to set them.
 You can select one or multiple parsers if needed.
+Do not respond to the user, your task is only to select the next tools to run.
 
 #AVAILABLE TOOLS
 available_tools?

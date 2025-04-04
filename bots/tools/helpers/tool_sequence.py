@@ -2,7 +2,8 @@ from bots.tools.parse import PARSE_TOOLS
 from bots.tools.fetch import FETCH_TOOLS
 from bots.tools.prepare import PREPARE_TOOLS
 from bots.tools.helpers import HELPERS_TOOLS
-from bots.tools.plan.pick_provider import pick_provider
+from bots.tools.helpers.pick_provider import pick_provider
+from bots.tools.helpers.tool_io import missing_inputs, all_outputs_already_set
 
 
 tool_list = PARSE_TOOLS + FETCH_TOOLS + PREPARE_TOOLS + HELPERS_TOOLS
@@ -18,29 +19,11 @@ for t in tool_list:
 
 def get_missing_inputs(tool_name, available_data, inputs):
   tool = tool_map[tool_name]
-  metadata = tool.metadata
-  if metadata is None:
-    return [], None
-  inputs = metadata['inputs'] if 'inputs' in metadata else []
-  require = metadata['require_inputs'] if 'require_inputs' in metadata else 'all'
-  if require not in ['all', 'any']:
-    raise Exception('require_inputs must be "all" or "any"')
-  if len(inputs) == 0:
-    return [], None
-  elif require == 'all':
-    if all(x in available_data for x in inputs):
-      return [], None
-    else:
-      return [x for x in inputs if x not in available_data], 'all'
-  elif require == 'any':
-    if any(x in available_data for x in inputs):
-      return [], None
-    else:
-      return inputs, 'any'
+  return missing_inputs(tool, available_data, inputs)
   
 def are_all_outputs_already_set(tool_name, available_data):
   tool = tool_map[tool_name]
-  return all(x in available_data for x in tool.metadata['outputs'])
+  return all_outputs_already_set(tool, available_data)
 
 def are_all_inputs_already_set(tool_name, available_data):
   missing_inputs, _ = get_missing_inputs(tool_name, available_data, [])
@@ -104,7 +87,12 @@ def compile_tool(tool_name, tool_chain, available_data, llm, state, log):
   log.append(f'Tool chain: {tool_chain}')
 
 def clean_tools(tool_names, valid_names):
-  tool_names = tool_names.split(',') if tool_names is not None else []
+  if isinstance(tool_names, str):
+    tool_names = tool_names.split(',') if tool_names is not None else []
+  elif isinstance(tool_names, list):
+    tool_names = tool_names
+  else:
+    raise Exception(f"Invalid tool_names: {tool_names}")
   tool_names = [x.strip() for x in tool_names]
   tool_names = [x for x in tool_names if x in valid_names]
   return tool_names

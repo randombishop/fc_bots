@@ -63,6 +63,6 @@ class TestIntents(unittest.TestCase):
     self.assertEqual(state.get('intent'), 'WhoIs')
     
   def test_word_cloud(self):
-    request = "Make a wordcloud for user @vitalik.eth"
+    request = "Make a wordcloud for user @dwr.eth"
     state = run_agent(test_id='TestActionSelection:word_cloud', mode='bot',request=request)
     self.assertEqual(state.get('intent'), 'WordCloud')

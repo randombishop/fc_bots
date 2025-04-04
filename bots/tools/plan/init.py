@@ -3,15 +3,17 @@ from bots.data.app import get_bot_character
 from bots.utils.llms import get_max_capactity
 from bots.data.users import get_username, get_fid
 from bots.data.channels import get_channel_url
+from bots.tools.blueprint.blueprints import BLUEPRINTS
 
-
-def initialize_tools(mode):
+def initialize_tools(mode, blueprint):
   if mode == 'assistant':
     return ['GetBio', 'GetLore', 'GetStyle', 'GetTime']
   elif mode == 'bot':
     return ['GetBio', 'GetLore', 'GetStyle', 'GetTime', 'GetConversation', 'Like', 'ShouldContinue']
   elif mode == 'blueprint':
-    return ['GetBio', 'GetLore', 'GetStyle', 'GetTime']
+    if blueprint not in BLUEPRINTS:
+      raise Exception(f"Blueprint {blueprint} not found")
+    return BLUEPRINTS[blueprint]
   else:
     raise Exception(f"Agent mode {mode} not found")
 
@@ -45,11 +47,12 @@ def init(input):
   if 'channel' in input and input['channel'] is not None:
     ans['channel'] = input['channel']
     ans['channel_url'] = get_channel_url(ans['channel'])
-  if 'blueprint' in input and input['blueprint'] is not None:
-    ans['blueprint'] = input['blueprint']
   ans['should_continue'] = True
   ans['max_rows'] = get_max_capactity()
-  ans['todo'] = initialize_tools(mode)
+  blueprint = input['blueprint'] if 'blueprint' in input else None
+  if blueprint is not None:
+    ans['blueprint'] = blueprint
+  ans['todo'] = initialize_tools(mode, blueprint)
   return ans
   
 

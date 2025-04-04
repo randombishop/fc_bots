@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.tools.fetch import FETCH_TOOLS
-from bots.tools.plan.tool_sequence import clean_tools, compile_sequence, format_tool
+from bots.tools.helpers.tool_sequence import clean_tools, compile_sequence, format_tool
 
 
 select_tool_task = """
@@ -14,6 +14,7 @@ You must only decide which tools will help you pull relevant data.
 Do not pick multiple tools that fetch the same outputs.
 Focus on the instructions intent and the parameters you already parsed to figure out which tools will provide useful context.
 If none of the proposed tools would be useful for your next steps, you can skip this step and return an empty list.
+Do not respond to the user, your task is only to select the next tools to run.
 
 #AVAILABLE TOOLS
 available_tools?

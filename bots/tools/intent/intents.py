@@ -8,8 +8,8 @@ INTENTS_DESCRIPTIONS = {
 'Perplexity': 'Ask a question to Perplexity AI.',
 'Pick': 'Pick a post given some criteria.',
 'Praise': 'Generate a praise for a user.',
-'Psycho': 'Generate a psychoanalysis for a user.',
-'Roast': 'Generate a roast for a user.',
+'Psycho': 'Generate a friendly and parody psychoanalysis for a user.',
+'Roast': 'Generate a friendly roast for a user.',
 'Summary': 'Make a summary about posts.',
 'WhoIs': 'Analyze a user profile and generate a new avatar for them.',
 'WordCloud': 'Make a word cloud.'

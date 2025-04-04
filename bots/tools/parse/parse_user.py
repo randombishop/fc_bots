@@ -10,7 +10,6 @@ Based on the provided conversation, who should your tools target?
 You must only extract the user parameter so that you can set the user parameter.
 Users typically start with @, but not always.
 If the request is about self or uses a pronoun, study the context and instructions carefully to figure out the intended user.
-If you decide to target a random user, set user to "*"
 
 #RESPONSE FORMAT:
 {
@@ -30,13 +29,9 @@ def parse(input):
   parse_prompt = state.format_all()
   parse_instructions = state.format(parse_user_instructions_template)
   params = call_llm(llm, parse_prompt, parse_instructions, parse_user_schema)
-  if params['user'] == '*':
-    return {
-      'user_fid': None,
-      'user': '*',
-      'parse_user_log': 'Random user selected'
-    }
   fid, user_name = read_user(params, fid_origin=state.get('fid_origin'), default_to_origin=False)
+  if fid is None:
+    user_name = None
   return {
     'user_fid': fid,
     'user': user_name

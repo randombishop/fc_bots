@@ -8,8 +8,15 @@ from bots.utils.json_cleaner import clean_json
 
 
 def get_llm():
-  model = "gemini-1.5-flash-002"
-  llm = ChatVertexAI(model=model)
+  model = "gemini-2.0-flash-001"
+  llm = ChatVertexAI(model=model, safety_settings=[
+    {"category": "HARM_CATEGORY_DEROGATORY", "threshold": 4},
+    {"category": "HARM_CATEGORY_TOXICITY", "threshold": 4},
+    {"category": "HARM_CATEGORY_MEDICAL", "threshold": 4},
+    {"category": "HARM_CATEGORY_VIOLENCE", "threshold": 3},
+    {"category": "HARM_CATEGORY_SEXUAL", "threshold": 2},
+    {"category": "HARM_CATEGORY_DANGEROUS", "threshold": 2}
+  ])
   return llm
 
 
@@ -26,14 +33,10 @@ def call_llm(llm, prompt, instructions, schema):
   result = llm.invoke(messages)
   text = result.content
   text = clean_json(text)
-  # TODO: check that result is compatible with schema 
-  # Maybe run a LLM to fix it if not?
   try:
     result = json5.loads(text)
   except:
-    raise Exception(f"Error parsing LLM response")
-  if 'error' in result and len(result['error']) > 0:
-    raise Exception(result['error'])
+    result = {}
   return result
 
 

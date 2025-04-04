@@ -139,3 +139,35 @@ def extract_cast(result, posts_map, index=''):
       c['mentions_ats'] = mentions_ats
       c['mentions_pos'] = mentions_positions
   return c
+
+
+def format_bot_casts(casts, name):
+  text = ''
+  for c in casts:
+    row = f'## @{name} posted'
+    if c['action_channel'] is not None:
+      row += f" in {c['action_channel']}"
+    row += f" {format_when(c['casted_at'])}:\n"
+    row += f"{shorten_text(c['casted_text'])}\n"
+    text += row+'\n'
+  return text
+
+
+def format_trending(casts):
+  text = ''
+  for s in casts:
+    cast_text = s['text']
+    if cast_text is None:
+      cast_text = ''
+    else:
+      cast_text = cast_text.replace('\n', ' ')
+      if len(cast_text) > 500:
+        cast_text = cast_text[:500]+'...'
+    row = f"## @{s['username']} posted {format_when(s['timestamp'])}:\n{shorten_text(cast_text)}"
+    if s['embed_text'] is not None and len(s['embed_text']) > 0:
+      embed_text = shorten_text(s['embed_text'])
+      embed_username = s['embed_username']
+      row += f" (quoting @{embed_username}: {embed_text})"
+    row += '\n'
+    text += row+'\n'
+  return text

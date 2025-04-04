@@ -18,36 +18,40 @@ def format_embed(embed):
 
 def memorize(input):
   state = input.state
-  if state.action not in ['WhoIs', 'Praise']:
-    return {'log': 'No user profile to save'}
-  bio_text = state.user_display_name + '\n' + state.user_bio \
-              if state.user_bio is not None else None
+  bio_text = ''
+  if state.get('user_display_name') is not None:
+    bio_text += state.get('user_display_name') + '\n'
+  if state.get('user_bio') is not None:
+    bio_text += state.get('user_bio')
+  bio_text = bio_text.strip()
   bio_embed = get_embed(bio_text)
-  pfp_embed = get_embed(state.user_pfp_description)
-  casts_embed = get_embed(state.user_casts_description)
-  engagement_text = state.user_replies_and_reactions_description + '\n' + \
-                    state.user_replies_and_reactions_keywords \
-                    if state.user_replies_and_reactions_description is not None else None
+  pfp_embed = get_embed(state.get('user_pfp_description'))
+  casts_embed = get_embed(state.get('user_casts_description'))
+  engagement_text = ''
+  if state.get('user_replies_and_reactions_description') is not None:
+    engagement_text += state.get('user_replies_and_reactions_description') + '\n'
+  if state.get('user_replies_and_reactions_keywords') is not None:
+    engagement_text += state.get('user_replies_and_reactions_keywords')
   engagement_embed = get_embed(engagement_text)
-  avatar_embed = get_embed(state.user_avatar_prompt)
+  avatar_embed = get_embed(state.get('user_avatar_prompt'))
   profile = {
-      'fid': state.user_fid,
-      'user_name': state.user,
-      'display_name': state.user_display_name,
-      'bio': state.user_bio,
-      'pfp_url': state.user_pfp_url,
-      'pfp_desc': state.user_pfp_description,
-      'casts_desc': state.user_casts_description,
-      'engagement_desc': state.user_replies_and_reactions_description,
-      'engagement_keywords': state.user_replies_and_reactions_keywords,
-      'avatar_url': state.user_avatar,
-      'avatar_desc': state.user_avatar_prompt,
-      'num_followers': state.user_followers,
-      'num_following': state.user_following       
+      'fid': state.get('user_fid'),
+      'user_name': state.get('user'),
+      'display_name': state.get('user_display_name'),
+      'bio': state.get('user_bio'),
+      'pfp_url': state.get('user_pfp_url'),
+      'pfp_desc': state.get('user_pfp_description'),
+      'casts_desc': state.get('user_casts_description'),
+      'engagement_desc': state.get('user_replies_and_reactions_description'),
+      'engagement_keywords': state.get('user_replies_and_reactions_keywords'),
+      'avatar_url': state.get('user_avatar'),
+      'avatar_desc': state.get('user_avatar_prompt'),
+      'num_followers': state.get('user_followers'),
+      'num_following': state.get('user_following')       
   }
   save_user_profile(profile)
   embeds = {
-    'fid': state.user_fid,
+    'fid': state.get('user_fid'),
     'bio_embed': format_embed(bio_embed),
     'pfp_embed': format_embed(pfp_embed),
     'casts_embed': format_embed(casts_embed),
@@ -60,6 +64,6 @@ def memorize(input):
 
 SaveUserProfile = Tool(
   name="SaveUserProfile",
-  func=memorize,
-  description="Save the user profile in long term memory"
+  description="Save the user profile in long term memory",
+  func=memorize
 )

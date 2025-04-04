@@ -4,7 +4,7 @@ from bots.utils.llms2 import call_llm
 from bots.tools.parse import PARSE_TOOLS
 from bots.tools.fetch import FETCH_TOOLS
 from bots.tools.prepare import PREPARE_TOOLS
-from bots.tools.plan.tool_sequence import format_tool
+from bots.tools.helpers.tool_sequence import format_tool
 from bots.tools.intent.intents import get_intent_examples, DEFAULT_ACTION_PLAN, DEFAULT_RESPONSE_PLAN
 
 instructions_template = """
@@ -14,6 +14,7 @@ Given the provided context and instructions, your task is to come up with a plan
 Your goal is to understand the intent of your instructions, prepare your action plan, and think about what you want to post.  
 You are provided with a series of examples of plans for reference, but you don't have to follow them exactly.
 You are also provided with a list of available tools so that you know your possibilities.
+Do not respond to the user, your task is only to plan the next tools to run.
 Output 3 fields in json format: 
 - intent: one word title for your plan
 - intended_action_plan: the steps you plan to take

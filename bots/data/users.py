@@ -1,5 +1,5 @@
 import json
-from sqlalchemy import Table
+from sqlalchemy import Table, select
 from bots.data.pg import engine, metadata, get_session
 from bots.data.wield import get_user_info_by_fid, get_user_info_by_name
 from bots.data.dune import run_query
@@ -75,6 +75,12 @@ def get_user_profile(fid):
   with get_session() as session:
     stmt = user_profile_table.select().where(user_profile_table.c.fid == fid)
     result = session.execute(stmt).mappings().fetchone()
+    return result
+  
+def get_user_profiles():
+  with get_session() as session:
+    stmt = select(user_profile_table.c.fid, user_profile_table.c.user_name)
+    result = session.execute(stmt).mappings().fetchall()
     return result
   
 def get_user_profile_embed(fid, part):
