@@ -1,4 +1,6 @@
 import pandas
+import numpy
+import random
 from bots.data.app import get_bot_prompts, get_bot_channels, get_bot_character
 from bots.data.bot_history import get_bot_casts, get_bot_prompts_stats
 from bots.data.casts import get_trending_casts
@@ -35,6 +37,12 @@ schema = """
     "reasoning":{"type":"STRING"}
 """
 
+def convert(df, field, ascending):
+  q = min(len(df), 5)
+  mult = 1 if ascending else -1
+  noise = numpy.random.uniform(0, 0.0001, size=len(df))
+  values = df[field].values * mult + noise
+  return pandas.qcut(values, q=q, labels=False, retbins=False)  
 
 def get_channel_ranking(bot_id, df_channels):
   character = get_bot_character(bot_id)
@@ -77,8 +85,6 @@ def get_next_prompt(bot_id):
     df = pandas.concat([df, df_auto], ignore_index=True)
   df = df.merge(df_stats, on=['id', 'channel'], how='left')
   current_trends_summary, reasoning, df_ranking = get_channel_ranking(bot_id, df_channels)
-  print('current_trends_summary:', current_trends_summary)
-  print('reasoning:', reasoning)
   df = df.merge(df_ranking, on='channel', how='left')
   df['relevance_ranking'] = df['relevance_ranking'].astype(float).fillna(len(df))
   df['bot_activity'] = df['bot_activity'].astype(float).fillna(0)
@@ -92,6 +98,27 @@ def get_next_prompt(bot_id):
   print('Data frame rows:', len(df))
   df = df[df['is_candidate']]
   print('Candidate rows:', len(df))
-   
+  df['boost1'] = convert(df, 'hours_ago', True)
+  df['boost2'] = convert(df, 'bot_activity', False)
+  df['boost3'] = convert(df, 'channel_activity', True)
+  df['boost4'] = convert(df, 'avg_engagement', True)
+  df['boost5'] = convert(df, 'relevance_ranking', False)
+  df['boost'] = df['boost1'] + df['boost2'] + df['boost3'] + df['boost4'] + df['boost5']
+  df.sort_values(by='boost', ascending=False, inplace=True)
+  df.reset_index(drop=True, inplace=True)
+  del df['last_cast']
+  del df['avg_replies']
+  del df['avg_likes']
+  del df['avg_recasts']
+  candidates = df[['id', 'channel']].to_dict(orient='records')
+  weights = df['boost'].tolist()
+  selected = random.choices(candidates, weights=weights, k=1)[0]
+  return {
+    'prompt_id': selected['id'],
+    'channel': selected['channel'],
+    'current_trends_summary': current_trends_summary,
+    'reasoning': reasoning,
+    'dataframe': df
+  }
   
   
