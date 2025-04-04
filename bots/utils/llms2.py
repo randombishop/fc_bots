@@ -8,7 +8,7 @@ from bots.utils.json_cleaner import clean_json
 
 
 def get_llm():
-  model = "gemini-1.5-flash-002"
+  model = "gemini-2.0-flash-001"
   llm = ChatVertexAI(model=model)
   return llm
 

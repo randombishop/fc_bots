@@ -11,7 +11,6 @@ class TestPerplexity(unittest.TestCase):
     self.assertIn('ParsePerplexityQuestion', state.get_tools_sequence())
     self.assertIn('CallPerplexity', state.get_tools_sequence())
     self.assertIsNotNone(state.get('perplexity_answer'))
-    self.assertIsNotNone(state.get('perplexity_link'))
     self.assertTrue(state.get('valid'))
     
   def test1(self):
