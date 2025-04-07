@@ -65,13 +65,12 @@ schema = {
 
 def prepare(input):
   state = input.state
-  llm = input.llm
   posts = state.get('casts_user')
   if len(posts) == 0:
     return {'log': 'No posts to analyze.'}
   prompt = state.format(prompt_template)
   instructions = state.format(instructions_template)
-  result = call_llm(llm, prompt, instructions, schema)
+  result = call_llm('medium', prompt, instructions, schema)
   user_casts_description = ''
   if 'sentence1' in result:
     user_casts_description += result['sentence1'] + '\n'

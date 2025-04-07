@@ -44,10 +44,9 @@ schema = {
 
 def like(input):
   state = input.state
-  llm = input.llm
   prompt = state.format(prompt_template)
   instructions = state.format(instructions_template)
-  result = call_llm(llm, prompt, instructions, schema)
+  result = call_llm('medium', prompt, instructions, schema)
   like = read_boolean(result, key='like')
   return {
     'like': like

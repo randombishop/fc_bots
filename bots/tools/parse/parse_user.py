@@ -25,10 +25,9 @@ parse_user_schema = {
 
 def parse(input):
   state = input.state
-  llm = input.llm
   parse_prompt = state.format_all()
   parse_instructions = state.format(parse_user_instructions_template)
-  params = call_llm(llm, parse_prompt, parse_instructions, parse_user_schema)
+  params = call_llm('medium', parse_prompt, parse_instructions, parse_user_schema)
   fid, user_name = read_user(params, fid_origin=state.get('fid_origin'), default_to_origin=False)
   if fid is None:
     user_name = None

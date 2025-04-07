@@ -2,7 +2,6 @@ import os
 from bots.agent import invoke_agent
 from bots.state import State
 from bots.tool_input import ToolInput
-from bots.utils.llms2 import get_llm, get_llm_img
 from bots.data.app import get_bot_character
 
 bot_id = int(os.getenv('TEST_BOT'))
@@ -13,7 +12,7 @@ def make_tool_input(params={}):
   state = State()
   state.character = get_bot_character(bot_id)
   state.tools_log = [('Mock', mock)]
-  tool_input = ToolInput(state, get_llm(), get_llm_img())
+  tool_input = ToolInput(state)
   return tool_input
 
 def run_agent(test_id, mode, request=None, fid_origin=None, parent_hash=None, attachment_hash=None, root_parent_url=None, channel=None, user=None, blueprint=None):

@@ -1,6 +1,6 @@
 from langchain.agents import Tool
-from bots.utils.get_image_data import get_image_data
-from bots.utils.llms2 import call_llm_with_image_url
+from bots.utils.get_url_data import get_url_data
+from bots.utils.llms2 import call_llm_with_data
 
 
 instructions = """
@@ -34,13 +34,12 @@ schema = {
 
 def prepare(input):
   state = input.state
-  llm = input.llm
   url = state.get('user_pfp_url')
-  image_data = get_image_data(url)
-  if image_data is None:
+  data, mime_type = get_url_data(url)
+  if data is None or mime_type is None:
     return {'user_pfp_description': ''}
   prompt = "Describe the provided profile picture in a short paragraph."
-  result = call_llm_with_image_url(llm, prompt, image_data, instructions, schema)
+  result = call_llm_with_data(prompt, data, mime_type, instructions, schema)
   description = result['image_description'] if 'image_description' in result else ''
   return {
     'user_pfp_description': description

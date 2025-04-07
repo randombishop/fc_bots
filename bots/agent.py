@@ -2,7 +2,6 @@ import json
 from langchain.agents import BaseSingleActionAgent
 from langchain.schema import AgentAction, AgentFinish
 from langchain.agents import AgentExecutor
-from bots.utils.llms2 import get_llm, get_llm_img
 from bots.state import State
 from bots.tool_input import ToolInput
 from bots.tools import TOOL_LIST
@@ -17,8 +16,6 @@ class Agent(BaseSingleActionAgent):
   def __init__(self):
     super().__init__()
     self._tools = TOOL_LIST
-    self._llm = get_llm()
-    self._llm_img = get_llm_img()
     self._state = None
     
   @property
@@ -26,11 +23,7 @@ class Agent(BaseSingleActionAgent):
     return ["input"]
   
   def get_tool_input(self):
-    input = ToolInput(
-      state=self._state, 
-      llm=self._llm, 
-      llm_img=self._llm_img
-    )
+    input = ToolInput(state=self._state)
     return {"input":input}
   
   def next_phase(self):

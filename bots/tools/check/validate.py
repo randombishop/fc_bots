@@ -40,10 +40,9 @@ schema = {
 
 def check(input):
   state = input.state
-  llm = input.llm
   prompt = state.format_all()
   instructions = state.format(instructions_template)
-  result = call_llm(llm, prompt, instructions, schema)
+  result = call_llm('medium', prompt, instructions, schema)
   do_not_post = read_boolean(result, key='do_not_post')
   reason = read_string(result, key='reason')
   valid = (not do_not_post)

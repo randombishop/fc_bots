@@ -30,8 +30,8 @@ def format_instructions(tool, providers):
   ans += '}\n'
   return ans
 
-def pick_provider(tool, providers, llm, state):
+def pick_provider(tool, providers, state):
   prompt = state.format_conversation()
   instructions = format_instructions(tool, providers)
-  result = call_llm(llm, prompt, instructions, schema)
+  result = call_llm('medium', prompt, instructions, schema)
   return result['tool']

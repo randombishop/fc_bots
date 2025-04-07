@@ -17,14 +17,12 @@ Avoid gradients or fine details, your design should be recognizable from a dista
 
 def prepare(input):
   state = input.state
-  llm = input.llm
-  llm_img = input.llm_img
   text = state.get('wordcloud_text')
   if text is None or len(text)==0:
     raise Exception("No text to generate mask")
   # Generate a new image
   prompt = prompt_template.replace("{{text}}", text)
-  image_url = generate_image(llm_img, llm, prompt)
+  image_url = generate_image(prompt)
   key = str(uuid.uuid4())
   file1 = key+'.original.png'
   response = requests.get(image_url)

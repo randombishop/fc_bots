@@ -6,7 +6,7 @@ from bots.data.bot_history import get_bot_casts, get_bot_prompts_stats
 from bots.data.casts import get_trending_casts
 from bots.utils.format_character import format_bio, format_lore
 from bots.utils.format_cast import format_bot_casts, format_trending
-from bots.utils.llms2 import get_llm, call_llm
+from bots.utils.llms2 import call_llm
 
 
 task = """
@@ -60,8 +60,7 @@ def get_channel_ranking(bot_id, df_channels):
   instructions += f"#YOUR LORE\n{lore}\n\n"
   instructions += f"#YOUR CHANNELS\n{','.join(channels)}\n\n"
   instructions += task
-  llm = get_llm()
-  result = call_llm(llm, prompt, instructions, schema)
+  result = call_llm('medium', prompt, instructions, schema)
   current_trends_summary = result['current_trends_summary']
   reasoning = result['reasoning']
   channel_ranking = result['channel_ranking']
