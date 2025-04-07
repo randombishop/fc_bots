@@ -8,13 +8,26 @@ from vertexai import generative_models
 from bots.utils.json_cleaner import clean_json
 
 
-model_flash = "gemini-2.0-flash-001"
-llm_flash = ChatVertexAI(model=model_flash)
+def create_llm_medium():
+  try:
+    model_flash = "gemini-2.0-flash-001"
+    llm_flash = ChatVertexAI(model=model_flash)
+    return llm_flash
+  except Exception as e:
+    print(f'Error in create_llm_medium: {e}')
+    return None
 
-llm_img = OpenAI()
+def create_llm_image():
+  try:
+    llm_img = OpenAI()
+    return llm_img
+  except Exception as e:
+    print(f'Error in create_llm_image: {e}')
+    return None
 
 models = {
-  'medium': llm_flash
+  'medium': create_llm_medium(),
+  'image': create_llm_image()
 }
 
 def get_max_capactity():
@@ -42,7 +55,7 @@ def rewrite_prompt(original_prompt):
       SystemMessage("Rewrite the provided prompt to adhere to OpenAI's content policies."),
       HumanMessage(original_prompt)
     ]
-    response = llm_flash.invoke(messages)
+    response = models['medium'].invoke(messages)
     return response.content if response else original_prompt
   except Exception as e:
     print('Failed to rewrite the prompt.')
@@ -50,7 +63,7 @@ def rewrite_prompt(original_prompt):
 
 @traceable(run_type="llm", name="DallE3")
 def _do_generate_image(prompt):
-  response = llm_img.images.generate(
+  response = models['image'].images.generate(
     model="dall-e-3",
     prompt=prompt,
     size="1024x1024",
