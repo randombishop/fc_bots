@@ -6,7 +6,6 @@ from bots.data.channels import get_channel_url
 from bots.tools.blueprint.blueprints import BLUEPRINTS
 
 def initialize_tools(mode, blueprint):
-  print(f'Initializing tools for mode: {mode} and blueprint: {blueprint}')
   if mode == 'assistant':
     return ['GetBio', 'GetLore', 'GetStyle', 'GetTime']
   elif mode == 'bot':
@@ -14,7 +13,8 @@ def initialize_tools(mode, blueprint):
   elif mode == 'blueprint':
     if blueprint not in BLUEPRINTS:
       raise Exception(f"Blueprint {blueprint} not found")
-    return BLUEPRINTS[blueprint]
+    bp = BLUEPRINTS[blueprint]
+    return bp.copy()
   else:
     raise Exception(f"Agent mode {mode} not found")
 
@@ -54,7 +54,6 @@ def init(input):
   if blueprint is not None:
     ans['blueprint'] = blueprint
   ans['todo'] = initialize_tools(mode, blueprint)
-  print(f'Initialized tools: {ans["todo"]}')
   return ans
   
 
