@@ -95,7 +95,7 @@ def call_llm_with_data(prompt, data, mime_type, instructions, schema):
       data=data,
     )
     vertex_model = GenerativeModel(
-      model_flash,
+      models['medium'],
       system_instruction=instructions
     )
     generation_config = {
