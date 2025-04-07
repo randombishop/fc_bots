@@ -65,5 +65,8 @@ def memorize(input):
 SaveUserProfile = Tool(
   name="SaveUserProfile",
   description="Save the user profile in long term memory",
+  metadata={
+    'inputs': ['user', 'user_fid', 'user_display_name', 'user_bio', 'user_avatar'],
+  },
   func=memorize
 )
