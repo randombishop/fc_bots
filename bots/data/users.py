@@ -23,7 +23,7 @@ def get_username(fid):
 
 def get_fid(username):
   if username is None:
-    raise Exception("get_fid: must provide username")
+    return None
   user_info = get_user_info_by_name(username)
   if user_info is not None:
     return user_info['fid']
