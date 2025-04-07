@@ -1,6 +1,6 @@
 from langchain.agents import Tool
 from bots.data.app import get_bot_character
-from bots.utils.llms import get_max_capactity
+from bots.utils.llms2 import get_max_capactity
 from bots.data.users import get_username, get_fid
 from bots.data.channels import get_channel_url
 from bots.tools.blueprint.blueprints import BLUEPRINTS

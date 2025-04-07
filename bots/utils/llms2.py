@@ -6,7 +6,10 @@ from langsmith import traceable
 from bots.utils.json_cleaner import clean_json
 
 
+def get_max_capactity():
+  return 50
 
+  
 def get_llm():
   model = "gemini-2.0-flash-001"
   llm = ChatVertexAI(model=model)
