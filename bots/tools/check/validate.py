@@ -3,13 +3,15 @@ from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_boolean, read_string
 
 
+
+
 instructions_template = """
 # TASK
 Your goal is to validate your own process before posting on a social media platform.
 FYI, posts are called casts in farcaster.
 Your task is to decide if you should block the prepared casts before posting.
 The reasons for blocking are: off-topic, repetitive, boring, aggressive or misunderstanding.
-Analyze the provided context and instructions carefully and decide if you want to move forward with posting the prepared casts.
+Analyze the provided context, instructions and your prepared posts, and decide if you want to move forward with casting them.
 If your casts are completely off-topic, set do_not_post=true and reason="off-topic".
 If the conversation is going in circles, set do_not_post=true and reason="repetitive".
 If the conversation is getting boring, set do_not_post=true and reason="boring".
@@ -40,7 +42,9 @@ schema = {
 
 def check(input):
   state = input.state
-  prompt = state.format_all()
+  prompt = state.format_conversation()
+  casts = state.get('casts')
+  prompt += f'\n\n#PREPARED POSTS:\n{casts}'
   instructions = state.format(instructions_template)
   result = call_llm('medium', prompt, instructions, schema)
   do_not_post = read_boolean(result, key='do_not_post')
