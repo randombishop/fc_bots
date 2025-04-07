@@ -128,8 +128,8 @@ def invoke_agent(run_name, mode, bot_id,
       'user': user,
       'blueprint': blueprint
   }
-  assistant = Agent()
-  executor = AgentExecutor(agent=assistant, tools=assistant._tools, max_iterations=25)
+  agent = Agent()
+  executor = AgentExecutor(agent=agent, tools=agent._tools, max_iterations=25)
   result = executor.invoke(input=json.dumps(input), config={"run_name": run_name})
   if 'output' not in result:
     raise Exception(f"Assistant {bot_id} returned no output")

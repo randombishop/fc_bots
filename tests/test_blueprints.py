@@ -11,7 +11,7 @@ class TestBlueprints(unittest.TestCase):
       test_id='TestBlueprints:test1',
       mode='blueprint',
       blueprint='WhoIs',
-      user='randombishop'
+      user='cryptowenmoon.eth'
     )
     
   

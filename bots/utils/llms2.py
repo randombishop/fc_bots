@@ -69,3 +69,26 @@ def generate_image(llm_img, llm, prompt):
       return result['url']
     else: 
       raise e
+    
+
+def call_llm_with_image_url(llm, prompt, url, instructions, schema):
+  media_message = {
+    "type": "image_url",
+    "image_url": {"url": url}
+  }
+  text_message = {
+      "type": "text",
+      "text": prompt
+  }
+  messages = [
+    SystemMessage(content=instructions),
+    HumanMessage(content=[media_message, text_message])
+  ]
+  result = llm.invoke(messages)
+  text = result.content
+  text = clean_json(text)
+  try:
+    result = json5.loads(text)
+  except:
+    result = {}
+  return result

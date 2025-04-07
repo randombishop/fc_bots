@@ -1,5 +1,4 @@
 import ollama
-import json
 
 
 class MistralLLM():
