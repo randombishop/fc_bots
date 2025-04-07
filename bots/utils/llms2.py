@@ -1,6 +1,6 @@
 from openai import OpenAI
 import json5
-from langchain_google_vertexai import ChatVertexAI, HarmCategory, HarmBlockThreshold
+from langchain_google_vertexai import ChatVertexAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from langsmith import traceable
 from bots.utils.json_cleaner import clean_json
@@ -9,12 +9,7 @@ from bots.utils.json_cleaner import clean_json
 
 def get_llm():
   model = "gemini-2.0-flash-001"
-  llm = ChatVertexAI(model=model, safety_settings={
-    HarmCategory.HARM_CATEGORY_UNSPECIFIED: HarmBlockThreshold.BLOCK_NONE,
-    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE
-  })
+  llm = ChatVertexAI(model=model)
   return llm
 
 
