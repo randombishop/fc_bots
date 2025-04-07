@@ -117,6 +117,7 @@ def get_next_prompt(bot_id):
   selected = random.choices(candidates, weights=weights, k=1)[0]
   return {
     'prompt_id': selected['id'],
+    'prompt': selected['prompt'],
     'channel': selected['channel'],
     'current_trends_summary': current_trends_summary,
     'reasoning': reasoning,
