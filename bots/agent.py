@@ -6,7 +6,7 @@ from bots.utils.llms2 import get_llm, get_llm_img
 from bots.state import State
 from bots.tool_input import ToolInput
 from bots.tools import TOOL_LIST
-from bots.tools.helpers.tool_io import missing_inputs, all_outputs_already_set
+from bots.tools.helpers.tool_io import missing_inputs
 
 
 TOOL_MAP = {x.name: x for x in TOOL_LIST}
