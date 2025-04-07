@@ -112,7 +112,7 @@ def get_next_prompt(bot_id):
   del df['avg_replies']
   del df['avg_likes']
   del df['avg_recasts']
-  candidates = df[['id', 'channel']].to_dict(orient='records')
+  candidates = df[['id', 'prompt','channel']].to_dict(orient='records')
   weights = df['boost'].tolist()
   selected = random.choices(candidates, weights=weights, k=1)[0]
   return {
