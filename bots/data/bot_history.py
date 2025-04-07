@@ -7,7 +7,7 @@ import random
 def get_bot_casts(bot_id, action_channel='*', limit=50, days=60):
   with get_session() as session:
     sql = text("""
-    SELECT selected_intent, action_prompt, action_channel, casted_text, casted_embeds, casted_at,
+    SELECT action_channel, casted_text, casted_embeds, casted_at,
            EXTRACT(EPOCH FROM (NOW() - casted_at)) / 3600 hours
     FROM app.bot_cast
     WHERE bot_id = :bot_id
