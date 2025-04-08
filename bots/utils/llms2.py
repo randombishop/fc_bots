@@ -8,24 +8,40 @@ from vertexai import generative_models
 from bots.utils.json_cleaner import clean_json
 
 
+gemini_15_flash = "gemini-1.5-flash-002"
+gemini_20_flash = "gemini-2.0-flash-001"
+
+
+def create_llm_small():
+  try:
+    llm_small = ChatVertexAI(model=gemini_15_flash)
+    return llm_small
+  except Exception as e:
+    print(f'Error in create_llm_small: {e}')
+    return None
+
+
 def create_llm_medium():
   try:
-    model_flash = "gemini-2.0-flash-001"
-    llm_flash = ChatVertexAI(model=model_flash)
-    return llm_flash
+    llm_med = ChatVertexAI(model=gemini_20_flash)
+    return llm_med
   except Exception as e:
     print(f'Error in create_llm_medium: {e}')
     return None
 
 def create_llm_image():
   try:
-    llm_img = OpenAI()
+    llm_img = OpenAI().images
     return llm_img
   except Exception as e:
     print(f'Error in create_llm_image: {e}')
     return None
 
+
+
+
 models = {
+  'small': create_llm_small(),
   'medium': create_llm_medium(),
   'image': create_llm_image()
 }
@@ -63,7 +79,7 @@ def rewrite_prompt(original_prompt):
 
 @traceable(run_type="llm", name="DallE3")
 def _do_generate_image(prompt):
-  response = models['image'].images.generate(
+  response = models['image'].generate(
     model="dall-e-3",
     prompt=prompt,
     size="1024x1024",
@@ -87,6 +103,7 @@ def generate_image(prompt):
       raise e
     
 
+@traceable(run_type="llm", name=gemini_15_flash)
 def call_llm_with_data(prompt, data, mime_type, instructions, schema):
   result = None
   try:
@@ -95,7 +112,7 @@ def call_llm_with_data(prompt, data, mime_type, instructions, schema):
       data=data,
     )
     vertex_model = GenerativeModel(
-      models['medium'],
+      gemini_15_flash,
       system_instruction=instructions
     )
     generation_config = {
