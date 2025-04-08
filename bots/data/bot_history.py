@@ -1,8 +1,17 @@
 from bots.data.users import get_top_daily_casters, get_user_profiles
-from bots.data.pg import get_session
-from sqlalchemy import text
+from bots.data.pg import engine, metadata, get_session
+from sqlalchemy import text, Table
 import random
 
+
+bot_cast_table = Table('bot_cast', metadata, autoload_with=engine, schema='app')
+
+
+def save_bot_cast(bot_cast):
+  with get_session() as session:
+    stmt = bot_cast_table.insert().values(bot_cast)
+    session.execute(stmt)
+    
 
 def get_bot_casts(bot_id, action_channel='*', limit=50, days=60):
   with get_session() as session:
