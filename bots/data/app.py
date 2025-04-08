@@ -1,5 +1,5 @@
 from bots.data.pg import engine, metadata, get_session
-from sqlalchemy import Table, select
+from sqlalchemy import Table, select, and_
 
 
 bot_config_table = Table('bot_config', metadata, autoload_with=engine, schema='app')
@@ -49,6 +49,17 @@ def get_autopilot_configs():
 def get_autorespond_configs():
   with get_session() as session:
     stmt = bot_config_table.select().where(bot_config_table.c.autorespond == True)
+    result = session.execute(stmt).mappings().fetchall()
+    return result
+  
+def get_responding_bots(fids):
+  with get_session() as session:
+    stmt = bot_config_table.select().where(
+        and_(
+            bot_config_table.c.fid_owner.in_(fids),
+            bot_config_table.c.autorespond == True
+        )
+    )
     result = session.execute(stmt).mappings().fetchall()
     return result
   
