@@ -40,5 +40,17 @@ def get_bot_config(bot_id):
     result = session.execute(stmt).mappings().fetchone()
     return result
   
+def get_autopilot_configs():
+  with get_session() as session:
+    stmt = bot_config_table.select().where(bot_config_table.c.autopilot == True)
+    result = session.execute(stmt).mappings().fetchall()
+    return result
+  
+def get_autorespond_configs():
+  with get_session() as session:
+    stmt = bot_config_table.select().where(bot_config_table.c.autorespond == True)
+    result = session.execute(stmt).mappings().fetchall()
+    return result
+  
   
 
