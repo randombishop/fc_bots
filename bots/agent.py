@@ -121,9 +121,19 @@ def invoke_agent(run_name, mode, bot_id,
       'user': user,
       'blueprint': blueprint
   }
+  run_name = f'{run_name}/{mode}/{bot_id}'
+  tags = []
+  if blueprint is not None:
+    tags.append('blueprint:'+str(blueprint))
+  if channel is not None:
+    tags.append('channel:'+str(channel))
+  if user is not None:
+    tags.append('user:'+str(user))
+  if fid_origin is not None:
+    tags.append('fid_origin:'+str(fid_origin))
   agent = Agent()
   executor = AgentExecutor(agent=agent, tools=agent._tools, max_iterations=25)
-  result = executor.invoke(input=json.dumps(input), config={"run_name": run_name})
+  result = executor.invoke(input=json.dumps(input), config={"run_name": run_name, "tags": tags})
   if 'output' not in result:
     raise Exception(f"Assistant {bot_id} returned no output")
   if 'error' in result:
