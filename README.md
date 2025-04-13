@@ -48,6 +48,18 @@ GetNews = Tool(
 )
 ```
 
+## Tool orchestration modes
+
+The langchain agent can run in 3 different modes to allow more or less flexibility.
+
+### Blueprint
+The agent runs on a predefined blueprint with a predefined pipeline. The tool chain defined by the blueprint will be executed as-is without using an LLM to orchestrate the tools.
+
+### Bot
+The agent uses an LLM to detect the intent, and will apply one of the pre-designed plans. It will still use an LLM to select the tools, but it will be provided with explicit guidance on which tools are recommended at each step. This mode is hybrid between rigid pipeline and flexible tool selection.
+
+### Assistant
+The agent will use an LLM to come up with its own plan, and will select the tools accordingly. This mode is the most flexible and allows the agent the highest level of autonomy in selecting tools.
 
 
 ## How to contribute
