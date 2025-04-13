@@ -9,13 +9,27 @@ I was built in an open way, using public Dune datasets as infrastructure, so tha
 
 ## How does it work?
 
-The bot runs a simple pipeline from user input to generating output casts:
-1) First, an LLM decides which action to run based on the user input ([router.py](./bots/router.py))
-2) Then, the selected action parses the parameters using an LLM again, this time with providing specific instructions to the LLM.
-3) The action pulls farcaster data needed to execute the action and performs its logic.
-4) Finally, it formats its outputs as casts and embeds.
+The bot runs on langchain framework and has access to a set of tools to respond or create a new cast on Farcaster.
+It integrates Dune queries, Google Gemini, OpenAI and Perplexity LLMs and image generation models.
 
-![Bot Pipeline](./docs/schema1.png)
+![Bot Pipeline](./docs/schema2.png)
+
+## Available Tools
+
+The tools are organized in multiple folders to facilitate planning and execution of complex workflows:
+
+- `init`: Initialize the bot with basic information about itself, the conversation, and current context.
+- `intent`: Identify the current intent that the bot should respond to.
+- `plan`: Plan the response to the user's message.
+- `parse`: Parse parameters before calling fetch and prepare tools.
+- `fetch`: Fetch data.
+- `prepare`: Transform data and prepare summaries, wordclouds, charts, tables, or other media to post.
+- `compose`: Compose a cast or a thread of casts with mentions and embeds.
+- `check`: Check the composed casts before posting.
+- `memorize`: Memorize elements of the pipeline for future use.
+- `helpers`: Utils that are not called directly by the agent, but can be required by some tools as dependencies.
+
+## Tool dependency management
 
 
 
@@ -23,13 +37,18 @@ The bot runs a simple pipeline from user input to generating output casts:
 
 ### Prerequisites
 
-1) Make sure you have a python 3.1 or more recent installed.
+This bot integrates a multitude of LLMs and data sources. Here is the list of requirements to run it locally: 
 
-2) Install [ollama](https://ollama.com/)
-
-3) Create a Dune Analytics account if you don't already have one, then create an API key. (free tier is good enough to run the bot.)
-
-4) Get a far.quest free API key [here](https://docs.wield.xyz/docs/getting-started)
+* python 3.1 or more recent installed.
+* GCP service account with Gemini access.
+* Neynar API key.
+* Dune Analytics API key.
+* far.quest free API key [here](https://docs.wield.xyz/docs/getting-started)
+* OpenAI API key.
+* Perplexity API key.
+* [ollama](https://ollama.com/)
+* Postgres DB (I still don't have a database script that creates a local test database, contact me for help setting one up.)
+* Langsmith account for monitoring.
 
 ## Install and run the test suite
 
@@ -37,9 +56,23 @@ The bot runs a simple pipeline from user input to generating output casts:
 
 2) Create a .env file with the following variables:
 ```
-LLM_MODEL=mistral
+GOOGLE_APPLICATION_CREDENTIALS=
+GCP_PROJECT_ID=
+GCP_REGION=
+GCP_BOT_BUCKET=
+
+DATABASE_URL=postgresql://
+
 DUNE_API_KEY=
-FAR_QUEST_API_KEY=
+FARQUEST_API_KEY=
+PERPLEXITY_API_KEY=
+OPENAI_API_KEY=
+
+TEST_BOT=
+LANGSMITH_TRACING=true
+LANGSMITH_ENDPOINT="https://api.smith.langchain.com"
+LANGSMITH_API_KEY=
+LANGSMITH_PROJECT=
 ```
 
 3) Create a virtual environment and install the package:
@@ -52,13 +85,11 @@ pip install -e .
 4) Run the test suite:
 ```
 ./run_tests # to run all tests
-python -m unittest tests/test_word_cloud.py   # to run one group of tests
-python -m unittest tests/test_word_cloud   # to run one group of tests
 python -m unittest tests.test_word_cloud.TestWordCloud.test8   # to run a specific test
 ```
 
-### Develop new bot actions
+### Develop new bot tools
 
-1) Look at the existing actions in bots/actions
+1) Look at the existing actions in bots/tools
 
 2) Use one of them as a template and build your own 🚀 
