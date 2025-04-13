@@ -3,29 +3,54 @@ import json5
 from langchain_google_vertexai import ChatVertexAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from langsmith import traceable
+from vertexai.generative_models import GenerativeModel, Part
+from vertexai import generative_models
 from bots.utils.json_cleaner import clean_json
 
 
-
-def get_llm():
-  model = "gemini-2.0-flash-001"
-  llm = ChatVertexAI(model=model, safety_settings=[
-    {"category": "HARM_CATEGORY_DEROGATORY", "threshold": 4},
-    {"category": "HARM_CATEGORY_TOXICITY", "threshold": 4},
-    {"category": "HARM_CATEGORY_MEDICAL", "threshold": 4},
-    {"category": "HARM_CATEGORY_VIOLENCE", "threshold": 3},
-    {"category": "HARM_CATEGORY_SEXUAL", "threshold": 2},
-    {"category": "HARM_CATEGORY_DANGEROUS", "threshold": 2}
-  ])
-  return llm
+gemini_15_flash = "gemini-1.5-flash-002"
+gemini_20_flash = "gemini-2.0-flash-001"
 
 
-def get_llm_img():
-  llm_img = OpenAI()
-  return llm_img
+def create_llm_small():
+  try:
+    llm_small = ChatVertexAI(model=gemini_15_flash)
+    return llm_small
+  except Exception as e:
+    print(f'Error in create_llm_small: {e}')
+    return None
 
+
+def create_llm_medium():
+  try:
+    llm_med = ChatVertexAI(model=gemini_20_flash)
+    return llm_med
+  except Exception as e:
+    print(f'Error in create_llm_medium: {e}')
+    return None
+
+def create_llm_image():
+  try:
+    llm_img = OpenAI().images
+    return llm_img
+  except Exception as e:
+    print(f'Error in create_llm_image: {e}')
+    return None
+
+
+
+
+models = {
+  'small': create_llm_small(),
+  'medium': create_llm_medium(),
+  'image': create_llm_image()
+}
+
+def get_max_capactity():
+  return 50
 
 def call_llm(llm, prompt, instructions, schema):
+  llm = models[llm]
   messages = [
     SystemMessage(instructions.encode('utf-8', errors='replace').decode('utf-8')),
     HumanMessage(prompt.encode('utf-8', errors='replace').decode('utf-8'))
@@ -40,21 +65,21 @@ def call_llm(llm, prompt, instructions, schema):
   return result
 
 
-def rewrite_prompt(llm, original_prompt):
+def rewrite_prompt(original_prompt):
   try:
     messages = [
       SystemMessage("Rewrite the provided prompt to adhere to OpenAI's content policies."),
       HumanMessage(original_prompt)
     ]
-    response = llm.invoke(messages)
+    response = models['medium'].invoke(messages)
     return response.content if response else original_prompt
   except Exception as e:
     print('Failed to rewrite the prompt.')
     raise e
 
 @traceable(run_type="llm", name="DallE3")
-def _do_generate_image(llm_img, prompt):
-  response = llm_img.images.generate(
+def _do_generate_image(prompt):
+  response = models['image'].generate(
     model="dall-e-3",
     prompt=prompt,
     size="1024x1024",
@@ -64,15 +89,53 @@ def _do_generate_image(llm_img, prompt):
   return {'url': response.data[0].url, 'status': 'generated'}
 
 
-def generate_image(llm_img, llm, prompt):
+def generate_image(prompt):
   try:
-    result = _do_generate_image(llm_img, prompt)
+    result = _do_generate_image(prompt)
     return result['url']
   except Exception as e:
     if 'content_policy_violation' in str(e).lower():
       print('Content policy violation detected.')
-      new_prompt = rewrite_prompt(llm, prompt)
-      result = _do_generate_image(llm_img, new_prompt)
+      new_prompt = rewrite_prompt(prompt)
+      result = _do_generate_image(new_prompt)
       return result['url']
     else: 
       raise e
+    
+
+@traceable(run_type="llm", name=gemini_15_flash)
+def call_llm_with_data(prompt, data, mime_type, instructions, schema):
+  result = None
+  try:
+    image1 = Part.from_data(
+      mime_type=mime_type,
+      data=data,
+    )
+    vertex_model = GenerativeModel(
+      gemini_15_flash,
+      system_instruction=instructions
+    )
+    generation_config = {
+      "max_output_tokens": 1024
+    }
+    safety_settings = {
+        generative_models.HarmCategory.HARM_CATEGORY_HATE_SPEECH: generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        generative_models.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        generative_models.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT: generative_models.HarmBlockThreshold.BLOCK_ONLY_HIGH
+    }
+    responses = vertex_model.generate_content(
+      [prompt, image1],
+      generation_config=generation_config,
+      safety_settings=safety_settings,
+      stream=True)
+    text = ''
+    for response in responses:
+      t = response.text
+      text += t
+    text = clean_json(text)
+    result = json5.loads(text)
+  except Exception as e:
+    print(f'Error in call_llm_with_data {e}')
+    result = {}
+  return result

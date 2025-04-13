@@ -28,10 +28,9 @@ schema = {
 
 def parse(input):
   state = input.state
-  llm = input.llm
   prompt = state.format_all()
   instructions = state.format(instructions_template)
-  params = call_llm(llm, prompt, instructions, schema)
+  params = call_llm('medium', prompt, instructions, schema)
   keyword = read_keyword(params)
   return {
     'keyword': keyword

@@ -60,10 +60,10 @@ def clean_text(text):
       text = text[:-1]
   return text
 
-def shorten_text(state, llm, text):
+def shorten_text(state, text):
   prompt = state.format(prompt_template.replace('{{post}}', text))
   instructions = state.format(instructions_template)
-  result = call_llm(llm, prompt, instructions, schema)
+  result = call_llm('medium', prompt, instructions, schema)
   short = result['tweet']
   if len(short) > MAX_LENGTH:
     short = short[:MAX_LENGTH]+'...'
@@ -71,13 +71,12 @@ def shorten_text(state, llm, text):
 
 def shorten(input):
   state = input.state
-  llm = input.llm
   casts = state.get('data_casts')
   log = []
   for c in casts:
     original = c['text']
     if original is not None and len(original) > MAX_LENGTH:
-      c['text'] = shorten_text(state, llm, original)
+      c['text'] = shorten_text(state, original)
     c['text'] = clean_text(c['text'])
     if original != c['text']:
       log.append(f'{original}\n>>>\n{c["text"]}')

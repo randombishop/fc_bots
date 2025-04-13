@@ -2,11 +2,10 @@ import json
 from langchain.agents import BaseSingleActionAgent
 from langchain.schema import AgentAction, AgentFinish
 from langchain.agents import AgentExecutor
-from bots.utils.llms2 import get_llm, get_llm_img
 from bots.state import State
 from bots.tool_input import ToolInput
 from bots.tools import TOOL_LIST
-from bots.tools.helpers.tool_io import missing_inputs, all_outputs_already_set
+from bots.tools.helpers.tool_io import missing_inputs
 
 
 TOOL_MAP = {x.name: x for x in TOOL_LIST}
@@ -17,8 +16,6 @@ class Agent(BaseSingleActionAgent):
   def __init__(self):
     super().__init__()
     self._tools = TOOL_LIST
-    self._llm = get_llm()
-    self._llm_img = get_llm_img()
     self._state = None
     
   @property
@@ -26,11 +23,7 @@ class Agent(BaseSingleActionAgent):
     return ["input"]
   
   def get_tool_input(self):
-    input = ToolInput(
-      state=self._state, 
-      llm=self._llm, 
-      llm_img=self._llm_img
-    )
+    input = ToolInput(state=self._state)
     return {"input":input}
   
   def next_phase(self):
@@ -128,9 +121,19 @@ def invoke_agent(run_name, mode, bot_id,
       'user': user,
       'blueprint': blueprint
   }
-  assistant = Agent()
-  executor = AgentExecutor(agent=assistant, tools=assistant._tools, max_iterations=25)
-  result = executor.invoke(input=json.dumps(input), config={"run_name": run_name})
+  run_name = f'{run_name}/{mode}/{bot_id}'
+  tags = []
+  if blueprint is not None:
+    tags.append('blueprint:'+str(blueprint))
+  if channel is not None:
+    tags.append('channel:'+str(channel))
+  if user is not None:
+    tags.append('user:'+str(user))
+  if fid_origin is not None:
+    tags.append('fid_origin:'+str(fid_origin))
+  agent = Agent()
+  executor = AgentExecutor(agent=agent, tools=agent._tools, max_iterations=25)
+  result = executor.invoke(input=json.dumps(input), config={"run_name": run_name, "tags": tags})
   if 'output' not in result:
     raise Exception(f"Assistant {bot_id} returned no output")
   if 'error' in result:

@@ -26,12 +26,11 @@ parse_user_schema = {
 
 def parse(input):
   state = input.state
-  llm = input.llm
   parse_prompt = state.format_all()
   current_channel = state.get_current_channel()   
   current_channel = '#CURRENT CHANNEL:\n/'+current_channel if current_channel is not None else ''
   parse_instructions = state.format(parse_user_instructions_template.replace('current_channel?', current_channel))
-  params = call_llm(llm, parse_prompt, parse_instructions, parse_user_schema)
+  params = call_llm('medium', parse_prompt, parse_instructions, parse_user_schema)
   channel_url = read_channel(params, current_channel=state.get('root_parent_url'), default_to_current=True)
   channel = get_channel_by_url(channel_url)
   return {

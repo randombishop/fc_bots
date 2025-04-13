@@ -6,7 +6,7 @@ from bots.data.bot_history import get_bot_casts, get_bot_prompts_stats
 from bots.data.casts import get_trending_casts
 from bots.utils.format_character import format_bio, format_lore
 from bots.utils.format_cast import format_bot_casts, format_trending
-from bots.utils.llms2 import get_llm, call_llm
+from bots.utils.llms2 import call_llm
 
 
 task = """
@@ -60,8 +60,7 @@ def get_channel_ranking(bot_id, df_channels):
   instructions += f"#YOUR LORE\n{lore}\n\n"
   instructions += f"#YOUR CHANNELS\n{','.join(channels)}\n\n"
   instructions += task
-  llm = get_llm()
-  result = call_llm(llm, prompt, instructions, schema)
+  result = call_llm('medium', prompt, instructions, schema)
   current_trends_summary = result['current_trends_summary']
   reasoning = result['reasoning']
   channel_ranking = result['channel_ranking']
@@ -77,17 +76,32 @@ def get_channel_ranking(bot_id, df_channels):
 def get_next_prompt(bot_id):
   df_prompts = pandas.DataFrame(get_bot_prompts(bot_id))
   df_channels = pandas.DataFrame(get_bot_channels(bot_id))
-  df_stats = pandas.DataFrame(get_bot_prompts_stats(bot_id))
+  if (len(df_prompts) == 0 or len(df_channels) == 0):
+    return None
   df = df_prompts[df_prompts['channel'] != '#Autopilot#']
+  # Duplicate autopilot prompts per channel
   df_auto = df_prompts[df_prompts['channel'] == '#Autopilot#']
   if len(df_auto) > 0:
     df_auto = df_auto.merge(df_channels[['channel']], how='cross')
     df_auto.drop(columns=['channel_x'], inplace=True)
     df_auto.rename(columns={'channel_y': 'channel'}, inplace=True)
     df = pandas.concat([df, df_auto], ignore_index=True)
-  df = df.merge(df_stats, on=['id', 'channel'], how='left')
-  current_trends_summary, reasoning, df_ranking = get_channel_ranking(bot_id, df_channels)
-  df = df.merge(df_ranking, on='channel', how='left')
+  # Add stats to the dataframe
+  df_stats = pandas.DataFrame(get_bot_prompts_stats(bot_id))
+  if len(df_stats) > 0:
+    df = df.merge(df_stats, on=['id', 'channel'], how='left')
+  else:
+    add_columns = ['avg_likes', 'avg_recasts', 'avg_replies', 'bot_activity', 'channel_activity', 'hours_ago', 'last_cast']
+    for c in add_columns:
+      df[c] = None
+  # Rank channels by relevance
+  current_trends_summary, reasoning, df_ranking = None, None, None
+  if len(df_channels) > 1:
+    current_trends_summary, reasoning, df_ranking = get_channel_ranking(bot_id, df_channels)
+    df = df.merge(df_ranking, on='channel', how='left')
+  else:
+    df['relevance_ranking'] = 1
+  # Fill missing values
   df['relevance_ranking'] = df['relevance_ranking'].astype(float).fillna(len(df))
   df['bot_activity'] = df['bot_activity'].astype(float).fillna(0)
   df['hours_ago'] = df['hours_ago'].astype(float).fillna(9999)
@@ -96,10 +110,24 @@ def get_next_prompt(bot_id):
   df['avg_likes'] = df['avg_likes'].astype(float).fillna(0)
   df['avg_recasts'] = df['avg_recasts'].astype(float).fillna(0)
   df['avg_engagement'] = df['avg_replies'] + df['avg_likes']*2 + df['avg_recasts']*3
+  # Select next prompt and channel
   df['is_candidate'] = (df['channel_activity'] > df['min_activity']) & (df['hours_ago'] > df['min_hours'])
   print('Data frame rows:', len(df))
   df = df[df['is_candidate']]
   print('Candidate rows:', len(df))
+  if len(df) == 0:
+    return None
+  elif len(df) == 1:
+    selected = df.iloc[0]
+    return {
+      'prompt_id': selected['id'],
+      'prompt': selected['prompt'],
+      'channel': selected['channel'],
+      'current_trends_summary': None,
+      'reasoning': None,
+      'dataframe': df
+    }
+  # Boost the prompt
   df['boost1'] = convert(df, 'hours_ago', True)
   df['boost2'] = convert(df, 'bot_activity', False)
   df['boost3'] = convert(df, 'channel_activity', True)
@@ -112,11 +140,12 @@ def get_next_prompt(bot_id):
   del df['avg_replies']
   del df['avg_likes']
   del df['avg_recasts']
-  candidates = df[['id', 'channel']].to_dict(orient='records')
+  candidates = df[['id', 'prompt','channel']].to_dict(orient='records')
   weights = df['boost'].tolist()
   selected = random.choices(candidates, weights=weights, k=1)[0]
   return {
     'prompt_id': selected['id'],
+    'prompt': selected['prompt'],
     'channel': selected['channel'],
     'current_trends_summary': current_trends_summary,
     'reasoning': reasoning,

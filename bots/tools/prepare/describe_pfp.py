@@ -1,6 +1,6 @@
-import requests
 from langchain.agents import Tool
-from bots.utils.llms import call_llm_with_attachment
+from bots.utils.get_url_data import get_url_data
+from bots.utils.llms2 import call_llm_with_data
 
 
 instructions = """
@@ -35,27 +35,12 @@ schema = {
 def prepare(input):
   state = input.state
   url = state.get('user_pfp_url')
-  if len(url) == 0:
-    return {'log': 'No profile picture available.'}
-  image_data = None
-  mime_type = None
-  try:  
-    headers = {
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-    }
-    response = requests.get(url, headers=headers)
-    response.raise_for_status()
-    image_data = response.content
-    mime_type = response.headers['Content-Type']
-  except Exception as e:
-    return {'log': f'Error fetching profile picture: {e}'}
-  if image_data is None or mime_type is None:
-    return {'log': 'Could not obtain image data and mime type.'}
+  data, mime_type = get_url_data(url)
+  if data is None or mime_type is None:
+    return {'user_pfp_description': ''}
   prompt = "Describe the provided profile picture in a short paragraph."
-  result = call_llm_with_attachment(prompt, image_data, mime_type, instructions, schema)
-  if 'image_description' not in result:
-    return {'log': 'Could not generate an image description.'}
-  description = result['image_description']
+  result = call_llm_with_data(prompt, data, mime_type, instructions, schema)
+  description = result['image_description'] if 'image_description' in result else ''
   return {
     'user_pfp_description': description
   }

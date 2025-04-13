@@ -39,14 +39,13 @@ def format_tools():
 
 def prepare(input):
   state = input.state
-  llm = input.llm
   prompt = state.format_all(succint=True)
   instructions = state.format(select_tool_task)
   instructions = instructions.replace('available_tools?', format_tools())
-  result = call_llm(llm, prompt, instructions, select_tool_schema)
+  result = call_llm('medium', prompt, instructions, select_tool_schema)
   tools = result['tools'] if 'tools' in result else None
   tools = clean_tools(tools, tool_map)
-  tools, log = compile_sequence(state, tools, llm)
+  tools, log = compile_sequence(state, tools)
   ans = {
     'prepared': True,
     'prepare_tools': ','.join(tools),

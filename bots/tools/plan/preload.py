@@ -34,7 +34,6 @@ tool_map = {x.name: x for x in FETCH_TOOLS}
 
 def preload(input):
   state = input.state
-  llm = input.llm
   available_data = state.get_available_data()
   available_tool_names = filter_suggested_tools([x.name for x in FETCH_TOOLS], available_data)
   available_tools = [tool_map[x] for x in available_tool_names]
@@ -48,7 +47,7 @@ def preload(input):
   prompt = state.format_conversation()
   instructions = state.format(select_tool_task)
   instructions = instructions.replace('available_tools?', available_tools)
-  result = call_llm(llm, prompt, instructions, select_tool_schema)
+  result = call_llm('medium', prompt, instructions, select_tool_schema)
   tools = result['tools'] if 'tools' in result else None
   tools = clean_tools(tools, available_tool_names)
   ans = {

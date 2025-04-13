@@ -76,15 +76,13 @@ schema = {
 
 def prepare(input):
   state = input.state
-  llm = input.llm
-  llm_img = input.llm_img
   prompt = state.format(prompt_template)
   if len(prompt) < 100:
     return {'log': 'Not enough data to generate a prompt for avatar'}
   instructions = state.format(instructions_template)
-  result = call_llm(llm, prompt, instructions, schema)
+  result = call_llm('medium', prompt, instructions, schema)
   user_avatar_prompt = result['avatar_prompt'] if 'avatar_prompt' in result else None
-  image_url = generate_image(llm_img, llm, user_avatar_prompt)
+  image_url = generate_image(user_avatar_prompt)
   filename = str(uuid.uuid4())+'.png'
   response = requests.get(image_url)
   response.raise_for_status()

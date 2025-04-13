@@ -30,7 +30,6 @@ select_link_schema = {
 
 def prepare(input):
   state = input.state
-  llm = input.llm
   question = state.get('question')
   if len(question) < 5:
     raise Exception("This tool requires a question to forward to Perplexity.")
@@ -43,7 +42,7 @@ def prepare(input):
   link = None
   if 'citations' in data and len(data['citations']) > 0:
     links = "\n".join(data['citations'])
-    links_selection = call_llm(llm,links, select_link_instructions, select_link_schema)
+    links_selection = call_llm('medium', links, select_link_instructions, select_link_schema)
     if 'url' in links_selection and links_selection['url'] is not None and len(links_selection['url']) > 10:
       link = links_selection['url']
   return {

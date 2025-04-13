@@ -60,13 +60,12 @@ schema = {
 
 def prepare(input):
   state = input.state
-  llm = input.llm
   formatted = state.get('user_replies_and_reactions')
   if formatted is None or formatted == '':
     return {'log': 'No replies and reactions to analyze.'}
   prompt = state.format(prompt_template)
   instructions = state.format(instructions_template)
-  result = call_llm(llm, prompt, instructions, schema)
+  result = call_llm('medium', prompt, instructions, schema)
   description = result['description'] if 'description' in result else ''
   keywords = result['keywords'] if 'keywords' in result else ''
   if isinstance(keywords, list):

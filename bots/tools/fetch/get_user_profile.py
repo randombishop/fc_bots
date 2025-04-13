@@ -6,6 +6,8 @@ def fetch(input):
   state = input.state
   user_name = state.get('user')
   user_info = get_user_info_by_name(user_name)
+  if user_info is None:
+    return {'error': 'No User Profile'}
   user_pfp_url = None
   if 'pfp' in user_info and user_info['pfp'] is not None and 'url' in user_info['pfp']:
     user_pfp_url = user_info['pfp']['url']

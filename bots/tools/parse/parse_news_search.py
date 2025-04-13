@@ -26,10 +26,9 @@ parse_schema = {
 
 def parse(input):
   state = input.state
-  llm = input.llm
   parse_prompt = state.format_all()
   parse_instructions = state.format(parse_instructions_template)
-  params = call_llm(llm, parse_prompt, parse_instructions, parse_schema)
+  params = call_llm('medium', parse_prompt, parse_instructions, parse_schema)
   search = read_string(params, key='search', default=None, max_length=256)
   return {
     'search': search

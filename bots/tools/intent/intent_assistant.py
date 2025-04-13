@@ -44,7 +44,6 @@ schema = {
 
 def select_intent(input):
   state = input.state
-  llm = input.llm
   instructions = state.format(instructions_template)
   examples = get_intent_examples()
   instructions = instructions.replace('intent_examples?', examples)
@@ -52,7 +51,7 @@ def select_intent(input):
   tools = "\n".join([format_tool(tool) for tool in tools])
   instructions = instructions.replace('available_tools?', tools)
   prompt = state.format_all(succint=True)
-  result = call_llm(llm, prompt, instructions, schema)
+  result = call_llm('medium', prompt, instructions, schema)
   intent = result['intent'] if 'intent' in result else ''
   action_plan = result['intended_action_plan'] if 'intended_action_plan' in result else DEFAULT_ACTION_PLAN
   response_plan = result['intended_response_plan'] if 'intended_response_plan' in result else DEFAULT_RESPONSE_PLAN

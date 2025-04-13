@@ -67,10 +67,9 @@ schema = {
 
 def compose(input):
   state = input.state
-  llm = input.llm
   prompt = state.format_all()
   instructions = state.format(instructions_template)
-  result = call_llm(llm, prompt, instructions, schema)
+  result = call_llm('medium', prompt, instructions, schema)
   casts = []
   for i in range(1, 4):
     c = extract_cast(result, state.posts_map, i)

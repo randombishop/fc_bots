@@ -8,9 +8,9 @@ def concat_casts(posts):
   for post in posts:
     post['id'] = post['hash'][2:8]
     ans += "\n"
-    ans += "<"+post['id']+">\n"
-    ans += post['user_name'] + " said: " + post['text']
-    ans += "\n</"+post['id']+">\n"
+    ans += f"<{post['id']}>\n"
+    ans += f"{post['user_name']} said: {post['text']}\n"
+    ans += f"</{post['id']}>\n"
   ans += "\n"
   return ans
 
@@ -126,7 +126,12 @@ def extract_cast(result, posts_map, index=''):
   elif embed_hash is not None:
     link = check_link_data({'id': embed_hash}, posts_map)
     if link is not None:
-      c['embeds'] = [{'fid': link['fid'], 'user_name': link['user_name'], 'hash': link['hash']}],
+      embed0 = {
+        'fid': link['fid'], 
+        'user_name': link['user_name'], 
+        'hash': link['hash']
+      }
+      c['embeds'] = [embed0]
       c['embeds_description'] = link['text']
       c['embeds_warpcast'] = f"https://warpcast.com/{link['user_name']}/{link['hash'][:10]}"
   raw_text, mentions_ats, mentions_positions = extract_mentions(c['text'])

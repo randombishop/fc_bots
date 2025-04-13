@@ -1,15 +1,15 @@
 from bots.data.pg import engine, metadata, get_session
-from sqlalchemy import Table, select
+from sqlalchemy import Table, select, and_
 
 
-
+bot_config_table = Table('bot_config', metadata, autoload_with=engine, schema='app')
 bot_character_table = Table('bot_character', metadata, autoload_with=engine, schema='app')
 bot_channels_table = Table('bot_channels', metadata, autoload_with=engine, schema='app')
 bot_prompts_table = Table('bot_prompts', metadata, autoload_with=engine, schema='app')
 
-def get_bot_character(fid_owner):
+def get_bot_character(bot_id):
   with get_session() as session:
-    stmt = select(bot_character_table).where(bot_character_table.c.fid_owner == fid_owner)
+    stmt = select(bot_character_table).where(bot_character_table.c.fid_owner == bot_id)
     row = session.execute(stmt).mappings().fetchone()
     return row['character']
   
@@ -31,6 +31,35 @@ def get_bot_prompt(id):
 def get_bot_prompts(bot_id):
   with get_session() as session:
     stmt = bot_prompts_table.select().where(bot_prompts_table.c.bot_id == bot_id)
+    result = session.execute(stmt).mappings().fetchall()
+    return result
+  
+def get_bot_config(bot_id):
+  with get_session() as session:
+    stmt = bot_config_table.select().where(bot_config_table.c.fid_owner == bot_id)
+    result = session.execute(stmt).mappings().fetchone()
+    return result
+  
+def get_autopilot_configs():
+  with get_session() as session:
+    stmt = bot_config_table.select().where(bot_config_table.c.autopilot == True)
+    result = session.execute(stmt).mappings().fetchall()
+    return result
+  
+def get_autorespond_configs():
+  with get_session() as session:
+    stmt = bot_config_table.select().where(bot_config_table.c.autorespond == True)
+    result = session.execute(stmt).mappings().fetchall()
+    return result
+  
+def get_responding_bots(fids):
+  with get_session() as session:
+    stmt = bot_config_table.select().where(
+        and_(
+            bot_config_table.c.fid_owner.in_(fids),
+            bot_config_table.c.autorespond == True
+        )
+    )
     result = session.execute(stmt).mappings().fetchall()
     return result
   
