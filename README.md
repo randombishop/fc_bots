@@ -29,7 +29,24 @@ The tools are organized in multiple folders to facilitate planning and execution
 - `memorize`: Memorize elements of the pipeline for future use.
 - `helpers`: Utils that are not called directly by the agent, but can be required by some tools as dependencies.
 
-## Tool dependency management
+## Tool parameters and dependencies.
+
+While still compliant with the standard langchain tool interface, our tools share parameters and context through the state object rather than passing parameters as arguments.
+
+They also define their dependencies as metadata in terms of attributes that they read (inputs) or write (outputs) into the state.
+
+Example of a tool definition and metadata:
+```
+GetNews = Tool(
+  name="GetNews",
+  description="Get a news story",
+  metadata={
+    'inputs': ['search'],
+    'outputs': ['yahoo_news', 'data_yahoo_news']
+  },
+  func=fetch
+)
+```
 
 
 
