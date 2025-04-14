@@ -39,21 +39,6 @@ class Agent(BaseSingleActionAgent):
         tool='Intent',
         tool_input=self.get_tool_input(),
         log='')
-    elif self._state.get('parsed') is None:
-      return AgentAction(
-        tool='Parse',
-        tool_input=self.get_tool_input(),
-        log='')
-    elif self._state.get('fetched') is None:
-      return AgentAction(
-        tool='Fetch',
-        tool_input=self.get_tool_input(),
-        log='')
-    elif self._state.get('prepared') is None:
-      return AgentAction(
-        tool='Prepare',
-        tool_input=self.get_tool_input(),
-        log='')
     elif self._state.get('composed') is None:
       return AgentAction(
         tool='Compose',
