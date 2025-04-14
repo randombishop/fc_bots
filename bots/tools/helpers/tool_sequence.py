@@ -92,7 +92,7 @@ def clean_tools(tool_names, valid_names):
   elif isinstance(tool_names, list):
     tool_names = tool_names
   else:
-    raise Exception(f"Invalid tool_names: {tool_names}")
+    return []
   tool_names = [x.strip() for x in tool_names]
   tool_names = [x for x in tool_names if x in valid_names]
   return tool_names

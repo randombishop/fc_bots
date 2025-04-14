@@ -1,3 +1,4 @@
+from bots.tools.fetch.aggregate_casts import AggregateCasts
 from bots.tools.fetch.get_bot_casts_in_channel import GetBotCastsInChannel
 from bots.tools.fetch.get_bot_casts import GetBotCasts
 from bots.tools.fetch.get_casts_category import GetCastsCategory
@@ -11,10 +12,13 @@ from bots.tools.fetch.get_most_active_users import GetMostActiveUsers
 from bots.tools.fetch.get_news import GetNews
 from bots.tools.fetch.get_trending import GetTrending
 from bots.tools.fetch.get_user_profile import GetUserProfile
+from bots.tools.fetch.get_user_stats import GetUserStats
 from bots.tools.fetch.get_user_replies_and_reactions import GetUserRepliesAndReactions
 
 
+
 FETCH_TOOLS = [
+  AggregateCasts,
   GetBotCastsInChannel,
   GetBotCasts,
   GetCastsCategory,
@@ -28,5 +32,6 @@ FETCH_TOOLS = [
   GetNews,
   GetTrending,
   GetUserProfile,
-  GetUserRepliesAndReactions
+  GetUserStats,
+  GetUserRepliesAndReactions  
 ]
