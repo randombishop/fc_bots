@@ -1,4 +1,4 @@
-from bots.tools.parse.make_sql_query import MakeSQLQuery
+from bots.tools.parse.make_user_stats_sql_query import MakeUserStatsSQLQuery
 from bots.tools.parse.parse_category import ParseCategory
 from bots.tools.parse.parse_channel import ParseChannel
 from bots.tools.parse.parse_keyword import ParseKeyword
@@ -11,7 +11,7 @@ from bots.tools.parse.select_random_user import SelectRandomUser
 
 
 PARSE_TOOLS = [
-  MakeSQLQuery,
+  MakeUserStatsSQLQuery,
   ParseCategory,
   ParseChannel,
   ParseKeyword,

@@ -4,7 +4,7 @@ from bots.data.dune import run_sql
 
 def fetch(input):
   state = input.state
-  sql = state.get('sql')
+  sql = state.get('user_stats_sql')
   df = run_sql(sql)    
   result = ''
   if df is not None and len(df)>0:
