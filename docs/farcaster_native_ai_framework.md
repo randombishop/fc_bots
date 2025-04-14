@@ -12,13 +12,16 @@ but like someone who never used them before would make very approximate decision
 
 As I started adding more tools to my agent library: searching casts with a keyword, with a search phrase, selecting a user, describing their PFP and casts, generating an avatar, etc. The agent became more and more unreliable.
 
-Here is a simple example: my agent has access to multiple tools to search for casts on Farcaster social media platform, plus multiple AIs. 
-Someone asks: "How many Brazilians do we have on Farcaster?" So he tries forwarding the question to Perplexity AI, 
-not a bad idea, but also searches for all casts with keyword brazil, and sometimes hallucinates a SelectUsers tool and tries passing it a brazil argument.
+Here is a simple example: my agent has access to multiple tools to search for casts on Farcaster social media platform, plus multiple AIs, 
+plus the ability to query some datasets directly from Dune Analytics.
 
-In this example, the correct answer is "I don't have the tools to give you that information", but when provided with +50 tools, unfortunately, the agent won't give up so easily. It will go on a wild goose chase, and at the end, the user will get a wrong answer.
+Someone asks: "How many Brazilians do we have on Farcaster?" 
+The correct plan is to use the MakeUserStatsSQLQuery tool followed by GetUserStats tool; but when using the standard way of plugging tools to an LLM, it fails half of the time to respond with the correct answer.
+Sometimes it tries forwarding the question to Perplexity AI, or searches for all casts with keyword brazil, and sometimes, even if it starts with MakeUserStatsSQLQuery, it realizes that the table doesn't have a country field, and won't go ahead with GetUserStats. Interestingly, it will be smart enough to use the portuguese language as a proxy to find brazilians because the prompt of MakeUserStatsSQLQuery instructs it to find workarounds when data is missing. But becausethe main prompt doesn't provide the same directive, it doesn't proceed afterwards.
 
-So even if frameworks like LangChain and AutoGPT lead the way and provide foundations for building AI agents, the core challenge remains: how do we reliably orchestrate LLMs to perform complex tasks while maintaining control over their behavior and ensuring reliable results?
+One could propose an easy solution, why not simply add "it's ok to return an approximative number if you can't get the exact one." to all the prompts that will be used by the agent along its execution pipeline; but I learnt the hard way that such approach never converges. When provided with +50 tools, adding such hacks will improve one use-case and degrade another. And issues like this will keep raising and bloating the prompts with more and more edge cases.
+
+So, in summary, even if frameworks like LangChain and AutoGPT lead the way and provide foundations for building AI agents, the core challenge remains: how do we reliably orchestrate LLMs to perform complex tasks while maintaining control over their behavior and ensuring reliable results?
 
 ## Current Approaches
 
@@ -28,7 +31,7 @@ Current approaches generally fall into two camps:
 
 2. **Structured frameworks** like LangChain that provide tools and patterns for building agents, but leave much of the orchestration logic to the developer.
 
-Some notable work in this space:
+Here are some useful resources on the topic:
 - [Task-driven Autonomous Agent](https://github.com/yoheinakajima/babyagi) by Yohei Nakajima
 - [The Rise and Potential of Large Language Model Based Agents](https://arxiv.org/abs/2309.07864) - A comprehensive survey
 - [LangChain](https://github.com/langchain-ai/langchain) - The leading framework for building LLM applications

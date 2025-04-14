@@ -11,4 +11,7 @@ class TestUserStats(unittest.TestCase):
     state = run_agent(test_id='TestUserStats:1', mode='bot', request=request)
     self.assertIn('GetUserStats', state.get_tools_sequence())
     
-    
+  def test2(self):
+    request = "What is the percentage of farcaster accounts who are active?"
+    state = run_agent(test_id='TestUserStats:2', mode='bot', request=request)
+    self.assertIn('GetUserStats', state.get_tools_sequence())
