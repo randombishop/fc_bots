@@ -133,17 +133,3 @@ def get_response_plan(intent):
   return INTENTS_RESPONSE_PLANS[intent] if intent is not None and intent in INTENTS_RESPONSE_PLANS else DEFAULT_RESPONSE_PLAN
   
 
-
-
-
-
-
-#def get_intent_examples():
-#  examples = ''
-#  for key in get_intents():
-#    examples += f'Example: {INTENTS_DESCRIPTIONS[key]}\n'
-#    examples += f'> intent:\n{key}\n'
-#    examples += f'> action_plan:\n{ACTION_PLANS[key]}\n'
-#    examples += f'> response _plan:\n{RESPONSE_PLANS[key]}\n'
-#    examples += '\n'
-#  return examples
