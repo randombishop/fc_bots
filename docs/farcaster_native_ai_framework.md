@@ -8,20 +8,20 @@ Coming from years of classic software enginnering, LLMs feel so powerful, after 
 
 Many AI solutions out there, including leading ones like OpenAI Assistants, advertise that the sky is the limit now: you just need to plug in your tools and the LLM will know how to use them to respond to any user request.
 
-But the truth is, I found that it only works with a limited set of tools, and only if they are very simple and independent. For example, add a tool for the weather and another one for the stock prices, and the agent will properly trigger them and provide good answers that require a weather forecast or some stock price. But if you plug-in 10 or more different tools, it becomes a mess. The agent gets confused with too many options and starts calling them not like a programmer would do, 
-but like someone who never used them before would make very approximate decisions on how to write a program, learn by trial and error, and at some point go so far on a wrong path that they don't even remember what they were trying to achieve in the first place.
+But the truth is, I found that it only works with a limited set of tools, and only if they are very simple and independent. For example, add a tool for the weather and another one for the stock prices, and the agent will properly trigger them and provide good answers that require a weather forecast or some stock price. But if you plug-in 10 or more different tools, it becomes a mess. The agent gets confused with too many options and starts calling them, not like a programmer would do, 
+but like someone who never used them before. They would make very approximate decisions on how to write a program, learn by trial and error, and at some point go on a goose chase and forget what they were trying to achieve in the first place.
 
 As I started adding more tools to my agent library: searching casts with a keyword, with a search phrase, selecting a user, describing their PFP and casts, generating an avatar, etc. The agent became more and more unreliable.
 
 Here is a simple example: Someone asks "How many Brazilians do we have on Farcaster?" 
 
-The correct plan is to use the MakeUserStatsSQLQuery tool followed by GetUserStats tool; but when using the standard way of plugging tools to an LLM, it fails half of the time to respond with the correct answer.
-Sometimes it tries forwarding the question to Perplexity AI, or searches for all casts with keyword brazil, and sometimes, even if it starts with MakeUserStatsSQLQuery, it realizes that the table doesn't have a country field, and won't go ahead with GetUserStats. Interestingly, it will be smart enough to use the portuguese language as a proxy to find brazilians because the prompt of MakeUserStatsSQLQuery instructs it to find workarounds when data is missing. But becausethe main prompt doesn't provide the same directive, it doesn't proceed afterwards.
+The correct plan is to call `MakeUserStatsSQLQuery` followed by `GetUserStats` tools; but when using the standard way of plugging tools to an LLM, it fails half of the time to respond with the correct answer.
+Sometimes it tries forwarding the question to Perplexity, or searches for all casts with keyword brazil, and sometimes, even if it starts with `MakeUserStatsSQLQuery`, it realizes that the table doesn't have a country field, and won't go ahead with the correct next step. Interestingly, it will be smart enough to use the portuguese language as a proxy to find brazilians because `MakeUserStatsSQLQuery` is pretty flexible. But because the main prompt doesn't say anything about being flexible when it comes to statistics, it doesn't proceed afterwards.
 
 One could propose an easy solution, why not simply add "it's ok to return an approximative number if you can't get the exact one." to all the prompts that will be used by the agent along its execution pipeline; but I learnt the hard way that such approach never converges. When provided with +50 tools, adding such hacks will improve one use-case and degrade another. And issues like this will keep raising and bloating the prompts with more and more edge cases.
 
 So, in summary, even if frameworks like AutoGPT, LangChain and OpenAI lead the way and provide foundations for building AI agents, the core challenge remains: 
-*how do we equip LLMs with large toolsets while maintaining control over their behavior and ensuring reliable results?*
+*how do we equip LLMs with large tool sets, while maintaining control over their behavior and ensuring reliable results?*
 
 
 ## Existing Approaches
