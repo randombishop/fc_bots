@@ -38,7 +38,7 @@ BabyAGI2 (2024) builds on top of baby1, and introduces the concept of self-build
 I never tested it yet, but if it truly thinks like a developer, and if it's capable of writing the correct python function for each situation and make the best use of the available tools, that would be amazing. 
 My 2 cents is that it adds complexity, uncertainty and some serious security risks, but the self-building-functions concept is something I will keep in mind for future versions.
 
-### [AutoGPT](https://github.com/Significant-Gravitas/AutoGPT), (OpenAI Agents)[https://github.com/openai/openai-agents-python] and [LangChain](https://github.com/langchain-ai/langchain)
+### [AutoGPT](https://github.com/Significant-Gravitas/AutoGPT), [OpenAI Agents](https://github.com/openai/openai-agents-python) and [LangChain](https://github.com/langchain-ai/langchain)
 These frameworks represent the current state-of-the-art in AI agent development, each with their own approach to tool orchestration.
 The following is Claude3.5's review of their features and pros/cons:
 
