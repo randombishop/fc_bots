@@ -1,6 +1,5 @@
 # Building Reliable AI Agents: A Farcaster Native Framework
 
-
 ## The Challenge: How many Brazilians do we have on Farcaster?
 
 When I started building my bot on Farcaster, I found it pretty easy in the beginning, and didn't even need a framework. 
@@ -22,7 +21,6 @@ One could propose an easy solution, why not simply add "it's ok to return an app
 
 So, in summary, even if frameworks like AutoGPT, LangChain and OpenAI lead the way and provide foundations for building AI agents, the core challenge remains: 
 *how do we equip LLMs with large tool sets, while maintaining control over their behavior and ensuring reliable results?*
-
 
 ## Existing Approaches
 
@@ -86,8 +84,6 @@ Both OpenAI's and Langchains frameworks are open source, but I picked LangChain 
 
 Now, I could have gone with any of these frameworks, the challenge would still be the same. I found that none of them provides something that works out of the box for a large set of tools. So here is how I (kind of) solved it so far...
 
-
-
 ## Organizing my tools
 
 First, I started by applying some clean code principles: if even myself can't easily visualize the available tools and how they depend on each other, how can I expect an LLM to do that?
@@ -108,7 +104,6 @@ and organized them into categories depending on what they do:
 ```
 
 Technically, the tools all implement the same interface, but by organizing them, I can guide the LLM to use them in the best way possible more efficiently.
-
 
 ## Divide and Conquer
 
@@ -149,41 +144,91 @@ BLUEPRINTS = {
 }
 ```
 
-
 ### Bot Mode
 I use this mode for my agent to respond to other users when tagged or replied to on the Farcaster network.
 Since I expect the requests or questions to be short and simple, I don't want to allow my agent to go too crazy here. 
 So, I defined a set of possible [intents](../bots/tools/intent/intents.py) for which we have good tools, and I only run the LLM once to detect the intent, pick the pre-set target tools, and extend the prompt that will compose the response. 
 The agent still works on the original instructions so it will adapt to it as much as possible, 
-but the pre-set target tools and the guardrails make it much more reliable when it's a task it was designed to handle.
+but the pre-set target tools act like guardrails to make it much more reliable when it's a task it was designed to handle.
 This actually solved the initial challenge in a very practical way: the agent will pick the `UserStats` intent 100% of times when asked for a statistic about users, which will guide it to target the `GetUserStats` tool, and add this directive when it's time to compose the reponse: `Compose a data driven response`.
-This is not fancy AGI, but it works.
-
+It's not very fancy, but it works.
 
 ### Assistant Mode
+In this mode, I want the agent to perform a task and post the result on behalf of its owner.
+For example, here are the instructions I am giving it to post on my behalf in a channel dedicated to classic cars:
+```
+Your goal is to post an interesting news story about classic cars in channel /retroparc.
+Create a search phrase that will be interesting to the channel audience and can yield news about classic cars.
+Use the search phrase to check out the news then compose an engaging cast about it.
+Include a link to the story.
+```
+The simple intent detection that works well when conversing with the agent online (bot mode), is not enough here, because I expect the assistant owners to propose elaborate multi-step plans, and the available tools already offer infinite possibilities. 
+So, in this mode, I don't rely on the pre-set intents, but let the LLM decide its targets almost freely.
 
+Almost? Yes, I tried different variations of the planning function, including the most flexible ones akin to BabyAGI1, but I wasn't happy with the results, it would not apply the best plan about 50% of the times. Therefore, even in my most flexible mode, I still apply a big restriction: I only let it plan the tools once, and I help it by `compiling` the tool sequence after the LLM has selected some target tools. More about this on the learnings section.
 
+While this achieves more flexibility than bot mode, it still doesn't unleash all the potential of my tool library. For example, the assistant can't iterate and re-adjust the plan as he uses his first tools and learns new information. 
 
+But it works and passes my unit tests suite for now... 
 
+## Learnings
 
-
-
-
-
-## More tricks
+### The Tool Sequence Compiler
+I mentioned that I help the LLM by `compiling` the tool sequence after it has selected some target tools.
+This is actually a trick that makes a big difference in reliability and performance of the agent.
+We know the tools are organized into categories and their dependency graph is well defined in terms of required inputs and output metadata.
+With that information, I can present to the LLM only the tools that are real targets, and hide the ones that are typically used as intermediate steps.
+Then I can reverse-engineer the tool sequence to run the target tools in the correct order.
+Now, the dependecy graph is not linear and there will be choices to make to select which pre-requisite tool to run first, but that's ok, the LLM is good at making those decisions, especially when it can focus on choosing from a small set of options and it is provided with a clear question: you know that you want to run this tool next, so which one of these dependencies applies best in this context?
+It's basically replicating how a human developer would go about writing a program: starting from the end goal and choosing the intermediate steps while keeping focus on a specific goal.
+This idea works really well and it's probably a keeper in future versions.
 
 ### Focused LLM Usage
-
-Finally, one of the key learnings, which is recurrent in many forums already, is that LLMs work best when given a single, clear task with exactly the context it needs. 
+In general, there's an online consensus that LLMs work best when given a single, clear task with exactly the context it needs. 
 There is always a temptation to add more to a prompt to fix an edge case, but as I experimented more and more, I realized that when a prompt is not always successful, it's better to split it into smaller prompts that are more reliable rather than adding to it.
+My tools and planning steps follow this principle rigorously now, and it works pretty well.
+For example, when calling a tool that applies to a user profile, we need to parse a user parameter. 
+It's a very basic task, but rather than incorporating with an other higher level tool, I found that making it its own atomic tool works way better.
+Here is how the prompt looks like in the `ParseUser` tool, which will only be shown the conversation and these instructions:
+```
+You are @{{name}}, a bot programmed to analyze user data and perform actions such as describing, analyzing, praising, roasting, etc.
+Based on the provided conversation, who should your tools target?
+You must only extract the user parameter so that you can set the user parameter.
+Users typically start with @, but not always.
+If the request is about self or uses a pronoun, study the context and instructions carefully to figure out the intended user.
 
-### Tool Sequence Compiler
-
-
+#RESPONSE FORMAT:
+{
+  "user": ...
+}
+```
+By repeating the word "user" so many times and solving the pronoun edge cases in this tool, and here only, it works 100% of times.
 
 ### Unit Tests
+This is not specific to AI Agents development, but I found that unit tests play a fantastic role in designing the tools and prompt engineering. 
+I have a suite of 86 tests that cover most of the tasks I expect my agents to be successful at.
+I use them not only to validate my changes, but also to measure the overall speed and introspect what is going on in different scenarios.
 
+### Monitoring
+Finally, I also monitor the agents runs both in production and in the test suite through the langsmith frontend (super usefule part of the LangChain framework.)
+There's a lot of data that will flow through an AI agent run, each prompt and output will be a long text and it quickly becomes an impossible mess if you try to a generic logging system, how do you even debug images in a text log file? 
+In langsmith, you can visualize the steps and tool calls in a structured way and zoom in the prompts inputs and outputs one at a time. 
+It also reports the number of tokens used and the cost of the operation, which is great for cost optimization.
 
 ## What's next?
+
+My current framework is pretty reliable with its set of about 50 tools. 
+
+My next milestone is to scale it to hundreds of tools while maintaining or improving reliability. 
+
+There is also a key insight from BabyAGI2 that resonates with me: treating AI planning more like a programming task.
+
+Instead of having the LLM select from predefined tool sequences, I envision a system where it can generate custom sequences just like it would generate Python code. This would combine the best of both worlds:
+1. The structured, deterministic nature of programming that makes tools reliable
+2. The creative, adaptive capabilities of LLMs that make them powerful
+
+In summary, my take-away is that building reliable AI agents is an exciting challenge that sits at the intersection of traditional software engineering and modern AI capabilities. While frameworks like LangChain provide excellent foundations, there's still much work to be done in making agents truly reliable at scale.
+
+I'll continue sharing my learnings as this framework evolves. Stay tuned!
 
 
