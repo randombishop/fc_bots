@@ -156,7 +156,7 @@ Since I expect the requests or questions to be short and simple, I don't want to
 So, I defined a set of possible [intents](../bots/tools/intent/intents.py) for which we have good tools, and I only run the LLM once to detect the intent, pick the pre-set target tools, and extend the prompt that will compose the response. 
 The agent still works on the original instructions so it will adapt to it as much as possible, 
 but the pre-set target tools and the guardrails make it much more reliable when it's a task it was designed to handle.
-This actually solved the initial challenge in a very practical way: the agent will pick the `UserStats` intent 100% of times when asked for a statistic about users, which will guide it to target the `GetUserStats` tool, and add this directive when it's time to compose the reponse: "Compose a data driven response".
+This actually solved the initial challenge in a very practical way: the agent will pick the `UserStats` intent 100% of times when asked for a statistic about users, which will guide it to target the `GetUserStats` tool, and add this directive when it's time to compose the reponse: `Compose a data driven response`.
 This is not fancy AGI, but it works.
 
 
