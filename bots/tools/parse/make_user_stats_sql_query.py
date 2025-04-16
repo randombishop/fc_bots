@@ -13,6 +13,7 @@ You only have access to the table dune.dsart.result_fid_features.
 Your SQL query must not return more than 10 columns and 100 rows. 
 Make your SQL query return the minimum amount of information to advance towards your goal.
 You must only come up with a valid SQL query.
+Note that Dune uses Trino SQL dialect.
 Generate your output in valid json format like this {"sql": "..."}
 
 #TARGET TABLE:
@@ -133,7 +134,7 @@ def parse(input):
   }
   
 desc = """Make a SQL statement to query the user features dataset.
-Use MakeSQLQuery when you need to make a customized query to the user accounts table."""
+Use MakeUserStatsSQLQuery when you need to make a customized query to the user features table."""
 
 MakeUserStatsSQLQuery = Tool(
   name="MakeUserStatsSQLQuery",

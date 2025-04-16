@@ -12,6 +12,7 @@ from bots.tools.fetch.get_most_active_users import GetMostActiveUsers
 from bots.tools.fetch.get_news import GetNews
 from bots.tools.fetch.get_trending import GetTrending
 from bots.tools.fetch.get_user_profile import GetUserProfile
+from bots.tools.fetch.get_cast_stats import GetCastStats
 from bots.tools.fetch.get_user_stats import GetUserStats
 from bots.tools.fetch.get_user_replies_and_reactions import GetUserRepliesAndReactions
 
@@ -32,6 +33,7 @@ FETCH_TOOLS = [
   GetNews,
   GetTrending,
   GetUserProfile,
+  GetCastStats,
   GetUserStats,
   GetUserRepliesAndReactions  
 ]
