@@ -1,6 +1,6 @@
-from datetime import datetime
 from bots.utils.check_links import check_link_data
 from bots.data.users import get_fid
+from bots.utils.format_when import format_when
 
 
 def concat_casts(posts):
@@ -9,33 +9,11 @@ def concat_casts(posts):
     post['id'] = post['hash'][2:8]
     ans += "\n"
     ans += f"<{post['id']}>\n"
-    ans += f"{post['user_name']} said: {post['text']}\n"
+    ans += f"@{post['user_name']} said: {post['text']}\n"
     ans += f"</{post['id']}>\n"
   ans += "\n"
   return ans
 
-def format_when(timestamp):
-  if isinstance(timestamp, str):
-    timestamp = timestamp.replace('T', ' ')
-    timestamp = timestamp[:19]
-    timestamp_dt = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
-    timestamp_seconds = timestamp_dt.timestamp()
-  elif isinstance(timestamp, datetime):
-    timestamp_seconds = timestamp.timestamp()
-  else:
-    timestamp_seconds = int(timestamp) / 1000
-  now = datetime.now()
-  timestamp_dt = datetime.fromtimestamp(timestamp_seconds)
-  delta = now - timestamp_dt
-  if delta.days > 0:
-    return f"{delta.days} days ago"
-  hours = delta.seconds // 3600
-  if hours > 0:
-    return f"{hours} hours ago"
-  minutes = delta.seconds // 60
-  if minutes > 0:
-    return f"{minutes} minutes ago"
-  return "seconds ago"
 
 def insert_mentions(original: str, mentions: list[str], mention_positions: list[int]) -> str:
   if len(mentions) != len(mention_positions):

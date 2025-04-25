@@ -13,7 +13,8 @@ INTENTS_DESCRIPTIONS = {
 'Summary': 'Make a summary about posts.',
 'WhoIs': 'Analyze a user profile and generate a new avatar for them.',
 'WordCloud': 'Make a word cloud.',
-'UserStats': 'Get users aggregation or statistic from the database.'
+'UserStats': 'Get users aggregation or statistic from the database.',
+'CastStats': 'Get casts (=posts) aggregation or statistic from the database.'
 }
 
 INTENTS_TARGETS = {
@@ -42,8 +43,9 @@ INTENTS_TARGETS = {
 
 'WordCloud': ['CreateWordCloud'],
 
-'UserStats': ['GetUserStats']
+'UserStats': ['GetUserStats'],
 
+'CastStats': ['GetCastStats']
 
 }
 
@@ -103,7 +105,9 @@ Embed the user's avatar in embed_url1""",
 'WordCloud': """Write a word play using the most common words (wordcloud_text) and the theme from the provided posts.
 Post it as a single short tweet and embed the wordcloud URL in embed_url1""",
 
-'UserStats': """Compose a data driven response."""
+'UserStats': """Compose a data driven response.""",
+
+'CastStats': """Compose a data driven response."""
 
 }
 

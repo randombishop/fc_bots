@@ -1,5 +1,5 @@
 from langchain.agents import Tool
-from bots.data.casts import get_cast
+from bots.data.neynar import get_cast_info
 from bots.data.users import get_username
 
 
@@ -21,14 +21,18 @@ def get_conversation(input):
       'when': 'now'
     }
     if attachment_hash is not None:
-      attachment_cast = get_cast(attachment_hash)
+      attachment_cast = get_cast_info(attachment_hash)
       if attachment_cast is not None:
         main_cast['quote'] = {'text': attachment_cast['text'], 'fid': attachment_cast['fid'], 'username': attachment_cast['username']}
     context.append(main_cast)
   current_depth = 0
   parent_hash = state.get('parent_hash')
   while parent_hash is not None and current_depth < max_depth:
-    previous_cast = get_cast(parent_hash)
+    previous_cast = None
+    try:
+      previous_cast = get_cast_info(parent_hash)
+    except:
+      pass
     if previous_cast is not None:
       context.append(previous_cast)
       parent_hash = previous_cast['parent_hash']
@@ -42,9 +46,12 @@ def get_conversation(input):
     text += f"#{i+1}. @{item['username']} said {item['when']}: \n"
     text += f"{item['text']} \n"  
     if 'quote' in item:
-      text += f"  [quoting @{item['quote']['username']}: \n"
-      text += f"  {item['quote']['text']} \n"
-      text += "  ]\n"
+      if 'username' in item['quote']:
+        text += f"  [quoting @{item['quote']['username']}: \n"
+        text += f"  {item['quote']['text']} \n"
+        text += "  ]\n"
+      elif 'url' in item['quote']:
+        text += f"  [{item['quote']['url']}]\n"
     text += '#'
   return {'conversation': text}
 
