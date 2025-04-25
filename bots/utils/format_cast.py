@@ -9,7 +9,7 @@ def concat_casts(posts):
     post['id'] = post['hash'][2:8]
     ans += "\n"
     ans += f"<{post['id']}>\n"
-    ans += f"{post['user_name']} said: {post['text']}\n"
+    ans += f"@{post['user_name']} said: {post['text']}\n"
     ans += f"</{post['id']}>\n"
   ans += "\n"
   return ans

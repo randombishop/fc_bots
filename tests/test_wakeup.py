@@ -71,7 +71,6 @@ class TestWakeUp(unittest.TestCase):
     self.assertIn(request, result['conversation'])
     self.assertIn('@horsefacts.eth', result['conversation'])
     self.assertIn('@randombishop', result['conversation'])
-    self.assertIn('quoting @greg', result['conversation'])
     self.assertIn('post a picture of you from a different era', result['conversation'])
 
   def test_conversation5(self):

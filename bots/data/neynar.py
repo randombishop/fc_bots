@@ -44,7 +44,6 @@ def parse_user_info(user):
     'num_following': int(user['following_count']),
     'num_followers': int(user['follower_count'])
   }
-  print(parsed)
   return parsed
 
 
@@ -95,5 +94,4 @@ def parse_cast(cast_info):
         cast['quote'] = {'url': embed['url']}
       elif 'cast' in embed:
         cast['quote'] = {'text': embed['cast']['text'], 'fid': int(embed['cast']['author']['fid']), 'username': embed['cast']['author']['username']}
-  print(cast)
   return cast
