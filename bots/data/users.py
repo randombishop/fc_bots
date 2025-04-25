@@ -1,7 +1,7 @@
 import json
 from sqlalchemy import Table, select
 from bots.data.pg import engine, metadata, get_session
-from bots.data.wield import get_user_info_by_fid, get_user_info_by_name
+from bots.data.neynar import get_user_info_by_fid, get_user_info_by_name
 from bots.data.dune import run_query
 from dune_client.types import QueryParameter
 from datetime import datetime, timedelta

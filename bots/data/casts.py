@@ -2,7 +2,7 @@ from bots.data.wield import get_cast_info
 from bots.data.dune import run_query
 from bots.models.bert import bert
 from bots.models.gambit import gambit, categories, topics
-from bots.utils.format_cast import format_when
+from bots.utils.format_when import format_when
 from dune_client.types import QueryParameter
 from bots.data.pg import get_session
 from sqlalchemy import text

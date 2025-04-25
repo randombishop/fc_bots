@@ -1,5 +1,5 @@
 from langchain.agents import Tool
-from bots.data.wield import get_user_info_by_name
+from bots.data.neynar import get_user_info_by_name
 
 
 def fetch(input):
