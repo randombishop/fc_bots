@@ -1,10 +1,11 @@
-from langchain.agents import Tool
 import os
 import uuid
 import requests
 from bots.utils.llms2 import generate_image
 from PIL import Image, ImageEnhance, ImageOps
-
+from bots.utils.prompts import format_template
+from bots.kit_interface.word_cloud_mask import WordCloudMask
+from bots.kit_interface.word_cloud_data import WordCloudData
 
 prompt_template = """
 Generate an image with a pure white background and a single, bold colored shape to illustrate this text: 
@@ -15,13 +16,12 @@ Avoid gradients or fine details, your design should be recognizable from a dista
 """
 
 
-def prepare(input):
-  state = input.state
-  text = state.get('wordcloud_text')
+def make_word_cloud_mask(word_cloud_data: WordCloudData) -> WordCloudMask:
+  text = word_cloud_data.text
   if text is None or len(text)==0:
     raise Exception("No text to generate mask")
   # Generate a new image
-  prompt = prompt_template.replace("{{text}}", text)
+  prompt = format_template(prompt_template, {'text': text})
   image_url = generate_image(prompt)
   key = str(uuid.uuid4())
   file1 = key+'.original.png'
@@ -56,19 +56,4 @@ def prepare(input):
   img_dark = enhancer.enhance(0.15)
   img_dark = img_dark.convert("RGBA")
   os.remove(file1)
-  return {
-    'wordcloud_mask': mask,
-    'wordcloud_background': img_dark,
-    'wordcloud_width': width,
-    'wordcloud_height': height
-  }
-
-MakeWordCloudMask = Tool(
-  name="MakeWordCloudMask",
-  description="Make a wordcloud mask to be used as a wordcloud background",
-  metadata={
-    'inputs': ['wordcloud_text'],
-    'outputs': ['wordcloud_mask', 'wordcloud_background', 'wordcloud_width', 'wordcloud_height']
-  },
-  func=prepare
-)
+  return WordCloudMask(mask, img_dark, width, height)
