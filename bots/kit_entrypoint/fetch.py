@@ -8,6 +8,7 @@ from bots.kit_interface.news import News
 from bots.kit_interface.favorite_users import FavoriteUsers
 from bots.kit_interface.most_active_users import MostActiveUsers
 from bots.kit_interface.casts import Casts
+from bots.kit_interface.reaction import Reaction
 # Tool implementations
 from bots.kit_impl.fetch.get_channel_id import get_channel_id
 from bots.kit_impl.fetch.get_keyword import get_keyword
@@ -26,6 +27,7 @@ from bots.kit_impl.fetch.aggregate_casts import aggregate_casts
 from bots.kit_impl.fetch.get_bot_casts_in_channel import get_bot_casts_in_channel
 from bots.kit_impl.fetch.get_bot_casts_all import get_bot_casts_all
 from bots.kit_impl.fetch.get_trending import get_trending
+from bots.kit_impl.fetch.get_user_reactions import get_user_reactions
 
 
 class Fetch:
@@ -249,4 +251,15 @@ class Fetch:
         Casts: The list of trending casts, or None if empty.
     """
     return get_trending()
-
+  
+  def get_user_reactions(self, user_id: UserId) -> list[Reaction]:
+    """
+    Get the reactions (likes, replies and recasts) of a user.
+    
+    Args:
+        user_id (UserId): The user identifier.
+        
+    Returns:
+        list[Reaction]: The list of reactions, or None if empty.
+    """
+    return get_user_reactions(user_id.fid)

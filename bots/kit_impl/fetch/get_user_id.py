@@ -1,4 +1,4 @@
-from bots.tools_interface.user_id import UserId
+from bots.kit_interface.user_id import UserId
 from bots.utils.read_params import read_user
 
 

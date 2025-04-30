@@ -4,7 +4,7 @@ from bots.data.bot_history import get_random_user, get_random_user_in_channel
 from bots.data.users import get_fid
 
 
-def get_random_user(bot_id: int, channel_id: ChannelId) -> UserId:
+def get_random_user(bot_id: int, channel_id: ChannelId|None) -> UserId:
   user_name, fid = None, None
   if channel_id is None:
     user_name = get_random_user(bot_id)
