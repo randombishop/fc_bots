@@ -3,14 +3,21 @@ import os
 from bots.utils.format_when import format_when
 
 
+API_URL = 'https://api.neynar.com/v2/farcaster/'
+
+
+def call_neynar_api(endpoint, params):
+  response = requests.get(API_URL + endpoint, headers={
+    'x-api-key': os.getenv('NEYNAR_API_KEY')
+  }, params=params)
+  response.raise_for_status()
+  return response.json()
+
+
 def get_user_info_by_fids(fids):
   fids = ','.join([str(fid) for fid in fids])
-  url = f'https://api.neynar.com/v2/farcaster/user/bulk?fids={fids}'
-  response = requests.get(url, headers={
-    'x-api-key': os.getenv('NEYNAR_API_KEY')
-  })
-  response.raise_for_status() 
-  infos = response.json()
+  url = 'user/bulk'
+  infos = call_neynar_api(url, {'fids': fids})
   return [parse_user_info(info) for info in infos['users']]
 
 
@@ -22,29 +29,9 @@ def get_user_info_by_fid(fid):
 
 
 def get_user_info_by_name(name):
-  url = f'https://api.neynar.com/v2/farcaster/user/by_username?username={name}'
-  response = requests.get(url, headers={
-    'x-api-key': os.getenv('NEYNAR_API_KEY')
-  })
-  response.raise_for_status()
-  info = response.json()
+  url = 'user/by_username'
+  info = call_neynar_api(url, {'username': name})
   return parse_user_info(info['user'])
-
-
-def parse_user_info(user):
-  if user is None:
-    return None
-  parsed = {
-    'fid': int(user['fid']),
-    'user_name': user['username'],
-    'display_name': user['display_name'],
-    'pfp': user['pfp_url'],
-    'bio': user['profile']['bio']['text'],
-    'custody_address': user['verified_addresses']['eth_addresses'][0],
-    'num_following': int(user['following_count']),
-    'num_followers': int(user['follower_count'])
-  }
-  return parsed
 
 
 def is_fid(user):
@@ -64,13 +51,120 @@ def get_user_info(user):
 
 
 def get_cast_info(hash):
-  url = f'https://api.neynar.com/v2/farcaster/cast?identifier={hash}&type=hash'
-  response = requests.get(url, headers={
-    'x-api-key': os.getenv('NEYNAR_API_KEY')
-  })
-  response.raise_for_status()
-  info = response.json()
+  url = 'cast'
+  params = {
+    'identifier': hash,
+    'type': 'hash'
+  }
+  info = call_neynar_api(url, params)
   return parse_cast(info['cast'])
+
+
+def get_casts_ids(hashes):
+  url = 'casts'
+  params = {
+    'casts': ','.join(hashes)
+  }
+  info = call_neynar_api(url, params)
+  array = [parse_cast(x) for x in info['result']['casts']]
+  return {x['hash']: x for x in array}
+
+
+def get_casts_user(fid, limit=25):
+  url = 'feed/user/casts'
+  params = {
+    'fid': fid,
+    'include_replies': 'false',
+    'limit': limit
+  }
+  info = call_neynar_api(url, params)
+  return [parse_cast(x) for x in info['casts']]
+
+
+def get_casts_channel(channel_url, limit=25):
+  url = 'feed/parent_urls'
+  params = {
+    'with_recasts': 'true',
+    'limit': limit,
+    'parent_urls': channel_url
+  }
+  info = call_neynar_api(url, params)
+  return [parse_cast(x) for x in info['casts']]
+
+
+def get_casts_user_channel(fid, channel_url, limit=25):
+  url = 'feed/user/casts'
+  params = {
+    'fid': fid,
+    'include_replies': 'false',
+    'parent_urls': channel_url,
+    'limit': limit
+  }
+  info = call_neynar_api(url, params)
+  return [parse_cast(x) for x in info['casts']]
+
+
+def search_casts(query, mode, limit=25):
+  url = 'cast/search'
+  params = {
+    'q': query,
+    'mode': mode,
+    'limit': limit,
+    'sort_type': 'algorithmic'
+  }
+  info = call_neynar_api(url, params)
+  return [parse_cast(x) for x in info['result']['casts']]
+
+
+def get_user_likes(fid, limit=25):
+  url = 'reactions/user'
+  params = {
+    'fid': fid,
+    'limit': limit,
+    'type': 'likes'
+  }
+  info = call_neynar_api(url, params)
+  return [parse_like(x) for x in info['reactions']]
+
+
+def get_user_replies_and_recasts(fid, limit=25):
+  url = 'feed/user/replies_and_recasts'
+  params = {
+    'fid': fid,
+    'limit': limit,
+    'filter': 'all'
+  }
+  info = call_neynar_api(url, params)
+  ans = [parse_replies_recasts(fid, x) for x in info['casts']]
+  parent_hashes = [x['cast']['parent_hash'] for x in ans if x['cast']['parent_hash'] is not None]
+  parent_casts = get_casts_ids(parent_hashes)
+  for x in ans:
+    if x['cast']['parent_hash'] is not None and x['cast']['parent_hash'] in parent_casts:
+      x['cast']['parent_cast'] = parent_casts[x['cast']['parent_hash']]
+  return ans
+
+
+
+
+
+################################################################################
+### Parse API responses into compact data structures
+################################################################################
+
+def parse_user_info(user):
+  if user is None:
+    return None
+  parsed = {
+    'fid': int(user['fid']),
+    'user_name': user['username'],
+    'display_name': user['display_name'],
+    'pfp': user['pfp_url'],
+    'bio': user['profile']['bio']['text'],
+    'custody_address': user['verified_addresses']['eth_addresses'][0],
+    'num_following': int(user['following_count']),
+    'num_followers': int(user['follower_count'])
+  }
+  return parsed
 
 
 def parse_cast(cast_info):
@@ -95,3 +189,28 @@ def parse_cast(cast_info):
       elif 'cast' in embed:
         cast['quote'] = {'text': embed['cast']['text'], 'fid': int(embed['cast']['author']['fid']), 'username': embed['cast']['author']['username']}
   return cast
+
+
+def parse_like(like):
+  cast = parse_cast(like['cast'])
+  return {
+    'type': 'like',
+    'timestamp': like['reaction_timestamp'],
+    'when': format_when(like['reaction_timestamp']),
+    'cast': cast
+  }
+
+
+def parse_replies_recasts(fid, info):
+  cast = parse_cast(info)
+  reaction = None
+  if cast['fid'] == fid and cast['parent_fid'] is not None: 
+    reaction = 'reply'
+  else:
+    reaction = 'recast'
+  return {
+    'type': reaction,
+    'timestamp': info['timestamp'],
+    'when': format_when(info['timestamp']),
+    'cast': cast
+  }

@@ -3,18 +3,6 @@ from bots.data.users import get_fid
 from bots.utils.format_when import format_when
 
 
-def concat_casts(posts):
-  ans = ''
-  for post in posts:
-    post['id'] = post['hash'][2:8]
-    ans += "\n"
-    ans += f"<{post['id']}>\n"
-    ans += f"@{post['user_name']} said: {post['text']}\n"
-    ans += f"</{post['id']}>\n"
-  ans += "\n"
-  return ans
-
-
 def insert_mentions(original: str, mentions: list[str], mention_positions: list[int]) -> str:
   if len(mentions) != len(mention_positions):
     raise ValueError("Mentions and positions arrays must have the same length")
