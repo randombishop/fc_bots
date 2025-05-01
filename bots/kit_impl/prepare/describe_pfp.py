@@ -1,4 +1,5 @@
-from langchain.agents import Tool
+from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.image_description import ImageDescription
 from bots.utils.get_url_data import get_url_data
 from bots.utils.llms2 import call_llm_with_data
 
@@ -32,26 +33,13 @@ schema = {
 }
 
 
-def prepare(input):
-  state = input.state
-  url = state.get('user_pfp_url')
+def describe_pfp(user_profile: UserProfile) -> ImageDescription:
+  url = user_profile.pfp_url
   data, mime_type = get_url_data(url)
   if data is None or mime_type is None:
     return {'user_pfp_description': ''}
   prompt = "Describe the provided profile picture in a short paragraph."
   result = call_llm_with_data(prompt, data, mime_type, instructions, schema)
   description = result['image_description'] if 'image_description' in result else ''
-  return {
-    'user_pfp_description': description
-  }
+  return ImageDescription(url, description)
 
-
-DescribePfp = Tool(
-  name="DescribePfp",
-  description="Describe a user's profile picture",
-  metadata={
-    'inputs': ['user_pfp_url'],
-    'outputs': ['user_pfp_description']
-  },
-  func=prepare
-)

@@ -7,12 +7,15 @@ from bots.kit_interface.favorite_users import FavoriteUsers
 from bots.kit_interface.favorite_users_table import FavoriteUsersTable
 from bots.kit_interface.most_active_users_chart import MostActiveUsersChart
 from bots.kit_interface.word_cloud_image import WordCloudImage
+from bots.kit_interface.image_description import ImageDescription
+from bots.kit_interface.user_profile import UserProfile
 # Tool implementations
 from bots.kit_impl.prepare.create_most_active_users_chart import create_most_active_users_chart
 from bots.kit_impl.prepare.make_word_cloud_data import make_word_cloud_data
 from bots.kit_impl.prepare.make_word_cloud_mask import make_word_cloud_mask
 from bots.kit_impl.prepare.render_favorite_users_table import render_favorite_users_table
 from bots.kit_impl.prepare.create_wordcloud import create_wordcloud
+from bots.kit_impl.prepare.describe_pfp import describe_pfp
 
 
 class Prepare:
@@ -80,6 +83,18 @@ class Prepare:
         WordCloudImage: The word cloud image url.
     """
     return create_wordcloud(data, mask)
+  
+  def describe_pfp(self, user_profile: UserProfile) -> ImageDescription:
+    """
+    Describe a user's profile picture.
+    
+    Args:
+        user_profile (UserProfile): The user's profile containing the target pfp_url. 
+  
+    Returns:
+        ImageDescription: The description of the image.
+    """
+    return describe_pfp(user_profile)
   
   
   
