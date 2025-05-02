@@ -7,4 +7,5 @@ class Style:
     self.style = style
       
   def __str__(self) -> str:
-    return f"#STYLE\n{'\n'.join(self.style)}"  
+    text = '\n'.join(self.style)
+    return f"#STYLE\n{text}"  

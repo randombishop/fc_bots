@@ -3,74 +3,18 @@ from langchain.agents import BaseSingleActionAgent
 from langchain.schema import AgentAction, AgentFinish
 from langchain.agents import AgentExecutor
 from bots.state import State
-from bots.tool_input import ToolInput
-from bots.tools import TOOL_LIST
-from bots.tools.helpers.tool_io import missing_inputs
-
-
-TOOL_MAP = {x.name: x for x in TOOL_LIST}
-
+from bots.tools.plan.init import InitState
 
 class Agent(BaseSingleActionAgent):
             
   def __init__(self):
     super().__init__()
-    self._tools = TOOL_LIST
+    self._tools = [InitState]
     self._state = None
     
   @property
   def input_keys(self):
     return ["input"]
-  
-  def get_tool_input(self):
-    input = ToolInput(state=self._state)
-    return {"input":input}
-  
-  def next_phase(self):
-    if not self._state.get('should_continue'):
-      return AgentFinish(return_values={"output": self._state}, log='done')
-    elif self._state.get('preloaded') is None:
-      return AgentAction(
-        tool='Preload',
-        tool_input=self.get_tool_input(),
-        log='')
-    elif self._state.get('intent') is None and self._state.get('mode') in ['assistant', 'bot']:
-      return AgentAction(
-        tool='Intent',
-        tool_input=self.get_tool_input(),
-        log='')
-    elif self._state.get('composed') is None:
-      return AgentAction(
-        tool='Compose',
-        tool_input=self.get_tool_input(),
-        log='')
-    elif (not self._state.get('checked')) and (self._state.get('casts') is not None) and (len(self._state.get('casts')) > 0):
-      return AgentAction(
-        tool='Check',
-        tool_input=self.get_tool_input(),
-        log='')
-    else:
-      return AgentFinish(return_values={"output": self._state}, log='done')
-  
-  def next_action(self, intermediate_steps, callbacks, **kwargs):
-    if not self._state.get('should_continue'):
-      return AgentFinish(return_values={"output": self._state}, log='done')
-    if self._state.get('todo') is not None and len(self._state.get('todo')) > 0:
-      tool_name = self._state.get('todo').pop(0)
-      tool = TOOL_MAP[tool_name]
-      available_data = self._state.get_available_data()
-      inputs, _ = missing_inputs(tool, available_data, [])
-      if len(inputs) > 0:
-        return self.plan(intermediate_steps, callbacks, **kwargs)
-      else:
-        return AgentAction(
-          tool=tool_name,
-          tool_input=self.get_tool_input(),
-          log='')
-    elif self._state.get('mode') in ['bot', 'assistant']:
-      return self.next_phase()
-    else:
-      return AgentFinish(return_values={"output": self._state}, log='done')
   
   def plan(self, intermediate_steps, callbacks, **kwargs):
     if self._state is None:
@@ -81,11 +25,13 @@ class Agent(BaseSingleActionAgent):
         tool='InitState',
         tool_input={'input': input},
         log='')
-    self._state.tools_log = intermediate_steps
-    return self.next_action(intermediate_steps, callbacks, **kwargs)
+    else:
+      return AgentFinish(return_values={"output": self._state}, log='done')
     
   async def aplan(self, intermediate_steps, **kwargs):
     return self.plan(intermediate_steps, **kwargs)
+
+
 
 
 

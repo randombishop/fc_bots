@@ -24,10 +24,10 @@ class State:
   def set_variable(self, variable: Variable):
     self.variables[variable.name] = variable
       
-  def fetch(self, method: str, params: dict, variable_name: str, variable_description: str):
+  def fetch(self, method: str, str_params: dict, var_params: dict, variable_name: str, variable_description: str):
     fetch_entrypoint = Fetch(self)
     pass
   
-  def prepare(self, method: str, params: dict, variable_name: str, variable_description: str):
+  def prepare(self, method: str, str_params: dict, var_params: dict, variable_name: str, variable_description: str):
     prepare_entrypoint = Prepare(self)
     pass

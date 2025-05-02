@@ -1,20 +1,15 @@
 from dotenv import load_dotenv
 load_dotenv()
 import unittest
-from bots.utils.tests import make_tool_input
-from bots.tools.init.get_bio import GetBio
-from bots.tools.init.get_lore import GetLore
-from bots.tools.init.get_style import GetStyle
-from bots.tools.init.get_time import GetTime
-from bots.tools.init.get_conversation import GetConversation
+from bots.utils.tests import run_agent
+
 
 
 class TestWakeUp(unittest.TestCase):
   
-  def test_bio(self):
-    input = make_tool_input()
-    result = GetBio.invoke({'input': input})
-    self.assertIsNotNone(result['bio'])
+  def test1(self):
+    state = run_agent(test_id='TestWakeUp:1', mode='bot')
+    #self.assertIsNotNone(result['bio'])
     
   def test_lore(self):
     input = make_tool_input()

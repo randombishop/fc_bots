@@ -7,7 +7,7 @@ class Time:
   """
   
   def __init__(self):
-    self.time = datetime.now().strftime('%Y-%m-%d %H:%M')
+    self.time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
       
   def __str__(self) -> str:
     return f"#CURRENT TIME: {self.time}"  

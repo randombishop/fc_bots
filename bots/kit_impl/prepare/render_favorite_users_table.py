@@ -6,7 +6,7 @@ from bots.utils.images import table_image
 from bots.utils.gcs import upload_to_gcs
 
 
-def prepare(data: FavoriteUsers) -> FavoriteUsersTable:
+def render_favorite_users_table(data: FavoriteUsers) -> FavoriteUsersTable:
   df = data.data
   if len(df) < 3:
     raise Exception(f"Not enough data ({len(df)})")

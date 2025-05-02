@@ -9,5 +9,8 @@ class Variable:
     self.value = value
       
   def __str__(self) -> str:
-    variable_type = type(self.value)
+    try:
+      variable_type = self.value.__class__.__name__
+    except:
+      variable_type = type(self.value)
     return f"{self.name} ({variable_type}) -> {self.description}"

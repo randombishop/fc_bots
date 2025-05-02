@@ -2,7 +2,7 @@ from bots.data.neynar import get_user_info_by_name
 from bots.kit_interface.user_profile import UserProfile
 
 
-def fetch(username: str) -> UserProfile:
+def get_user_profile(username: str) -> UserProfile:
   user_info = get_user_info_by_name(username)
   if user_info is None:
     return None

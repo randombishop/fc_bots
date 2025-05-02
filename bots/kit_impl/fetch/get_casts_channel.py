@@ -1,5 +1,6 @@
 from bots.data.neynar import get_casts_channel as get_casts_data
-from bots.kit_interface.cast import Cast, Casts
+from bots.kit_interface.cast import Cast
+from bots.kit_interface.casts import Casts
 from bots.kit_interface.channel_id import ChannelId
 
 
