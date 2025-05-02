@@ -112,13 +112,13 @@ def initialize_state(input):
   if character is None:
     raise Exception(f"Bot {id} not found")
   state.character = character
+  # name
+  state.bot_name = character['name']
   # mode
   mode = input['mode']
   if mode not in ['assistant', 'bot', 'blueprint']:
     raise Exception(f"Invalid mode `{mode}`. should be assistant, bot or blueprint")
   state.mode = mode
-  # name
-  state.name = character['name']
   # request
   if 'request' in input and input['request'] is not None:
     state.request = input['request']

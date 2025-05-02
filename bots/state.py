@@ -7,7 +7,7 @@ class State:
   
   def __init__(self):
     self.bot_id = None
-    self.name = None
+    self.bot_name = None
     self.character = None
     self.mode = None
     self.request = None

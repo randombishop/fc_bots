@@ -1,7 +1,7 @@
 from bots.kit_interface.user_replies_and_reactions_description import UserRepliesAndReactionsDescription
 from bots.kit_interface.user_id import UserId
 from bots.kit_interface.user_profile import UserProfile
-from bots.kit_interface.reaction import Reaction
+from bots.kit_interface.reactions import Reactions
 from bots.kit_interface.bio import Bio
 from bots.kit_interface.style import Style
 from bots.kit_interface.lore import Lore
@@ -66,12 +66,12 @@ schema = {
 
 
 def describe_user_replies_and_reactions(bot_name: str, bio: Bio, lore: Lore, style: Style, 
-                                        user_id: UserId, user_profile: UserProfile, reactions: list[Reaction]) -> UserRepliesAndReactionsDescription:
+                                        user_id: UserId, user_profile: UserProfile, reactions: Reactions) -> UserRepliesAndReactionsDescription:
   prompt = format_template(prompt_template, {
     'user_name': user_id.username,
     'user_display_name': user_profile.display_name,
     'user_bio': user_profile.bio,
-    'user_replies_and_reactions': str(reactions)
+    'user_replies_and_reactions': reactions
   })
   instructions = format_template(instructions_template, {
     'name': bot_name,

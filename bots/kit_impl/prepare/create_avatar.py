@@ -6,6 +6,8 @@ from bots.kit_interface.user_profile import UserProfile
 from bots.kit_interface.image_description import ImageDescription
 from bots.kit_interface.user_casts_description import UserCastsDescription
 from bots.kit_interface.avatar import Avatar
+from bots.kit_interface.bio import Bio
+from bots.kit_interface.lore import Lore
 from bots.utils.llms2 import call_llm, generate_image
 from bots.utils.gcs import upload_to_gcs
 from bots.utils.prompts import format_template
