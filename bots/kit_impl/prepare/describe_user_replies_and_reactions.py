@@ -1,11 +1,18 @@
-from langchain.agents import Tool
+from bots.kit_interface.user_replies_and_reactions_description import UserRepliesAndReactionsDescription
+from bots.kit_interface.user_id import UserId
+from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.reaction import Reaction
+from bots.kit_interface.bio import Bio
+from bots.kit_interface.style import Style
+from bots.kit_interface.lore import Lore
+from bots.utils.prompts import format_template
 from bots.utils.llms2 import call_llm
 
 
 
 prompt_template = """
 # USER ID
-@{{user}}
+@{{user_name}}
 
 # USER DISPLAY NAME
 {{user_display_name}}
@@ -58,30 +65,22 @@ schema = {
 }
 
 
-def prepare(input):
-  state = input.state
-  formatted = state.get('user_replies_and_reactions')
-  if formatted is None or formatted == '':
-    return {'log': 'No replies and reactions to analyze.'}
-  prompt = state.format(prompt_template)
-  instructions = state.format(instructions_template)
+def describe_user_replies_and_reactions(bot_name: str, bio: Bio, lore: Lore, style: Style, 
+                                        user_id: UserId, user_profile: UserProfile, reactions: list[Reaction]) -> UserRepliesAndReactionsDescription:
+  prompt = format_template(prompt_template, {
+    'user_name': user_id.username,
+    'user_display_name': user_profile.display_name,
+    'user_bio': user_profile.bio,
+    'user_replies_and_reactions': str(reactions)
+  })
+  instructions = format_template(instructions_template, {
+    'name': bot_name,
+    'bio': bio,
+    'lore': lore,
+    'style': style
+  })
   result = call_llm('medium', prompt, instructions, schema)
   description = result['description'] if 'description' in result else ''
   keywords = result['keywords'] if 'keywords' in result else ''
-  if isinstance(keywords, list):
-    keywords = ','.join(keywords)
-  return {
-    'user_replies_and_reactions_description': description,
-    'user_replies_and_reactions_keywords': keywords
-  }
+  return UserRepliesAndReactionsDescription(description, keywords)
 
-
-DescribeUserRepliesAndReactions = Tool(
-  name="DescribeUserRepliesAndReactions",
-  description="Describe the replies and reactions of a user.",
-  metadata={
-    'inputs': ['user', 'user_display_name', 'user_bio', 'user_replies_and_reactions'],
-    'outputs': ['user_replies_and_reactions_description', 'user_replies_and_reactions_keywords']
-  },
-  func=prepare
-)

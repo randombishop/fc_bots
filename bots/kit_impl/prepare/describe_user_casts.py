@@ -1,10 +1,17 @@
-from langchain.agents import Tool
+from bots.kit_interface.user_casts_description import UserCastsDescription
+from bots.kit_interface.user_id import UserId
+from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.casts import Casts
+from bots.kit_interface.bio import Bio
+from bots.kit_interface.style import Style
+from bots.kit_interface.lore import Lore
+from bots.utils.prompts import format_template
 from bots.utils.llms2 import call_llm
 
 
 prompt_template = """
-# USER ID
-@{{user}}
+# USER NAME
+@{{user_name}}
 
 # USER DISPLAY NAME
 {{user_display_name}}
@@ -63,13 +70,19 @@ schema = {
 }
 
 
-def prepare(input):
-  state = input.state
-  posts = state.get('casts_user')
-  if len(posts) == 0:
-    return {'log': 'No posts to analyze.'}
-  prompt = state.format(prompt_template)
-  instructions = state.format(instructions_template)
+def describe_user_casts(bot_name: str, bio: Bio, lore: Lore, style: Style, user_id: UserId, user_profile: UserProfile, casts: Casts) -> UserCastsDescription:
+  prompt = format_template(prompt_template, {
+    'user_name': user_id.username,
+    'user_display_name': user_profile.display_name,
+    'user_bio': user_profile.bio,
+    'casts_user': str(casts)
+  })
+  instructions = format_template(instructions_template, {
+    'name': bot_name,
+    'bio': bio,
+    'lore': lore,
+    'style': style
+  })
   result = call_llm('medium', prompt, instructions, schema)
   user_casts_description = ''
   if 'sentence1' in result:
@@ -78,17 +91,5 @@ def prepare(input):
     user_casts_description += result['sentence2'] + '\n'
   if 'sentence3' in result:
     user_casts_description += result['sentence3']
-  return {
-    'user_casts_description': user_casts_description
-  }
+  return UserCastsDescription(user_casts_description)
   
-
-DescribeUserCasts = Tool(
-  name="DescribeUserCasts",
-  description="Describe the user's casts",
-  metadata={
-    'inputs': ['user', 'user_display_name', 'user_bio','casts_user'],
-    'outputs': ['user_casts_description']
-  },
-  func=prepare
-)

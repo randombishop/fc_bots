@@ -1,14 +1,19 @@
 import os
 import uuid
 import requests
-from langchain.agents import Tool
+from bots.kit_interface.user_id import UserId
+from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.image_description import ImageDescription
+from bots.kit_interface.user_casts_description import UserCastsDescription
+from bots.kit_interface.avatar import Avatar
 from bots.utils.llms2 import call_llm, generate_image
 from bots.utils.gcs import upload_to_gcs
+from bots.utils.prompts import format_template
 
 
 prompt_template = """
-# USER ID
-@{{user}}
+# USER
+@{{user_name}}
 
 # USER DISPLAY NAME
 {{user_display_name}}
@@ -19,7 +24,7 @@ prompt_template = """
 # USER PFP DESCRIPTION
 {{user_pfp_description}}
 
-# USER POSTS
+# USER CASTS
 {{casts_user}}
 """
 
@@ -74,12 +79,21 @@ schema = {
 }
 
 
-def prepare(input):
-  state = input.state
-  prompt = state.format(prompt_template)
+def create_avatar(bot_name: str, bio: Bio, lore: Lore, user_id: UserId, user_profile: UserProfile, pfp_description: ImageDescription, casts_description: UserCastsDescription) -> Avatar:
+  prompt = format_template(prompt_template, {
+    'user_name': user_id.username,
+    'user_display_name': user_profile.display_name,
+    'user_bio': user_profile.bio,
+    'user_pfp_description': pfp_description.description,
+    'casts_user': casts_description.text
+  })
   if len(prompt) < 100:
     return {'log': 'Not enough data to generate a prompt for avatar'}
-  instructions = state.format(instructions_template)
+  instructions = format_template(instructions_template, {
+    'name': bot_name,
+    'bio': bio,
+    'lore': lore
+  })
   result = call_llm('medium', prompt, instructions, schema)
   user_avatar_prompt = result['avatar_prompt'] if 'avatar_prompt' in result else None
   image_url = generate_image(user_avatar_prompt)
@@ -91,18 +105,4 @@ def prepare(input):
   upload_to_gcs(local_file=filename, target_folder='png', target_file=filename)
   os.remove(filename)
   user_avatar = f"https://fc.datascience.art/bot/main_files/{filename}"
-  return {
-    'user_avatar_prompt': user_avatar_prompt,
-    'user_avatar': user_avatar
-  }
-  
-
-CreateAvatar = Tool(
-  name="CreateAvatar",
-  description="Create an avatar for a user",
-  metadata={
-    'inputs': ['user', 'user_display_name', 'user_bio', 'user_pfp_description', 'casts_user'],
-    'outputs': ['user_avatar_prompt', 'user_avatar']
-  },
-  func=prepare
-)
+  return Avatar(user_avatar_prompt, user_avatar)
