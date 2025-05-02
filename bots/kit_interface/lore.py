@@ -10,4 +10,4 @@ class Lore:
     self.lore = lore
       
   def __str__(self) -> str:
-    return f"#LORE\n{format_lore(self.lore)}"  
+    return format_lore(self.lore) 

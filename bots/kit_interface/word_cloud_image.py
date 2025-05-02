@@ -7,4 +7,4 @@ class WordCloudImage:
     self.url = url
       
   def __str__(self) -> str:
-    return f"#WordCloudImage\nurl -> {self.url}"
+    return self.url

@@ -13,4 +13,4 @@ class WordCloudMask:
     self.height = height
     
   def __str__(self) -> str:
-    return f"#WordCloudMask: {self.width}x{self.height} image"
+    return f"{self.width}x{self.height} image"

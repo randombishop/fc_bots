@@ -10,4 +10,4 @@ class Time:
     self.time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
       
   def __str__(self) -> str:
-    return f"#CURRENT TIME: {self.time}"  
+    return self.time

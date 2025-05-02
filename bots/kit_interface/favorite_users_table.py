@@ -7,4 +7,4 @@ class FavoriteUsersTable:
     self.url = url
       
   def __str__(self) -> str:
-    return f"#FavoriteUsersTable\nurl -> {self.url}"
+    return self.url

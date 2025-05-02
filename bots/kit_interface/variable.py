@@ -13,4 +13,8 @@ class Variable:
       variable_type = self.value.__class__.__name__
     except:
       variable_type = type(self.value)
-    return f"{self.name} ({variable_type}) -> {self.description}"
+    variable_value = str(self.value)
+    if len(variable_value) > 50:
+      variable_value = variable_value[:47] + '...'
+      variable_value = variable_value.replace('\n', ' ')
+    return f"{self.name} ({variable_type}) -> {self.description} -> {variable_value}"

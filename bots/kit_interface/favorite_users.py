@@ -10,4 +10,4 @@ class FavoriteUsers:
     self.df = df
       
   def __str__(self) -> str:
-    return f"#FavoriteUsers:\n{self.df.to_string(index=False)}"  
+    return self.df.to_string(index=False)

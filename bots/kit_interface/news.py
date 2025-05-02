@@ -8,4 +8,4 @@ class News:
     self.link = link
       
   def __str__(self) -> str:
-    return f"#News: {self.link}\n{self.story}"  
+    return f"{self.link} -> {self.story}"

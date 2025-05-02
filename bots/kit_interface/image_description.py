@@ -8,5 +8,4 @@ class ImageDescription:
     self.description = description
       
   def __str__(self) -> str:
-    return f"""#ImageDescription (url -> {self.url})
-    {self.description}"""
+    return f"{self.url} -> {self.description}"

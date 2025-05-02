@@ -8,4 +8,4 @@ class ChannelId:
     self.channel_url = channel_url
       
   def __str__(self) -> str:
-    return f"#ChannelId:\n{self.channel}"
+    return self.channel

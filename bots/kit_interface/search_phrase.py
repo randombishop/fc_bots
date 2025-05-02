@@ -7,4 +7,4 @@ class SearchPhrase:
     self.search = search
       
   def __str__(self) -> str:
-    return f"#SearchPhrase:\n{self.search}"
+    return self.search

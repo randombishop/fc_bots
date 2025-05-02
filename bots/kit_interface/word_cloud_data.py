@@ -9,4 +9,4 @@ class WordCloudData:
     self.word_counts = word_counts
     
   def __str__(self) -> str:
-    return f"#WordCloudData: {len(self.word_counts)} words"
+    return f"{len(self.word_counts)} words"

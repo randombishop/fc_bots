@@ -8,4 +8,4 @@ class UserId:
     self.username = username
       
   def __str__(self) -> str:
-    return f"#UserId:\n{self.username}"
+    return f"{self.username} ({self.fid})"

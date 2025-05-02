@@ -84,21 +84,22 @@ def init_conversation(state):
     else:
       parent_hash = None
   context.reverse()
-  text = ''
-  for i in range(len(context)):
-    item = context[i]
-    text += f"#{i+1}. @{item['username']} said {item['when']}: \n"
-    text += f"{item['text']} \n"  
-    if 'quote' in item:
-      if 'username' in item['quote']:
-        text += f"  [quoting @{item['quote']['username']}: \n"
-        text += f"  {item['quote']['text']} \n"
-        text += "  ]\n"
-      elif 'url' in item['quote']:
-        text += f"  [{item['quote']['url']}]\n"
-    text += '#'
-  var = Variable('conversation', "The context's conversation", Conversation(text))
-  state.set_variable(var)
+  if len(context) > 0:
+    text = ''
+    for i in range(len(context)):
+      item = context[i]
+      text += f"#{i+1}. @{item['username']} said {item['when']}: \n"
+      text += f"{item['text']} \n"  
+      if 'quote' in item:
+        if 'username' in item['quote']:
+          text += f"  [quoting @{item['quote']['username']}: \n"
+          text += f"  {item['quote']['text']} \n"
+          text += "  ]\n"
+        elif 'url' in item['quote']:
+          text += f"  [{item['quote']['url']}]\n"
+      text += '#'
+    var = Variable('conversation', "The context's conversation", Conversation(text))
+    state.set_variable(var)
 
   
 def initialize_state(input):    
@@ -163,28 +164,12 @@ def initialize_state(input):
   # max_rows
   state.max_rows = get_max_capactity()
   # mode specific initialization
-  initialize_mode(state)
+  init_time(state)
+  init_bio(state)
+  init_lore(state)
+  init_style(state)
+  init_conversation(state)
   return [str(v) for v in state.variables.values()]
-  
-
-def initialize_mode(state):
-  if state.mode == 'assistant':
-    init_time(state)
-    init_bio(state)
-    init_lore(state)
-    init_style(state)
-  elif state.mode == 'bot':
-    init_time(state)
-    init_bio(state)
-    init_lore(state)
-    init_style(state)
-    init_conversation(state)
-    # TOOD: remember to plug-in Like and ShouldContinue
-  elif state.mode == 'blueprint':
-    if state.blueprint not in BLUEPRINTS:
-      raise Exception(f"Blueprint {state.blueprint} not found")
-  else:
-    raise Exception(f"Agent mode {state.mode} is not valid")
   
 
 InitState = Tool(

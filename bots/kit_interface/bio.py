@@ -10,4 +10,4 @@ class Bio:
     self.bio = bio
       
   def __str__(self) -> str:
-    return f"#BIO\n{format_bio(self.bio)}"  
+    return format_bio(self.bio) 

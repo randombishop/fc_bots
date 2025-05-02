@@ -18,8 +18,11 @@ class State:
     self.blueprint = None
     self.variables = {}
   
-  def get_variable(self, name: str) -> Variable:
-    return self.variables[name]
+  def get_variable(self, name: str):
+    if name in self.variables:
+      return self.variables[name].value
+    else:
+      return None
   
   def set_variable(self, variable: Variable):
     self.variables[variable.name] = variable

@@ -7,4 +7,4 @@ class Conversation:
     self.conversation = conversation
       
   def __str__(self) -> str:
-    return f"#CONVERSATION\n{self.conversation}"  
+    return self.conversation

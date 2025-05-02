@@ -12,8 +12,7 @@ class MostActiveUsers:
     self.df = df
       
   def __str__(self) -> str:
-    ans = "#MostActiveUsers\n"
-    ans += f"(in channel {self.channel_id.channel})\n"
+    ans += f"Most active users in channel {self.channel_id.channel}\n"
     if len(self.df) > 0:
       rows = self.df.to_dict('records')
       for r in rows:

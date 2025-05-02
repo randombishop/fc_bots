@@ -7,4 +7,4 @@ class MostActiveUsersChart:
     self.url = url
       
   def __str__(self) -> str:
-    return f"#MostActiveUsersChart\nurl -> {self.url}"
+    return self.url

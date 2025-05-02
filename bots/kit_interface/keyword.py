@@ -7,4 +7,4 @@ class Keyword:
     self.keyword = keyword
       
   def __str__(self) -> str:
-    return f"#Keyword:\n{self.keyword}"
+    return self.keyword

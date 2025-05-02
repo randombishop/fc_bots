@@ -1,9 +1,5 @@
 BLUEPRINTS = {
   'WhoIs': [
-    'GetBio', 
-    'GetLore', 
-    'GetStyle', 
-    'GetTime', 
     'GetUserProfile', 
     'GetCastsUser', 
     'GetUserRepliesAndReactions', 
