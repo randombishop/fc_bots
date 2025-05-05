@@ -69,6 +69,17 @@ WhoIs = [
     }, 
     'variable_name': 'avatar',
     'variable_description': 'Created Avatar'
+  },
+  {
+    'tool': 'memorize',
+    'method': 'save_user_profile',
+    'var_params': {
+      'user_id': 'selected_user',
+      'user_profile': 'user_profile',
+      'pfp_description': 'pfp_description',
+      'casts_description': 'casts_description',
+      'reactions_description': 'reactions_description',
+      'avatar': 'avatar'
+    }
   }
-  # Add save user profile tool
 ]

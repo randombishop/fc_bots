@@ -1,6 +1,7 @@
 from bots.kit_interface.variable import Variable
 from bots.kit_entrypoint.fetch import Fetch
 from bots.kit_entrypoint.prepare import Prepare
+from bots.kit_entrypoint.memorize import Memorize
 from bots.utils.functions import combine_params, get_function, check_params
 
 
@@ -43,15 +44,15 @@ class State:
     
   def execute(self, tool: str, method: str, str_params: dict, var_params: dict, variable_name: str, variable_description: str):
     """
-    Executes a method from the Fetch or Prepare suite of tools
+    Executes a method from the Fetch, Prepare or Memorize suite of tools
     
     Args:
-      tool: str - The tool implementation to use (fetch or prepare)
-      method: str - The method to execute (see the tool implementation for details)
-      str_params: dict - The string parameters to pass to the method
-      var_params: dict - The variable references to pass to the method, these must be available in self.variables
-      variable_name: str - The name of the variable to set with the result of the method
-      variable_description: str - The description of the obtained variable
+      tool: str - The tool implementation to use (fetch or prepare) (*required)
+      method: str - The method to execute (see the tool implementation for details) (*required)
+      str_params: dict - The string parameters to pass to the method (optional)
+      var_params: dict - The variable references to pass to the method, these must be available in self.variables (optional)
+      variable_name: str - The name of the variable to set with the result of the method (optional)
+      variable_description: str - The description of the obtained variable (optional)
       
     Returns:
       The result of the executed method
@@ -61,12 +62,14 @@ class State:
       object = Fetch(self)
     elif tool == 'prepare':
       object = Prepare(self)
+    elif tool == 'memorize':
+      object = Memorize(self)
     else:
       raise ValueError(f"Invalid tool: {tool}")
     func = get_function(object, method)
     check_params(func, params)
     result = func(**params)
-    if result is not None:
+    if result is not None and variable_name is not None:
       variable = Variable(variable_name, variable_description, result)
       self.set_variable(variable)
     return result

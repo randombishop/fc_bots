@@ -1,4 +1,9 @@
-from langchain.agents import Tool
+from bots.kit_interface.user_id import UserId
+from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.image_description import ImageDescription
+from bots.kit_interface.user_casts_description import UserCastsDescription
+from bots.kit_interface.user_reactions_description import UserReactionsDescription
+from bots.kit_interface.avatar import Avatar
 from bots.data.users import save_user_profile, save_user_profile_embeds
 from bots.models.bert import bert
 
@@ -16,42 +21,46 @@ def format_embed(embed):
     return None
 
 
-def memorize(input):
-  state = input.state
+def memorize(user_id: UserId, 
+             user_profile: UserProfile, 
+             pfp_description: ImageDescription, 
+             casts_description: UserCastsDescription,
+             reactions_description: UserReactionsDescription,
+             avatar: Avatar):
   bio_text = ''
-  if state.get('user_display_name') is not None:
-    bio_text += state.get('user_display_name') + '\n'
-  if state.get('user_bio') is not None:
-    bio_text += state.get('user_bio')
+  if user_profile.display_name is not None:
+    bio_text += user_profile.display_name + '\n'
+  if user_profile.bio is not None:
+    bio_text += user_profile.bio
   bio_text = bio_text.strip()
   bio_embed = get_embed(bio_text)
-  pfp_embed = get_embed(state.get('user_pfp_description'))
-  casts_embed = get_embed(state.get('user_casts_description'))
+  pfp_embed = get_embed(pfp_description.description)
+  casts_embed = get_embed(casts_description.text)
   engagement_text = ''
-  if state.get('user_replies_and_reactions_description') is not None:
-    engagement_text += state.get('user_replies_and_reactions_description') + '\n'
-  if state.get('user_replies_and_reactions_keywords') is not None:
-    engagement_text += state.get('user_replies_and_reactions_keywords')
+  if reactions_description.text is not None:
+    engagement_text += reactions_description.text + '\n'
+  if reactions_description.keywords is not None:
+    engagement_text += reactions_description.keywords
   engagement_embed = get_embed(engagement_text)
-  avatar_embed = get_embed(state.get('user_avatar_prompt'))
+  avatar_embed = get_embed(avatar.prompt)
   profile = {
-      'fid': state.get('user_fid'),
-      'user_name': state.get('user'),
-      'display_name': state.get('user_display_name'),
-      'bio': state.get('user_bio'),
-      'pfp_url': state.get('user_pfp_url'),
-      'pfp_desc': state.get('user_pfp_description'),
-      'casts_desc': state.get('user_casts_description'),
-      'engagement_desc': state.get('user_replies_and_reactions_description'),
-      'engagement_keywords': state.get('user_replies_and_reactions_keywords'),
-      'avatar_url': state.get('user_avatar'),
-      'avatar_desc': state.get('user_avatar_prompt'),
-      'num_followers': state.get('user_followers'),
-      'num_following': state.get('user_following')       
+      'fid': user_id.fid,
+      'user_name': user_id.user_name,
+      'display_name': user_profile.display_name,
+      'bio': user_profile.bio,
+      'pfp_url': pfp_description.url,
+      'pfp_desc': pfp_description.description,
+      'casts_desc': casts_description.text,
+      'engagement_desc': reactions_description.text,
+      'engagement_keywords': reactions_description.keywords,
+      'avatar_url': avatar.url,
+      'avatar_desc': avatar.prompt,
+      'num_followers': user_profile.followers,
+      'num_following': user_profile.following       
   }
   save_user_profile(profile)
   embeds = {
-    'fid': state.get('user_fid'),
+    'fid': user_id.fid,
     'bio_embed': format_embed(bio_embed),
     'pfp_embed': format_embed(pfp_embed),
     'casts_embed': format_embed(casts_embed),
@@ -59,14 +68,5 @@ def memorize(input):
     'avatar_embed': format_embed(avatar_embed)
   }
   save_user_profile_embeds(embeds)
-  return {'log': 'Saved user profile in pg'}
+  return 'Saved user profile in pg'
 
-
-SaveUserProfile = Tool(
-  name="SaveUserProfile",
-  description="Save the user profile in long term memory",
-  metadata={
-    'inputs': ['user', 'user_fid', 'user_display_name', 'user_bio', 'user_avatar'],
-  },
-  func=memorize
-)

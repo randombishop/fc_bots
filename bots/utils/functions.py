@@ -44,8 +44,8 @@ def validate_function(input):
   method = config['method']
   str_params = config['str_params'] if 'str_params' in config else None
   var_params = config['var_params'] if 'var_params' in config else None
-  variable_name = config['variable_name']
-  variable_description = config['variable_description']
+  variable_name = config['variable_name'] if 'variable_name' in config else None
+  variable_description = config['variable_description'] if 'variable_description' in config else None
   return tool, method, str_params, var_params, variable_name, variable_description
 
 
