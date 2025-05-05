@@ -14,7 +14,7 @@ from bots.data.channels import get_channel_url
 from bots.data.channels import get_channel_by_url
 from bots.data.neynar import get_cast_info
 from bots.data.users import get_username
-from bots.tools.blueprint.blueprints import BLUEPRINTS
+from bots.kit_blueprints.blueprints import BLUEPRINTS
 
 
 
@@ -158,7 +158,16 @@ def initialize_state(input):
       state.set_variable(channel_var)
   # blueprint
   if 'blueprint' in input and input['blueprint'] is not None:
-    state.blueprint = input['blueprint']
+    blueprint = input['blueprint']
+    if isinstance(blueprint, list):
+      state.blueprint = input['blueprint']
+    elif isinstance(blueprint, str):
+      if blueprint in BLUEPRINTS:
+        state.blueprint = BLUEPRINTS[blueprint]
+      else:
+        raise Exception(f"Invalid blueprint `{blueprint}`")
+    else:
+      raise Exception(f"Invalid blueprint. Should be a list or a string")
   # should_continue
   state.should_continue = True
   # max_rows

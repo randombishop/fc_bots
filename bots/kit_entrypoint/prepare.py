@@ -10,7 +10,7 @@ from bots.kit_interface.word_cloud_image import WordCloudImage
 from bots.kit_interface.image_description import ImageDescription
 from bots.kit_interface.user_profile import UserProfile
 from bots.kit_interface.user_casts_description import UserCastsDescription
-from bots.kit_interface.user_replies_and_reactions_description import UserRepliesAndReactionsDescription
+from bots.kit_interface.user_reactions_description import UserReactionsDescription
 from bots.kit_interface.user_id import UserId
 from bots.kit_interface.avatar import Avatar
 from bots.kit_interface.reactions import Reactions
@@ -22,7 +22,7 @@ from bots.kit_impl.prepare.render_favorite_users_table import render_favorite_us
 from bots.kit_impl.prepare.create_wordcloud import create_wordcloud
 from bots.kit_impl.prepare.describe_pfp import describe_pfp
 from bots.kit_impl.prepare.describe_user_casts import describe_user_casts
-from bots.kit_impl.prepare.describe_user_replies_and_reactions import describe_user_replies_and_reactions
+from bots.kit_impl.prepare.describe_user_reactions import describe_user_reactions
 from bots.kit_impl.prepare.create_avatar import create_avatar
 
 
@@ -124,7 +124,7 @@ class Prepare:
                                user_profile=user_profile,
                                casts=casts)
   
-  def describe_user_replies_and_reactions(self, user_id: UserId, user_profile: UserProfile, reactions: Reactions) -> UserRepliesAndReactionsDescription:
+  def describe_user_reactions(self, user_id: UserId, user_profile: UserProfile, reactions: Reactions) -> UserReactionsDescription:
     """
     Describe a user's replies and reactions.
     
@@ -134,9 +134,9 @@ class Prepare:
         reactions (list[Reaction]): The user's reactions.
   
     Returns:
-        UserRepliesAndReactionsDescription: The description of the user's replies and reactions.
+        UserReactionsDescription: The description of the user's replies and reactions.
     """
-    return describe_user_replies_and_reactions(bot_name=self.state.bot_name, 
+    return describe_user_reactions(bot_name=self.state.bot_name, 
                                                bio=self.state.get('bio'), 
                                                lore=self.state.get('lore'),
                                                style=self.state.get('style'),

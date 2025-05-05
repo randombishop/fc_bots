@@ -1,4 +1,4 @@
-class UserRepliesAndReactionsDescription:
+class UserReactionsDescription:
   """
   Describes a user's replies and reactions.
   """

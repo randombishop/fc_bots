@@ -1,6 +1,7 @@
 from bots.kit_interface.variable import Variable
 from bots.kit_entrypoint.fetch import Fetch
 from bots.kit_entrypoint.prepare import Prepare
+from bots.utils.functions import combine_params, get_function, check_params
 
 
 class State:
@@ -26,11 +27,21 @@ class State:
   
   def set_variable(self, variable: Variable):
     self.variables[variable.name] = variable
-      
+
+  def _execute(self, object, method, str_params: dict, var_params: dict, variable_name: str, variable_description: str):
+    params = combine_params(self, str_params, var_params)
+    func = get_function(object, method)
+    check_params(func, params)
+    result = func(**params)
+    if result is not None:
+      variable = Variable(variable_name, variable_description, result)
+      self.set_variable(variable)
+    return result
+  
   def fetch(self, method: str, str_params: dict, var_params: dict, variable_name: str, variable_description: str):
     fetch_entrypoint = Fetch(self)
-    pass
+    return self._execute(fetch_entrypoint, method, str_params, var_params, variable_name, variable_description)
   
   def prepare(self, method: str, str_params: dict, var_params: dict, variable_name: str, variable_description: str):
     prepare_entrypoint = Prepare(self)
-    pass
+    return self._execute(prepare_entrypoint, method, str_params, var_params, variable_name, variable_description)

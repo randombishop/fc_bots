@@ -1,4 +1,4 @@
-from bots.kit_interface.user_replies_and_reactions_description import UserRepliesAndReactionsDescription
+from bots.kit_interface.user_reactions_description import UserReactionsDescription
 from bots.kit_interface.user_id import UserId
 from bots.kit_interface.user_profile import UserProfile
 from bots.kit_interface.reactions import Reactions
@@ -65,8 +65,8 @@ schema = {
 }
 
 
-def describe_user_replies_and_reactions(bot_name: str, bio: Bio, lore: Lore, style: Style, 
-                                        user_id: UserId, user_profile: UserProfile, reactions: Reactions) -> UserRepliesAndReactionsDescription:
+def describe_user_reactions(bot_name: str, bio: Bio, lore: Lore, style: Style, 
+                                        user_id: UserId, user_profile: UserProfile, reactions: Reactions) -> UserReactionsDescription:
   prompt = format_template(prompt_template, {
     'user_name': user_id.username,
     'user_display_name': user_profile.display_name,
@@ -82,5 +82,5 @@ def describe_user_replies_and_reactions(bot_name: str, bio: Bio, lore: Lore, sty
   result = call_llm('medium', prompt, instructions, schema)
   description = result['description'] if 'description' in result else ''
   keywords = result['keywords'] if 'keywords' in result else ''
-  return UserRepliesAndReactionsDescription(description, keywords)
+  return UserReactionsDescription(description, keywords)
 
