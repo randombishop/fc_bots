@@ -17,6 +17,7 @@ from bots.data.users import get_username
 from bots.kit_blueprints.blueprints import BLUEPRINTS
 from bots.utils.llms2 import get_max_capactity
 from bots.utils.should_continue import should_continue
+from bots.utils.like import like
 
 
 @traceable(run_type='parser')
@@ -125,6 +126,24 @@ def init_should_continue(state):
   return state.should_continue
 
 
+@traceable(run_type='parser')
+def init_like(state):
+  bot_id = state.bot_id
+  bot_name = state.bot_name
+  bio = state.get_variable('bio')
+  if bio is not None:
+    bio = bio.value
+  lore = state.get_variable('lore')
+  if lore is not None:
+    lore = lore.value
+  conversation = state.get_variable('conversation')
+  if conversation is not None:
+    conversation = conversation.value.conversation
+  request = state.request
+  state.like = like(bot_id, bot_name, bio, lore, conversation, request)
+  return state.like
+
+
 def initialize_state(input):    
   state = input['state']
   # bot_id
@@ -204,6 +223,7 @@ def initialize_state(input):
   init_conversation(state)
   if state.mode == 'bot':
     init_should_continue(state)
+    init_like(state)
   return [str(v) for v in state.variables.values()]
   
 

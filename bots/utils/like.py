@@ -1,7 +1,7 @@
-from langchain.agents import Tool
 from bots.data.app import get_bot_config
 from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_boolean
+from bots.utils.prompts import format_template
 
 
 prompt_template = """
@@ -13,7 +13,7 @@ prompt_template = """
 """
 
 instructions_template = """
-You are @{{name}} bot, a social media bot.
+You are @{{bot_name}} bot, a social media bot.
 
 #YOUR BIO
 {{bio}}
@@ -43,28 +43,13 @@ schema = {
 
 
 
-def like(input):
-  state = input.state
-  bot_config = get_bot_config(state.get('id'))
+def like(bot_id, bot_name, bio, lore, conversation, request):
+  bot_config = get_bot_config(bot_id)
   if bot_config is None:
-    return {
-      'like': False, 
-      'error': 'No Bot Config'
-    }
-  prompt = state.format(prompt_template)
-  instructions = state.format(instructions_template).replace('prompt_like?', bot_config['prompt_like'])
+    return False
+  prompt = format_template(prompt_template, {'conversation': conversation, 'request': request})
+  instructions = format_template(instructions_template, {'bot_name': bot_name, 'bio': bio, 'lore': lore}).replace('prompt_like?', bot_config['prompt_like'])
   result = call_llm('medium', prompt, instructions, schema)
   like = read_boolean(result, key='like')
-  return {
-    'like': like
-  }
+  return like
 
-
-Like = Tool(
-  name="Like",
-  description="Decide if you like a post",
-  metadata={
-    'outputs': ['like']
-  },
-  func=like
-)
