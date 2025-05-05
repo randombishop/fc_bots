@@ -31,7 +31,7 @@ class Agent(BaseSingleActionAgent):
         tool_input={'input': input},
         log='')
     elif self._state.mode in ['bot', 'assistant']:
-      return self.next_phase()
+      return AgentFinish(return_values={"output": self._state}, log='done')
     else:
       return AgentFinish(return_values={"output": self._state}, log='done')
     

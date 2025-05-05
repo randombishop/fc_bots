@@ -1,4 +1,5 @@
 from langchain.agents import Tool
+from langsmith import traceable
 from bots.kit_interface.variable import Variable
 from bots.kit_interface.time import Time
 from bots.kit_interface.bio import Bio
@@ -8,21 +9,24 @@ from bots.kit_interface.channel_id import ChannelId
 from bots.kit_interface.conversation import Conversation
 from bots.kit_interface.user_id import UserId
 from bots.data.app import get_bot_character
-from bots.utils.llms2 import get_max_capactity
 from bots.data.users import get_username, get_fid
 from bots.data.channels import get_channel_url
 from bots.data.channels import get_channel_by_url
 from bots.data.neynar import get_cast_info
 from bots.data.users import get_username
 from bots.kit_blueprints.blueprints import BLUEPRINTS
+from bots.utils.llms2 import get_max_capactity
+from bots.utils.should_continue import should_continue
 
 
-
+@traceable(run_type='parser')
 def init_time(state):
   var = Variable('time', 'The current time', Time())
   state.set_variable(var)
+  return var
 
 
+@traceable(run_type='parser')
 def init_bio(state):
   character = state.character
   if character is None or character['bio'] is None or len(character['bio']) == 0:
@@ -30,8 +34,9 @@ def init_bio(state):
   else:
     var = Variable('bio', 'Your bio', Bio(character['bio']))
     state.set_variable(var)
+    return var
 
-
+@traceable(run_type='parser')
 def init_lore(state):
   character = state.character
   if character is None or character['lore'] is None or len(character['lore']) == 0:
@@ -39,8 +44,9 @@ def init_lore(state):
   else:
     var = Variable('lore', 'Your lore', Lore(character['lore']))
     state.set_variable(var)
+    return var
 
-
+@traceable(run_type='parser')
 def init_style(state):
   character = state.character
   if character is None or character['style'] is None or len(character['style']) == 0:
@@ -48,9 +54,10 @@ def init_style(state):
   else:
     var = Variable('style', 'Your style', Style(character['style']))
     state.set_variable(var)
-
+    return var
 
 max_depth = 28
+@traceable(run_type='parser')
 def init_conversation(state):
   fid_origin = state.fid_origin
   request = state.request
@@ -100,8 +107,24 @@ def init_conversation(state):
       text += '#'
     var = Variable('conversation', "The context's conversation", Conversation(text))
     state.set_variable(var)
-
+    return var
   
+  
+@traceable(run_type='parser')
+def init_should_continue(state):
+  bot_id = state.bot_id
+  bot_name = state.bot_name
+  channel = state.get_variable('current_channel')
+  if channel is not None:
+    channel = channel.value.channel_id
+  conversation = state.get_variable('conversation')
+  if conversation is not None:
+    conversation = conversation.value.conversation
+  request = state.request
+  state.should_continue = should_continue(bot_id, bot_name, channel, conversation, request)
+  return state.should_continue
+
+
 def initialize_state(input):    
   state = input['state']
   # bot_id
@@ -179,6 +202,8 @@ def initialize_state(input):
   init_lore(state)
   init_style(state)
   init_conversation(state)
+  if state.mode == 'bot':
+    init_should_continue(state)
   return [str(v) for v in state.variables.values()]
   
 
