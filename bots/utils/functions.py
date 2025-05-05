@@ -1,5 +1,6 @@
 import inspect
 import traceback
+from langsmith import traceable
 
 
 def combine_params(state, str_params, var_params):
@@ -57,3 +58,13 @@ def exec_function(state, tool, method, str_params, var_params, variable_name, va
       'error': str(e),
       'stacktrace': traceback.format_exc().splitlines()
     }
+  
+def exec_function_runnable(run_type, input):
+  state = input['state']
+  tool, method, str_params, var_params, variable_name, variable_description = validate_function(input)
+  params = combine_params(state, str_params, var_params)
+  @traceable(run_type=run_type, name=method)
+  def _exec_function(params):
+    return exec_function(state, tool, method, str_params, var_params, variable_name, variable_description)
+  _exec_function(params)
+  return state.get_variable(variable_name)
