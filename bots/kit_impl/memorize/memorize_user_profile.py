@@ -45,7 +45,7 @@ def memorize_user_profile(user_id: UserId,
   avatar_embed = get_embed(avatar.prompt)
   profile = {
       'fid': user_id.fid,
-      'user_name': user_id.user_name,
+      'user_name': user_id.username,
       'display_name': user_profile.display_name,
       'bio': user_profile.bio,
       'pfp_url': pfp_description.url,
