@@ -2,31 +2,50 @@ import json
 from langchain.agents import BaseSingleActionAgent
 from langchain.schema import AgentAction, AgentFinish
 from langchain.agents import AgentExecutor
+from bots.tools import TOOLS
 from bots.state import State
-from bots.tools.plan.init import InitState
+
 
 class Agent(BaseSingleActionAgent):
             
   def __init__(self):
     super().__init__()
-    self._tools = [InitState]
+    self._tools = TOOLS
     self._state = None
     
   @property
   def input_keys(self):
     return ["input"]
   
+  def next_action(self, intermediate_steps, callbacks, **kwargs):
+    if not self._state.should_continue:
+      return AgentFinish(return_values={"output": self._state}, log='done')
+    elif self._state.todo is not None and len(self._state.todo) > 0:
+      tool_config = self._state.todo.pop(0)
+      input = {
+        'state': self._state,
+        'config': tool_config
+      }
+      return AgentAction(
+        tool=tool_config['tool'],
+        tool_input={'input': input},
+        log='')
+    elif self._state.mode in ['bot', 'assistant']:
+      return self.next_phase()
+    else:
+      return AgentFinish(return_values={"output": self._state}, log='done')
+    
   def plan(self, intermediate_steps, callbacks, **kwargs):
     if self._state is None:
       self._state = State()
       input = json.loads(kwargs['input'])
       input['state'] = self._state
       return AgentAction(
-        tool='InitState',
+        tool='init_state',
         tool_input={'input': input},
         log='')
     else:
-      return AgentFinish(return_values={"output": self._state}, log='done')
+      return self.next_action(intermediate_steps, callbacks, **kwargs)
     
   async def aplan(self, intermediate_steps, **kwargs):
     return self.plan(intermediate_steps, **kwargs)

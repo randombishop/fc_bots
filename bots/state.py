@@ -18,6 +18,7 @@ class State:
     self.root_parent_url = None
     self.blueprint = None
     self.variables = {}
+    self.todo = []
   
   def get_variable(self, name: str):
     if name in self.variables:

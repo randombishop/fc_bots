@@ -182,8 +182,8 @@ def initialize_state(input):
   return [str(v) for v in state.variables.values()]
   
 
-InitState = Tool(
-  name="InitState",
+init_state = Tool(
+  name="init_state",
   func=initialize_state,
   description="Initialize the state of the bot."
 )

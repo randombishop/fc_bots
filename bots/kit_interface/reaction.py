@@ -16,13 +16,21 @@ class Reaction:
   def __str__(self) -> str:
     text = ''
     if self.type == 'reply' and self.cast.parent_cast is not None:
-      text += f"* Replied *\n"
+      text += f"✉️ Replied\n"
       text += f"@{self.cast.parent_cast.username} said: {shorten_text(self.cast.parent_cast.text)}\n"
       text += f"@{self.cast.username} replied: {self.cast.text}\n"
-      text += '*\n'
-    elif self.type in ['REPOST', 'LIKE']:
-      text += "* Liked *" if self.type == 'like' else "* Reposted *"
+      text += '\n'
+    elif self.type == 'like':
+      text += "❤️ Liked "
       text += f"@{self.cast.username}'s cast: "
       text += f"@{shorten_text(self.cast.text)}\n"
-      text += '*\n'
+      text += '\n'
+    elif self.type == 'recast':
+      text += "🔁 Reposted "
+      text += f"@{self.cast.username}'s cast: "
+      text += f"@{shorten_text(self.cast.text)}\n"
+      text += '\n'
+    else:
+      text += f"* {self.type} *\n"
+      text += '\n'
     return text

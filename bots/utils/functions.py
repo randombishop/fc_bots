@@ -3,14 +3,16 @@ import inspect
 
 def combine_params(state, str_params, var_params):
   params = {}
-  params.update(str_params)
-  for key, ref in var_params.items():
-    v = state.get_variable(ref)
-    if v is None:
-      raise ValueError(f"Variable {ref} not found")
-    params[key] = v
+  if str_params is not None:
+    params.update(str_params)
+  if var_params is not None:
+    for key, ref in var_params.items():
+      v = state.get_variable(ref)
+      if v is None:
+        raise ValueError(f"Variable {ref} not found")
+      params[key] = v
   return params
-
+  
 
 def get_function(object, method):
   func = getattr(object, method)
