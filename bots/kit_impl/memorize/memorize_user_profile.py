@@ -21,7 +21,7 @@ def format_embed(embed):
     return None
 
 
-def memorize(user_id: UserId, 
+def memorize_user_profile(user_id: UserId, 
              user_profile: UserProfile, 
              pfp_description: ImageDescription, 
              casts_description: UserCastsDescription,

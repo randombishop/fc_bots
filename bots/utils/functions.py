@@ -16,6 +16,7 @@ def combine_params(state, str_params, var_params):
   return params
   
 
+
 def get_function(object, method):
   func = getattr(object, method)
   if func is None:
@@ -37,13 +38,16 @@ def check_params(func, params):
       
 
 def validate_function(input):
+  state = input['state']
   config = input['config']
   tool = config['tool']
-  if tool not in ['fetch', 'prepare']:
-    raise ValueError(f"Invalid tool: {tool}")
+  object = state.get_implementation(tool)
   method = config['method']
+  func = get_function(object, method)
   str_params = config['str_params'] if 'str_params' in config else None
   var_params = config['var_params'] if 'var_params' in config else None
+  params = combine_params(state, str_params, var_params)
+  check_params(func, params)
   variable_name = config['variable_name'] if 'variable_name' in config else None
   variable_description = config['variable_description'] if 'variable_description' in config else None
   return tool, method, str_params, var_params, variable_name, variable_description
@@ -67,4 +71,7 @@ def exec_function_runnable(run_type, input):
   def _exec_function(params):
     return exec_function(state, tool, method, str_params, var_params, variable_name, variable_description)
   _exec_function(params)
-  return state.get_variable(variable_name)
+  if variable_name is not None:
+    return state.get_variable(variable_name)
+  else:
+    return None

@@ -6,7 +6,7 @@ from bots.kit_interface.user_reactions_description import UserReactionsDescripti
 from bots.kit_interface.user_id import UserId
 from bots.kit_interface.avatar import Avatar
 # Tool implementations
-from bots.kit_impl.memorize.save_user_profile import save_user_profile
+from bots.kit_impl.memorize.memorize_user_profile import memorize_user_profile
 
 
 class Memorize:
@@ -14,7 +14,7 @@ class Memorize:
   def __init__(self, state):
     self.state = state
 
-  def save_user_profile(self, user_id: UserId, user_profile: UserProfile, pfp_description: ImageDescription, casts_description: UserCastsDescription, reactions_description: UserReactionsDescription, avatar: Avatar ) -> str:
+  def memorize_user_profile(self, user_id: UserId, user_profile: UserProfile, pfp_description: ImageDescription, casts_description: UserCastsDescription, reactions_description: UserReactionsDescription, avatar: Avatar ) -> str:
     """
     Save the user profile in long term memory.
     
@@ -29,6 +29,6 @@ class Memorize:
     Returns:
         str: Status log of the save operation.
     """
-    return save_user_profile(user_id, user_profile, pfp_description, casts_description, reactions_description, avatar)
+    return memorize_user_profile(user_id, user_profile, pfp_description, casts_description, reactions_description, avatar)
   
   

@@ -72,7 +72,7 @@ WhoIs = [
   },
   {
     'tool': 'memorize',
-    'method': 'save_user_profile',
+    'method': 'memorize_user_profile',
     'var_params': {
       'user_id': 'selected_user',
       'user_profile': 'user_profile',

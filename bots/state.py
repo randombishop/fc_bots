@@ -42,6 +42,16 @@ class State:
     else:
       return None
     
+  def get_implementation(self, tool: str):
+    if tool == 'fetch':
+      return Fetch(self)
+    elif tool == 'prepare':
+      return Prepare(self)
+    elif tool == 'memorize':
+      return Memorize(self)
+    else:
+      raise ValueError(f"Invalid tool: {tool}")
+  
   def execute(self, tool: str, method: str, str_params: dict, var_params: dict, variable_name: str, variable_description: str):
     """
     Executes a method from the Fetch, Prepare or Memorize suite of tools
@@ -58,14 +68,7 @@ class State:
       The result of the executed method
     """
     params = combine_params(self, str_params, var_params)
-    if tool == 'fetch':
-      object = Fetch(self)
-    elif tool == 'prepare':
-      object = Prepare(self)
-    elif tool == 'memorize':
-      object = Memorize(self)
-    else:
-      raise ValueError(f"Invalid tool: {tool}")
+    object = self.get_implementation(tool)
     func = get_function(object, method)
     check_params(func, params)
     result = func(**params)
