@@ -77,7 +77,8 @@ def describe_user_reactions(bot_name: str, bio: Bio, lore: Lore, style: Style,
     'name': bot_name,
     'bio': bio,
     'lore': lore,
-    'style': style
+    'style': style,
+    'user': user_id.username
   })
   result = call_llm('medium', prompt, instructions, schema)
   description = result['description'] if 'description' in result else ''

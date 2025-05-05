@@ -117,9 +117,9 @@ class Prepare:
         UserCastsDescription: The description of the user's casts.
     """
     return describe_user_casts(bot_name=self.state.bot_name, 
-                               bio=self.state.get('bio'), 
-                               lore=self.state.get('lore'),
-                               style=self.state.get('style'),
+                               bio=self.state.get_variable('bio').value, 
+                               lore=self.state.get_variable('lore').value,
+                               style=self.state.get_variable('style').value,
                                user_id=user_id,
                                user_profile=user_profile,
                                casts=casts)
@@ -137,14 +137,14 @@ class Prepare:
         UserReactionsDescription: The description of the user's replies and reactions.
     """
     return describe_user_reactions(bot_name=self.state.bot_name, 
-                                               bio=self.state.get('bio'), 
-                                               lore=self.state.get('lore'),
-                                               style=self.state.get('style'),
-                                               user_id=user_id,
-                                               user_profile=user_profile,
-                                               reactions=reactions) 
+                                    bio=self.state.get_variable('bio').value, 
+                                    lore=self.state.get_variable('lore').value,
+                                    style=self.state.get_variable('style').value,
+                                    user_id=user_id,
+                                    user_profile=user_profile,
+                                    reactions=reactions) 
   
-  def create_avatar(self, user_id: UserId, user_profile: UserProfile, pfp_description: ImageDescription, casts_description: UserCastsDescription) -> Avatar:
+  def create_avatar(self, user_id: UserId, user_profile: UserProfile, pfp_description: ImageDescription, casts_user: Casts, casts_description: UserCastsDescription) -> Avatar:
     """
     Create an avatar for a user.
     
@@ -152,16 +152,17 @@ class Prepare:
         user_id (UserId): The user's id.  
         user_profile (UserProfile): The user's profile.
         pfp_description (ImageDescription): The description of the user's profile picture.
+        casts_user (Casts): The user's casts.
         casts_description (UserCastsDescription): The description of the user's casts.
   
     Returns:
         Avatar: The avatar image url.
     """
     return create_avatar(bot_name=self.state.bot_name,   
-                         bio=self.state.get('bio'), 
-                         lore=self.state.get('lore'),
-                         style=self.state.get('style'),
+                         bio=self.state.get_variable('bio').value, 
+                         lore=self.state.get_variable('lore').value,
                          user_id=user_id,
                          user_profile=user_profile,
                          pfp_description=pfp_description,
+                         casts=casts_user,
                          casts_description=casts_description) 

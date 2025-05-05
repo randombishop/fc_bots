@@ -4,6 +4,7 @@ import requests
 from bots.kit_interface.user_id import UserId
 from bots.kit_interface.user_profile import UserProfile
 from bots.kit_interface.image_description import ImageDescription
+from bots.kit_interface.casts import Casts
 from bots.kit_interface.user_casts_description import UserCastsDescription
 from bots.kit_interface.avatar import Avatar
 from bots.kit_interface.bio import Bio
@@ -23,11 +24,14 @@ prompt_template = """
 # USER BIO
 {{user_bio}}
 
+# USER CASTS
+{{casts}}
+
+# USER CASTS SUMMARY
+{{casts_description}}
+
 # USER PFP DESCRIPTION
 {{user_pfp_description}}
-
-# USER CASTS
-{{casts_user}}
 """
 
 instructions_template = """
@@ -81,20 +85,22 @@ schema = {
 }
 
 
-def create_avatar(bot_name: str, bio: Bio, lore: Lore, user_id: UserId, user_profile: UserProfile, pfp_description: ImageDescription, casts_description: UserCastsDescription) -> Avatar:
+def create_avatar(bot_name: str, bio: Bio, lore: Lore, user_id: UserId, user_profile: UserProfile, pfp_description: ImageDescription, casts: Casts, casts_description: UserCastsDescription) -> Avatar:
   prompt = format_template(prompt_template, {
     'user_name': user_id.username,
     'user_display_name': user_profile.display_name,
     'user_bio': user_profile.bio,
     'user_pfp_description': pfp_description.description,
-    'casts_user': casts_description.text
+    'casts': casts,
+    'casts_description': casts_description.text
   })
   if len(prompt) < 100:
     return {'log': 'Not enough data to generate a prompt for avatar'}
   instructions = format_template(instructions_template, {
     'name': bot_name,
     'bio': bio,
-    'lore': lore
+    'lore': lore,
+    'user': user_id.username
   })
   result = call_llm('medium', prompt, instructions, schema)
   user_avatar_prompt = result['avatar_prompt'] if 'avatar_prompt' in result else None

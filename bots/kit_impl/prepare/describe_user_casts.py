@@ -81,7 +81,8 @@ def describe_user_casts(bot_name: str, bio: Bio, lore: Lore, style: Style, user_
     'name': bot_name,
     'bio': bio,
     'lore': lore,
-    'style': style
+    'style': style,
+    'user': user_id.username
   })
   result = call_llm('medium', prompt, instructions, schema)
   user_casts_description = ''

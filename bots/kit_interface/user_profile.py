@@ -11,9 +11,9 @@ class UserProfile:
     self.pfp_url = pfp_url
       
   def __str__(self) -> str:
-    return f"""
-    display_name: {self.display_name}
-    bio: {self.bio}
-    followers: {self.followers}
-    following: {self.following}
-    pfp_url: {self.pfp_url}"""
+    ans = f"display_name: {self.display_name}\n"
+    ans += f"bio: {self.bio}\n"
+    ans += f"followers: {self.followers}\n"
+    ans += f"following: {self.following}\n"
+    ans += f"pfp_url: {self.pfp_url}\n"
+    return ans

@@ -64,6 +64,7 @@ WhoIs = [
       'user_id': 'selected_user', 
       'user_profile': 'user_profile', 
       'pfp_description': 'pfp_description',
+      'casts_user': 'casts_user',
       'casts_description': 'casts_description',
     }, 
     'variable_name': 'avatar',
