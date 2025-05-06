@@ -17,6 +17,33 @@ class Agent(BaseSingleActionAgent):
   def input_keys(self):
     return ["input"]
   
+  def next_phase(self):
+    if not self._state.should_continue:
+      return AgentFinish(return_values={"output": self._state}, log='done')
+    elif self._state.iterations != 'done':
+      if self._state.mode == 'bot':
+        return AgentAction(
+          tool='intent',
+          tool_input={'state': self._state},
+          log='')
+      elif self._state.mode == 'assistant':
+        return AgentAction(
+          tool='program',
+          tool_input={'state': self._state},
+          log='')
+    elif not self._state.composed:
+      return AgentAction(
+        tool='compose',
+        tool_input={'state': self._state},
+        log='')
+    elif (not self._state.checked) and (self._state.casts is not None) and (len(self._state.casts) > 0):
+      return AgentAction(
+        tool='check',
+        tool_input={'state': self._state},
+        log='')
+    else:
+      return AgentFinish(return_values={"output": self._state}, log='done')
+    
   def next_action(self, intermediate_steps, callbacks, **kwargs):
     if not self._state.should_continue:
       return AgentFinish(return_values={"output": self._state}, log='done')
@@ -31,7 +58,7 @@ class Agent(BaseSingleActionAgent):
         tool_input={'input': input},
         log='')
     elif self._state.mode in ['bot', 'assistant']:
-      return AgentFinish(return_values={"output": self._state}, log='done')
+      return self.next_phase()
     else:
       return AgentFinish(return_values={"output": self._state}, log='done')
     

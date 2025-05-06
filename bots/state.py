@@ -20,6 +20,10 @@ class State:
     self.blueprint = None
     self.variables = {}
     self.todo = []
+    self.iterations = 0
+    self.composed = False
+    self.checked = False
+    self.casts = None
     
   def set_variable(self, variable: Variable):
     """
@@ -44,16 +48,15 @@ class State:
   
   def get_context(self) -> str:
     """
-    Formats all the state variables into a string to be used as LLM prompt
+    Formats current state into a context string containing all variables, current channel, conversation and instructions
     
     Returns:
-      The context of the state
+      Text representation of current state
     """
-    name = self.get('name')
-    ans = f'You are @{name} bot, a social media bot.\n'
+    ans = f'You are @{self.bot_name} bot, a social media bot.\n'
     ans += 'Here are the variables in your internal state, followed by your instructions.\n\n'
     for variable in self.variables.values():
-      variable_type = self.value.__class__.__name__
+      variable_type = variable.value.__class__.__name__
       ans += f"#{variable.name} ({variable_type}) -> {variable.description}\n"
       ans += f"{variable.value}\n\n"
     ans += '\n\n'

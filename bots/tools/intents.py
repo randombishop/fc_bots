@@ -19,33 +19,31 @@ INTENTS_DESCRIPTIONS = {
 
 INTENTS_TARGETS = {
   
-'FavoriteUsers': ['RenderFavoriteUsersTable'],
+'FavoriteUsers': [{'tool': 'prepare', 'method': 'render_favorite_users_table'}],
 
-'MoreLikeThis': ['GetMoreLikeThis', 'CreateWordCloud'],
+'MoreLikeThis': [{'tool': 'fetch', 'method': 'get_casts_search'}, {'tool': 'prepare', 'method': 'create_word_cloud'}],
 
-'MostActiveUsers': ['CreateMostActiveUsersChart'],
+'MostActiveUsers': [{'tool': 'prepare', 'method': 'create_most_active_users_chart'}],
 
-'News': ['GetNews'],
+'News': [{'tool': 'fetch', 'method': 'get_news'}],
 
-'Perplexity': ['CallPerplexity'],
+'Pick': [{'tool': 'fetch', 'method': 'aggregate_casts'}],
 
-'Pick': ['AggregateCasts'],
+'Praise': [{'tool': 'prepare', 'method': 'create_avatar'}],
 
-'Praise': ['CreateAvatar'],
+'Psycho': [{'tool': 'prepare', 'method': 'create_avatar'}],
 
-'Psycho': ['CreateAvatar'],
+'Roast': [{'tool': 'prepare', 'method': 'create_avatar'}],
 
-'Roast': ['CreateAvatar'],
+'Summary': [{'tool': 'prepare', 'method': 'create_word_cloud'}],
 
-'Summary': ['CreateWordCloud'],
+'WhoIs':  [{'tool': 'prepare', 'method': 'create_avatar'}],
 
-'WhoIs':  ['CreateAvatar'],
+'WordCloud': [{'tool': 'prepare', 'method': 'create_word_cloud'}],
 
-'WordCloud': ['CreateWordCloud'],
+'UserStats': [{'tool': 'fetch', 'method': 'make_user_stats_sql_query'}, {'tool': 'fetch', 'method': 'execute_dune_query'}],
 
-'UserStats': ['GetUserStats'],
-
-'CastStats': ['GetCastStats']
+'CastStats': [{'tool': 'fetch', 'method': 'make_cast_stats_sql_query'}, {'tool': 'fetch', 'method': 'execute_dune_query'}]
 
 }
 
@@ -53,27 +51,25 @@ INTENTS_TARGETS = {
 
 INTENTS_RESPONSE_PLANS = {
   
-'FavoriteUsers': """Post one tweet about who the user likes and why.
-Embed the table url in embed_url1""",
+'FavoriteUsers': """Post one cast about who the user likes and why.
+Include a link to the table url""",
   
-'MoreLikeThis': """Use the first tweet for a freestyle intro (with or without an embed, a wordcloud or anything else) 
-then fill embed_hash2 and embed_hash3 with similar posts ids.""",
+'MoreLikeThis': """Use the first post for a freestyle intro (with or without an embed, a wordcloud or anything else) 
+then link to similar posts ids in second and third posts.""",
 
-'MostActiveUsers': """Post one tweet about the most active users in the channel and embed the chart image in embed_url1""",
+'MostActiveUsers': """Post one cast about the most active users in the channel and link to the chart image""",
 
-'News': """Post one tweet about the news and embed the link in embed_url1""",
-
-'Perplexity': """Rephrase the answer from perplexity in your words in one engaging tweetand embed the link in embed_url1""",
+'News': """Post one cast about the news and include the link to the story""",
 
 'Pick': """Pick a post and comment it.
-Make sure you fill embed_hash1 to embed the post that you picked.""",  
+Make sure you include a link to the post that you picked.""",  
 
 'Praise': """Analyze the user posts carefully.
 Based on the provided information, identify their core personality and what makes them unique.
 Praise them in a way that is authentic and specific, not vague.
 Be yourself and include what you really like about them.
 Keep it short but impactful, a poetic appreciation, a clever compliment, or a deep truth about them.
-Also, embed the user's avatar in embed_url1""",
+Also, embed the user's avatar in the first post""",
 
 'Psycho': """Based on the posts, provide a hilariously original psychoanalysis of the user's personality in 3 tweets.
 Do not use real pathology names, instead, create your own funny medical names with novel issues.
@@ -82,7 +78,7 @@ Examine the recurring themes and word choices and explain their subconscious mot
 Imagine a blend of Freudian insights and stand-up comedy.
 Remember to be creative, original, and thoroughly entertaining but always remain respectful.
 Be respectful, and do not use sexual, religious or political references.
-Also, embed the user's avatar in embed_url1""",
+Also, include a link to the user's avatar url""",
 
 'Roast': """Analyze the user's posts and craft a roast that is both hilarious and original.
 Roast them as hard as you can in one short but explosive tweet.
@@ -90,20 +86,20 @@ Cleverly highlight the quirky, absurd, or contradictory elements in the posts.
 Use wordplay, irony, and playful sarcasm.
 Maintain a humorous, light-hearted tone without resorting to unnecessarily mean-spirited personal attacks.
 Be respectful, and do not use sexual, religious or political references.
-Also, embed the user's avatar in embed_url1""",
+Also, include the link to the user's avatar""",
 
 'Summary': """Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
 Focus on posts that are genuine, interesting, funny, or informative.
 Don't reference websites and don't include any urls in your summary.
-Post your summary intro and embed the wordcloud in the first tweet.
-Then continue your summary in tweet2 and tweet3 and include links to the most interesting posts in embed_hash2 and embed_hash3.
+Post your summary intro and link to the wordcloud in the first post.
+Then continue your summary in the second and third post and include links to the most interesting posts.
 """,
 
 'WhoIs': """Analyze the user posts carefully and post a short description in one single tweet.
-Embed the user's avatar in embed_url1""",
+Include the user's avatar url link""",
 
 'WordCloud': """Write a word play using the most common words (wordcloud_text) and the theme from the provided posts.
-Post it as a single short tweet and embed the wordcloud URL in embed_url1""",
+Post it as a single short tweet and include a link to the wordcloud URL""",
 
 'UserStats': """Compose a data driven response.""",
 
@@ -114,8 +110,7 @@ Post it as a single short tweet and embed the wordcloud URL in embed_url1""",
 
 DEFAULT_RESPONSE_PLAN = """
 For your information, in the farcaster social media platform, posts are called casts.
-You can optionally embed an url or a post hash if it is relevant. 
-When you want to embed an url or post, use the embed_url or embed_hash fields, don't include the link or post id in the tweet field itself.
+You can optionally link to an url or a post hash if it is relevant. 
 """
 
 

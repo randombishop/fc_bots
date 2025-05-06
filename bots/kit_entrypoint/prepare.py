@@ -55,17 +55,17 @@ class Prepare:
     """
     return render_favorite_users_table(data)
   
-  def make_word_cloud_data(self, data: Casts) -> WordCloudData:
+  def make_word_cloud_data(self, casts: Casts) -> WordCloudData:
     """
     Create a data object before rendering a word cloud.
     
     Args:
-        data (Casts): The list of casts to prepare the word cloud data.
+        casts (Casts): The list of casts to prepare the word cloud data.
   
     Returns:
         WordCloudData: Text and word counts.
     """
-    return make_word_cloud_data(data)
+    return make_word_cloud_data(casts)
   
   def make_word_cloud_mask(self, data: WordCloudData) -> WordCloudMask:
     """
