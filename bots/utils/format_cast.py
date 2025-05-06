@@ -82,7 +82,7 @@ def format_casts(casts):
 
 
 
-def exclude_url(x):
+def exclude_link(x):
   exclude = ['warpcast.com']
   for e in exclude:
     if e in x:
@@ -90,22 +90,13 @@ def exclude_url(x):
   return False
 
 
-def extract_hashes(text):
-  hash_pattern = r'0x[a-fA-F0-9]{6}'
-  hashes = re.findall(hash_pattern, text)
-  text_without_hashes = re.sub(hash_pattern, '', text)
-  text_without_hashes = re.sub(r'\s+', ' ', text_without_hashes).strip()
-  hashes = [x.lower() for x in hashes]
-  return text_without_hashes, hashes
+def extract_links(text):
+  link_pattern = r'\[(.*?)\]'
+  links = re.findall(link_pattern, text)
+  text_without_links = re.sub(link_pattern, '', text)
+  links = [x for x in links if not exclude_link(x)]
+  return text_without_links, links
 
-
-def extract_urls(text):
-  url_pattern = r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+'
-  urls = re.findall(url_pattern, text)
-  text_without_urls = re.sub(url_pattern, '', text)
-  text_without_urls = re.sub(r'\s+', ' ', text_without_urls).strip()
-  urls = [x for x in urls if not exclude_url(x)]
-  return text_without_urls, urls
 
 
 def clean_text(text):
@@ -113,7 +104,6 @@ def clean_text(text):
     return None
   text = text.replace('$', '')
   text = text.replace('tweet', 'cast')
-  text = re.sub(r'\[\d+\]', '', text)
   if len(text) > 2:
     if text[0]=='"':
       text = text[1:]
@@ -123,8 +113,9 @@ def clean_text(text):
 
 
 def extract_cast(text, posts_map):
-  text, embed_hashes = extract_hashes(text)
-  text, embed_urls = extract_urls(text)
+  text, links = extract_links(text)
+  embed_urls = [x for x in links if x.startswith('https://') or x.startswith('http://')]
+  embed_hashes = [x for x in links if x.startswith('0x')]
   text = clean_text(text)
   text, mentions_ats, mentions_positions = extract_mentions(text)
   c = {'text': text}
