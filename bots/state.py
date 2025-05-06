@@ -41,8 +41,43 @@ class State:
       return self.variables[name]
     else:
       return None
+  
+  def get_context(self) -> str:
+    """
+    Formats all the state variables into a string to be used as LLM prompt
     
-  def get_implementation(self, tool: str):
+    Returns:
+      The context of the state
+    """
+    name = self.get('name')
+    ans = f'You are @{name} bot, a social media bot.\n'
+    ans += 'Here are the variables in your internal state, followed by your instructions.\n\n'
+    for variable in self.variables.values():
+      variable_type = self.value.__class__.__name__
+      ans += f"#{variable.name} ({variable_type}) -> {variable.description}\n"
+      ans += f"{variable.value}\n\n"
+    ans += '\n\n'
+    channel = self.get_variable('current_channel')
+    if channel is not None:
+      ans += f"#CURRENT CHANNEL\n/{channel.value}\n\n"
+    conversation = self.get_variable('conversation')
+    if conversation is not None and len(conversation.value.conversation)>0:
+      ans += f"#CONVERSATION\n{conversation.value.conversation}\n"
+    request = self.request
+    if request is not None and len(request)>0:
+      ans += f"#INSTRUCTIONS\n{request}\n"
+    return ans
+  
+  def get_implementation(self, tool: str) -> Fetch | Prepare | Memorize:
+    """
+    Instantiates a tool implementation
+    
+    Args:
+      tool: str - The tool implementation to use (fetch, prepare or memorize)
+      
+    Returns:
+      The tool implementation
+    """
     if tool == 'fetch':
       return Fetch(self)
     elif tool == 'prepare':
