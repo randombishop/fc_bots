@@ -7,7 +7,13 @@ class Variable:
     self.name = name
     self.description = description
     self.value = value
-      
+
+  def get_type(self):
+    try:
+      return self.value.__class__.__name__
+    except:
+      return str(type(self.value))
+
   def __str__(self) -> str:
     try:
       variable_type = self.value.__class__.__name__

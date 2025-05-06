@@ -113,10 +113,6 @@ def select_intent(state):
   prompt2 = state.get_context()
   prompt2 += '\n\n\n' + '-'*100 + '\n\n\n'
   prompt2 += '# YOUR SOURCE CODE:\n\n'
-  kit_interface_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../kit_interface')
-  for file in os.listdir(kit_interface_dir):
-    if file.endswith('.py'):
-      prompt2 += get_source_code('../kit_interface', file, 'bots.kit_interface') + '\n'
   prompt2 += get_source_code('../kit_entrypoint', 'fetch.py', 'bots.kit_entrypoint') + '\n'
   prompt2 += get_source_code('../kit_entrypoint', 'prepare.py', 'bots.kit_entrypoint') + '\n'
   prompt2 += get_source_code('..', 'state.py', 'bots') + '\n'

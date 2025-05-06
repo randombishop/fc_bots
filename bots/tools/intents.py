@@ -90,8 +90,8 @@ Also, include the link to the user's avatar""",
 
 'Summary': """Ignore posts that look like ads, promotions, have links to minting NFTs or any other type of commercial activity.
 Focus on posts that are genuine, interesting, funny, or informative.
-Don't reference websites and don't include any urls in your summary.
-Post your summary intro and link to the wordcloud in the first post.
+Don't reference websites and don't include any urls in your summary, except the ones that you generated yourself.
+Post your summary intro and a link to the wordcloud that you created in the first post.
 Then continue your summary in the second and third post and include links to the most interesting posts.
 """,
 

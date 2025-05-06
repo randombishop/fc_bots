@@ -4,7 +4,7 @@ class Cast:
   """
   
   def __init__(self, data: dict):
-    self.id = data['hash'][2:8]
+    self.id = '0x' + data['hash'][2:8]
     self.hash = data['hash']
     self.fid = data['fid']
     self.username = data['username']
