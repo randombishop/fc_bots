@@ -24,11 +24,14 @@ Your task is to respond to a user on a social media platform based on the provid
 Output 1 response post or a thread of up to 3 posts max in json format.
 Prefer a response in 1 single post if possible, but you can use 2 or 3 posts if really needed.
 For your information, in the farcaster social media platform, posts are called casts.
-To include urls or post ids, just put them between brackets like this [https://...] or [0x......]
+When you include urls or post ids, always put them between brackets like this [https://...] or [0x......]
+When you mention users, always use the @username format, no need to put them between brackets or parentheses or any other special characters.
+Avoid mentioning more than 3 users in a single post.
+Avoid phrasing your post like previous similar ones or copying from other posts.
 Output the result in json format.
 Make sure you don't use " inside json strings. 
 Avoid invalid json.
-Avoid phrasing your post like previous similar ones or copying from other posts.
+
 
 #RESPONSE PLAN:
 {{response_plan}}
@@ -70,7 +73,6 @@ def _compose(state):
       casts = v.value.casts
       for c in casts:
         posts_map[c.id] = c
-  print(posts_map)
   casts = []
   def add_cast(num):
     if f'post{num}' in result and result[f'post{num}'] is not None and len(result[f'post{num}']) > 0:

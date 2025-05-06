@@ -46,7 +46,14 @@ def extract_mentions(text):
     else:
       result_text += text[i]
       i += 1
-  return result_text, mentions, positions
+  mention_ats = [clean_username(x) for x in mentions]
+  return result_text, mention_ats, positions
+
+
+def clean_username(username):
+  if username is not None and len(username) > 0 and username[-1] in '.!?,;:':
+    username = username[:-1]
+  return username
 
 
 def shorten_text(text):
@@ -134,12 +141,15 @@ def extract_cast(text, posts_map):
       c['embeds_description'] = link.text
       c['embeds_warpcast'] = f"https://warpcast.com/{link.username}/{link.hash[:10]}"
   if len(mentions_ats) > 0:
-    mentions = [get_fid(x[1:]) for x in mentions_ats]
-    mentions = [int(x) for x in mentions if x is not None]
-    if len(mentions) == len(mentions_ats):
-      c['mentions'] = mentions
-      c['mentions_ats'] = mentions_ats
-      c['mentions_pos'] = mentions_positions
+    try:
+      mentions = [get_fid(x[1:]) for x in mentions_ats]
+      mentions = [int(x) for x in mentions if x is not None]
+      if len(mentions) == len(mentions_ats):
+        c['mentions'] = mentions
+        c['mentions_ats'] = mentions_ats
+        c['mentions_pos'] = mentions_positions
+    except:
+      pass
   return c
 
 
