@@ -2,7 +2,7 @@ from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.utils.format_cast import extract_cast, format_casts
 from bots.utils.prompts import format_template
-
+from bots.utils.shorten import MAX_LENGTH, shorten_text
 
 instructions_template = """
 You are @{{bot_name}} bot
@@ -74,7 +74,10 @@ def _compose(state):
   casts = []
   def add_cast(num):
     if f'post{num}' in result and result[f'post{num}'] is not None and len(result[f'post{num}']) > 0:
-      casts.append(extract_cast(result[f'post{num}'], posts_map))
+      text = result[f'post{num}']
+      if len(text) > MAX_LENGTH:
+        text = shorten_text(text, state.get_variable('style').value)
+      casts.append(extract_cast(text, posts_map))
   add_cast(1)
   add_cast(2)
   add_cast(3)
