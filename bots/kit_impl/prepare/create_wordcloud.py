@@ -10,11 +10,11 @@ from bots.kit_interface.word_cloud_image import WordCloudImage
 
 
 def create_wordcloud(data: WordCloudData, mask: WordCloudMask) -> WordCloudImage:
-  mask = numpy.array(mask.mask)
-  colormap = ImageColorGenerator(mask)
+  mask_array = numpy.array(mask.mask)
+  colormap = ImageColorGenerator(mask_array)
   words = data.word_counts
   filename1 = str(uuid.uuid4())+'.words.png'
-  wordcloud = WordCloud(mask=mask,
+  wordcloud = WordCloud(mask=mask_array,
                         background_color=None,  
                         min_font_size=1,
                         mode='RGBA',

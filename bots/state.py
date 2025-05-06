@@ -19,11 +19,13 @@ class State:
     self.root_parent_url = None
     self.blueprint = None
     self.variables = {}
+    self.plan = None
     self.todo = []
     self.iterations = 0
     self.composed = False
     self.checked = False
     self.casts = None
+    self.valid = False
     
   def set_variable(self, variable: Variable):
     """
@@ -105,7 +107,7 @@ class State:
     Returns:
       The result of the executed method
     """
-    params = combine_params(self, str_params, var_params)
+    params = combine_params(self.variables, str_params, var_params)
     object = self.get_implementation(tool)
     func = get_function(object, method)
     check_params(func, params)

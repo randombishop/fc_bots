@@ -1,17 +1,20 @@
 import inspect
 import traceback
+import json
 from langsmith import traceable
+from bots.kit_interface.error import Error
+from bots.kit_interface.variable import Variable
 
 
-def combine_params(state, str_params, var_params):
+def combine_params(variables, str_params, var_params):
   params = {}
   if str_params is not None:
     params.update(str_params)
   if var_params is not None:
     for key, ref in var_params.items():
-      v = state.get_variable(ref)
-      if v is None:
+      if ref not in variables:
         raise ValueError(f"Variable {ref} not found")
+      v = variables[ref]
       params[key] = v.value
   return params
   
@@ -33,7 +36,7 @@ def check_params(func, params):
     if param_name in params:
       expected_type = param.annotation
       actual_value = params[param_name]
-      if not isinstance(actual_value, expected_type):
+      if (expected_type!=actual_value) and (not isinstance(actual_value, expected_type)):
         raise TypeError(f"Parameter {param_name} expects type {expected_type}, got {type(actual_value)}")
       
 
@@ -46,7 +49,7 @@ def validate_function(input):
   func = get_function(object, method)
   str_params = config['str_params'] if 'str_params' in config else None
   var_params = config['var_params'] if 'var_params' in config else None
-  params = combine_params(state, str_params, var_params)
+  params = combine_params(state.variables, str_params, var_params)
   check_params(func, params)
   variable_name = config['variable_name'] if 'variable_name' in config else None
   variable_description = config['variable_description'] if 'variable_description' in config else None
@@ -57,16 +60,13 @@ def exec_function(state, tool, method, str_params, var_params, variable_name, va
   try:
     return state.execute(tool, method, str_params, var_params, variable_name, variable_description)
   except Exception as e:
-    print(traceback.format_exc())
-    return {
-      'error': str(e),
-      'stacktrace': traceback.format_exc().splitlines()
-    }
+    return Error(str(e), traceback.format_exc().splitlines())
   
+
 def exec_function_runnable(run_type, input):
   state = input['state']
   tool, method, str_params, var_params, variable_name, variable_description = validate_function(input)
-  params = combine_params(state, str_params, var_params)
+  params = combine_params(state.variables, str_params, var_params)
   @traceable(run_type=run_type, name=method)
   def _exec_function(params):
     return exec_function(state, tool, method, str_params, var_params, variable_name, variable_description)
@@ -75,3 +75,30 @@ def exec_function_runnable(run_type, input):
     return state.get_variable(variable_name)
   else:
     return None
+  
+
+def validate_sequence(state, sequence):
+  variables = state.variables.copy()
+  ans = []
+  exception = None
+  try:
+    for call in sequence:
+      tool = call['tool']
+      object = state.get_implementation(tool)
+      method = call['method']
+      func = get_function(object, method)
+      str_params = call['str_params'] if 'str_params' in call else None
+      var_params = call['var_params'] if 'var_params' in call else None
+      params = combine_params(variables, str_params, var_params)
+      check_params(func, params)
+      ans.append(call)
+      sig = inspect.signature(func)
+      variable_type = sig.return_annotation
+      variable_name = call['variable_name'] if 'variable_name' in call else None
+      variable_description = call['variable_description'] if 'variable_description' in call else None
+      if variable_name is not None:
+        variables[variable_name] = Variable(variable_name, variable_description, variable_type)
+  except Exception as e:
+    exception = e
+  return ans, exception
+

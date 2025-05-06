@@ -10,7 +10,7 @@ from bots.utils.json_cleaner import clean_json
 
 gemini_15_flash = "gemini-1.5-flash-002"
 gemini_20_flash = "gemini-2.0-flash-001"
-
+gemini_25_flash = "gemini-2.5-flash-preview-04-17"
 
 def create_llm_small():
   try:
@@ -28,6 +28,14 @@ def create_llm_medium():
   except Exception as e:
     print(f'Error in create_llm_medium: {e}')
     return None
+  
+def create_llm_large():
+  try:
+    llm_large = ChatVertexAI(model=gemini_25_flash)
+    return llm_large
+  except Exception as e:
+    print(f'Error in create_llm_large: {e}')
+    return None
 
 def create_llm_image():
   try:
@@ -43,6 +51,7 @@ def create_llm_image():
 models = {
   'small': create_llm_small(),
   'medium': create_llm_medium(),
+  'large': create_llm_large(),
   'image': create_llm_image()
 }
 

@@ -3,7 +3,7 @@ from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.tools.intents import get_intents, get_intents_descriptions, get_intended_targets, get_response_plan
 from bots.utils.prompts import format_template
-
+from bots.utils.functions import validate_sequence
 
 
 instructions_template1 = """
@@ -49,31 +49,37 @@ Your program must be a sequence of calls to execute(tool: str, method: str, str_
 - variable_description: str - The description of the obtained variable (optional) - What is the purpose of the variable?
 {{intended_targets}}
 Your task is to figure out the prerequisites and parameters of the intended targets and compose a program that will successfully execute its final steps.
-Make sure all required parameters are prepared by previous steps before each new call.
+Once you prepare your call sequence, simulate it and calculate available variables after each step.
+Make sure all required parameters are made available by previous steps before each new call.
 You must output your sequence of calls as a list of dictionaries in json format.
 
 
 
 #OUTPUT FORMAT
-[
-  {
-    "tool": "...",
-    "method": "...",
-    "str_params": {
-      "...": "..."
+{
+  "program": [
+    {
+      "tool": "...",
+      "method": "...",
+      "str_params": {
+        "...": "..."
+      },
+      "var_params": {
+        "...": "..."
+      },
+      "variable_name": "...",
+      "variable_description": "..."
     },
-    "var_params": {
-      "...": "..."
-    },
-    "variable_name": "...",
-    "variable_description": "..."
-  },
-  ...
-]
+    ...
+  ]
+}
 """
 
 schema2 = {
-  "type":"ARRAY"
+  "type":"OBJECT",
+  "properties":{
+    "program":{"type":"ARRAY"}
+  }
 }
 
 def get_source_code(folder, file, package):
@@ -114,14 +120,20 @@ def select_intent(state):
   prompt2 += get_source_code('../kit_entrypoint', 'fetch.py', 'bots.kit_entrypoint') + '\n'
   prompt2 += get_source_code('../kit_entrypoint', 'prepare.py', 'bots.kit_entrypoint') + '\n'
   prompt2 += get_source_code('..', 'state.py', 'bots') + '\n'
-  result2 = call_llm('medium', prompt2, instructions2, schema2) 
-  return {
+  result2 = call_llm('large', prompt2, instructions2, schema2) 
+  program = result2['program'] if 'program' in result2 else []
+  validated, error = validate_sequence(state, program) 
+  plan = {
     'intent': intent, 
     'intended_targets': targets, 
     'intended_response_plan': response_plan,
-    'program': result2
+    'program': program,
+    'validated': validated.copy(),
+    'error': error
   } 
-  
+  state.plan = plan
+  state.todo = validated
+  return plan
 
 intent = Tool(
   name="intent",
