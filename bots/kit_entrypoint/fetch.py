@@ -10,6 +10,7 @@ from bots.kit_interface.most_active_users import MostActiveUsers
 from bots.kit_interface.casts import Casts
 from bots.kit_interface.reactions import Reactions
 from bots.kit_interface.dune_query import DuneQuery
+from bots.kit_interface.data_frame import DataFrame
 # Tool implementations
 from bots.kit_impl.fetch.get_channel_id import get_channel_id
 from bots.kit_impl.fetch.get_keyword import get_keyword
@@ -30,6 +31,9 @@ from bots.kit_impl.fetch.get_bot_casts_all import get_bot_casts_all
 from bots.kit_impl.fetch.get_trending import get_trending
 from bots.kit_impl.fetch.get_user_reactions import get_user_reactions
 from bots.kit_impl.fetch.make_cast_stats_sql_query import make_cast_stats_sql_query
+from bots.kit_impl.fetch.make_user_stats_sql_query import make_user_stats_sql_query
+from bots.kit_impl.fetch.execute_dune_query import execute_dune_query
+
 
 class Fetch:
   
@@ -268,8 +272,31 @@ class Fetch:
   def make_cast_stats_sql_query(self) -> DuneQuery:
     """
     Make a SQL query to fetch cast statistics from Dune Analytics.
+    Use to access the full table of cast features.
     
     Returns:
         DuneQuery: A DuneQuery object containing the SQL query, None otherwise.
     """
     return make_cast_stats_sql_query(self.state.get_context(), self.state.bot_name)
+  
+  def make_user_stats_sql_query(self) -> DuneQuery:
+    """
+    Make a SQL query to fetch user statistics from Dune Analytics.
+    Use to access the full table of user features.
+    
+    Returns:
+        DuneQuery: A DuneQuery object containing the SQL query, None otherwise.
+    """
+    return make_user_stats_sql_query(self.state.get_context(), self.state.bot_name)
+  
+  def execute_dune_query(self, query: DuneQuery) -> DataFrame:
+    """
+    Execute a Dune query and return a DataFrame.
+    
+    Args:
+        query (DuneQuery): The Dune query to execute.
+
+    Returns:
+        DataFrame: A DataFrame object containing the results of the Dune query, None otherwise.
+    """
+    return execute_dune_query(query)

@@ -1,11 +1,12 @@
-from langchain.agents import Tool
+from bots.kit_interface.dune_query import DuneQuery
 from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_string
+from bots.utils.prompts import format_template
 
 
-parse_instructions_template = """
+instructions_template = """
 #TASK:
-You are @{{name}} bot and you have access to a Dune table containing user accounts statistics and features.
+You are @{{bot_name}} bot and you have access to a Dune table containing user accounts statistics and features.
 Your goal is to prepare a SQL query to help you proceed with your instructions.
 What SQL query should we run.
 If you can't get the exact information you need, try to get the closest alternative.
@@ -123,24 +124,12 @@ parse_schema = {
 }
 
 
-def parse(input):
-  state = input.state
-  parse_prompt = state.format_all()
-  parse_instructions = state.format(parse_instructions_template)
-  params = call_llm('medium', parse_prompt, parse_instructions, parse_schema)
+def make_user_stats_sql_query(context: str, bot_name: str) -> DuneQuery:
+  prompt = context
+  instructions = format_template(instructions_template, {'bot_name': bot_name})
+  params = call_llm('medium', prompt, instructions, parse_schema)
   sql = read_string(params, key='sql', default=None, max_length=1024)
-  return {
-    'user_stats_sql': sql
-  }
-  
-desc = """Make a SQL statement to query the user features dataset.
-Use MakeUserStatsSQLQuery when you need to make a customized query to the user features table."""
-
-MakeUserStatsSQLQuery = Tool(
-  name="MakeUserStatsSQLQuery",
-  description=desc,
-  metadata={
-    'outputs': ['user_stats_sql']
-  },
-  func=parse
-)
+  if sql is not None and len(sql) > 10:
+    return DuneQuery(sql)
+  else:
+    return None
