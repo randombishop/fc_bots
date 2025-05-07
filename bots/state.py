@@ -48,6 +48,18 @@ class State:
     else:
       return None
   
+  def get_variable_values(self, variable_type: str):
+    """
+    Gets all variables of a given type
+    
+    Args:
+      variable_type: str - The class name of the variables to 
+      
+    Returns:
+      A list of the variables' values
+    """
+    return [x.value for x in self.variables.values() if x.value.__class__.__name__==variable_type]
+  
   def get_implementation(self, tool: str) -> Fetch | Prepare | Memorize:
     """
     Instantiates a tool implementation
