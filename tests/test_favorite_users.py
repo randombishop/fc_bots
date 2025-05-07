@@ -10,7 +10,7 @@ class TestFavoriteUsers(unittest.TestCase):
     self.assertEqual(state.plan['intent'], 'FavoriteUsers')
     self.assertEqual(len(state.get_variable_values('FavoriteUsers')), 1)
     self.assertEqual(len(state.get_variable_values('FavoriteUsersTable')), 1)
-    self.assertEqual(state.get_variable_values('UserId')[0].fid, fid_target)
+    self.assertEqual(state.get_variable_values('UserId')[-1].fid, fid_target)
     self.assertTrue(state.valid)
     
   def test1(self):
