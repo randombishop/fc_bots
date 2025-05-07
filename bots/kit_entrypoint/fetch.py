@@ -110,8 +110,7 @@ class Fetch:
     Returns:
         UserId: A UserId object containing a valid user fid and username, None otherwise.
     """
-    bot_id = self.state.get_bot_id()
-    return get_random_user(bot_id,channel_id)
+    return get_random_user(self.state.bot_id, channel_id)
   
   def get_user_profile(self, user_id: UserId) -> UserProfile:
     """
@@ -238,7 +237,7 @@ class Fetch:
     Returns:
         Casts: The list of casts posted by the bot (yourself) in the selected channel, or None if empty.
     """
-    return get_bot_casts_in_channel(self.state.get_bot_id(), channel_id)
+    return get_bot_casts_in_channel(self.state.bot_id, channel_id)
   
   def get_bot_casts_all(self) -> Casts:
     """
@@ -247,7 +246,7 @@ class Fetch:
     Returns:
         Casts: The list of all casts posted by the bot (yourself), or None if empty.  
     """
-    return get_bot_casts_all(self.state.get_bot_id())
+    return get_bot_casts_all(self.state.bot_id)
   
   def get_trending(self) -> Casts:
     """

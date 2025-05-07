@@ -54,9 +54,10 @@ def debug_state(state):
   ans += "\n"
   variables = '\n'.join([str(v) for v in state.variables.values()])
   ans += f"#VARIABLES\n{variables}"
-  ans += "\n\n"
-  ans += ">>> OUTPUT CASTS >>>\n"
-  ans += format_casts(state.casts)
+  if state.casts is not None and len(state.casts)>0:
+    ans += "\n\n"
+    ans += ">>> OUTPUT CASTS >>>\n"
+    ans += format_casts(state.casts)
   ans += "\n"
   ans += "-"*64
   return ans
