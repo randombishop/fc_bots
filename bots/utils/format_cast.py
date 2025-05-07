@@ -90,7 +90,7 @@ def format_casts(casts):
 
 
 def exclude_link(x):
-  exclude = ['warpcast.com']
+  exclude = ['warpcast.com', 'www.dsart.io']
   for e in exclude:
     if e in x:
       return True

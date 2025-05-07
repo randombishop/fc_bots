@@ -7,7 +7,7 @@ from bots.utils.gcs import upload_to_gcs
 
 
 def render_favorite_users_table(data: FavoriteUsers) -> FavoriteUsersTable:
-  df = data.data
+  df = data.df
   if len(df) < 3:
     raise Exception(f"Not enough data ({len(df)})")
   df.rename(inplace=True, columns={
