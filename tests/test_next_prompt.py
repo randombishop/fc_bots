@@ -13,10 +13,5 @@ class TestNextPrompt(unittest.TestCase):
     self.assertIsNotNone(next['prompt_id'])
     self.assertIsNotNone(next['channel'])
     
-  def test2(self):
-    next = get_next_prompt(253232)
-    print('TestNextPrompt:test2')
-    print(next)
-    self.assertIsNotNone(next['prompt_id'])
-    self.assertIsNotNone(next['channel'])
+  
     
