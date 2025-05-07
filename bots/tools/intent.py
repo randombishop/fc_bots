@@ -45,7 +45,7 @@ Your program must be a sequence of calls to execute(tool: str, method: str, str_
 - method: str - The method to execute (see the tool implementation for details)
 - str_params: dict - The string parameters to pass to the method - You can pass any string here. (optional)
 - var_params: dict - The variable references to pass to the method, these must be available in self.variables, make sure you simulate what you ran before to evaluate if a variable will be available at any point in time. (optional)
-- variable_name: str - The name of the variable to set with the result of the method (optional) - Where do you want to store the result of the execution?
+- variable_name: str - The name of the variable to set with the result of the method (*required, you must set a target variable name to be able to see the result) - Where do you want to store the result of the execution?
 - variable_description: str - The description of the obtained variable (optional) - What is the purpose of the variable?
 {{intended_targets}}
 Your task is to figure out the prerequisites and parameters of the intended targets and compose a program that will successfully execute its final steps.

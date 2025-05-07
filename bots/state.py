@@ -88,7 +88,7 @@ class State:
       method: str - The method to execute (see the tool implementation for details) (*required)
       str_params: dict - The string parameters to pass to the method (optional)
       var_params: dict - The variable references to pass to the method, these must be available in self.variables (optional)
-      variable_name: str - The name of the variable to set with the result of the method (optional)
+      variable_name: str - The name of the variable to set with the result of the method (*required)
       variable_description: str - The description of the obtained variable (optional)
       
     Returns:
@@ -99,7 +99,7 @@ class State:
     func = get_function(object, method)
     check_params(func, params)
     result = func(**params)
-    if result is not None and variable_name is not None:
+    if result is not None:
       variable = Variable(variable_name, variable_description, result)
       self.set_variable(variable)
     return result

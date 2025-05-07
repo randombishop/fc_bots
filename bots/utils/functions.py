@@ -51,14 +51,16 @@ def validate_function(input):
   var_params = config['var_params'] if 'var_params' in config else None
   params = combine_params(state.variables, str_params, var_params)
   check_params(func, params)
-  variable_name = config['variable_name'] if 'variable_name' in config else None
-  variable_description = config['variable_description'] if 'variable_description' in config else None
+  variable_name = config['variable_name'] 
+  variable_description = config['variable_description'] if 'variable_description' in config else ''
   return tool, method, str_params, var_params, variable_name, variable_description
 
 
 def get_variable_target(input):
   try:
-    return input['config']['variable_name'], input['config']['variable_description']
+    variable_name = input['config']['variable_name']
+    variable_description = input['config']['variable_description'] if 'variable_description' in input['config'] else ''
+    return variable_name, variable_description
   except:
     return None, None
 

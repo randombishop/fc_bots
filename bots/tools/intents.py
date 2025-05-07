@@ -51,8 +51,9 @@ INTENTS_TARGETS = {
 
 INTENTS_RESPONSE_PLANS = {
   
-'FavoriteUsers': """Post one cast about who the user likes and why.
-Include a link to the table url""",
+'FavoriteUsers': """Post one cast about who the user likes.
+Include a link to the table url that you created.
+Do not guess a table link, only use the one that you created.""",
   
 'MoreLikeThis': """Use the first post for a freestyle intro (with or without an embed, a wordcloud or anything else) 
 then link to similar posts ids in second and third posts.""",

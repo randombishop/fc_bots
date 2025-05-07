@@ -150,6 +150,12 @@ def get_user_replies_and_recasts(fid, limit=25):
 ################################################################################
 ### Parse API responses into compact data structures
 ################################################################################
+def parse_custody_address(user):
+  try: 
+    return user['verified_addresses']['eth_addresses'][0]
+  except:
+    return None
+
 
 def parse_user_info(user):
   if user is None:
@@ -160,7 +166,7 @@ def parse_user_info(user):
     'display_name': user['display_name'],
     'pfp': user['pfp_url'],
     'bio': user['profile']['bio']['text'],
-    'custody_address': user['verified_addresses']['eth_addresses'][0],
+    'custody_address': parse_custody_address(user),
     'num_following': int(user['following_count']),
     'num_followers': int(user['follower_count'])
   }
