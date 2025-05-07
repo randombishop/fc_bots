@@ -11,7 +11,7 @@ from bots.kit_interface.bio import Bio
 from bots.kit_interface.lore import Lore
 from bots.utils.llms2 import call_llm, generate_image
 from bots.utils.gcs import upload_to_gcs
-from bots.utils.prompts import format_template
+from bots.utils.format_state import format_template
 
 
 prompt_template = """

@@ -1,5 +1,5 @@
 from langchain.agents import Tool
-from bots.utils.prompts import format_template, format_state
+from bots.utils.format_state import format_template, format_state
 from bots.utils.format_cast import format_casts
 from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_boolean, read_string

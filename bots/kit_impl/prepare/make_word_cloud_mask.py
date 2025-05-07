@@ -3,7 +3,7 @@ import uuid
 import requests
 from bots.utils.llms2 import generate_image
 from PIL import Image, ImageEnhance, ImageOps
-from bots.utils.prompts import format_template
+from bots.utils.format_state import format_template
 from bots.kit_interface.word_cloud_mask import WordCloudMask
 from bots.kit_interface.word_cloud_data import WordCloudData
 

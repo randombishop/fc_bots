@@ -1,6 +1,6 @@
 import os
 from bots.agent import invoke_agent
-from bots.utils.prompts import debug_state
+from bots.utils.format_state import debug_state
 
 bot_id = int(os.getenv('TEST_BOT'))
 

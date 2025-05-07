@@ -1,7 +1,7 @@
 from bots.data.app import get_bot_config
 from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_boolean
-from bots.utils.prompts import format_template
+from bots.utils.format_state import format_template
 
 
 prompt_template = """

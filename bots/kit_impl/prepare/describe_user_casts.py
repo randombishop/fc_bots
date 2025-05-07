@@ -5,7 +5,7 @@ from bots.kit_interface.casts import Casts
 from bots.kit_interface.bio import Bio
 from bots.kit_interface.style import Style
 from bots.kit_interface.lore import Lore
-from bots.utils.prompts import format_template
+from bots.utils.format_state import format_template
 from bots.utils.llms2 import call_llm
 
 

@@ -1,7 +1,7 @@
 from bots.kit_interface.dune_query import DuneQuery
 from bots.utils.llms2 import call_llm
 from bots.utils.read_params import read_string
-from bots.utils.prompts import format_template
+from bots.utils.format_state import format_template
 
 
 instructions_template = """

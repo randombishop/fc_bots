@@ -2,7 +2,7 @@ import os
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.tools.intents import get_intents, get_intents_descriptions, get_intended_targets, get_response_plan
-from bots.utils.prompts import format_template, format_state
+from bots.utils.format_state import format_template, format_state
 from bots.utils.functions import validate_sequence
 
 

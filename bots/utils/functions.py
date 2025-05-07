@@ -56,6 +56,12 @@ def validate_function(input):
   return tool, method, str_params, var_params, variable_name, variable_description
 
 
+def get_variable_target(input):
+  try:
+    return input['config']['variable_name'], input['config']['variable_description']
+  except:
+    return None, None
+
 
 def exec_function(run_type, input):
   try:
@@ -65,14 +71,21 @@ def exec_function(run_type, input):
     @traceable(run_type=run_type, name=method)
     def _exec_function(params):
       return state.execute(tool, method, str_params, var_params, variable_name, variable_description)
-    _exec_function(params)
+    result = _exec_function(params)
     if variable_name is not None:
       return state.get_variable(variable_name)
     else:
-      return None
+      return result
   except Exception as e:
-    return Error(str(e), traceback.format_exc().splitlines())
-
+    error = Error(str(e), traceback.format_exc().splitlines())
+    variable_name, variable_description = get_variable_target(input)
+    if variable_name is not None:
+      variable = Variable(variable_name, variable_description, error)
+      state.set_variable(variable)
+      return variable
+    else:
+      return error
+  
 
 def validate_sequence(state, sequence):
   variables = state.variables.copy()

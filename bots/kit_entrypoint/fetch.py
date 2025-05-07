@@ -33,7 +33,8 @@ from bots.kit_impl.fetch.get_user_reactions import get_user_reactions
 from bots.kit_impl.fetch.make_cast_stats_sql_query import make_cast_stats_sql_query
 from bots.kit_impl.fetch.make_user_stats_sql_query import make_user_stats_sql_query
 from bots.kit_impl.fetch.execute_dune_query import execute_dune_query
-
+# utils
+from bots.utils.format_state import format_state
 
 class Fetch:
   
@@ -277,7 +278,8 @@ class Fetch:
     Returns:
         DuneQuery: A DuneQuery object containing the SQL query, None otherwise.
     """
-    return make_cast_stats_sql_query(self.state.get_context(), self.state.bot_name)
+    context = format_state(self.state, intro=True, variables=True)
+    return make_cast_stats_sql_query(context, self.state.bot_name)
   
   def make_user_stats_sql_query(self) -> DuneQuery:
     """
@@ -287,7 +289,8 @@ class Fetch:
     Returns:
         DuneQuery: A DuneQuery object containing the SQL query, None otherwise.
     """
-    return make_user_stats_sql_query(self.state.get_context(), self.state.bot_name)
+    context = format_state(self.state, intro=True, variables=True)
+    return make_user_stats_sql_query(context, self.state.bot_name)
   
   def execute_dune_query(self, query: DuneQuery) -> DataFrame:
     """

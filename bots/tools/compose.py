@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.utils.format_cast import extract_cast, format_casts
-from bots.utils.prompts import format_template, format_state
+from bots.utils.format_state import format_template, format_state
 from bots.utils.shorten import MAX_LENGTH, shorten_text
 
 instructions_template = """

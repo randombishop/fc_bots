@@ -1,5 +1,5 @@
 from bots.utils.llms2 import call_llm
-from bots.utils.prompts import format_template
+from bots.utils.format_state import format_template
 
 
 instructions_template = """

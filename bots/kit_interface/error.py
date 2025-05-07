@@ -8,5 +8,5 @@ class Error:
     self.stacktrace = stacktrace
       
   def __str__(self) -> str:
-    return f"{self.message}\n{self.stacktrace}"
+    return self.message
   
