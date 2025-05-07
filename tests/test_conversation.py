@@ -18,7 +18,7 @@ class TestConversation(unittest.TestCase):
   def test2(self):
     request = 'Hello World'
     state = run_agent(test_id='TestConversation:2', request=request, mode='blueprint', blueprint=[])
-    conversation = str(state.get_variable('conversation'))
+    conversation = str(state.get_variable('conversation').value)
     self.assertIn(request, conversation)
     self.assertEqual(state.request, request)  
 
@@ -26,7 +26,7 @@ class TestConversation(unittest.TestCase):
     request = "Find similar casts"
     parent_hash = '0x8fa5e35f8b843c1713a2c4d32a59edc6a2abb863'
     state = run_agent(test_id='TestConversation:2', request=request, parent_hash=parent_hash, mode='blueprint', blueprint=[])
-    conversation = str(state.get_variable('conversation'))
+    conversation = str(state.get_variable('conversation').value)
     self.assertIn(request, conversation)
     self.assertIn('@v', conversation)
     self.assertIn('@unknown_user', conversation)
@@ -35,7 +35,7 @@ class TestConversation(unittest.TestCase):
     request = "Other casts like this one?"
     attachment_hash = '0xbe89c48299d8b080267ddd96c06c84397ee13185'
     state = run_agent(test_id='TestConversation:4', request=request, attachment_hash=attachment_hash, mode='blueprint', blueprint=[])
-    conversation = str(state.get_variable('conversation'))
+    conversation = str(state.get_variable('conversation').value)
     self.assertIn(request, conversation)  
     self.assertIn('@unknown_user', conversation)
     self.assertIn('quoting @ds007', conversation)
@@ -46,8 +46,8 @@ class TestConversation(unittest.TestCase):
     fid_origin = 253232
     parent_hash = '0x6f119aad7fa236cd31eeebd03d569bc264350d29'
     state = run_agent(test_id='TestConversation:5', request=request, fid_origin=fid_origin, parent_hash=parent_hash, mode='blueprint', blueprint=[])
-    conversation = str(state.get_variable('conversation'))
-    user_origin = state.get_variable('user_origin')
+    conversation = str(state.get_variable('conversation').value)
+    user_origin = state.get_variable('user_origin').value
     self.assertIn(request, conversation)
     self.assertIn('@horsefacts.eth', conversation)
     self.assertIn('@randombishop', conversation)
@@ -59,7 +59,7 @@ class TestConversation(unittest.TestCase):
     request = "Deleted parent test"
     parent_hash = '0xb59fcfda9e859be648e5d5541d292a6fb8cc9fcb'
     state = run_agent(test_id='TestConversation:5', request=request, parent_hash=parent_hash, mode='blueprint', blueprint=[])
-    conversation = str(state.get_variable('conversation'))
+    conversation = str(state.get_variable('conversation').value)
     self.assertIn(request, conversation)
     
   
