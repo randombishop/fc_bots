@@ -58,7 +58,9 @@ Do not guess a table link, only use the one that you created.""",
 'MoreLikeThis': """Use the first post for a freestyle intro (with or without an embed, a wordcloud or anything else) 
 then link to similar posts ids in second and third posts.""",
 
-'MostActiveUsers': """Post one cast about the most active users in the channel and link to the chart image""",
+'MostActiveUsers': """Post one cast about the most active users in the channel and link to the chart image.
+Use the chart image url that you created, do not guess a link if it doesn't appear on your own data.
+""",
 
 'News': """Post one cast about the news and include the link to the story""",
 
