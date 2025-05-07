@@ -14,7 +14,7 @@ class TestSummary(unittest.TestCase):
     request = "Give me a summary using keyword ethereum"
     state = run_agent(test_id='TestSummary:test1', mode='bot', request=request)
     self.assert_expected_output(state)
-    keywords = [x.value.keyword for x in state.get_variables() if x.value.__class__.__name__=='Keyword']
+    keywords = [x.value.keyword for x in state.variables.values() if x.value.__class__.__name__=='Keyword']
     self.assertIn('ethereum', keywords)
     
   def test2(self):

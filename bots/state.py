@@ -48,31 +48,6 @@ class State:
     else:
       return None
   
-  def get_context(self) -> str:
-    """
-    Formats current state into a context string containing all variables, current channel, conversation and instructions
-    
-    Returns:
-      Text representation of current state
-    """
-    ans = f'You are @{self.bot_name} bot, a social media bot.\n'
-    ans += 'Here are the variables in your internal state, followed by your instructions.\n\n'
-    for variable in self.variables.values():
-      variable_type = variable.value.__class__.__name__
-      ans += f"#{variable.name} ({variable_type}) -> {variable.description}\n"
-      ans += f"{variable.value}\n\n"
-    ans += '\n\n'
-    channel = self.get_variable('current_channel')
-    if channel is not None:
-      ans += f"#CURRENT CHANNEL\n/{channel.value}\n\n"
-    conversation = self.get_variable('conversation')
-    if conversation is not None and len(conversation.value.conversation)>0:
-      ans += f"#CONVERSATION\n{conversation.value.conversation}\n"
-    request = self.request
-    if request is not None and len(request)>0:
-      ans += f"#INSTRUCTIONS\n{request}\n"
-    return ans
-  
   def get_implementation(self, tool: str) -> Fetch | Prepare | Memorize:
     """
     Instantiates a tool implementation

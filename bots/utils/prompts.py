@@ -21,3 +21,26 @@ def format_conversation(channel, conversation, request):
   if request is not None and len(request)>0:
     ans += f"#INSTRUCTIONS\n{request}\n"
   return ans
+
+
+def format_state(state, intro=False, variables=False):
+    ans = ''
+    if intro:
+      ans = f'You are @{state.bot_name} bot, a social media bot.\n'
+    if variables:
+      ans += 'Here are the variables in your internal state, followed by your instructions.\n\n'
+      for variable in state.variables.values():
+        variable_type = variable.value.__class__.__name__
+        ans += f"#{variable.name} ({variable_type}) -> {variable.description}\n"
+        ans += f"{variable.value}\n\n"
+      ans += '\n\n'
+    channel = state.get_variable('current_channel')
+    if channel is not None:
+      ans += f"#CURRENT CHANNEL\n/{channel.value}\n\n"
+    conversation = state.get_variable('conversation')
+    if conversation is not None and len(conversation.value.conversation)>0:
+      ans += f"#CONVERSATION\n{conversation.value.conversation}\n"
+    request = state.request
+    if request is not None and len(request)>0:
+      ans += f"#INSTRUCTIONS\n{request}\n"
+    return ans

@@ -2,7 +2,7 @@ import os
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.tools.intents import get_intents, get_intents_descriptions, get_intended_targets, get_response_plan
-from bots.utils.prompts import format_template
+from bots.utils.prompts import format_template, format_state
 from bots.utils.functions import validate_sequence
 
 
@@ -96,7 +96,7 @@ def get_source_code(folder, file, package):
 def select_intent(state):
   state.iterations = 'done'
   instructions1 = format_template(instructions_template1, {'bot_name': state.bot_name}).replace('available_intents?', get_intents_descriptions())
-  prompt1 = state.get_context()
+  prompt1 = format_state(state, intro=True, variables=True)
   result1 = call_llm('medium', prompt1, instructions1, schema1)
   intent = result1['intent'] if 'intent' in result1 else None
   if intent not in get_intents():
@@ -110,7 +110,7 @@ def select_intent(state):
   else:
     targets_str = ''
   instructions2 = format_template(instructions_template2, {'bot_name': state.bot_name, 'intended_targets': targets_str})
-  prompt2 = state.get_context()
+  prompt2 = format_state(state, intro=True, variables=True)
   prompt2 += '\n\n\n' + '-'*100 + '\n\n\n'
   prompt2 += '# YOUR SOURCE CODE:\n\n'
   prompt2 += get_source_code('../kit_entrypoint', 'fetch.py', 'bots.kit_entrypoint') + '\n'
