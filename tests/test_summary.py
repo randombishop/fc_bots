@@ -27,11 +27,11 @@ class TestSummary(unittest.TestCase):
     self.assertEqual(channels[0].channel_url, 'https://warpcast.com/~/channel/rodeo-club')
     
   def test3(self):
-    request = "Summary of posts about the beauty of canadian landscapes"
+    request = "Summary of posts about the beauty of Canada"
     state = run_agent(test_id='TestSummary:test3', mode='bot', request=request)
     search_phrases = state.get_variable_values('SearchPhrase')
     self.assert_expected_output(state)
-    self.assertIsNotNone(search_phrases[0].search)
+    self.assertIn('canada', search_phrases[0].search.lower())
       
   def test4(self):
     request = "Summary of @randombishop's posts"
