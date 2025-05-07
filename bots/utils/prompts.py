@@ -1,4 +1,5 @@
 import re
+from bots.utils.format_cast import format_casts
 
 
 def format_template(template, variables):
@@ -44,3 +45,17 @@ def format_state(state, intro=False, variables=False):
     if request is not None and len(request)>0:
       ans += f"#INSTRUCTIONS\n{request}\n"
     return ans
+
+
+def debug_state(state):
+  ans = "-"*32
+  ans += format_state(state, intro=False, variables=False)
+  ans += "\n"
+  variables = '\n'.join([str(v) for v in state.variables.values()])
+  ans += f"#VARIABLES\n{variables}"
+  ans += "\n"
+  ans += format_casts(state.casts)
+  ans += "-"*32
+  return ans
+  
+  print("-"*32)
