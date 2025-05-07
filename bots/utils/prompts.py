@@ -48,14 +48,17 @@ def format_state(state, intro=False, variables=False):
 
 
 def debug_state(state):
-  ans = "-"*32
+  ans = "-"*64
+  ans += "\n"
   ans += format_state(state, intro=False, variables=False)
   ans += "\n"
   variables = '\n'.join([str(v) for v in state.variables.values()])
   ans += f"#VARIABLES\n{variables}"
-  ans += "\n"
+  ans += "\n\n"
+  ans += ">>> OUTPUT CASTS >>>\n"
   ans += format_casts(state.casts)
-  ans += "-"*32
+  ans += "\n"
+  ans += "-"*64
   return ans
   
-  print("-"*32)
+  

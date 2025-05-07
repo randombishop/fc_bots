@@ -12,6 +12,9 @@ class Casts:
       
   def __str__(self) -> str:
     ans = f"#{self.description}\n"
-    for cast in self.casts:
-      ans += f"{cast}\n"
+    if len(self.casts) > 0:
+      for cast in self.casts:
+        ans += f"{cast}\n"
+    else:
+      ans += "No casts found.\n"
     return ans

@@ -56,26 +56,23 @@ def validate_function(input):
   return tool, method, str_params, var_params, variable_name, variable_description
 
 
-def exec_function(state, tool, method, str_params, var_params, variable_name, variable_description):
+
+def exec_function(run_type, input):
   try:
-    return state.execute(tool, method, str_params, var_params, variable_name, variable_description)
+    state = input['state']
+    tool, method, str_params, var_params, variable_name, variable_description = validate_function(input)
+    params = combine_params(state.variables, str_params, var_params)
+    @traceable(run_type=run_type, name=method)
+    def _exec_function(params):
+      return state.execute(tool, method, str_params, var_params, variable_name, variable_description)
+    _exec_function(params)
+    if variable_name is not None:
+      return state.get_variable(variable_name)
+    else:
+      return None
   except Exception as e:
     return Error(str(e), traceback.format_exc().splitlines())
-  
 
-def exec_function_runnable(run_type, input):
-  state = input['state']
-  tool, method, str_params, var_params, variable_name, variable_description = validate_function(input)
-  params = combine_params(state.variables, str_params, var_params)
-  @traceable(run_type=run_type, name=method)
-  def _exec_function(params):
-    return exec_function(state, tool, method, str_params, var_params, variable_name, variable_description)
-  _exec_function(params)
-  if variable_name is not None:
-    return state.get_variable(variable_name)
-  else:
-    return None
-  
 
 def validate_sequence(state, sequence):
   variables = state.variables.copy()

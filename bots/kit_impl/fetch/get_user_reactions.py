@@ -11,8 +11,6 @@ def get_user_reactions(fid: int) -> Reactions:
     data += replies_recasts
   if likes is not None:
     data += likes
-  if len(data) == 0:
-    return None
   data.sort(key=lambda x: x['timestamp'])
   reactions = [Reaction(x) for x in data]
   return Reactions(reactions)

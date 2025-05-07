@@ -1,9 +1,9 @@
 from langchain.agents import Tool
-from bots.utils.functions import exec_function_runnable
+from bots.utils.functions import exec_function
 
 
 def _prepare(input):
-  return exec_function_runnable('chain', input)
+  return exec_function('chain', input)
 
 
 prepare = Tool(

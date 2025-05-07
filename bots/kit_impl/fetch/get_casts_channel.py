@@ -7,9 +7,9 @@ from bots.kit_interface.channel_id import ChannelId
 def get_casts_channel(channel_id: ChannelId) -> Casts:
   channel_url = channel_id.channel_url
   casts = get_casts_data(channel_url, 50)
+  description = f'Casts in channel {channel_id.channel}'
   if casts is None or len(casts) == 0:
-    return None
+    return Casts(description, [])
   casts.sort(key=lambda x: x['timestamp'])
   casts = [Cast(c) for c in casts]
-  description = f'Casts in channel {channel_id.channel}'
   return Casts(description, casts)

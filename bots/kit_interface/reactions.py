@@ -10,4 +10,7 @@ class Reactions:
     self.reactions = data
       
   def __str__(self) -> str:
-    return "\n".join([str(reaction) for reaction in self.reactions])
+    if len(self.reactions) > 0:
+      return "\n".join([str(reaction) for reaction in self.reactions])
+    else:
+      return "No reactions found.\n"

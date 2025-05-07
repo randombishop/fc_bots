@@ -8,9 +8,9 @@ def get_casts_user(user_id: UserId) -> Casts:
   fid = user_id.fid
   username = user_id.username
   casts = get_data(fid, 50)
+  description = f'Casts from @{username}'
   if casts is None or len(casts) == 0:
-    return None
+    return Casts(description, [])
   casts.sort(key=lambda x: x['timestamp'])
   casts = [Cast(c) for c in casts]
-  description = f'Casts from @{username}'
   return Casts(description, casts)

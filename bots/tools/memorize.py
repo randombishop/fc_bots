@@ -1,9 +1,9 @@
 from langchain.agents import Tool
-from bots.utils.functions import exec_function_runnable
+from bots.utils.functions import exec_function
 
 
 def _memorize(input):
-  return exec_function_runnable('embedding', input)
+  return exec_function('embedding', input)
 
 
 memorize = Tool(
