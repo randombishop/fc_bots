@@ -117,7 +117,7 @@ def init_should_continue(state):
   bot_name = state.bot_name
   channel = state.get_variable('current_channel')
   if channel is not None:
-    channel = channel.value.channel_id
+    channel = channel.value.channel
   conversation = state.get_variable('conversation')
   if conversation is not None:
     conversation = conversation.value.conversation

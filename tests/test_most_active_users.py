@@ -6,32 +6,28 @@ from bots.utils.tests import run_agent
 
 class TestMostActiveUsers(unittest.TestCase):
 
-  def assert_expected_output(self, state):
-    self.assertEqual(state.get('intent'), 'MostActiveUsers')
-    self.assertIn('GetMostActiveUsers', state.get_tools_sequence())
-    self.assertIsNotNone(state.get('data_casts'))
-    self.assertTrue(state.get('valid'))
+  def assert_expected_output(self, state, channel, channel_url):
+    self.assertEqual(state.plan['intent'], 'MostActiveUsers')
+    self.assertEqual(len(state.get_variable_values('MostActiveUsers')), 1)
+    self.assertEqual(len(state.get_variable_values('MostActiveUsersChart')), 1)
+    self.assertEqual(state.get_variable_values('ChannelId')[-1].channel, channel)
+    self.assertEqual(state.get_variable_values('ChannelId')[-1].channel_url, channel_url)
+    self.assertIsNotNone(state.casts)
+    self.assertTrue(len(state.casts[0]['mentions']) > 0)
+    self.assertTrue(state.valid)
       
   def test1(self):
     request = "Who is most active in channel /politics?"
     state = run_agent(test_id='TestMostActiveUsers:1', mode='bot', request=request)
-    self.assert_expected_output(state)
-    self.assertEqual(state.get('channel'), 'politics')
-    self.assertEqual(state.get('channel_url'), 'https://warpcast.com/~/channel/politics')
+    self.assert_expected_output(state, 'politics', 'https://warpcast.com/~/channel/politics')
     
   def test2(self):
     request = "Who is most active here? Mention at least 1 top contributor."
     channel_url = 'https://farcaster.group/data'
     state = run_agent(test_id='TestMostActiveUsers:2', mode='bot', request=request, root_parent_url=channel_url)
-    self.assert_expected_output(state)
-    self.assertEqual(state.get('channel'), 'data')
-    self.assertEqual(state.get('channel_url'), channel_url)
-    self.assertTrue(len(state.get('data_casts')[0]['mentions']) > 0)
+    self.assert_expected_output(state, 'data', channel_url)
     
   def test3(self):
     request = "Who is most active in channel /mfers? Include an activity chart."
     state = run_agent(test_id='TestMostActiveUsers:3', mode='bot', request=request)
-    self.assert_expected_output(state)
-    self.assertEqual(state.get('channel'), 'mfers')
-    self.assertEqual(state.get('channel_url'), 'https://warpcast.com/~/channel/mfers')
-    self.assertIn('CreateMostActiveUsersChart', state.get_tools_sequence())
+    self.assert_expected_output(state, 'mfers', 'https://warpcast.com/~/channel/mfers')
