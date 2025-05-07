@@ -27,7 +27,7 @@ class TestSummary(unittest.TestCase):
     self.assertEqual(channels[0].channel_url, 'https://warpcast.com/~/channel/rodeo-club')
     
   def test3(self):
-    request = "Summary of posts about the beauty of Canada"
+    request = "Summary of posts about the beauty of canada"
     state = run_agent(test_id='TestSummary:test3', mode='bot', request=request)
     search_phrases = state.get_variable_values('SearchPhrase')
     self.assert_expected_output(state)
