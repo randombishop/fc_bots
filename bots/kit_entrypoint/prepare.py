@@ -1,29 +1,33 @@
 # Data interfaces
-from bots.kit_interface.most_active_users import MostActiveUsers
-from bots.kit_interface.word_cloud_data import WordCloudData
-from bots.kit_interface.word_cloud_mask import WordCloudMask
+from bots.kit_interface.avatar import Avatar
 from bots.kit_interface.casts import Casts
 from bots.kit_interface.favorite_users import FavoriteUsers
 from bots.kit_interface.favorite_users_table import FavoriteUsersTable
-from bots.kit_interface.most_active_users_chart import MostActiveUsersChart
-from bots.kit_interface.word_cloud_image import WordCloudImage
+from bots.kit_interface.image import Image
 from bots.kit_interface.image_description import ImageDescription
-from bots.kit_interface.user_profile import UserProfile
-from bots.kit_interface.user_casts_description import UserCastsDescription
-from bots.kit_interface.user_reactions_description import UserReactionsDescription
-from bots.kit_interface.user_id import UserId
-from bots.kit_interface.avatar import Avatar
+from bots.kit_interface.most_active_users import MostActiveUsers
+from bots.kit_interface.most_active_users_chart import MostActiveUsersChart
 from bots.kit_interface.reactions import Reactions
+from bots.kit_interface.user_casts_description import UserCastsDescription
+from bots.kit_interface.user_id import UserId
+from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.user_reactions_description import UserReactionsDescription
+from bots.kit_interface.word_cloud_data import WordCloudData
+from bots.kit_interface.word_cloud_image import WordCloudImage
+from bots.kit_interface.word_cloud_mask import WordCloudMask
 # Tool implementations
+from bots.kit_impl.prepare.create_avatar import create_avatar
+from bots.kit_impl.prepare.create_image import create_image
 from bots.kit_impl.prepare.create_most_active_users_chart import create_most_active_users_chart
-from bots.kit_impl.prepare.make_word_cloud_data import make_word_cloud_data
-from bots.kit_impl.prepare.make_word_cloud_mask import make_word_cloud_mask
-from bots.kit_impl.prepare.render_favorite_users_table import render_favorite_users_table
 from bots.kit_impl.prepare.create_wordcloud import create_wordcloud
 from bots.kit_impl.prepare.describe_pfp import describe_pfp
 from bots.kit_impl.prepare.describe_user_casts import describe_user_casts
 from bots.kit_impl.prepare.describe_user_reactions import describe_user_reactions
-from bots.kit_impl.prepare.create_avatar import create_avatar
+from bots.kit_impl.prepare.make_word_cloud_data import make_word_cloud_data
+from bots.kit_impl.prepare.make_word_cloud_mask import make_word_cloud_mask
+from bots.kit_impl.prepare.render_favorite_users_table import render_favorite_users_table
+# utils
+from bots.utils.format_state import format_state
 
 
 class Prepare:
@@ -166,3 +170,18 @@ class Prepare:
                          pfp_description=pfp_description,
                          casts=casts_user,
                          casts_description=casts_description) 
+  
+  def create_image(self) -> Image:
+    """
+    Create an image based on current context.
+    Use this method when you need to create a new image for your post. 
+    It will generate a prompt and then use dall-e3 to generate an image.
+    Avoid calling this method in the beginning of your tool sequences, use it rather towards the end to make sure it has all the context it needs.
+    
+    Returns:
+        Image: The image url.
+    """
+    return create_image(context=format_state(self.state, intro=True, variables=True), 
+                        bot_name=self.state.bot_name, 
+                        bio=self.state.get_variable('bio').value, 
+                        lore=self.state.get_variable('lore').value)

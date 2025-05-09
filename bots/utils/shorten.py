@@ -1,5 +1,4 @@
 from bots.utils.llms2 import call_llm
-from bots.utils.format_state import format_template
 
 
 instructions_template = """
@@ -34,9 +33,7 @@ MAX_LENGTH = 275
 
 def shorten_text(text, style):
   prompt = text
-  instructions = format_template(instructions_template, {
-    'style': style
-  })
+  instructions = instructions_template.replace('{{style}}', str(style))
   result = call_llm('medium', prompt, instructions, schema)
   short = result['tweet']
   if len(short) > MAX_LENGTH:

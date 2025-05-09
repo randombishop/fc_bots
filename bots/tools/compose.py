@@ -2,7 +2,7 @@ from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
 from bots.utils.format_cast import extract_cast, format_casts
 from bots.utils.format_state import format_template, format_state
-from bots.utils.shorten import MAX_LENGTH, shorten_text
+
 
 instructions_template = """
 You are @{{bot_name}} bot
@@ -64,7 +64,7 @@ def _compose(state):
     'lore': state.get_variable('lore').value,
     'style': state.get_variable('style').value,
     'request': state.request,
-    'response_plan': state.plan['intended_response_plan']
+    'response_plan': state.plan['response_plan']
   })
   result = call_llm('large', prompt, instructions, schema)
   posts_map = {}
@@ -77,9 +77,7 @@ def _compose(state):
   def add_cast(num):
     if f'post{num}' in result and result[f'post{num}'] is not None and len(result[f'post{num}']) > 0:
       text = result[f'post{num}']
-      if len(text) > MAX_LENGTH:
-        text = shorten_text(text, state.get_variable('style').value)
-      casts.append(extract_cast(text, posts_map))
+      casts.append(extract_cast(text, posts_map, state.get_variable('style').value))
   add_cast(1)
   add_cast(2)
   add_cast(3)

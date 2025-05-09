@@ -1,6 +1,7 @@
 import re
 from bots.data.users import get_fid
 from bots.utils.format_when import format_when
+from bots.utils.shorten import MAX_LENGTH, shorten_text
 
 
 def insert_mentions(original: str, mentions: list[str], mention_positions: list[int]) -> str:
@@ -88,22 +89,12 @@ def format_casts(casts):
   return ans
 
 
-
-def exclude_link(x):
-  exclude = ['warpcast.com', 'www.dsart.io']
-  for e in exclude:
-    if e in x:
-      return True
-  return False
-
-
 def extract_links(text):
   link_pattern = r'\[(.*?)\]'
   links = re.findall(link_pattern, text)
   text_without_links = re.sub(link_pattern, '', text)
-  links = [x for x in links if not exclude_link(x)]
+  links = [x.replace('https://warpcast.com/', '').replace('https://www.warpcast.com/', '') for x in links]
   return text_without_links, links
-
 
 
 def clean_text(text):
@@ -119,10 +110,20 @@ def clean_text(text):
   return text
 
 
-def extract_cast(text, posts_map):
+def exclude_link(x):
+  exclude = ['warpcast.com', 'www.dsart.io']
+  for e in exclude:
+    if e in x:
+      return True
+  return False
+
+def extract_cast(text, posts_map, style):
   text, links = extract_links(text)
   embed_urls = [x for x in links if x.startswith('https://') or x.startswith('http://')]
+  embed_urls = [x for x in embed_urls if not exclude_link(x)]
   embed_hashes = [x for x in links if x.startswith('0x')]
+  if len(text) > MAX_LENGTH:
+    text = shorten_text(text, style)
   text = clean_text(text)
   text, mentions_ats, mentions_positions = extract_mentions(text)
   c = {'text': text}
