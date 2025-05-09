@@ -39,3 +39,14 @@ def shorten_text(text, style):
   if len(short) > MAX_LENGTH:
     short = short[:MAX_LENGTH]+'...'
   return short
+
+
+def cut_text(text):
+  if text is None:
+    return ''
+  text_lines = text.split('\n')
+  if len(text_lines) > 1:
+    text = text_lines[0] + '...'
+  if len(text) > MAX_LENGTH:
+    text = text[:MAX_LENGTH]+'...'
+  return text

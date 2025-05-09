@@ -1,7 +1,7 @@
 import re
 from bots.data.users import get_fid
 from bots.utils.format_when import format_when
-from bots.utils.shorten import MAX_LENGTH, shorten_text
+from bots.utils.shorten import MAX_LENGTH, shorten_text, cut_text
 
 
 def insert_mentions(original: str, mentions: list[str], mention_positions: list[int]) -> str:
@@ -57,17 +57,6 @@ def clean_username(username):
   return username
 
 
-def shorten_text(text):
-  if text is None:
-    return ''
-  text_lines = text.split('\n')
-  if len(text_lines) > 1:
-    text = text_lines[0] + '...'
-  if len(text) > 256:
-    text = text[:256]+'...'
-  return text
-
-
 def format_casts(casts):
   if casts is None or len(casts)==0:
     return ''
@@ -80,7 +69,7 @@ def format_casts(casts):
     if 'embeds' in c and c['embeds'] is not None and len(c['embeds'])>0:
       embed = c['embeds'][0]
       description = c['embeds_description'] if 'embeds_description' in c else None
-      description = shorten_text(description)
+      description = cut_text(description)
       if 'user_name' in embed and 'hash' in embed:
         ans += f" [{description}](https://warpcast.com/{embed['user_name']}/{embed['hash'][:10]})"
       else:
@@ -161,7 +150,7 @@ def format_bot_casts(casts, name):
     if c['action_channel'] is not None:
       row += f" in {c['action_channel']}"
     row += f" {format_when(c['casted_at'])}:\n"
-    row += f"{shorten_text(c['casted_text'])}\n"
+    row += f"{cut_text(c['casted_text'])}\n"
     text += row+'\n'
   return text
 
@@ -176,9 +165,9 @@ def format_trending(casts):
       cast_text = cast_text.replace('\n', ' ')
       if len(cast_text) > 500:
         cast_text = cast_text[:500]+'...'
-    row = f"## @{s['username']} posted {format_when(s['timestamp'])}:\n{shorten_text(cast_text)}"
+    row = f"## @{s['username']} posted {format_when(s['timestamp'])}:\n{cut_text(cast_text)}"
     if s['embed_text'] is not None and len(s['embed_text']) > 0:
-      embed_text = shorten_text(s['embed_text'])
+      embed_text = cut_text(s['embed_text'])
       embed_username = s['embed_username']
       row += f" (quoting @{embed_username}: {embed_text})"
     row += '\n'

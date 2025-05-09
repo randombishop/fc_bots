@@ -28,6 +28,6 @@ class TestPraise(unittest.TestCase):
     self.assert_expected_output(state, fid_origin, 'randombishop')
     
   def test3(self):
-    request = "Praise a random user"
+    request = "Praise a random user in channel /mfers"
     state = run_agent(test_id='TestPraise:3', mode='bot', request=request)
     self.assert_expected_output(state, None, None)

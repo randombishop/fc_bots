@@ -28,5 +28,5 @@ class TestUserStats(unittest.TestCase):
     request = """
     Come up with an interesting user aggregation statistic about farcaster users and share your insight
     """
-    state = run_agent(test_id='TestUserStats:2', mode='assistant', request=request)
+    state = run_agent(test_id='TestUserStats:3', mode='assistant', request=request)
     self.assert_expected_output(state)

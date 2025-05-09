@@ -137,10 +137,11 @@ def get_user_replies_and_recasts(fid, limit=25):
   info = call_neynar_api(url, params)
   ans = [parse_replies_recasts(fid, x) for x in info['casts']]
   parent_hashes = [x['cast']['parent_hash'] for x in ans if x['cast']['parent_hash'] is not None]
-  parent_casts = get_casts_ids(parent_hashes)
-  for x in ans:
-    if x['cast']['parent_hash'] is not None and x['cast']['parent_hash'] in parent_casts:
-      x['cast']['parent_cast'] = parent_casts[x['cast']['parent_hash']]
+  if len(parent_hashes) > 0:
+    parent_casts = get_casts_ids(parent_hashes)
+    for x in ans:
+      if x['cast']['parent_hash'] is not None and x['cast']['parent_hash'] in parent_casts:
+        x['cast']['parent_cast'] = parent_casts[x['cast']['parent_hash']]
   return ans
 
 
