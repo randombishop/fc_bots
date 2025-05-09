@@ -8,4 +8,4 @@ class UserId:
     self.username = username
       
   def __str__(self) -> str:
-    return f"{self.username} ({self.fid})"
+    return f"@{self.username} ({self.fid})"
