@@ -32,8 +32,6 @@ Output the result in json format.
 Make sure you don't use " inside json strings. 
 Avoid invalid json.
 
-
-#RESPONSE PLAN:
 {{response_plan}}
 
 #RESPONSE FORMAT:
@@ -58,13 +56,16 @@ schema = {
 def _compose(state):
   state.composed = True
   prompt = format_state(state, intro=True, variables=True)
+  response_plan = ''
+  if state.plan is not None and 'response_plan' in state.plan:
+    response_plan = '#RESPONSE PLAN\n' + state.plan['response_plan']
   instructions = format_template(instructions_template, {
     'bot_name': state.bot_name,
     'bio': state.get_variable('bio').value,
     'lore': state.get_variable('lore').value,
     'style': state.get_variable('style').value,
     'request': state.request,
-    'response_plan': state.plan['response_plan']
+    'response_plan': response_plan
   })
   result = call_llm('large', prompt, instructions, schema)
   posts_map = {}

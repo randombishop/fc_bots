@@ -28,7 +28,7 @@ class Agent(BaseSingleActionAgent):
           log='')
       elif self._state.mode == 'assistant':
         return AgentAction(
-          tool='program',
+          tool='plan',
           tool_input={'state': self._state},
           log='')
     elif not self._state.composed:

@@ -99,10 +99,11 @@ def select_intent(state):
     'response_plan': f"#SUGGESTED RESPONSE PLAN\n{response_plan}"}
     )
   prompt2 = format_state(state, intro=True, variables=True)
-  prompt2 += '\n\n\n' + '-'*100 + '\n\n\n'
-  prompt2 += '# YOUR SOURCE CODE:\n\n'
-  prompt2 += str(get_source_code())
-  prompt2 += '\n\n'
+  if len(state.get_variable_values('SourceCode'))==0:
+    prompt2 += '\n\n\n' + '-'*100 + '\n\n\n'
+    prompt2 += '# YOUR SOURCE CODE:\n\n'
+    prompt2 += str(get_source_code())
+    prompt2 += '\n\n'
   prompt2 += f"#SUGGESTED RESPONSE PLAN\n{response_plan}"
   result2 = call_llm('large', prompt2, instructions2, schema2) 
   program = result2['program'] if 'program' in result2 else []

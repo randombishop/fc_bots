@@ -6,6 +6,9 @@ from bots.utils.format_state import format_template, format_state
 from bots.utils.functions import validate_sequence
 
 
+MAX_ITERATIONS = 3
+
+
 instructions_template = """
 #TASK
 You are @{{bot_name}}, a social media bot with access to a set of tools.
@@ -52,6 +55,7 @@ Once you have prepared and formatted your program in json format, double check t
 }
 """
 
+
 schema = {
   "type":"OBJECT",
   "properties":{
@@ -61,7 +65,10 @@ schema = {
 
 
 def _plan(state):
-  state.iterations += 1
+  if state.iterations < MAX_ITERATIONS:
+    state.iterations += 1
+  else:
+    state.iterations = 'done'
   instructions = format_template(instructions_template, {'bot_name': state.bot_name})
   prompt = format_state(state, intro=True, variables=True)
   if len(state.get_variable_values('SourceCode'))==0:
@@ -79,6 +86,8 @@ def _plan(state):
   } 
   state.plan = plan
   state.todo = validated
+  if len(validated) == 0:
+    state.iterations = 'done'
   return plan
 
 plan = Tool(

@@ -60,6 +60,20 @@ class State:
     """
     return [x.value for x in self.variables.values() if x.value.__class__.__name__==variable_type]
   
+  def get_variable_types(self):
+    """
+    Get counts for each variable type
+      
+    Returns:
+      A dictionary with the variable type as the key and the count as the value
+    """
+    ans = {}
+    for variable in self.variables.values():
+      if variable.value.__class__.__name__ not in ans:
+        ans[variable.value.__class__.__name__] = 0
+      ans[variable.value.__class__.__name__] += 1
+    return ans
+  
   def get_implementation(self, tool: str) -> Fetch | Prepare | Memorize:
     """
     Instantiates a tool implementation

@@ -7,13 +7,13 @@ from bots.data.app import get_bot_prompt
 
 class TestAssistant(unittest.TestCase):
   
-  def skip_test1(self):
+  def test1(self):
     prompt = get_bot_prompt(1)
     request = prompt['prompt']
     channel = 'mfers'
     state = run_agent(test_id='TestAssistant:1', mode='assistant', request=request, channel=channel)
-    self.assertIn('GetMostActiveUsers', state.get_tools_sequence())
-    self.assertIn('CreateMostActiveUsersChart', state.get_tools_sequence())
+    self.assertIn('MostActiveUsers', state.get_variable_types())
+    self.assertIn('MostActiveUsersChart', state.get_variable_types())
     
   def skip_test2(self):
     prompt = get_bot_prompt(2)
