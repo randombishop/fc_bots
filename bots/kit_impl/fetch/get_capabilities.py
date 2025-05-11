@@ -1,11 +1,12 @@
 import random
+from bots.kit_interface.capabilities_examples import CapabilitiesExamples
+
 
 INTENTS_DESCRIPTIONS = {
 'FavoriteUsers': 'Find the favorite accounts of a user.',
 'MoreLikeThis': 'Find posts using "More Like This" algorithm.',
 'MostActiveUsers': 'List the most active users in a channel.',
 'News': 'Check the news.',
-'Perplexity': 'Ask a question to Perplexity AI.',
 'Pick': 'Pick a post given some criteria.',
 'Praise': 'Generate a praise for a user.',
 'Psycho': 'Generate a friendly and parody psychoanalysis for a user.',
@@ -14,11 +15,9 @@ INTENTS_DESCRIPTIONS = {
 'WhoIs': 'Analyze a user profile and generate a new avatar for them.',
 'WordCloud': 'Make a word cloud.',
 'UserStats': 'Get users aggregation or statistic from the database.',
-'CastStats': 'Get casts (=posts) aggregation or statistic from the database.'
+'CastStats': 'Get casts (=posts) aggregation or statistic from the database.',
+'Meta': 'Explain what the bot can do and how to use it.'
 }
-
-
-
 
 
 INTENTS_RESPONSE_PLANS = {
@@ -115,6 +114,11 @@ Execute the query.
 Compose a data driven response.
 """,
 
+'Meta': """Fetch examples of your capabilities.
+Fetch your source code.
+Study your capabilities and source code and let the user know how you can help them.
+Be accurate and honest about your capabilities and avoid making false promises.
+"""
 }
 
 
@@ -125,8 +129,16 @@ You can optionally link to an url or a cast id if it is relevant, but do not gue
 """
 
 
+def get_capabilities_examples() -> CapabilitiesExamples:
+  examples = INTENTS_DESCRIPTIONS.values()
+  random.shuffle(examples)
+  text = '\n'.join(examples)
+  return CapabilitiesExamples(text)
+
+
 def get_intents():
   return list(INTENTS_DESCRIPTIONS.keys())
+
 
 def get_intents_descriptions():
   keys = list(INTENTS_DESCRIPTIONS.keys())
@@ -135,6 +147,7 @@ def get_intents_descriptions():
   for key in keys:
     ans += f'{key}: {INTENTS_DESCRIPTIONS[key]}\n'
   return ans
+
 
 def get_response_plan(intent):
   return INTENTS_RESPONSE_PLANS[intent] if intent is not None and intent in INTENTS_RESPONSE_PLANS else DEFAULT_RESPONSE_PLAN

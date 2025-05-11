@@ -1,17 +1,21 @@
 # Data interfaces
+from bots.kit_interface.capabilities_examples import CapabilitiesExamples
+from bots.kit_interface.casts import Casts
 from bots.kit_interface.channel_id import ChannelId
+from bots.kit_interface.data_frame import DataFrame
+from bots.kit_interface.dune_query import DuneQuery
+from bots.kit_interface.favorite_users import FavoriteUsers
 from bots.kit_interface.keyword import Keyword
+from bots.kit_interface.most_active_users import MostActiveUsers
+from bots.kit_interface.news import News
+from bots.kit_interface.reactions import Reactions
 from bots.kit_interface.search_phrase import SearchPhrase
+from bots.kit_interface.source_code import SourceCode
 from bots.kit_interface.user_id import UserId
 from bots.kit_interface.user_profile import UserProfile
-from bots.kit_interface.news import News
-from bots.kit_interface.favorite_users import FavoriteUsers
-from bots.kit_interface.most_active_users import MostActiveUsers
-from bots.kit_interface.casts import Casts
-from bots.kit_interface.reactions import Reactions
-from bots.kit_interface.dune_query import DuneQuery
-from bots.kit_interface.data_frame import DataFrame
 # Tool implementations
+from bots.kit_impl.fetch.get_capabilities import get_capabilities_examples
+from bots.kit_impl.fetch.get_source_code import get_source_code
 from bots.kit_impl.fetch.get_channel_id import get_channel_id
 from bots.kit_impl.fetch.get_keyword import get_keyword
 from bots.kit_impl.fetch.get_search_phrase import get_search_phrase
@@ -40,6 +44,24 @@ class Fetch:
   
   def __init__(self, state):
     self.state = state
+    
+  def get_capabilities_examples(self) -> CapabilitiesExamples:
+    """
+    Get examples of tasks that can be performed using your tools.
+    
+    Returns:
+        CapabilitiesExamples: A CapabilitiesExamples object containing the examples of tasks that can be performed using your tools.
+    """
+    return get_capabilities_examples()
+  
+  def get_source_code(self) -> SourceCode:
+    """
+    Get the source code of the bot.
+    
+    Returns:
+        SourceCode: A SourceCode object containing your python implementation.
+    """
+    return get_source_code()
 
   def get_channel_id(self, parsed_channel: str) -> ChannelId:
     """

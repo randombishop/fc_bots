@@ -1,9 +1,11 @@
 import os
 from langchain.agents import Tool
 from bots.utils.llms2 import call_llm
-from bots.tools.intents import get_intents, get_intents_descriptions, get_response_plan
+from bots.kit_impl.fetch.get_capabilities import get_intents, get_intents_descriptions, get_response_plan
+from bots.kit_impl.fetch.get_source_code import get_source_code
 from bots.utils.format_state import format_template, format_state
 from bots.utils.functions import validate_sequence
+
 
 
 instructions_template1 = """
@@ -82,16 +84,6 @@ schema2 = {
   }
 }
 
-def get_source_code(folder, file, package):
-  ans = ''
-  current_dir = os.path.dirname(os.path.abspath(__file__))
-  state_file = os.path.join(current_dir, folder, file)
-  with open(state_file, 'r') as f:
-    ans += f"### {package}.{file[:-3]} ###'\n"
-    ans += f.read() + '\n'
-    ans += f"### End of {file} ###'\n"
-  return ans
-
 
 def select_intent(state):
   state.iterations = 'done'
@@ -109,9 +101,8 @@ def select_intent(state):
   prompt2 = format_state(state, intro=True, variables=True)
   prompt2 += '\n\n\n' + '-'*100 + '\n\n\n'
   prompt2 += '# YOUR SOURCE CODE:\n\n'
-  prompt2 += get_source_code('../kit_entrypoint', 'fetch.py', 'bots.kit_entrypoint') + '\n'
-  prompt2 += get_source_code('../kit_entrypoint', 'prepare.py', 'bots.kit_entrypoint') + '\n'
-  prompt2 += get_source_code('..', 'state.py', 'bots') + '\n\n'
+  prompt2 += str(get_source_code())
+  prompt2 += '\n\n'
   prompt2 += f"#SUGGESTED RESPONSE PLAN\n{response_plan}"
   result2 = call_llm('large', prompt2, instructions2, schema2) 
   program = result2['program'] if 'program' in result2 else []
