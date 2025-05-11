@@ -7,6 +7,11 @@ from bots.utils.tests import run_agent
 
 class TestIntents(unittest.TestCase):
   
+  def test_meta(self):
+    request = "What can you do?"
+    state = run_agent(test_id='TestIntents:meta', mode='bot',request=request)
+    self.assertEqual(state.plan['intent'], 'Meta')
+    
   def test_favorite_users(self):
     request = "Who are @vitalik.eth's favorite users?"
     state = run_agent(test_id='TestIntents:favorite_users', mode='bot',request=request)

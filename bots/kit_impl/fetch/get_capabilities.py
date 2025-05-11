@@ -130,7 +130,7 @@ You can optionally link to an url or a cast id if it is relevant, but do not gue
 
 
 def get_capabilities_examples() -> CapabilitiesExamples:
-  examples = INTENTS_DESCRIPTIONS.values()
+  examples = list(INTENTS_DESCRIPTIONS.values())
   random.shuffle(examples)
   text = '\n'.join(examples)
   return CapabilitiesExamples(text)
