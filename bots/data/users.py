@@ -71,9 +71,9 @@ def get_top_daily_casters(channel, limit=10):
   return df
 
 
-def get_user_profile(fid):
+def get_user_profile(bot_id, fid):
   with get_session() as session:
-    stmt = user_profile_table.select().where(user_profile_table.c.fid == fid)
+    stmt = user_profile_table.select().where(user_profile_table.c.bot_id == bot_id).where(user_profile_table.c.fid == fid)
     result = session.execute(stmt).mappings().fetchone()
     return result
   
@@ -83,34 +83,49 @@ def get_user_profiles():
     result = session.execute(stmt).mappings().fetchall()
     return result
   
-def get_user_profile_embed(fid, part):
+def get_user_profile_embed(bot_id, fid, part):
   with get_session() as session:
-    stmt = user_profile_embed_table.select().where(user_profile_embed_table.c.fid == fid).where(user_profile_embed_table.c.part == part)
+    stmt = (user_profile_embed_table
+              .select()
+              .where(user_profile_embed_table.c.bot_id == bot_id)
+              .where(user_profile_embed_table.c.fid == fid)
+              .where(user_profile_embed_table.c.part == part))
     result = session.execute(stmt).mappings().fetchone()
     return result
 
 def save_user_profile(profile):
-  if get_user_profile(profile['fid']) is None:
+  if get_user_profile(profile['bot_id'], profile['fid']) is None:
     with get_session() as session:
       session.execute(user_profile_table.insert().values(**profile))
     print('Inserted new user profile in pg')
   else:
     with get_session() as session:
-      session.execute(user_profile_table.update().where(user_profile_table.c.fid == profile['fid']).values(**profile))
+      session.execute(user_profile_table
+                      .update()
+                      .where(user_profile_table.c.bot_id == profile['bot_id'])
+                      .where(user_profile_table.c.fid == profile['fid'])
+                      .values(**profile))
     print('Updated existing user profile in pg')
 
-def save_user_profile_embed(fid, part, embed):
-  if get_user_profile_embed(fid, part) is None:
+def save_user_profile_embed(bot_id, fid, part, embed):
+  if get_user_profile_embed(bot_id, fid, part) is None:
     with get_session() as session:
-      session.execute(user_profile_embed_table.insert().values(fid=fid, part=part, embed=embed))
+      session.execute(user_profile_embed_table
+                      .insert()
+                      .values(bot_id=bot_id, fid=fid, part=part, embed=embed))
     print('Inserted new embedding in pg')
   else:
     with get_session() as session:
-      session.execute(user_profile_embed_table.update().where(user_profile_embed_table.c.fid == fid).where(user_profile_embed_table.c.part == part).values(embed=embed))
+      session.execute(user_profile_embed_table
+                      .update()
+                      .where(user_profile_embed_table.c.bot_id == bot_id)
+                      .where(user_profile_embed_table.c.fid == fid)
+                      .where(user_profile_embed_table.c.part == part)
+                      .values(embed=embed))
     print('Updated existing embedding in pg')
     
 def save_user_profile_embeds(profile):
   parts = ['bio', 'pfp', 'casts', 'engagement', 'avatar']
   for part in parts:
     if profile[f'{part}_embed'] is not None:
-      save_user_profile_embed(profile['fid'], part, profile[f'{part}_embed'])
+      save_user_profile_embed(profile['bot_id'], profile['fid'], part, profile[f'{part}_embed'])

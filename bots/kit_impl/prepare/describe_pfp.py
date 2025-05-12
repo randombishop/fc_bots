@@ -1,4 +1,4 @@
-from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.user_info import UserInfo
 from bots.kit_interface.image_description import ImageDescription
 from bots.utils.get_url_data import get_url_data
 from bots.utils.llms2 import call_llm_with_data
@@ -33,8 +33,8 @@ schema = {
 }
 
 
-def describe_pfp(user_profile: UserProfile) -> ImageDescription:
-  url = user_profile.pfp_url
+def describe_pfp(user_info: UserInfo) -> ImageDescription:
+  url = user_info.pfp_url
   data, mime_type = get_url_data(url)
   if data is None or mime_type is None:
     return {'user_pfp_description': ''}

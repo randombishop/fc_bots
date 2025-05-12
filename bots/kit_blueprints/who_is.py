@@ -1,12 +1,12 @@
 WhoIs = [
   {
     'tool': 'fetch',
-    'method': 'get_user_profile',
+    'method': 'get_user_info',
     'var_params': {
       'user_id': 'selected_user'
     },
-    'variable_name': 'user_profile',
-    'variable_description': 'User profile'
+    'variable_name': 'user_info',
+    'variable_description': 'User basic info'
   },
   {
     'tool': 'fetch',  
@@ -30,7 +30,7 @@ WhoIs = [
     'tool': 'prepare',
     'method': 'describe_pfp',
     'var_params': {
-      'user_profile': 'user_profile'
+      'user_info': 'user_info'
     },
     'variable_name': 'pfp_description',
     'variable_description': 'Description of the user profile picture'
@@ -40,7 +40,7 @@ WhoIs = [
     'method': 'describe_user_casts',
     'var_params': {
       'user_id': 'selected_user', 
-      'user_profile': 'user_profile', 
+      'user_info': 'user_info', 
       'casts': 'casts_user'
     }, 
     'variable_name': 'casts_description',
@@ -51,7 +51,7 @@ WhoIs = [
     'method': 'describe_user_reactions',
     'var_params': {
       'user_id': 'selected_user', 
-      'user_profile': 'user_profile', 
+      'user_info': 'user_info', 
       'reactions': 'user_reactions'
     }, 
     'variable_name': 'reactions_description',
@@ -62,24 +62,12 @@ WhoIs = [
     'method': 'create_avatar',
     'var_params': {
       'user_id': 'selected_user', 
-      'user_profile': 'user_profile', 
+      'user_info': 'user_info', 
       'pfp_description': 'pfp_description',
       'casts_user': 'casts_user',
       'casts_description': 'casts_description',
     }, 
     'variable_name': 'avatar',
     'variable_description': 'Created Avatar'
-  },
-  {
-    'tool': 'memorize',
-    'method': 'memorize_user_profile',
-    'var_params': {
-      'user_id': 'selected_user',
-      'user_profile': 'user_profile',
-      'pfp_description': 'pfp_description',
-      'casts_description': 'casts_description',
-      'reactions_description': 'reactions_description',
-      'avatar': 'avatar'
-    }
   }
 ]

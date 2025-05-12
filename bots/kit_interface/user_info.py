@@ -1,6 +1,6 @@
-class UserProfile:
+class UserInfo:
   """
-  Represents a farcaster user profile basic information.
+  Represents a farcaster user's basic information.
   """
   
   def __init__(self, display_name: str, bio: str, followers: int, following: int, pfp_url: str):

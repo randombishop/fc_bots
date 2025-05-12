@@ -10,7 +10,7 @@ from bots.kit_interface.most_active_users_chart import MostActiveUsersChart
 from bots.kit_interface.reactions import Reactions
 from bots.kit_interface.user_casts_description import UserCastsDescription
 from bots.kit_interface.user_id import UserId
-from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.user_info import UserInfo
 from bots.kit_interface.user_reactions_description import UserReactionsDescription
 from bots.kit_interface.word_cloud_data import WordCloudData
 from bots.kit_interface.word_cloud_image import WordCloudImage
@@ -96,25 +96,25 @@ class Prepare:
     """
     return create_wordcloud(data, mask)
   
-  def describe_pfp(self, user_profile: UserProfile) -> ImageDescription:
+  def describe_pfp(self, user_info: UserInfo) -> ImageDescription:
     """
     Describe a user's profile picture.
     
     Args:
-        user_profile (UserProfile): The user's profile containing the target pfp_url. 
+        user_info (UserInfo): The user's basic information containing the target pfp_url. 
   
     Returns:
         ImageDescription: The description of the image.
     """
-    return describe_pfp(user_profile)
+    return describe_pfp(user_info)
   
-  def describe_user_casts(self, user_id: UserId, user_profile: UserProfile, casts: Casts) -> UserCastsDescription:
+  def describe_user_casts(self, user_id: UserId, user_info: UserInfo, casts: Casts) -> UserCastsDescription:
     """
     Describe a user's casts.
     
     Args:
         user_id (UserId): The user's id.  
-        user_profile (UserProfile): The user's profile.
+        user_info (UserInfo): The user's basic information.
         casts (Casts): The user's casts.
   
     Returns:
@@ -125,16 +125,16 @@ class Prepare:
                                lore=self.state.get_variable('lore').value,
                                style=self.state.get_variable('style').value,
                                user_id=user_id,
-                               user_profile=user_profile,
+                               user_info=user_info,
                                casts=casts)
   
-  def describe_user_reactions(self, user_id: UserId, user_profile: UserProfile, reactions: Reactions) -> UserReactionsDescription:
+  def describe_user_reactions(self, user_id: UserId, user_info: UserInfo, reactions: Reactions) -> UserReactionsDescription:
     """
     Describe a user's replies and reactions.
     
     Args:
         user_id (UserId): The user's id.  
-        user_profile (UserProfile): The user's profile.
+        user_info (UserInfo): The user's basic information.
         reactions (list[Reaction]): The user's reactions.
   
     Returns:
@@ -145,16 +145,16 @@ class Prepare:
                                     lore=self.state.get_variable('lore').value,
                                     style=self.state.get_variable('style').value,
                                     user_id=user_id,
-                                    user_profile=user_profile,
+                                    user_info=user_info,
                                     reactions=reactions) 
   
-  def create_avatar(self, user_id: UserId, user_profile: UserProfile, pfp_description: ImageDescription, casts_user: Casts, casts_description: UserCastsDescription) -> Avatar:
+  def create_avatar(self, user_id: UserId, user_info: UserInfo, pfp_description: ImageDescription, casts_user: Casts, casts_description: UserCastsDescription) -> Avatar:
     """
     Create an avatar for a user.
     
     Args:
         user_id (UserId): The user's id.  
-        user_profile (UserProfile): The user's profile.
+        user_info (UserInfo): The user's basic information.
         pfp_description (ImageDescription): The description of the user's profile picture.
         casts_user (Casts): The user's casts.
         casts_description (UserCastsDescription): The description of the user's casts.
@@ -166,7 +166,7 @@ class Prepare:
                          bio=self.state.get_variable('bio').value, 
                          lore=self.state.get_variable('lore').value,
                          user_id=user_id,
-                         user_profile=user_profile,
+                         user_info=user_info,
                          pfp_description=pfp_description,
                          casts=casts_user,
                          casts_description=casts_description) 

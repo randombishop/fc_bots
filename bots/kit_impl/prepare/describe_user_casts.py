@@ -1,6 +1,6 @@
 from bots.kit_interface.user_casts_description import UserCastsDescription
 from bots.kit_interface.user_id import UserId
-from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.user_info import UserInfo
 from bots.kit_interface.casts import Casts
 from bots.kit_interface.bio import Bio
 from bots.kit_interface.style import Style
@@ -70,11 +70,11 @@ schema = {
 }
 
 
-def describe_user_casts(bot_name: str, bio: Bio, lore: Lore, style: Style, user_id: UserId, user_profile: UserProfile, casts: Casts) -> UserCastsDescription:
+def describe_user_casts(bot_name: str, bio: Bio, lore: Lore, style: Style, user_id: UserId, user_info: UserInfo, casts: Casts) -> UserCastsDescription:
   prompt = format_template(prompt_template, {
     'user_name': user_id.username,
-    'user_display_name': user_profile.display_name,
-    'user_bio': user_profile.bio,
+    'user_display_name': user_info.display_name,
+    'user_bio': user_info.bio,
     'casts_user': str(casts)
   })
   instructions = format_template(instructions_template, {

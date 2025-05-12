@@ -1,6 +1,6 @@
 from bots.kit_interface.user_reactions_description import UserReactionsDescription
 from bots.kit_interface.user_id import UserId
-from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.user_info import UserInfo
 from bots.kit_interface.reactions import Reactions
 from bots.kit_interface.bio import Bio
 from bots.kit_interface.style import Style
@@ -66,11 +66,11 @@ schema = {
 
 
 def describe_user_reactions(bot_name: str, bio: Bio, lore: Lore, style: Style, 
-                                        user_id: UserId, user_profile: UserProfile, reactions: Reactions) -> UserReactionsDescription:
+                                        user_id: UserId, user_info: UserInfo, reactions: Reactions) -> UserReactionsDescription:
   prompt = format_template(prompt_template, {
     'user_name': user_id.username,
-    'user_display_name': user_profile.display_name,
-    'user_bio': user_profile.bio,
+    'user_display_name': user_info.display_name,
+    'user_bio': user_info.bio,
     'user_replies_and_reactions': reactions
   })
   instructions = format_template(instructions_template, {

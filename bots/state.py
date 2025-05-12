@@ -27,6 +27,7 @@ class State:
     self.checked = False
     self.casts = None
     self.valid = False
+    self.memorized = False
     
   def set_variable(self, variable: Variable):
     """
@@ -91,8 +92,6 @@ class State:
       return Prepare(self)
     elif tool == 'miniapps':
       return MiniApps(self)
-    elif tool == 'memorize':
-      return Memorize(self)
     else:
       raise ValueError(f"Invalid tool: {tool}")
   

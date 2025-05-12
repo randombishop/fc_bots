@@ -12,7 +12,7 @@ from bots.kit_interface.reactions import Reactions
 from bots.kit_interface.search_phrase import SearchPhrase
 from bots.kit_interface.source_code import SourceCode
 from bots.kit_interface.user_id import UserId
-from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.user_info import UserInfo
 # Tool implementations
 from bots.kit_impl.fetch.get_capabilities import get_capabilities_examples
 from bots.kit_impl.fetch.get_source_code import get_source_code
@@ -21,7 +21,7 @@ from bots.kit_impl.fetch.get_keyword import get_keyword
 from bots.kit_impl.fetch.get_search_phrase import get_search_phrase
 from bots.kit_impl.fetch.get_user_id import get_user_id
 from bots.kit_impl.fetch.get_random_user import get_random_user_in_channel, get_random_user_in_general
-from bots.kit_impl.fetch.get_user_profile import get_user_profile
+from bots.kit_impl.fetch.get_user_info import get_user_info
 from bots.kit_impl.fetch.get_news import get_news
 from bots.kit_impl.fetch.get_favorite_users import get_favorite_users
 from bots.kit_impl.fetch.get_most_active_users import get_most_active_users
@@ -142,17 +142,17 @@ class Fetch:
     """
     return get_random_user_in_general(self.state.bot_id)
   
-  def get_user_profile(self, user_id: UserId) -> UserProfile:
+  def get_user_info(self, user_id: UserId) -> UserInfo:
     """
-    Get a user basic profile information
+    Get basic information for a user
     
     Args:
         user_id (UserId): The user identifier parameters.
         
     Returns:
-        UserProfile: A UserProfile object containing the user's basic profile information, None otherwise.
+        UserInfo: A UserInfo object containing the user's basic information, None otherwise.
     """
-    return get_user_profile(user_id.username)
+    return get_user_info(user_id.username)
   
   def get_news(self, search_phrase: SearchPhrase) -> News:
     """

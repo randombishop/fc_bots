@@ -2,7 +2,7 @@ import os
 import uuid
 import requests
 from bots.kit_interface.user_id import UserId
-from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.user_info import UserInfo
 from bots.kit_interface.image_description import ImageDescription
 from bots.kit_interface.casts import Casts
 from bots.kit_interface.user_casts_description import UserCastsDescription
@@ -85,11 +85,11 @@ schema = {
 }
 
 
-def create_avatar(bot_name: str, bio: Bio, lore: Lore, user_id: UserId, user_profile: UserProfile, pfp_description: ImageDescription, casts: Casts, casts_description: UserCastsDescription) -> Avatar:
+def create_avatar(bot_name: str, bio: Bio, lore: Lore, user_id: UserId, user_info: UserInfo, pfp_description: ImageDescription, casts: Casts, casts_description: UserCastsDescription) -> Avatar:
   prompt = format_template(prompt_template, {
     'user_name': user_id.username,
-    'user_display_name': user_profile.display_name,
-    'user_bio': user_profile.bio,
+    'user_display_name': user_info.display_name,
+    'user_bio': user_info.bio,
     'user_pfp_description': pfp_description.description,
     'casts': casts,
     'casts_description': casts_description.text

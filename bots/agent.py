@@ -41,6 +41,11 @@ class Agent(BaseSingleActionAgent):
         tool='check',
         tool_input={'state': self._state},
         log='')
+    elif not self._state.memorized:
+      return AgentAction(
+        tool='memorize',
+        tool_input={'state': self._state},
+        log='')
     else:
       return AgentFinish(return_values={"output": self._state}, log='done')
     
