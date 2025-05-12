@@ -64,6 +64,11 @@ class Agent(BaseSingleActionAgent):
         log='')
     elif self._state.mode in ['bot', 'assistant']:
       return self.next_phase()
+    elif self._state.mode == 'blueprint' and not self._state.memorized:
+      return AgentAction(
+        tool='memorize',
+        tool_input={'state': self._state},
+        log='')
     else:
       return AgentFinish(return_values={"output": self._state}, log='done')
     

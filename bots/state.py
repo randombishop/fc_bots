@@ -2,7 +2,6 @@ from bots.kit_interface.variable import Variable
 from bots.kit_entrypoint.fetch import Fetch
 from bots.kit_entrypoint.prepare import Prepare
 from bots.kit_entrypoint.miniapps import MiniApps
-from bots.kit_entrypoint.memorize import Memorize
 from bots.utils.functions import combine_params, get_function, check_params
 
 
@@ -76,7 +75,7 @@ class State:
       ans[variable.value.__class__.__name__] += 1
     return ans
   
-  def get_implementation(self, tool: str) -> Fetch | Prepare | Memorize:
+  def get_implementation(self, tool: str) -> Fetch | Prepare | MiniApps:
     """
     Instantiates a tool implementation
     

@@ -89,6 +89,7 @@ def get_variables(state, data_types):
 
 
 def _memorize(state):
+  state.memorized = True
   log = []
   user_profile_data = get_variables(state, ['UserId', 'UserInfo', 'ImageDescription', 'UserCastsDescription', 'UserReactionsDescription', 'Avatar'])
   if user_profile_data is not None:
