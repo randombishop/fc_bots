@@ -17,7 +17,7 @@ INTENTS_DESCRIPTIONS = {
 'UserStats': 'Get users aggregation or statistic from the database.',
 'CastStats': 'Get casts (=posts) aggregation or statistic from the database.',
 'Meta': 'Explain what the bot can do and how to use it.',
-'AvatarMatch': 'Open the avatar match mini-app to find similar profiles or mint the user profile NFT.'
+'AvatarMatch': 'Find similar profiles or mint the user profile NFT.'
 }
 
 
