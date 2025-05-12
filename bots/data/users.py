@@ -77,9 +77,9 @@ def get_user_profile(bot_id, fid):
     result = session.execute(stmt).mappings().fetchone()
     return result
   
-def get_user_profiles():
+def get_user_profiles(bot_id):
   with get_session() as session:
-    stmt = select(user_profile_table.c.fid, user_profile_table.c.user_name)
+    stmt = select(user_profile_table.c.fid, user_profile_table.c.user_name).where(user_profile_table.c.bot_id == bot_id)
     result = session.execute(stmt).mappings().fetchall()
     return result
   

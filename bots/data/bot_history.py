@@ -111,7 +111,7 @@ def get_random_user_in_channel(bot_id, channel_url):
   top_users = df_top_users['User'].tolist()
   if len(top_users) == 0:
     return None
-  saved_profiles = get_user_profiles()
+  saved_profiles = get_user_profiles(bot_id)
   saved_profiles = {row['user_name']: row['fid'] for row in saved_profiles}
   candidates = [user for user in top_users if user not in saved_profiles]
   if len(candidates) == 0:
