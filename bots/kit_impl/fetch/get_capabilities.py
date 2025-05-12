@@ -16,7 +16,8 @@ INTENTS_DESCRIPTIONS = {
 'WordCloud': 'Make a word cloud.',
 'UserStats': 'Get users aggregation or statistic from the database.',
 'CastStats': 'Get casts (=posts) aggregation or statistic from the database.',
-'Meta': 'Explain what the bot can do and how to use it.'
+'Meta': 'Explain what the bot can do and how to use it.',
+'AvatarMatch': 'Open the avatar match mini-app to find similar profiles or mint the user profile NFT.'
 }
 
 
@@ -111,14 +112,15 @@ Compose a data driven response.""",
 
 'CastStats': """Make a SQL query to fetch cast statistics from Dune Analytics.
 Execute the query.
-Compose a data driven response.
-""",
+Compose a data driven response.""",
 
 'Meta': """Fetch examples of your capabilities.
 Fetch your source code.
 Study your capabilities and source code and let the user know how you can help them.
-Be accurate and honest about your capabilities and avoid making false promises.
-"""
+Be accurate and honest about your capabilities and avoid making false promises.""",
+
+'AvatarMatch': """Propose the link to the avatar match mini-app."""
+
 }
 
 

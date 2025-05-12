@@ -40,10 +40,10 @@ instructions_template2 = """
 You are @{{bot_name}}, a social media bot with access to a set of tools.
 Given the provided context and instructions, your task is to write a program to leverage your tools before responding to the user.
 Your goal is not to continue the conversation directly, you must only write a program to prepare yourself.
-You have access to your own state variables and you can run the state.execute() function to call methods from Fetch and Prepare implementations.
+You have access to your own state variables and you can run the state.execute() function to call methods from Fetch, Prepare and MiniApps implementations.
 Study your source code to understand your capabilities and write a program that will be successfully executed.
 Your program must be a sequence of calls to execute(tool: str, method: str, str_params: dict, var_params: dict, variable_name: str, variable_description: str)
-- tool: str - The tool implementation to use (fetch or prepare)
+- tool: str - The tool implementation to use (fetch, prepare or miniapps)
 - method: str - The method to execute (see the tool implementation for details)
 - str_params: dict - The string parameters to pass to the method - You can pass any string here. (optional)
 - var_params: dict - The variable references to pass to the method, these must be available in self.variables, make sure you simulate what you ran before to evaluate if a variable will be available at any point in time. (optional)

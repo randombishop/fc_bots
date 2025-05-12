@@ -20,7 +20,7 @@ from bots.kit_impl.fetch.get_channel_id import get_channel_id
 from bots.kit_impl.fetch.get_keyword import get_keyword
 from bots.kit_impl.fetch.get_search_phrase import get_search_phrase
 from bots.kit_impl.fetch.get_user_id import get_user_id
-from bots.kit_impl.fetch.get_random_user import get_random_user
+from bots.kit_impl.fetch.get_random_user import get_random_user_in_channel, get_random_user_in_general
 from bots.kit_impl.fetch.get_user_profile import get_user_profile
 from bots.kit_impl.fetch.get_news import get_news
 from bots.kit_impl.fetch.get_favorite_users import get_favorite_users
@@ -121,10 +121,9 @@ class Fetch:
     """
     return get_user_id(user)
   
-  def get_random_user(self, channel_id: ChannelId) -> UserId:
+  def get_random_user_in_channel(self, channel_id: ChannelId) -> UserId:
     """
-    Get the parameters fid and username for user related tools when the instructions require selecting a random user.
-    Use get_random_user when you need to fetch a random active user from a channel.
+    Get the parameters fid and username for user related tools when you need to select a random user from a specific channel.
     
     Args:
         channel_id (ChannelId): The channel to fetch a random active user.
@@ -132,7 +131,16 @@ class Fetch:
     Returns:
         UserId: A UserId object containing a valid user fid and username, None otherwise.
     """
-    return get_random_user(self.state.bot_id, channel_id)
+    return get_random_user_in_channel(self.state.bot_id, channel_id)
+  
+  def get_random_user_in_general(self) -> UserId:
+    """
+    Get the parameters fid and username for user related tools when you need to select a random user from the general feed.
+        
+    Returns:
+        UserId: A UserId object containing a valid user fid and username, None otherwise.
+    """
+    return get_random_user_in_general(self.state.bot_id)
   
   def get_user_profile(self, user_id: UserId) -> UserProfile:
     """

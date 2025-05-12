@@ -12,6 +12,11 @@ class TestIntents(unittest.TestCase):
     state = run_agent(test_id='TestIntents:meta', mode='bot',request=request)
     self.assertEqual(state.plan['intent'], 'Meta')
     
+  def test_avatar_match(self):
+    request = "Help me find user profiles similar to @vitalik.eth"
+    state = run_agent(test_id='TestIntents:avatar_match', mode='bot',request=request)
+    self.assertEqual(state.plan['intent'], 'AvatarMatch')
+    
   def test_favorite_users(self):
     request = "Who are @vitalik.eth's favorite users?"
     state = run_agent(test_id='TestIntents:favorite_users', mode='bot',request=request)

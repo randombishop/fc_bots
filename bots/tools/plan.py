@@ -16,13 +16,13 @@ Given the provided context and instructions, your task is to generate your own p
 Your goal is not to continue the conversation directly, you must only plan and prepare yourself.
 Study the context, conversation and instructions to understand the user's intent.
 Study your source code to understand your capabilities.
-You have access to your own state variables and you can run the state.execute() function to call methods from Fetch and Prepare implementations.
+You have access to your own state variables and you can run the state.execute() function to call methods from Fetch, Prepare and MiniApps implementations.
 Study your current state variables to understand your current progress towards your goal.
 Once you have a full understanding of your current goal, state and capabilities, you can decide if you want to execute a program or proceed to composing your answer.
 If you are ready to compose your answer, just output {"program": []}
 If you decide to execute a program, write a program that will be successfully executed and output the sequence of calls in json format.
 Your program must be a sequence of calls to execute(tool: str, method: str, str_params: dict, var_params: dict, variable_name: str, variable_description: str)
-- tool: str - The tool implementation to use (fetch or prepare)
+- tool: str - The tool implementation to use (fetch, prepare or miniapps)
 - method: str - The method to execute (see the tool implementation for details)
 - str_params: dict - The string parameters to pass to the method - You can pass any string here. (optional)
 - var_params: dict - The variable references to pass to the method, these must be available in self.variables, make sure you simulate what you ran before to evaluate if a variable will be available at any point in time. (optional)

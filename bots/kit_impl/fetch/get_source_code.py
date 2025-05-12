@@ -17,5 +17,6 @@ def get_source_code() -> SourceCode:
   ans = ''
   ans += _get_source_code('../../kit_entrypoint', 'fetch.py', 'bots.kit_entrypoint') + '\n'
   ans += _get_source_code('../../kit_entrypoint', 'prepare.py', 'bots.kit_entrypoint') + '\n'
+  ans += _get_source_code('../../kit_entrypoint', 'miniapps.py', 'bots.kit_entrypoint') + '\n'
   ans += _get_source_code('../..', 'state.py', 'bots') + '\n\n'
   return SourceCode(ans)
