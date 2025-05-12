@@ -187,7 +187,10 @@ def parse_cast(cast_info):
     'parent_fid': cast_info['parent_author']['fid'] if 'parent_author' in cast_info else None,
     'parent_hash': cast_info['parent_hash'] if 'parent_hash' in cast_info else None,
     'timestamp': cast_info['timestamp'],
-    'when': format_when(cast_info['timestamp'])
+    'when': format_when(cast_info['timestamp']),
+    'num_likes': int(cast_info['reactions']['likes_count']) if 'reactions' in cast_info and 'likes_count' in cast_info['reactions'] else 0,
+    'num_recasts': int(cast_info['reactions']['recasts_count']) if 'reactions' in cast_info and 'recasts_count' in cast_info['reactions'] else 0,
+    'num_replies': int(cast_info['replies']['count']) if 'replies' in cast_info and 'count' in cast_info['replies'] else 0
   }
   if 'embeds' in cast_info and len(cast_info['embeds']) > 0:
       embed = cast_info['embeds'][0]
