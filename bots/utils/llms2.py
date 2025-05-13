@@ -14,7 +14,7 @@ gemini_large = "gemini-2.5-flash-preview-04-17"
 
 def create_llm(model):
   try:
-    llm = ChatVertexAI(model=model, response_format="json")
+    llm = ChatVertexAI(model=model, temperature=0, response_format="json")
     return llm
   except Exception as e:
     print(f'Error in create_llm_small: {e}')

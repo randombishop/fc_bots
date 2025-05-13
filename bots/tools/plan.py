@@ -34,7 +34,7 @@ Make sure all required parameters are made available by previous steps before ea
 If you need to see some data before deciding a parameter, you can return a partial program sequence and you will get another chance to start a new program afterwards.  
 You must output your sequence of calls as a list of dictionaries in json format.
 Once you have prepared and formatted your program in json format, double check that the json is valid and remove non valid annotations.
-
+DO NOT add any extra commentary or explanation.
 
 #OUTPUT FORMAT
 {

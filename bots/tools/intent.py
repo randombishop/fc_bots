@@ -54,6 +54,7 @@ Once you prepared your call sequence, simulate it and calculate available variab
 Make sure all required parameters are made available by previous steps before each new call.
 You must output your sequence of calls as a list of dictionaries in json format.
 Once you have prepared and formatted your program in json format, double check that the json is valid and remove non valid annotations.
+DO NOT add any extra commentary or explanation.
 
 {{response_plan}}
 
