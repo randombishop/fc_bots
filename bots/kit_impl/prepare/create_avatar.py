@@ -6,6 +6,7 @@ from bots.kit_interface.user_info import UserInfo
 from bots.kit_interface.image_description import ImageDescription
 from bots.kit_interface.casts import Casts
 from bots.kit_interface.user_casts_description import UserCastsDescription
+from bots.kit_interface.user_reactions_description import UserReactionsDescription
 from bots.kit_interface.avatar import Avatar
 from bots.kit_interface.bio import Bio
 from bots.kit_interface.lore import Lore
@@ -29,6 +30,9 @@ prompt_template = """
 
 # USER CASTS SUMMARY
 {{casts_description}}
+
+# USER REACTIONS SUMMARY
+{{reactions_description}}
 
 # USER PFP DESCRIPTION
 {{user_pfp_description}}
@@ -85,14 +89,18 @@ schema = {
 }
 
 
-def create_avatar(bot_name: str, bio: Bio, lore: Lore, user_id: UserId, user_info: UserInfo, pfp_description: ImageDescription, casts: Casts, casts_description: UserCastsDescription) -> Avatar:
+def create_avatar(bot_name: str, bio: Bio, lore: Lore, 
+                  user_id: UserId, user_info: UserInfo, pfp_description: ImageDescription, 
+                  casts: Casts, casts_description: UserCastsDescription,
+                  reactions_description: UserReactionsDescription) -> Avatar:
   prompt = format_template(prompt_template, {
     'user_name': user_id.username,
     'user_display_name': user_info.display_name,
     'user_bio': user_info.bio,
     'user_pfp_description': pfp_description.description,
     'casts': casts,
-    'casts_description': casts_description.text
+    'casts_description': casts_description.text,
+    'reactions_description': str(reactions_description)
   })
   if len(prompt) < 100:
     return {'log': 'Not enough data to generate a prompt for avatar'}

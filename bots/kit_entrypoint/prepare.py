@@ -148,7 +148,8 @@ class Prepare:
                                     user_info=user_info,
                                     reactions=reactions) 
   
-  def create_avatar(self, user_id: UserId, user_info: UserInfo, pfp_description: ImageDescription, casts_user: Casts, casts_description: UserCastsDescription) -> Avatar:
+  def create_avatar(self, user_id: UserId, user_info: UserInfo, pfp_description: ImageDescription, 
+                    casts_user: Casts, casts_description: UserCastsDescription, reactions_description: UserReactionsDescription) -> Avatar:
     """
     Create an avatar for a user.
     
@@ -169,7 +170,8 @@ class Prepare:
                          user_info=user_info,
                          pfp_description=pfp_description,
                          casts=casts_user,
-                         casts_description=casts_description) 
+                         casts_description=casts_description,
+                         reactions_description=reactions_description) 
   
   def create_image(self) -> Image:
     """
