@@ -38,7 +38,7 @@ from bots.kit_impl.fetch.execute_dune_query import execute_dune_query
 from bots.kit_impl.fetch.keyword import new_keyword, generate_keyword
 from bots.kit_impl.fetch.search_phrase import new_search_phrase, generate_search_phrase
 # utils
-from bots.utils.format_state import format_state
+from bots.utils.format_state import format_state, format_todo
 
 class Fetch:
   
@@ -346,5 +346,5 @@ class Fetch:
         SearchPhrase: A SearchPhrase object containing a valid search phrase, None otherwise.
     """
     context = format_state(self.state, intro=True, variables=True)
-    next_steps = str(self.state.todo)
+    next_steps = format_todo(self.state)
     return generate_search_phrase(self.state.bot_name, context, next_steps)

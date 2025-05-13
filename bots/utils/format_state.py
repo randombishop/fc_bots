@@ -18,9 +18,9 @@ def format_conversation(channel, conversation, request):
   if channel is not None:
     ans += f"#CURRENT CHANNEL\n/{channel}\n\n"
   if conversation is not None and len(conversation)>0:
-    ans += f"#CONVERSATION\n{conversation}\n"
+    ans += f"#CONVERSATION\n{conversation}\n\n"
   if request is not None and len(request)>0:
-    ans += f"#INSTRUCTIONS\n{request}\n"
+    ans += f"#INSTRUCTIONS\n{request}\n\n"
   return ans
 
 
@@ -47,6 +47,13 @@ def format_state(state, intro=False, variables=False):
     return ans
 
 
+def format_todo(state):
+  if state.todo is None:
+    return ''
+  todo = [f'{x["tool"]}.{x["method"]}' for x in state.todo]
+  return '\n'.join(todo)
+  
+  
 def debug_state(state):
   ans = "-"*64
   ans += "\n"
