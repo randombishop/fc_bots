@@ -196,8 +196,13 @@ def parse_cast(cast_info):
       embed = cast_info['embeds'][0]
       if 'url' in embed:
         cast['quote'] = {'url': embed['url']}
-      elif 'cast' in embed:
-        cast['quote'] = {'text': embed['cast']['text'], 'fid': int(embed['cast']['author']['fid']), 'username': embed['cast']['author']['username']}
+      elif 'cast' in embed and 'author' in embed['cast']:
+        embed_cast = embed['cast']
+        cast['quote'] = {
+          'text': embed_cast['text'] if 'text' in embed_cast else '', 
+          'fid': int(embed_cast['author']['fid']), 
+          'username': embed_cast['author']['username']
+        }
   return cast
 
 

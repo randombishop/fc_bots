@@ -322,6 +322,19 @@ class Fetch:
     """
     return new_keyword(keyword)
   
+  def generate_keyword(self) -> Keyword:
+    """
+    Generates a keyword to be used for searching casts.
+    Use generate_keyword when you don't know which keyword to use yet and prefer to generate the keyword at execution time.
+    If you don't need to wait for new data and already know which keyword to use, use new_keyword instead.
+    
+    Returns:
+        Keyword: A Keyword object containing a valid keyword, None otherwise.
+    """
+    context = format_state(self.state, intro=True, variables=True)
+    next_steps = format_todo(self.state)
+    return generate_keyword(self.state.bot_name, context, next_steps)
+  
   def new_search_phrase(self, search: str) -> SearchPhrase:
     """
     Instantiates a search phrase object to be used for searching casts, fetching news, or use more-like-this algorithm.

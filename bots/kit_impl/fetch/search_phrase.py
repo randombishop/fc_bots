@@ -47,5 +47,5 @@ def generate_search_phrase(bot_name: str, context: str, next_steps: str) -> Sear
   })
   result = call_llm('medium', prompt, instructions, schema)
   search = read_string(result, key='search_phrase', max_length=500)
-  return new_search_phrase(search)
+  return SearchPhrase(search)
 

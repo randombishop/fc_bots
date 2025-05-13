@@ -66,6 +66,7 @@ WhoIs = [
       'pfp_description': 'pfp_description',
       'casts_user': 'casts_user',
       'casts_description': 'casts_description',
+      'reactions_description': 'reactions_description'
     }, 
     'variable_name': 'avatar',
     'variable_description': 'Created Avatar'

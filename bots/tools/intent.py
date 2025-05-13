@@ -53,7 +53,7 @@ Your task is to figure out the prerequisites and parameters of the intended targ
 Once you prepared your call sequence, simulate it and calculate available variables after each step.
 Make sure all required parameters are made available by previous steps before each new call.
 You must output your sequence of calls as a list of dictionaries in json format.
-Once you have prepared and formatted your program in json format, double check that the json is valid.
+Once you have prepared and formatted your program in json format, double check that the json is valid and remove non valid annotations.
 
 {{response_plan}}
 
