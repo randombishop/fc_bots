@@ -1,14 +1,14 @@
 from dotenv import load_dotenv
 load_dotenv()
 import unittest
-from bots.kit_interface.user_profile import UserProfile
+from bots.kit_interface.user_info import UserInfo
 from bots.kit_impl.prepare.describe_pfp import describe_pfp
 
 
 class TestDescribePfp(unittest.TestCase):
 
   def _describe_pfp(self, url):
-    user_profile = UserProfile('Name', 'bio', 0, 0, url)
+    user_profile = UserInfo('Name', 'bio', 0, 0, url)
     image_description = describe_pfp(user_profile)
     print(image_description)
     self.assertTrue(len(image_description.description) > 0)

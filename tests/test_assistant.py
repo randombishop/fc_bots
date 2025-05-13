@@ -82,7 +82,7 @@ class TestAssistant(unittest.TestCase):
     channel = 'retroparc'
     state = run_agent(test_id='TestAssistant:6', mode='assistant', request=request, channel=channel)
     self.assertIn('News', state.get_variable_types())
-    self.assertIsNotNone(state.casts[0].embeds[0].url)
+    self.assertIsNotNone(state.casts[0]['embeds'][0]['url'])
     
   def test7(self):
     request = """
