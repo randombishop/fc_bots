@@ -35,7 +35,10 @@ If you need to see some data before deciding a parameter, you can return a parti
 You must output your sequence of calls as a list of dictionaries in json format.
 Once you have prepared and formatted your program in json format, double check that the json is valid and remove non valid annotations.
 DO NOT add any extra commentary or explanation.
+DO NOT output the sequence array at the top level, put it inside a json object under the key "program". 
+MAKE SURE TO OUTPUT VALID JSON AS SPECIFIED IN OUTPUT FORMAT.
 
+ 
 #OUTPUT FORMAT
 {
   "program": [

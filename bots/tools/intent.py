@@ -55,6 +55,8 @@ Make sure all required parameters are made available by previous steps before ea
 You must output your sequence of calls as a list of dictionaries in json format.
 Once you have prepared and formatted your program in json format, double check that the json is valid and remove non valid annotations.
 DO NOT add any extra commentary or explanation.
+DO NOT output the sequence array at the top level, put it inside a json object under the key "program". 
+MAKE SURE TO OUTPUT VALID JSON AS SPECIFIED IN OUTPUT FORMAT.
 
 {{response_plan}}
 
