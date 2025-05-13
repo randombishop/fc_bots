@@ -82,8 +82,20 @@ def extract_links(text):
   link_pattern = r'\[(.*?)\]'
   links = re.findall(link_pattern, text)
   text_without_links = re.sub(link_pattern, '', text)
-  links = [x.replace('https://warpcast.com/', '').replace('https://www.warpcast.com/', '') for x in links]
+  links = [replace_warpcast_links(x) for x in links]
   return text_without_links, links
+
+
+def replace_warpcast_links(link):
+  if 'warpcast.com' in link:
+    idx = link.rfind('/')
+    if idx != -1:
+      id = link[idx+1:]
+      if id.startswith('0x'):
+        if len(id) > 8:
+          id = id[:8]
+        return id
+  return link
 
 
 def clean_text(text):
@@ -115,6 +127,8 @@ def extract_cast(text, posts_map, style):
     text = shorten_text(text, style)
   text = clean_text(text)
   text, mentions_ats, mentions_positions = extract_mentions(text)
+  print('mentions_ats', mentions_ats)
+  print('mentions_positions', mentions_positions)
   c = {'text': text}
   if embed_urls is not None and len(embed_urls) > 0:
     c['embeds'] = embed_urls
