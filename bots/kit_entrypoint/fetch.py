@@ -17,8 +17,6 @@ from bots.kit_interface.user_info import UserInfo
 from bots.kit_impl.fetch.get_capabilities import get_capabilities_examples
 from bots.kit_impl.fetch.get_source_code import get_source_code
 from bots.kit_impl.fetch.get_channel_id import get_channel_id
-from bots.kit_impl.fetch.get_keyword import get_keyword
-from bots.kit_impl.fetch.get_search_phrase import get_search_phrase
 from bots.kit_impl.fetch.get_user_id import get_user_id
 from bots.kit_impl.fetch.get_random_user import get_random_user_in_channel, get_random_user_in_general
 from bots.kit_impl.fetch.get_user_info import get_user_info
@@ -37,6 +35,8 @@ from bots.kit_impl.fetch.get_user_reactions import get_user_reactions
 from bots.kit_impl.fetch.make_cast_stats_sql_query import make_cast_stats_sql_query
 from bots.kit_impl.fetch.make_user_stats_sql_query import make_user_stats_sql_query
 from bots.kit_impl.fetch.execute_dune_query import execute_dune_query
+from bots.kit_impl.fetch.keyword import new_keyword, generate_keyword
+from bots.kit_impl.fetch.search_phrase import new_search_phrase, generate_search_phrase
 # utils
 from bots.utils.format_state import format_state
 
@@ -77,34 +77,6 @@ class Fetch:
         ChannelId: A ChannelId object containing channel and channel_url if found, None otherwise.
     """
     return get_channel_id(parsed_channel)
-  
-  def get_keyword(self, keyword: str) -> Keyword:
-    """
-    Create the keyword to be used for searching casts.
-    Use get_keyword when you need to search for posts with a single keyword.
-    Do not use an abbreviation for the keyword, it has to be at least 4 characters long.
-    The keyword should be a single word, not a phrase.
-    
-    Args:
-        keyword (str): One single keyword to search for.
-        
-    Returns:
-        Keyword: A Keyword object containing a valid keyword, None otherwise.
-    """
-    return get_keyword(keyword)
-  
-  def get_search_phrase(self, search: str) -> SearchPhrase:
-    """
-    Create the search phrase to be used for searching casts, fetching news, or use more-like-this algorithm.
-    Use get_search_phrase when you need a multiple word search phrase.
-    
-    Args:
-        search (str): What should we search for?
-        
-    Returns:
-        SearchPhrase: A SearchPhrase object containing a valid search phrase, None otherwise.
-    """
-    return get_search_phrase(search)
 
   def get_user_id(self, user: str) -> UserId:
     """
@@ -243,19 +215,20 @@ class Fetch:
     """
     return get_casts_user(user_id)
   
-  def aggregate_casts(self, description: str, cast_lists: list[Casts]) -> Casts:
+  def aggregate_casts(self, description: str, casts1: Casts, casts2: Casts) -> Casts:
     """
-    Aggregate casts from multiple sources.
-    Use aggregate_casts when you need to combine casts from multiple sources into one single collection.
+    Aggregate 2 lists of casts.
+    Use aggregate_casts when you need to combine 2 lists of casts into one single collection.
     
     Args:
         description (str): The description of the new collection of casts.
-        cast_lists (list[Casts]): The list of casts to aggregate.
+        casts1: First list of casts.
+        casts2: Second list of casts.
         
     Returns:
         Casts: The aggregated casts, or None if empty.
     """
-    return aggregate_casts(description, cast_lists)
+    return aggregate_casts(description, [casts1, casts2])
   
   def get_bot_casts_in_channel(self, channel_id: ChannelId) -> Casts:
     """
@@ -332,3 +305,46 @@ class Fetch:
         DataFrame: A DataFrame object containing the results of the Dune query, None otherwise.
     """
     return execute_dune_query(query)
+  
+  def new_keyword(self, keyword: str) -> Keyword:
+    """
+    Instantiates a keyword object to be used for searching casts.
+    Use get_keyword when you need to search for posts with a single keyword and you already know which keyword to use.
+    If you don't know which keyword to use yet, use generate_keyword instead.
+    Do not use an abbreviation for the keyword, it has to be at least 4 characters long.
+    The keyword should be a single word, not a phrase.
+    
+    Args:
+        keyword (str): One single keyword to search for.
+        
+    Returns:
+        Keyword: A Keyword object containing a valid keyword, None otherwise.
+    """
+    return new_keyword(keyword)
+  
+  def new_search_phrase(self, search: str) -> SearchPhrase:
+    """
+    Instantiates a search phrase object to be used for searching casts, fetching news, or use more-like-this algorithm.
+    Use get_search_phrase when you need a multiple word search phrase and you already know which search phrase to use.
+    If you don't know which search phrase to use yet, use generate_search_phrase instead.
+    
+    Args:
+        search (str): What should we search for?
+        
+    Returns:
+        SearchPhrase: A SearchPhrase object containing a valid search phrase, None otherwise.
+    """
+    return new_search_phrase(search)
+
+  def generate_search_phrase(self) -> SearchPhrase:
+    """
+    Generates a search phrase to be used for searching casts, fetching news, or use more-like-this algorithm.
+    Use generate_search_phrase when you don't know which search phrase to use yet and prefer to generate the search phrase at execution time.
+    If you don't need to wait for new data and already know which search phrase to use, use new_search_phrase instead.
+    
+    Returns:
+        SearchPhrase: A SearchPhrase object containing a valid search phrase, None otherwise.
+    """
+    context = format_state(self.state, intro=True, variables=True)
+    next_steps = str(self.state.todo)
+    return generate_search_phrase(self.state.bot_name, context, next_steps)

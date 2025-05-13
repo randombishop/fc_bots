@@ -28,9 +28,10 @@ Your program must be a sequence of calls to execute(tool: str, method: str, str_
 - var_params: dict - The variable references to pass to the method, these must be available in self.variables, make sure you simulate what you ran before to evaluate if a variable will be available at any point in time. (optional)
 - variable_name: str - The name of the variable to set with the result of the method (*required, you must set a target variable name to be able to see the result) - Where do you want to store the result of the execution?
 - variable_description: str - The description of the obtained variable (optional) - What is the purpose of the variable?
-Your task is to figure out the prerequisites and parameters of the intended targets and compose a program that will successfully execute.
+You must figure out the prerequisites and parameters of each step and compose a program that will successfully execute.
 Once you prepared your call sequence, simulate it and calculate available variables after each step.
 Make sure all required parameters are made available by previous steps before each new call.
+If you need to see some data before deciding a parameter, you can return a partial program sequence and you will get another chance to start a new program afterwards.  
 You must output your sequence of calls as a list of dictionaries in json format.
 Once you have prepared and formatted your program in json format, double check that the json is valid.
 
