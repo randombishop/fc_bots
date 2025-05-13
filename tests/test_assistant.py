@@ -64,25 +64,25 @@ class TestAssistant(unittest.TestCase):
   def test5(self):
     request = """
     Your goal is to be a polarity detector in the channel.
-    Use recent channel activity to generate a search phrase that will be interesting to the channel audience and can yield opposed opinions.
-    Once your search phrase is ready, use it to search for casts.
-    Then create a word cloud from the casts.
-    Once you have your posts, classify them into 2 opposed camps by any criteria you want, then make a thread about it.
+    First fetch the casts from the channel, then create a word cloud from the casts.
+    Once your data is ready, study the channel activity carefully to detect 2 opposed camps, use any criteria you want.
+    Classify the casts into 2 camps, then make a thread about it.
     In the first cast, describe the opposition that you discovered, maybe in the form of a question, and include a link to the wordcloud.
     Then in the second and third casts, describe each side, and link to an example cast to illustrate each side of the polarity.
     """
     channel = 'mfers'
     state = run_agent(test_id='TestAssistant:5', mode='assistant', request=request, channel=channel)
-    self.assertIn('WordCloud', state.get_variable_types())
+    self.assertIn('WordCloudImage', state.get_variable_types())
     
   def test6(self):
     request = """Your goal is to post an interesting news story about classic cars in channel /retroparc.
     Create a search phrase that will be interesting to the channel audience and can yield news about classic cars.
     Use the search phrase to check out the news then compose an engaging cast about it.
-    Include a link to the story."""
+    Include the url link to the story in your post."""
     channel = 'retroparc'
     state = run_agent(test_id='TestAssistant:6', mode='assistant', request=request, channel=channel)
     self.assertIn('News', state.get_variable_types())
+    self.assertIsNotNone(state.casts[0].embeds[0].url)
     
   def test7(self):
     request = """
@@ -94,7 +94,7 @@ class TestAssistant(unittest.TestCase):
     
   def test8(self):
     request = """
-    Find the most liked and commented cast in the Japan channel, and then cast and tag those who shared it.
+    Find the most liked and commented cast in the Japan channel, then cast about it, and tag those who shared it.
     Also, please include the link of that cast.
     """
     channel = 'japan'
