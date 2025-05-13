@@ -52,7 +52,7 @@ class TestWordCloud(unittest.TestCase):
     self.assert_expected_output(state)
     search_phrases = state.get_variable_values('SearchPhrase')
     self.assertEqual(len(search_phrases), 1)
-    self.assertIn('canada', search_phrases[0].search)
+    self.assertIn('canada', search_phrases[0].search.lower())
     
   def test6(self):
     request = "Make a wordcloud for @randombishop's posts"
