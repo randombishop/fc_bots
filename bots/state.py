@@ -1,124 +1,121 @@
-import re
-from bots.data.channels import get_channel_by_url
+from bots.kit_interface.variable import Variable
+from bots.kit_entrypoint.fetch import Fetch
+from bots.kit_entrypoint.prepare import Prepare
+from bots.kit_entrypoint.miniapps import MiniApps
+from bots.utils.functions import combine_params, get_function, check_params
 
-
-def include_in_log(v):
-  return (isinstance(v, str) and len(v) > 0) or isinstance(v,int) or isinstance(v,float) or isinstance(v,bool)
 
 class State:
   
   def __init__(self):
+    self.bot_id = None
+    self.bot_name = None
     self.character = None
-    self.tools_log = []
-    self.posts_map = {}
-  
-  def get(self, key):
-    for step in reversed(self.tools_log):
-      tool_result = step[1]
-      if key in tool_result:
-        return tool_result[key]
-    return None
-  
-  def get_current_channel(self):
-    channel = self.get('channel')
-    if channel is None:
-      channel = self.get('root_parent_url')
-      if channel is not None:
-        channel = get_channel_by_url(channel)
-    return channel
-
-  def add_posts(self, posts):
-    for x in posts:
-      self.posts_map[x['id']] = x
-  
-  def get_available_data(self):
-    ans = {}
-    for x in self.tools_log:
-      observation = x[1]
-      for k,v in observation.items():
-        if v is not None:
-          ans[k] = v
-    return ans
-  
-  def format(self, template):
-    result = template
-    placeholders = re.findall(r'\{\{(\w+)\}\}', template)
-    for placeholder in placeholders:
-      value = self.get(placeholder)
-      if value is None:
-        raise Exception(f"Placeholder {placeholder} not found in state")
-      result = result.replace('{{' + placeholder + '}}', value)
-    return result
-  
-  def format_conversation(self):
-    channel = self.get_current_channel()
-    conversation = self.get('conversation')
-    request = self.get('request')
-    ans = ''
-    if channel is not None:
-      ans += f"#CURRENT CHANNEL\n/{channel}\n\n"
-    if conversation is not None and len(conversation)>0:
-      ans += f"#CONVERSATION\n{conversation}\n"
-    if request is not None and len(request)>0:
-      ans += f"#INSTRUCTIONS\n{request}\n"
-    return ans
-
-  def format_all(self, succint=False):
-    skip_tools = [
-      'InitState', 
-      'GetBio', 
-      'GetLore', 
-      'GetStyle', 
-      'GetTime', 
-      'GetConversation', 
-      'ShouldContinue',
-      'Like',
-      'Preload',
-      'Parse',
-      'Fetch',
-      'Prepare',
-      'Check'
-      ]
-    name = self.get('name')
-    ans = f'You are @{name} bot, a social media bot.\n'
-    ans += 'Here is your log of the internal tools you executed, followed by your instructions.\n\n'
-    ans += '#TOOL OUTPUTS\n\n'
-    for x in self.tools_log:
-      step = x[0]
-      if step.tool not in skip_tools:
-        observation = x[1]
-        ans += f"##{step.tool}\n\n"
-        for k,v in observation.items():
-          if v is not None and include_in_log(v):
-            ans += f"###{k}\n"
-            v = str(v)
-            if succint and len(v) > 256:
-              v = v[:256] + '...\n'
-              v += f'(text length: {len(v)}. Data truncated to focus on current task.)'
-            ans += f"{v}\n\n"
-    ans += '\n\n'
-    channel = self.get_current_channel()
-    if channel is not None:
-      ans += f"#CURRENT CHANNEL\n/{channel}\n\n"
-    conversation = self.get('conversation')
-    if conversation is not None and len(conversation)>0:
-      ans += f"#CONVERSATION\n{conversation}\n"
-    request = self.get('request')
-    if request is not None and len(request)>0:
-      ans += f"#INSTRUCTIONS\n{request}\n"
-    return ans
-      
-  def get_tools_sequence(self):
-    return [x[0].tool for x in self.tools_log]
+    self.mode = None
+    self.request = None
+    self.fid_origin = None
+    self.parent_hash = None
+    self.attachment_hash = None
+    self.root_parent_url = None
+    self.blueprint = None
+    self.variables = {}
+    self.plan = None
+    self.todo = []
+    self.iterations = 0
+    self.composed = False
+    self.checked = False
+    self.casts = None
+    self.valid = False
+    self.memorized = False
     
-  def debug(self):
-    try:
-      s = '-'*100+'\n'
-      s += ' > '.join(self.get_tools_sequence())+' >>> \n'
-      casts = self.get('casts')
-      if casts is not None and len(casts)>0:
-        s += casts
-      s += '-'*100+'\n'
-      print(s)
-    except Exception as e:
-      print('Exception in state.debug():', e)
+  def set_variable(self, variable: Variable):
+    """
+    Sets a variable in the state
+    
+    Args:
+      variable: Variable - The variable to set
+    """
+    self.variables[variable.name] = variable
+  
+  def get_variable(self, name: str):
+    """
+    Gets a variable from the state
+    
+    Args:
+      name: str - The name of the variable to get
+    """
+    if name in self.variables:
+      return self.variables[name]
+    else:
+      return None
+  
+  def get_variable_values(self, variable_type: str):
+    """
+    Gets all variables of a given type
+    
+    Args:
+      variable_type: str - The class name of the variables to 
+      
+    Returns:
+      A list of the variables' values
+    """
+    return [x.value for x in self.variables.values() if x.value.__class__.__name__==variable_type]
+  
+  def get_variable_types(self):
+    """
+    Get counts for each variable type
+      
+    Returns:
+      A dictionary with the variable type as the key and the count as the value
+    """
+    ans = {}
+    for variable in self.variables.values():
+      if variable.value.__class__.__name__ not in ans:
+        ans[variable.value.__class__.__name__] = 0
+      ans[variable.value.__class__.__name__] += 1
+    return ans
+  
+  def get_implementation(self, tool: str) -> Fetch | Prepare | MiniApps:
+    """
+    Instantiates a tool implementation
+    
+    Args:
+      tool: str - The tool implementation to use (fetch, prepare or memorize)
+      
+    Returns:
+      The tool implementation
+    """
+    if tool == 'fetch':
+      return Fetch(self)
+    elif tool == 'prepare':
+      return Prepare(self)
+    elif tool == 'miniapps':
+      return MiniApps(self)
+    else:
+      raise ValueError(f"Invalid tool: {tool}")
+  
+  def execute(self, tool: str, method: str, str_params: dict, var_params: dict, variable_name: str, variable_description: str):
+    """
+    Executes a method from the Fetch, Prepare or Memorize suite of tools
+    
+    Args:
+      tool: str - The tool implementation to use (fetch or prepare) (*required)
+      method: str - The method to execute (see the tool implementation for details) (*required)
+      str_params: dict - The string parameters to pass to the method (optional)
+      var_params: dict - The variable references to pass to the method, these must be available in self.variables (optional)
+      variable_name: str - The name of the variable to set with the result of the method (*required)
+      variable_description: str - The description of the obtained variable (optional)
+      
+    Returns:
+      The result of the executed method
+    """
+    params = combine_params(self.variables, str_params, var_params)
+    object = self.get_implementation(tool)
+    func = get_function(object, method)
+    check_params(func, params)
+    result = func(**params)
+    if result is not None:
+      variable = Variable(variable_name, variable_description, result)
+      self.set_variable(variable)
+    return result
+

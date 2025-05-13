@@ -8,7 +8,7 @@ def is_fid(value):
   else:
     try:
       int_value = int(value)
-      return int_value > 0 and int_value<10000000
+      return int_value > 0 and int_value<100000000
     except:
       return False
 
@@ -126,6 +126,7 @@ def read_user(params, fid_origin=None, default_to_origin=False):
   user_name = None
   if 'user' in params and is_specific_user(params['user']):
     s = str(params['user']).lower()
+    s = s.split(' ')[0].strip()
     if s.startswith('@'):
       s = s[1:]
     if s.startswith('fid#'):

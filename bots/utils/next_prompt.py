@@ -48,8 +48,8 @@ def get_channel_ranking(bot_id, df_channels):
   character = get_bot_character(bot_id)
   name = character['name']
   channels = df_channels['channel'].to_list()
-  bio = format_bio(character)
-  lore = format_lore(character)
+  bio = format_bio(character['bio'])
+  lore = format_lore(character['lore'])
   trending = get_trending_casts(50)
   trending = format_trending(trending)
   bot_casts = get_bot_casts(bot_id)

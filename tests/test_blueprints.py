@@ -13,5 +13,6 @@ class TestBlueprints(unittest.TestCase):
       blueprint='WhoIs',
       user='randombishop'
     )
+    self.assertEqual(len(state.get_variable_values('Avatar')), 1)
     
   

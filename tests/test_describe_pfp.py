@@ -1,17 +1,17 @@
 from dotenv import load_dotenv
 load_dotenv()
 import unittest
-from bots.utils.tests import make_tool_input
-from bots.tools.prepare.describe_pfp import prepare
+from bots.kit_interface.user_info import UserInfo
+from bots.kit_impl.prepare.describe_pfp import describe_pfp
 
 
 class TestDescribePfp(unittest.TestCase):
 
   def _describe_pfp(self, url):
-    input = make_tool_input({'user_pfp_url': url})
-    result = prepare(input)
-    print(result)
-    self.assertTrue(len(result['user_pfp_description']) > 0)
+    user_profile = UserInfo('Name', 'bio', 0, 0, url)
+    image_description = describe_pfp(user_profile)
+    print(image_description)
+    self.assertTrue(len(image_description.description) > 0)
     
   def test1(self):
     url = 'https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/482ceb2b-91ee-4885-eb4a-02f46a08ac00/original'

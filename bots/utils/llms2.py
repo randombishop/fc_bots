@@ -8,25 +8,16 @@ from vertexai import generative_models
 from bots.utils.json_cleaner import clean_json
 
 
-gemini_15_flash = "gemini-1.5-flash-002"
-gemini_20_flash = "gemini-2.0-flash-001"
+gemini_small = "gemini-2.0-flash-lite-001"
+gemini_medium = "gemini-2.0-flash-001"
+gemini_large = "gemini-2.5-flash-preview-04-17"
 
-
-def create_llm_small():
+def create_llm(model):
   try:
-    llm_small = ChatVertexAI(model=gemini_15_flash)
-    return llm_small
+    llm = ChatVertexAI(model=model, temperature=0, response_format="json")
+    return llm
   except Exception as e:
     print(f'Error in create_llm_small: {e}')
-    return None
-
-
-def create_llm_medium():
-  try:
-    llm_med = ChatVertexAI(model=gemini_20_flash)
-    return llm_med
-  except Exception as e:
-    print(f'Error in create_llm_medium: {e}')
     return None
 
 def create_llm_image():
@@ -37,12 +28,10 @@ def create_llm_image():
     print(f'Error in create_llm_image: {e}')
     return None
 
-
-
-
 models = {
-  'small': create_llm_small(),
-  'medium': create_llm_medium(),
+  'small': create_llm(gemini_small),
+  'medium': create_llm(gemini_medium),
+  'large': create_llm(gemini_large),
   'image': create_llm_image()
 }
 
@@ -103,7 +92,7 @@ def generate_image(prompt):
       raise e
     
 
-@traceable(run_type="llm", name=gemini_15_flash)
+@traceable(run_type="llm", name=gemini_small)
 def call_llm_with_data(prompt, data, mime_type, instructions, schema):
   result = None
   try:
@@ -112,7 +101,7 @@ def call_llm_with_data(prompt, data, mime_type, instructions, schema):
       data=data,
     )
     vertex_model = GenerativeModel(
-      gemini_15_flash,
+      gemini_small,
       system_instruction=instructions
     )
     generation_config = {

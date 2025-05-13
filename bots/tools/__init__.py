@@ -1,33 +1,21 @@
-from bots.tools.init import INIT_TOOLS
-from bots.tools.intent import INTENT_TOOLS
-from bots.tools.plan import PLAN_TOOLS
-from bots.tools.parse import PARSE_TOOLS
-from bots.tools.fetch import FETCH_TOOLS
-from bots.tools.prepare import PREPARE_TOOLS
-from bots.tools.check import CHECK_TOOLS
-from bots.tools.memorize import MEMORIZE_TOOLS
-from bots.tools.helpers import HELPERS_TOOLS
+from bots.tools.init_state import init_state
+from bots.tools.fetch import fetch
+from bots.tools.prepare import prepare  
+from bots.tools.miniapps import miniapps
+from bots.tools.intent import intent
+from bots.tools.plan import plan
+from bots.tools.compose import compose
+from bots.tools.check import check
+from bots.tools.memorize import memorize
 
-
-TOOL_MAP = {
-  'init': INIT_TOOLS,
-  'intent': INTENT_TOOLS,
-  'plan': PLAN_TOOLS,
-  'parse': PARSE_TOOLS,
-  'fetch': FETCH_TOOLS,
-  'prepare': PREPARE_TOOLS,
-  'check': CHECK_TOOLS,
-  'memorize': MEMORIZE_TOOLS,
-  'helpers': HELPERS_TOOLS
-}
-
-
-TOOL_LIST = []
-for x in TOOL_MAP.values():
-  TOOL_LIST.extend(x)
-  
-
-
-  
-
-
+TOOLS = [
+  init_state, 
+  fetch,
+  prepare,
+  miniapps,
+  intent,
+  plan,
+  compose,
+  check,
+  memorize
+]
