@@ -75,7 +75,7 @@ def _plan(state):
     state.iterations = 'done'
   instructions = format_template(instructions_template, {'bot_name': state.bot_name})
   prompt = format_state(state, intro=True, variables=True)
-  if len(state.get_variable_values('SourceCode'))==0:
+  if not state.has_variable_value_with_type('SourceCode'):
     prompt += '\n\n\n' + '-'*100 + '\n\n\n'
     prompt += '# YOUR SOURCE CODE:\n\n'
     prompt += str(get_source_code())

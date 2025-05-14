@@ -7,9 +7,9 @@ from bots.utils.tests import run_agent
 class TestPsycho(unittest.TestCase):
 
   def assert_expected_output(self, state, fid, username):
-    self.assertEqual(state.plan['intent'], 'Psycho')
-    self.assertTrue(state.valid)
-    user_id = state.get_variable_values('UserId')[-1]
+    self.assertEqual(state.get_selected_intent(), 'Psycho')
+    self.assertTrue(state.is_valid())
+    user_id = state.get_last_variable_value_by_type('UserId')
     self.assertEqual(user_id.fid, fid)
     self.assertEqual(user_id.username, username)
     

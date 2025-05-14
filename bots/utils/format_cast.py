@@ -127,8 +127,6 @@ def extract_cast(text, posts_map, style):
     text = shorten_text(text, style)
   text = clean_text(text)
   text, mentions_ats, mentions_positions = extract_mentions(text)
-  print('mentions_ats', mentions_ats)
-  print('mentions_positions', mentions_positions)
   c = {'text': text}
   if embed_urls is not None and len(embed_urls) > 0:
     c['embeds'] = embed_urls

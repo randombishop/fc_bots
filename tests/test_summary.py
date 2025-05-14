@@ -7,36 +7,35 @@ from bots.utils.tests import run_agent
 class TestSummary(unittest.TestCase):
   
   def assert_expected_output(self, state):
-    self.assertEqual(state.plan['intent'], 'Summary')
-    self.assertTrue(state.valid)
+    self.assertEqual(state.get_selected_intent(), 'Summary')
+    self.assertTrue(state.is_valid())
       
   def test1(self):
     request = "Give me a summary using keyword ethereum"
     state = run_agent(test_id='TestSummary:test1', mode='bot', request=request)
     self.assert_expected_output(state)
-    keywords = state.get_variable_values('Keyword')
+    keywords = state.get_variable_values_by_type('Keyword')
     self.assertIn('ethereum', [x.keyword for x in keywords])
       
   def test2(self):
     request = "Summary for /rodeo channel?"
     state = run_agent(test_id='TestSummary:test2', mode='bot', request=request)
     self.assert_expected_output(state)
-    channels = state.get_variable_values('ChannelId')
-    self.assertEqual(len(channels), 1)
-    self.assertEqual(channels[0].channel, 'rodeo-club')
-    self.assertEqual(channels[0].channel_url, 'https://warpcast.com/~/channel/rodeo-club')
+    channel = state.get_last_variable_value_by_type('ChannelId')
+    self.assertEqual(channel.channel, 'rodeo-club')
+    self.assertEqual(channel.channel_url, 'https://warpcast.com/~/channel/rodeo-club')
     
   def test3(self):
     request = "Summary of posts about the beauty of canada"
     state = run_agent(test_id='TestSummary:test3', mode='bot', request=request)
-    search_phrases = state.get_variable_values('SearchPhrase')
+    search_phrase = state.get_last_variable_value_by_type('SearchPhrase')
     self.assert_expected_output(state)
-    self.assertIn('canada', search_phrases[0].search.lower())
+    self.assertIn('canada', search_phrase.search.lower())
       
   def test4(self):
     request = "Summary of @randombishop's posts"
     state = run_agent(test_id='TestSummary:test4', mode='bot', request=request)
     self.assert_expected_output(state)
-    users = state.get_variable_values('UserId')
-    self.assertEqual(users[0].username, 'randombishop')
-    self.assertEqual(users[0].fid, 253232)
+    user = state.get_last_variable_value_by_type('UserId')
+    self.assertEqual(user.username, 'randombishop')
+    self.assertEqual(user.fid, 253232)

@@ -102,7 +102,7 @@ def select_intent(state):
     'response_plan': f"#SUGGESTED RESPONSE PLAN\n{response_plan}"}
     )
   prompt2 = format_state(state, intro=True, variables=True)
-  if len(state.get_variable_values('SourceCode'))==0:
+  if not state.has_variable_value_with_type('SourceCode'):
     prompt2 += '\n\n\n' + '-'*100 + '\n\n\n'
     prompt2 += '# YOUR SOURCE CODE:\n\n'
     prompt2 += str(get_source_code())

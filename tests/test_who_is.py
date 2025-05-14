@@ -7,8 +7,8 @@ from bots.utils.tests import run_agent
 class TestWhoIs(unittest.TestCase):
   
   def assert_expected_output(self, state, fid, username):
-    self.assertEqual(state.plan['intent'], 'WhoIs')
-    user = state.get_variable_values('UserId')[-1]
+    self.assertEqual(state.get_selected_intent(), 'WhoIs')
+    user = state.get_last_variable_value_by_type('UserId')
     self.assertEqual(user.fid, fid)
     self.assertEqual(user.username, username)
     

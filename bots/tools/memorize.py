@@ -80,9 +80,9 @@ def memorize_user_profile(bot_id:int,
 def get_variables(state, data_types):
   ans = []
   for t in data_types:
-    vars = state.get_variable_values(t)
-    if len(vars) > 0:
-      ans.append(vars[-1])
+    var = state.get_last_variable_value_by_type(t)
+    if var is not None:
+      ans.append(var)
     else:
       return None
   return ans

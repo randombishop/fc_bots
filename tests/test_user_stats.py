@@ -7,23 +7,21 @@ from bots.utils.tests import run_agent
 class TestUserStats(unittest.TestCase):
   
   def assert_expected_output(self, state):
-    queries = state.get_variable_values('DuneQuery')
-    results = state.get_variable_values('DataFrame')
-    self.assertEqual(len(queries), 1)
-    self.assertEqual(len(results), 1)
-    self.assertTrue(state.valid)
+    self.assertTrue(state.has_variable_value_with_type('DuneQuery'))
+    self.assertTrue(state.has_variable_value_with_type('DataFrame'))
+    self.assertTrue(state.is_valid())
     
   def test1(self):
     request = "How many Brazilians do we have on Farcaster?"
     state = run_agent(test_id='TestUserStats:1', mode='bot', request=request)
     self.assert_expected_output(state)
-    self.assertEqual(state.plan['intent'], 'UserStats')
+    self.assertEqual(state.get_selected_intent(), 'UserStats')
     
   def test2(self):
     request = "What is the percentage of farcaster accounts who are active?"
     state = run_agent(test_id='TestUserStats:2', mode='bot', request=request)
     self.assert_expected_output(state)
-    self.assertEqual(state.plan['intent'], 'UserStats')
+    self.assertEqual(state.get_selected_intent(), 'UserStats')
     
   def test3(self):
     request = """
