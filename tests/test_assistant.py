@@ -75,10 +75,12 @@ class TestAssistant(unittest.TestCase):
     self.assertIn('WordCloudImage', state.get_variable_types())
     
   def test6(self):
-    request = """Your goal is to post an interesting news story about classic cars in channel /retroparc.
+    request = """
+    Your goal is to post an interesting news story about classic cars in channel /retroparc.
     Create a search phrase that will be interesting to the channel audience and can yield news about classic cars.
     Use the search phrase to check out the news then compose an engaging cast about it.
-    Include the url link to the story in your post."""
+    Include the url link to the story in your post.
+    """
     channel = 'retroparc'
     state = run_agent(test_id='TestAssistant:6', mode='assistant', request=request, channel=channel)
     self.assertIn('News', state.get_variable_types())
