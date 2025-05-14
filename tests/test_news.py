@@ -7,10 +7,10 @@ from bots.utils.tests import run_agent
 class TestNews(unittest.TestCase):
   
   def assert_expected_output(self, state):
-    self.assertEqual(state.plan['intent'], 'News')
-    self.assertEqual(len(state.get_variable_values('News')), 1)
+    self.assertEqual(state.get_selected_intent(), 'News')
+    self.assertTrue(state.has_variable_value_with_type('News'))
     self.assertIsNotNone(state.casts)
-    self.assertTrue(state.valid)
+    self.assertTrue(state.is_valid())
   
   def test1(self):
     request = "Search the news for Data Science"

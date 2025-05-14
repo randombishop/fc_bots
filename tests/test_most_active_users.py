@@ -7,14 +7,14 @@ from bots.utils.tests import run_agent
 class TestMostActiveUsers(unittest.TestCase):
 
   def assert_expected_output(self, state, channel, channel_url):
-    self.assertEqual(state.plan['intent'], 'MostActiveUsers')
-    self.assertEqual(len(state.get_variable_values('MostActiveUsers')), 1)
-    self.assertEqual(len(state.get_variable_values('MostActiveUsersChart')), 1)
-    self.assertEqual(state.get_variable_values('ChannelId')[-1].channel, channel)
-    self.assertEqual(state.get_variable_values('ChannelId')[-1].channel_url, channel_url)
+    self.assertEqual(state.get_selected_intent(), 'MostActiveUsers')
+    self.assertTrue(state.has_variable_value_with_type('MostActiveUsers'))
+    self.assertTrue(state.has_variable_value_with_type('MostActiveUsersChart'))
+    self.assertEqual(state.get_last_variable_value_by_type('ChannelId').channel, channel)
+    self.assertEqual(state.get_last_variable_value_by_type('ChannelId').channel_url, channel_url)
     self.assertIsNotNone(state.casts)
     self.assertTrue(len(state.casts[0]['mentions']) > 0)
-    self.assertTrue(state.valid)
+    self.assertTrue(state.is_valid())
       
   def test1(self):
     request = "Who is most active in channel /politics?"

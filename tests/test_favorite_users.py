@@ -7,11 +7,11 @@ from bots.utils.tests import run_agent
 class TestFavoriteUsers(unittest.TestCase):
 
   def assert_expected_output(self, state, fid_target):
-    self.assertEqual(state.plan['intent'], 'FavoriteUsers')
-    self.assertEqual(len(state.get_variable_values('FavoriteUsers')), 1)
-    self.assertEqual(len(state.get_variable_values('FavoriteUsersTable')), 1)
-    self.assertEqual(state.get_variable_values('UserId')[-1].fid, fid_target)
-    self.assertTrue(state.valid)
+    self.assertEqual(state.get_selected_intent(), 'FavoriteUsers')
+    self.assertTrue(state.has_variable_value_with_type('FavoriteUsers'))
+    self.assertTrue(state.has_variable_value_with_type('FavoriteUsersTable'))
+    self.assertEqual(state.get_last_variable_value_by_type('UserId').fid, fid_target)
+    self.assertTrue(state.is_valid())
     
   def test1(self):
     request = "Who are @vitalik.eth's favorite users?"

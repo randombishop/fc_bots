@@ -1,3 +1,4 @@
+from bots.utils.base_state import BaseState
 from bots.kit_interface.variable import Variable
 from bots.kit_entrypoint.fetch import Fetch
 from bots.kit_entrypoint.prepare import Prepare
@@ -5,76 +6,11 @@ from bots.kit_entrypoint.miniapps import MiniApps
 from bots.utils.functions import combine_params, get_function, check_params
 
 
-class State:
+class State(BaseState):
   
   def __init__(self):
-    self.bot_id = None
-    self.bot_name = None
-    self.character = None
-    self.mode = None
-    self.request = None
-    self.fid_origin = None
-    self.parent_hash = None
-    self.attachment_hash = None
-    self.root_parent_url = None
-    self.blueprint = None
-    self.variables = {}
-    self.plan = None
-    self.todo = []
-    self.iterations = 0
-    self.composed = False
-    self.checked = False
-    self.casts = None
-    self.valid = False
-    self.memorized = False
+    super().__init__()
     
-  def set_variable(self, variable: Variable):
-    """
-    Sets a variable in the state
-    
-    Args:
-      variable: Variable - The variable to set
-    """
-    self.variables[variable.name] = variable
-  
-  def get_variable(self, name: str):
-    """
-    Gets a variable from the state
-    
-    Args:
-      name: str - The name of the variable to get
-    """
-    if name in self.variables:
-      return self.variables[name]
-    else:
-      return None
-  
-  def get_variable_values(self, variable_type: str):
-    """
-    Gets all variables of a given type
-    
-    Args:
-      variable_type: str - The class name of the variables to 
-      
-    Returns:
-      A list of the variables' values
-    """
-    return [x.value for x in self.variables.values() if x.value.__class__.__name__==variable_type]
-  
-  def get_variable_types(self):
-    """
-    Get counts for each variable type
-      
-    Returns:
-      A dictionary with the variable type as the key and the count as the value
-    """
-    ans = {}
-    for variable in self.variables.values():
-      if variable.value.__class__.__name__ not in ans:
-        ans[variable.value.__class__.__name__] = 0
-      ans[variable.value.__class__.__name__] += 1
-    return ans
-  
   def get_implementation(self, tool: str) -> Fetch | Prepare | MiniApps:
     """
     Instantiates a tool implementation
