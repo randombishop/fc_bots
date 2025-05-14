@@ -17,7 +17,7 @@ def create_llm(model):
     llm = ChatVertexAI(model=model, temperature=0, response_format="json")
     return llm
   except Exception as e:
-    print(f'Error in create_llm_small: {e}')
+    print(f'Error in create_llm: {e}')
     return None
 
 def create_llm_image():

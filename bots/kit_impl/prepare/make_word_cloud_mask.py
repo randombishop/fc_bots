@@ -34,7 +34,6 @@ def make_word_cloud_mask(word_cloud_data: WordCloudData) -> WordCloudMask:
   img = img.convert('RGB')
   pixels = img.load()
   width, height = img.size
-  print('Image size', width, height)
   mask = Image.new('RGB', (width, height))
   mask_pixels = mask.load()
   threshold = 180
