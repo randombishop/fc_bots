@@ -30,7 +30,10 @@ def get_bot_prompt(id):
   
 def get_bot_prompts(bot_id):
   with get_session() as session:
-    stmt = bot_prompts_table.select().where(bot_prompts_table.c.bot_id == bot_id)
+    stmt = (bot_prompts_table
+            .select()
+            .where(bot_prompts_table.c.bot_id == bot_id)
+            .where(bot_prompts_table.c.active == True))
     result = session.execute(stmt).mappings().fetchall()
     return result
   
