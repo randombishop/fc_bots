@@ -89,6 +89,28 @@ def exec_function(run_type, input):
       return error
   
 
+def parse_str_params(call):
+  if 'str_params' not in call:
+    return None
+  ans = {}
+  for k,v in call['str_params'].items():
+    v = v.strip()
+    ans[k] = v
+  return ans
+
+
+def parse_var_params(call):
+  if 'var_params' not in call:
+    return None
+  ans = {}
+  for k,v in call['var_params'].items():
+    v = v.strip()
+    if v.startswith('#'):
+      v = v[1:]
+    ans[k] = v
+  return ans
+
+
 def validate_sequence(state, sequence):
   variables = state.variables.copy()
   ans = []
@@ -99,15 +121,22 @@ def validate_sequence(state, sequence):
       object = state.get_implementation(tool)
       method = call['method']
       func = get_function(object, method)
-      str_params = call['str_params'] if 'str_params' in call else None
-      var_params = call['var_params'] if 'var_params' in call else None
-      params = combine_params(variables, str_params, var_params)
-      check_params(func, params)
-      ans.append(call)
-      sig = inspect.signature(func)
-      variable_type = sig.return_annotation
+      str_params = parse_str_params(call)
+      var_params = parse_var_params(call)
       variable_name = call['variable_name'] if 'variable_name' in call else None
       variable_description = call['variable_description'] if 'variable_description' in call else None
+      params = combine_params(variables, str_params, var_params)
+      check_params(func, params)
+      ans.append({
+        'tool': tool,
+        'method': method,
+        'str_params': str_params,
+        'var_params': var_params,
+        'variable_name': call['variable_name'] if 'variable_name' in call else None,
+        'variable_description': call['variable_description'] if 'variable_description' in call else None
+      })
+      sig = inspect.signature(func)
+      variable_type = sig.return_annotation
       if variable_name is not None:
         variables[variable_name] = Variable(variable_name, variable_description, variable_type)
   except Exception as e:

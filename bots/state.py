@@ -16,7 +16,7 @@ class State(BaseState):
     Instantiates a tool implementation
     
     Args:
-      tool: str - The tool implementation to use (fetch, prepare or memorize)
+      tool: str - The tool implementation to use (fetch, prepare or miniapps)
       
     Returns:
       The tool implementation
@@ -32,14 +32,15 @@ class State(BaseState):
   
   def execute(self, tool: str, method: str, str_params: dict, var_params: dict, variable_name: str, variable_description: str):
     """
-    Executes a method from the Fetch, Prepare or Memorize suite of tools
+    Executes a method from the Fetch, Prepare or Memorize suites of tools
+    and stores the result in the state variables dictionary.
     
     Args:
       tool: str - The tool implementation to use (fetch or prepare) (*required)
       method: str - The method to execute (see the tool implementation for details) (*required)
       str_params: dict - The string parameters to pass to the method (optional)
       var_params: dict - The variable references to pass to the method, these must be available in self.variables (optional)
-      variable_name: str - The name of the variable to set with the result of the method (*required)
+      variable_name: str - The name of the recipient variable containing the result of the method (*required)
       variable_description: str - The description of the obtained variable (optional)
       
     Returns:
