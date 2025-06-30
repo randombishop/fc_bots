@@ -12,7 +12,7 @@ gemini_small = "gemini-2.0-flash-lite-001"
 gemini_medium = "gemini-2.0-flash-001"
 gemini_large = "gemini-2.5-flash-preview-04-17"
 
-def create_llm(model):
+def chat_llm(model):
   try:
     llm = ChatVertexAI(model=model, temperature=0, response_format="json")
     return llm
@@ -20,7 +20,7 @@ def create_llm(model):
     print(f'Error in create_llm: {e}')
     return None
 
-def create_llm_image():
+def image_llm():
   try:
     llm_img = OpenAI().images
     return llm_img
@@ -29,17 +29,17 @@ def create_llm_image():
     return None
 
 models = {
-  'small': create_llm(gemini_small),
-  'medium': create_llm(gemini_medium),
-  'large': create_llm(gemini_large),
-  'image': create_llm_image()
+  'small': gemini_small,
+  'medium': gemini_medium,
+  'large': gemini_large
 }
 
 def get_max_capactity():
   return 50
 
-def call_llm(llm, prompt, instructions, schema):
-  llm = models[llm]
+def call_llm(model, prompt, instructions, schema):
+  model = models[llm]
+  llm = ChatVertexAI(model=model, temperature=0, response_format="json")
   messages = [
     SystemMessage(instructions.encode('utf-8', errors='replace').decode('utf-8')),
     HumanMessage(prompt.encode('utf-8', errors='replace').decode('utf-8'))
@@ -68,7 +68,8 @@ def rewrite_prompt(original_prompt):
 
 @traceable(run_type="llm", name="DallE3")
 def _do_generate_image(prompt):
-  response = models['image'].generate(
+  model = image_llm()
+  response = model.generate(
     model="dall-e-3",
     prompt=prompt,
     size="1024x1024",
