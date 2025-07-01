@@ -37,8 +37,8 @@ models = {
 def get_max_capactity():
   return 50
 
-def call_llm(model, prompt, instructions, schema):
-  model = models[llm]
+def call_llm(size, prompt, instructions, schema):
+  model = models[size]
   llm = ChatVertexAI(model=model, temperature=0, response_format="json")
   messages = [
     SystemMessage(instructions.encode('utf-8', errors='replace').decode('utf-8')),
