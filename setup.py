@@ -14,7 +14,6 @@ setup(
       "xgboost==2.1.0",
       "shap==0.46.0",
       "tensorflow==2.17.0",
-      "tensorflow-text==2.17.0",
       "tensorflow-hub==0.16.1",
       "keras==3.4.1",
       "ollama==0.4.7",
