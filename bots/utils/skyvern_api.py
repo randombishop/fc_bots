@@ -6,7 +6,7 @@ import time
 API_KEY = os.getenv("SKYVERN_API_KEY")
 USERNAME = os.getenv("SKYVERN_USERNAME")
 PASSWORD = os.getenv("SKYVERN_PASSWORD")
-URL_WORKFLOWS = "http://worker.datascience.art:7000/api/v1/workflows"
+URL_WORKFLOWS = os.getenv("SKYVERN_WORKFLOW_URL")
 TIMEOUT = 300
 
 
