@@ -32,7 +32,6 @@ from bots.kit_impl.fetch.get_bot_casts_in_channel import get_bot_casts_in_channe
 from bots.kit_impl.fetch.get_bot_casts_all import get_bot_casts_all
 from bots.kit_impl.fetch.get_trending import get_trending
 from bots.kit_impl.fetch.get_user_reactions import get_user_reactions
-from bots.kit_impl.fetch.make_cast_stats_sql_query import make_cast_stats_sql_query
 from bots.kit_impl.fetch.make_user_stats_sql_query import make_user_stats_sql_query
 from bots.kit_impl.fetch.execute_dune_query import execute_dune_query
 from bots.kit_impl.fetch.keyword import new_keyword, generate_keyword
@@ -272,17 +271,6 @@ class Fetch:
     """
     return get_user_reactions(user_id.fid)
 
-  def make_cast_stats_sql_query(self) -> DuneQuery:
-    """
-    Make a SQL query to fetch cast statistics from Dune Analytics.
-    Use to access the full table of cast features.
-    
-    Returns:
-        DuneQuery: A DuneQuery object containing the SQL query, None otherwise.
-    """
-    context = format_state(self.state, intro=True, variables=True)
-    return make_cast_stats_sql_query(context, self.state.bot_name)
-  
   def make_user_stats_sql_query(self) -> DuneQuery:
     """
     Make a SQL query to fetch user statistics from Dune Analytics.

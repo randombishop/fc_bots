@@ -15,7 +15,6 @@ INTENTS_DESCRIPTIONS = {
 'WhoIs': 'Analyze a user profile and generate a new avatar for them.',
 'WordCloud': 'Make a word cloud.',
 'UserStats': 'Get users aggregation or statistic from the database.',
-'CastStats': 'Get casts (=posts) aggregation or statistic from the database.',
 'Meta': 'Explain what the bot can do and how to use it.',
 'AvatarMatch': 'Find similar profiles or mint the user profile NFT.'
 }
@@ -107,10 +106,6 @@ Post it as a single short cast and include a link to the wordcloud URL.
 Use the wordcloud url that you created, do not guess a link or url if they don't appear on your own data.""",
 
 'UserStats': """Make a SQL query to fetch user statistics from Dune Analytics.
-Execute the query.
-Compose a data driven response.""",
-
-'CastStats': """Make a SQL query to fetch cast statistics from Dune Analytics.
 Execute the query.
 Compose a data driven response.""",
 
