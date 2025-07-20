@@ -10,7 +10,7 @@ from bots.utils.json_cleaner import clean_json
 
 gemini_small = "gemini-2.0-flash-lite-001"
 gemini_medium = "gemini-2.0-flash-001"
-gemini_large = "gemini-2.5-flash-preview-04-17"
+gemini_large = "gemini-2.5-flash"
 
 def chat_llm(model):
   try:
